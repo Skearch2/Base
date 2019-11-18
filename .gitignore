@@ -1,0 +1,52 @@
+
+# General
+*/etc/*
+.ftpquota
+*.txt
+*.md
+error_log
+
+# Codeigniter 3
+/system/*
+*/application/logs/*
+!application/logs/index.html
+!application/logs/.htaccess
+*/cache/*
+!*/cache/index.html
+!*/cache/.htaccess
+/vendor/
+
+# Images
+*.JPG
+*.jpg
+*.jpeg
+*.gif
+*.raw
+*.png
+*.tiff
+*.svg
+*.bmp
+*.ico
+
+# Archives
+*.7z
+*.rar
+*.zip
+*.gz
+*.gzip
+*.tgz
+*.bzip
+*.bz2
+*.xz
+
+# Fonts
+*.eot
+*.svg
+*.ttf
+*.otf
+*.woff
+*.woff2
+
+# Backup
+*.bak
+*.tmp
