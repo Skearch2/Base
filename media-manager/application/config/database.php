@@ -49,8 +49,8 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'phpmyadmin';
-$db['default']['password'] = 'appfactory';
+$db['default']['username'] = 'skearch_dba';
+$db['default']['password'] = 'y5o(s+kPtRLY';
 $db['default']['database'] = 'skearch_dev';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = '';
