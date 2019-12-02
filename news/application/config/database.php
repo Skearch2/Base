@@ -86,10 +86,10 @@ $db['hoosk'] = array(
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'skearch_dba',
-	'password' => 'y5o(s+kPtRLY',
-	'database' => 'skearch_default',
+	'hostname' => DB_DEFAULT_HOST,
+	'username' => DB_DEFAULT_USERNAME,
+	'password' => DB_DEFAULT_PASS,
+	'database' => DB_DEFAULT_NAME,
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

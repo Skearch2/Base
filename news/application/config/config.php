@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'https://localhost/skearch';
+$config['base_url']	= BASE_URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +29,6 @@ $config['base_url'] = 'https://localhost/skearch';
 | variable so that it is blank.
 |
 */
-
 $config['index_page'] = '';
 
 /*
@@ -212,7 +211,7 @@ $config['directory_trigger'] = 'd';
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;   // DISABLED IN PRODUCTION!
+$config['log_threshold'] = 0;
 
 /*
 |--------------------------------------------------------------------------
@@ -356,15 +355,14 @@ $config['encryption_key'] = 'uz8AL8Q8u036VPH7aB1hYcT9U5unNa9W';
 | except for 'cookie_prefix' and 'cookie_httponly', which are ignored here.
 |
 */
-
 $config['sess_driver'] = 'database';
-$config['sess_cookie_name']		= 'skearch_ci_session';
-$config['sess_expiration']		= 7200;
+$config['sess_cookie_name'] = 'skearch_ci_session';
+$config['sess_expiration'] = 7200;
 $config['sess_save_path'] = 'skearch_ci_sessions';
-$config['sess_match_ip']		= FALSE;
+$config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
-
-
+$config['sess_regenerate_destroy'] = FALSE;
+$config['sess_table_name']		= 'skearch_ci_sessions';
 
 /*
 |--------------------------------------------------------------------------
@@ -381,9 +379,9 @@ $config['sess_time_to_update'] = 300;
 |       'cookie_httponly') will also affect sessions.
 |
 */
-$config['cookie_prefix']	= '';
-$config['cookie_domain']	= '';
-$config['cookie_path']		= '/';
+$config['cookie_prefix']	= "";
+$config['cookie_domain']	= "";
+$config['cookie_path']		= "/";
 $config['cookie_secure']	= FALSE;
 $config['cookie_httponly'] 	= FALSE;
 
@@ -413,7 +411,7 @@ $config['standardize_newlines'] = FALSE;
 |          for backwards compatibility purposes!
 |
 */
-$config['global_xss_filtering'] = TRUE;
+$config['global_xss_filtering'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -429,7 +427,7 @@ $config['global_xss_filtering'] = TRUE;
 | 'csrf_regenerate' = Regenerate token on every submission
 | 'csrf_exclude_uris' = Array of URIs which ignore CSRF checks
 */
-$config['csrf_protection'] = TRUE;
+$config['csrf_protection'] = FALSE;
 $config['csrf_token_name'] = 'csrf_test_name';
 $config['csrf_cookie_name'] = 'csrf_cookie_name';
 $config['csrf_expire'] = 7200;
