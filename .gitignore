@@ -16,6 +16,9 @@ error_log
 !*/cache/.htaccess
 /vendor/
 
+# Skearch
+skearch_config.php
+
 # Images
 *.JPG
 *.jpg

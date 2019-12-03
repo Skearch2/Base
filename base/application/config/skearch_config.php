@@ -1,28 +1,64 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 /*
 |--------------------------------------------------------------------------
-| Configuration for Skearch2
+| CONFIGURATION FOR SKEARCH BASE
 |--------------------------------------------------------------------------
-|
-|   FLM - 17-AUG-18
-|   After some back and forth between setting these up as constants
-|   or as part of a custom config file, decided to use config file.
-|   The main advantage this gives us is being able to setup an admin page
-|   for modification of these values.
  */
 
 /*
 |--------------------------------------------------------------------------
-| Site Defined URLs
+| Base Site URL
 |--------------------------------------------------------------------------
 |
-|   landing_page - Default page ("target") for empty URL
- */
-$config['landing_page'] = 'default';
+| URL to your CodeIgniter root. Typically this will be your base URL,
+| WITH a trailing slash:
+|
+|	http://example.com/
+|
+| If this is not set then CodeIgniter will try guess the protocol, domain
+| and path to your installation. However, you should always configure this
+| explicitly and never rely on auto-guessing, especially in production
+| environments.
+|
+*/
+define('BASE_URL', 'https://localhost/skearch/');
 
-/* Maintenance mode */
-$config['maintenance'] = false;
 
-/* Skearch Application Title */
-$config['skearch_title'] = "";
+/*
+|--------------------------------------------------------------------------
+| Database Connectivity Settings
+|--------------------------------------------------------------------------
+|
+| This section will contain the settings needed to access the database.
+| WITH a trailing slash:
+|
+| -------------------------------------------------------------------
+| EXPLANATION OF VARIABLES
+| -------------------------------------------------------------------
+|
+|	['DB_HOST'] The hostname of your database server.
+|	['DB_USERNAME'] The username used to connect to the database
+|	['DB_PASS'] The password used to connect to the database
+|	['DB_NAME'] The name of the database you want to connect to
+|
+*/
+
+define('DB_HOST', 'localhost');
+define('DB_USERNAME', 'phpmyadmin');
+define('DB_PASS', 'appfactory');
+define('DB_NAME', 'skearch_dev');
+
+// /*
+// |--------------------------------------------------------------------------
+// | Site Defined URLs
+// |--------------------------------------------------------------------------
+// |
+// |   landing_page - Default page ("target") for empty URL
+//  */
+// $config['landing_page'] = 'default';
+
+// /* Maintenance mode */
+// $config['maintenance'] = false;
+
+// /* Skearch Application Title */
+// $config['skearch_title'] = "";

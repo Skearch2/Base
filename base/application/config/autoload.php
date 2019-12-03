@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -69,7 +69,7 @@ $autoload['packages'] = array();
  *		database
  */
 
-$autoload['libraries'] = array('globals','form_validation','session','ion_auth','database','email','curl','parser');
+$autoload['libraries'] = array('globals', 'form_validation', 'session', 'ion_auth', 'database', 'email', 'curl', 'parser');
 
 
 /*
@@ -106,7 +106,7 @@ $autoload['drivers'] = array();
  */
 
 
-$autoload['helper'] = array('form','url');
+$autoload['helper'] = array('form', 'url');
 
 
 /*
@@ -121,7 +121,7 @@ $autoload['helper'] = array('form','url');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array('skearch_config');
+$autoload['config'] = array();
 
 
 /*

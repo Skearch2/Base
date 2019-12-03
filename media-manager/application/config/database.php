@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 /*
 | -------------------------------------------------------------------
 | DATABASE CONNECTIVITY SETTINGS
@@ -48,10 +48,10 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'phpmyadmin';
-$db['default']['password'] = 'appfactory';
-$db['default']['database'] = 'skearch_dev';
+$db['default']['hostname'] = DB_HOST;
+$db['default']['username'] = DB_USERNAME;
+$db['default']['password'] = DB_PASS;
+$db['default']['database'] = DB_NAME;
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = FALSE;
