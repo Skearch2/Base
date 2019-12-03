@@ -21,7 +21,7 @@
 | environments.
 |
 */
-define('BASE_URL', 'https://localhost/skearch/media-manager/');
+define('BASE_URL', 'https://dev.skearch.com/media-manager/');
 
 
 /*
@@ -44,6 +44,6 @@ define('BASE_URL', 'https://localhost/skearch/media-manager/');
 */
 
 define('DB_HOST', 'localhost');
-define('DB_USERNAME', 'phpmyadmin');
-define('DB_PASS', 'appfactory');
+define('DB_USERNAME', 'skearch_dba');
+define('DB_PASS', 'y5o(s+kPtRLY');
 define('DB_NAME', 'skearch_dev');
