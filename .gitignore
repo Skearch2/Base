@@ -17,7 +17,7 @@ error_log
 /vendor/
 
 # Skearch
-skearch_config.php
+#skearch_config.php
 
 # Images
 *.JPG

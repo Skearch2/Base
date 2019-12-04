@@ -1,8 +1,4 @@
 <?php
-if (!file_exists('config.php')) {
-	header("Location: " . str_replace("/index.php", "", htmlspecialchars($_SERVER["PHP_SELF"])) . "/install");
-	die();
-}
 /**
  * CodeIgniter
  *
@@ -39,11 +35,7 @@ if (!file_exists('config.php')) {
  * @since	Version 1.0.0
  * @filesource
  */
-/** Config **/
-include('config.php');
 
-//used for echoing in templates
-define('ADMIN_THEME', BASE_URL . '/theme/admin');
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
