@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']    = 'https://localhost/skearch/media-manager/';
+$config['base_url']    = BASE_URL;
 
 /*
 |--------------------------------------------------------------------------
