@@ -1,26 +1,26 @@
 <?php
 
 //Skearch News Base URL
-define ('BASE_URL', 'http://localhost/skearch/news');
+define ('BASE_URL', 'http://dev.skearch.com/news');
 
-//Hoosk Database details
+//Skearch News Database details
 define ('DB_HOST', 'localhost');
 //Username
-define ('DB_USERNAME', 'phpmyadmin');
+define('DB_USERNAME', 'skearch_dba');
 //Pass
-define ('DB_PASS', 'appfactory');
+define('DB_PASS', get_cfg_var('SKEARCH_DBA_PASS'));
 //Database Name
 define ('DB_NAME', 'skearch_news');
 
 //Email/Cookie URL
 define ('EMAIL_URL', '');
 
-//Skearch Database details
+//Skearch Base Database details
 define ('DB_DEFAULT_HOST', 'localhost');
 //Username
-define ('DB_DEFAULT_USERNAME', 'phpmyadmin');
+define('DB_USERNAME', 'skearch_dba');
 //Pass
-define ('DB_DEFAULT_PASS', 'appfactory');
+define('DB_PASS', get_cfg_var('SKEARCH_DBA_PASS'));
 //Database Name
 define ('DB_DEFAULT_NAME', 'skearch_dev');
 ?>
