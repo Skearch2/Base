@@ -21,7 +21,7 @@
 | environments.
 |
 */
-define('BASE_URL', 'https://localhost/skearch/');
+define('BASE_URL', 'https://dev.skearch.com/');
 
 
 /*
@@ -44,8 +44,8 @@ define('BASE_URL', 'https://localhost/skearch/');
 */
 
 define('DB_HOST', 'localhost');
-define('DB_USERNAME', 'phpmyadmin');
-define('DB_PASS', 'appfactory');
+define('DB_USERNAME', 'skearch_dba');
+define('DB_PASS', get_cfg_var('SKEARCH_DBA_PASS'));
 define('DB_NAME', 'skearch_dev');
 
 // /*
