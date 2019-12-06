@@ -19,7 +19,6 @@ php.ini
 
 # Skearch
 skearch_config.php
-php.ini
 
 # Images
 *.JPG
