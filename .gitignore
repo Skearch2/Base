@@ -5,6 +5,7 @@
 *.txt
 *.md
 error_log
+php.ini
 
 # Codeigniter 3
 /system/*
@@ -17,7 +18,8 @@ error_log
 /vendor/
 
 # Skearch
-#skearch_config.php
+skearch_config.php
+php.ini
 
 # Images
 *.JPG
