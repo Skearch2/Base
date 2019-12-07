@@ -1,0 +1,108 @@
+.flex-control-paging{display:none;}
+
+.flexslider {margin: 0; padding: 0;}
+.flexslider2 {margin: 0; padding: 0;}
+.flexslider_right {margin: 0; padding: 0;}
+.flexslider_right_gives {margin: 0; padding: 0;}
+
+.flexslider .slides > li {display: none; -webkit-backface-visibility: hidden;} /* Hide the slides before the JS is loaded. Avoids image jumping */
+.flexslider .slides img {width: 960px; display: block;height:90px;}
+
+.flexslider2 .slides > li {display: none; -webkit-backface-visibility: hidden;} /* Hide the slides before the JS is loaded. Avoids image jumping */
+.flexslider2 .slides img {width: 620px; display: block;height:260px;}
+
+.flexslider_right .slides > li {display: none; -webkit-backface-visibility: hidden;}
+.flexslider_right .slides img {width: 620px; display: block;height:260px;}
+
+.flexslider_right_gives .slides > li {display: none; -webkit-backface-visibility: hidden;}
+.flexslider_right_gives .slides img {width: 620px; display: block;height:260px;}
+
+.flex-pauseplay span {text-transform: capitalize;}
+.slides:after {content: "."; display: block; clear: both; visibility: hidden; line-height: 0; height: 0;} html[xmlns] .slides {display: block;}
+* html .slides {height: 1%;}
+.no-js .slides > li:first-child {display: block;}
+
+/* FlexSlider Default Theme
+*********************************/
+.flexslider { background: none repeat scroll 0 0 #edf5f6;border: 2px solid #000;border-radius: 6px; box-shadow: 0 8px 21px rgba(0, 0, 0, 0.5);float: left;height: 96px;padding: 5px 8px 7px 7px;width: 949px;}
+.flexslider2 { border: 8px solid #edf5f6;border-radius: 6px; float: left;margin-left:152px;height: 260px;width: 620px;}
+.flexslider_right { background:none repeat scroll 0 0 #fff;border: 2px solid #000;border-radius: 6px; float: left;height: 600px;width: 300px;padding:7px;text-align:center;}
+.flexslider_right_gives {height: 650px;width: 250px;padding:0;margin:0;}
+
+.flex-viewport { max-height: 2000px; -webkit-transition: all 1s ease; -moz-transition: all 1s ease; -o-transition: all 1s ease; transition: all 1s ease; }
+.loading .flex-viewport { max-height: 300px; }
+.flexslider .slides { zoom: 1; }
+.flexslider2 .slides { zoom: 1; }
+.carousel li { margin-right: 5px; }
+
+/* Direction Nav */
+.flex-direction-nav {*height: 0;display:none;}
+.flex-direction-nav a  { text-decoration:none; display: block; width: 40px; height: 40px; margin: -20px 0 0; position: absolute; top: 50%; z-index: 10; overflow: hidden; opacity: 0; cursor: pointer; color: rgba(0,0,0,0.8); text-shadow: 1px 1px 0 rgba(255,255,255,0.3); -webkit-transition: all .3s ease; -moz-transition: all .3s ease; transition: all .3s ease; }
+.flex-direction-nav .flex-prev { left: -50px; }
+.flex-direction-nav .flex-next { right: -50px; text-align: right; }
+.flexslider:hover .flex-prev { opacity: 0.7; left: 10px; }
+.flexslider:hover .flex-next { opacity: 0.7; right: 10px; }
+.flexslider:hover .flex-next:hover, .flexslider:hover .flex-prev:hover { opacity: 1; }
+.flex-direction-nav .flex-disabled { opacity: 0!important; filter:alpha(opacity=0); cursor: default; }
+.flex-direction-nav a:before  { font-family: "flexslider-icon"; font-size: 40px; line-height:1; display: inline-block; content: '\f001'; }
+.flex-direction-nav a.flex-next:before  { content: '\f002'; }
+
+/* Pause/Play */
+.flex-pauseplay a { display: block; width: 20px; height: 20px; position: absolute; bottom: 5px; left: 10px; opacity: 0.8; z-index: 10; overflow: hidden; cursor: pointer; color: #000; }
+.flex-pauseplay a:before  { font-family: "flexslider-icon"; font-size: 20px; display: inline-block; content: '\f004'; }
+.flex-pauseplay a:hover  { opacity: 1; }
+.flex-pauseplay a.flex-play:before { content: '\f003'; }
+
+@media screen and (max-width: 860px) {
+  .flex-direction-nav .flex-prev { opacity: 1; left: 10px;}
+  .flex-direction-nav .flex-next { opacity: 1; right: 10px;}
+}
+a { color: #fff;text-decoration: none;}
+.flexslider .slides img {
+    display: block;
+    height: 100px;
+    max-width: 100%;
+    width: 970px;
+}
+.flexslider {
+    /*background: none repeat scroll 0 0 #edf5f6;
+    border: 2px solid #000;*/
+    border-radius: 6px;
+    box-shadow: 0 8px 21px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    float: left;
+    /*height: 110px;*/
+    height: 120px;
+    overflow: hidden;
+    padding: 10px;
+    position: absolute;
+    /*width: 100%;*/
+    /*width: 970px;*/
+    width: 989px;
+}
+
+.flexslider2 .slides img {
+    display: block;
+    width: 619px;
+    height:260px;
+}
+
+.flexslider_right .slides img {
+    display : block;
+    height : 600px;
+    width : 300px;
+}
+
+.flexslider_right_gives .slides img {
+    display : block;
+    height : 650px;
+    width : 250px;
+}
+.flexslider_right_gives.new-banner-add{ margin-top: 15px;}
+/*.flexslider_right_gives .slides img{ border: #fff 3px solid; border-top: none; border-radius:0 0 7px 7px;width: 244px;}*/
+.flexslider_right_gives.new-banner-add .slides li img {
+    height: 325px;
+/*    border: #fff 3px solid;
+    border-radius: 7px;*/
+    width: 250px;
+}

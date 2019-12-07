@@ -1,0 +1,16 @@
+RewriteEngine on
+<IfModule headers_module>
+  header set X-Clacks-Overhead "GNU Terry Pratchett"
+</IfModule>
+
+<IfModule mod_rewrite.c>
+   RewriteEngine On
+   
+   RewriteCond %{HTTPS} off
+   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+   RewriteCond $1 !^(index\.php|resources|robots\.txt)
+   RewriteCond %{REQUEST_FILENAME} !-d
+   RewriteCond %{REQUEST_FILENAME} !-f
+   RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>
