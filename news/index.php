@@ -54,6 +54,12 @@
  * NOTE: If you change these, also change the error_reporting() code below
  */
 	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+	
+	//Used for encryption - be creative, if this is changed once set up then passwords will need reset
+	define('SALT', 'Once Up0n @ h00sK!');
+
+	//RSS off flag
+	define('RSS_FEED', false);
 
 /*
  *---------------------------------------------------------------
