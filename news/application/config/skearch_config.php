@@ -16,11 +16,5 @@ define ('DB_NAME', 'skearch_news');
 define ('EMAIL_URL', '');
 
 //Skearch Base Database details
-define ('DB_DEFAULT_HOST', 'localhost');
-//Username
-define('DB_USERNAME', 'skearch_dba');
-//Pass
-define('DB_PASS', get_cfg_var('SKEARCH_DBA_PASS'));
-//Database Name
-define ('DB_DEFAULT_NAME', 'skearch_dev');
+define ('DB_NAME_DEFAULT', 'skearch_dev');
 ?>
