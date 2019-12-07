@@ -21,7 +21,7 @@
 | environments.
 |
 */
-define('BASE_URL', 'https://localhost/media-manager/');
+define('BASE_URL', 'https://localhost/');
 
 
 /*
