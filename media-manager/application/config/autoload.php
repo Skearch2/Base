@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 /*
 | -------------------------------------------------------------------
 | AUTO-LOADER
@@ -37,7 +37,7 @@
 |
 */
 
-$autoload['packages'] = array( APPPATH . 'core' );
+$autoload['packages'] = array(APPPATH . 'core');
 
 
 /*
@@ -52,7 +52,7 @@ $autoload['packages'] = array( APPPATH . 'core' );
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('ion_auth','session');
+$autoload['libraries'] = array('ion_auth', 'session');
 
 
 /*
@@ -82,7 +82,7 @@ $autoload['helper'] = array('asset', 'url', 'form');
 */
 
 //$autoload['config'] = array();
-$autoload['config'] = array( 'asset', 'ismanager' );
+$autoload['config'] = array('asset', 'ismanager');
 
 /*
 | -------------------------------------------------------------------

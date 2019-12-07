@@ -1,7 +1,7 @@
 <IfModule mod_rewrite.c>
 
     RewriteEngine On
-    RewriteBase /media-manager/
+    #RewriteBase /media-manager/
 
     ### Canonicalize codeigniter URLs
 
@@ -9,6 +9,10 @@
     # "welcome" you should probably change this
     #RewriteRule ^(test(/index)?|index(\.php)?)/?$ / [L,R=301]
     #RewriteRule ^(.*)/index/?$ $1 [L,R=301]
+
+    # Forces HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
     # Removes trailing slashes (prevents SEO duplicate content issues)
     RewriteCond %{REQUEST_FILENAME} !-d
