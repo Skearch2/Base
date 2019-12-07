@@ -1,7 +1,7 @@
 <?php
 
 //Skearch News Base URL
-define ('BASE_URL', 'http://dev.skearch.com/news');
+define ('BASE_URL', 'https://dev.skearch.com/news');
 
 //Skearch News Database details
 define ('DB_HOST', 'localhost');
