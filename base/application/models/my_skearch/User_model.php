@@ -16,7 +16,7 @@ if (!defined('BASEPATH')) {
 class User_model extends CI_Model
 {
 
-    public function register()
+    public function register($is_brandmember = NULL)
     {
 
         $username = $this->input->post('myskearch_id');
@@ -30,10 +30,22 @@ class User_model extends CI_Model
             'age_group' => $this->input->post('age_group'),
             'group_name' => $group_name,
         );
-        $group = array('2'); //member group
+        if ($is_brandmember == 1) {
+            array_push($additional_data, array(
+                'organization' => $this->input->post('organization'),
+                'address1' => $this->input->post('address1'),
+                'address2' => $this->input->post('address2'),
+                'city' => $this->input->post('city'),
+                'state' => $this->input->post('state'),
+                'country' => $this->input->post('country'),
+                'zip' => $this->input->post('zip')
+            ));
+            $group = array('3'); // brand member group
+        } else {
+            $group = array('5'); // regular member group
+        }
 
         return $this->ion_auth->register($username, $password, $email, $additional_data, $group);
-
     }
 
     public function update_profile($user_id)
@@ -57,7 +69,6 @@ class User_model extends CI_Model
             'age_group' => $this->input->post('age_group'),
         );
 
-        $this->ion_auth->update($id, $data);
+        $this->ion_auth->update($user_id, $data);
     }
-
 }

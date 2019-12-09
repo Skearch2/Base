@@ -1,4 +1,5 @@
 <?php
+
 /**
  * File: ~/application/controller/my_skearch/Auth.php
  */
@@ -37,13 +38,15 @@ class Auth extends MY_Controller
     public function login()
     {
 
+        if (!file_exists(APPPATH . '/views/my_skearch/pages/login.php')) {
+            show_404();
+        }
+
         if ($this->ion_auth->logged_in()) {
             redirect('myskearch/dashboard', 'refresh');
         }
 
-        if (!file_exists(APPPATH . '/views/my_skearch/pages/login.php')) {
-            show_404();
-        }
+
 
         $this->form_validation->set_rules('myskearch_id', 'MySkearch ID', 'required|trim');
         $this->form_validation->set_rules('password', 'Password', 'required|trim');
@@ -72,13 +75,15 @@ class Auth extends MY_Controller
     public function signup()
     {
 
+        if (!file_exists(APPPATH . '/views/my_skearch/pages/register.php')) {
+            show_404();
+        }
+
         if ($this->ion_auth->logged_in()) {
             redirect('myskearch/dashboard', 'refresh');
         }
 
-        if (!file_exists(APPPATH . '/views/my_skearch/pages/register.php')) {
-            show_404();
-        }
+        $is_brandmember = $this->input->post("is_brandmember");
 
         $this->form_validation->set_rules('first_name', 'First Name', 'required|trim|alpha');
         $this->form_validation->set_rules('last_name', 'Last Name', 'required|trim|alpha');
@@ -88,15 +93,31 @@ class Auth extends MY_Controller
         $this->form_validation->set_rules('myskearch_id', 'MySkearch ID', 'required|trim|min_length[5]');
         $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[8]');
         $this->form_validation->set_rules('password2', 'Confirm Password', 'required|trim|matches[password]');
-        $this->form_validation->set_rules('agree', 'Terms and Conditions', 'required',
+        if (!empty($is_brandmember) && $is_brandmember == 1) {
+            $this->form_validation->set_rules('organization', 'Organization', 'required|trim|xss_clean');
+            $this->form_validation->set_rules('address1', 'Address 1', 'required|trim|xss_clean');
+            $this->form_validation->set_rules('address2', 'Address 2', 'required|trim|xss_clean');
+            $this->form_validation->set_rules('organization', 'Organization', 'required|trim|xss_clean');
+            $this->form_validation->set_rules('city', 'City', 'required|trim');
+            $this->form_validation->set_rules('state', 'State', 'required');
+            $this->form_validation->set_rules('country', 'Country', 'required');
+            if (!empty($this->input->post('zip'))) {
+                $this->form_validation->set_rules('zip', 'Zipcode', 'required|numeric|exact_length[5]');
+            }
+        }
+        $this->form_validation->set_rules(
+            'agree',
+            'Terms and Conditions',
+            'required',
             array('required' => 'You must agree with the terms and conditions.')
         );
+
 
         if ($this->form_validation->run() === false) {
             $data['title'] = ucwords('my skearch  | sign up');
             $this->load->view('my_skearch/pages/register', $data);
         } else {
-            if ($this->User_model->register()) {
+            if ($this->User_model->register($is_brandmember)) {
                 $this->session->set_flashdata('success', 'An email has been sent to you for account activation.');
                 redirect('myskearch/auth/login');
             } else {
@@ -139,8 +160,8 @@ class Auth extends MY_Controller
             $template = $this->Template_model->get_template('welcome');
 
             $data = array(
-              'firstname' => $user->first_name,
-              'lastname' => $user->last_name
+                'firstname' => $user->first_name,
+                'lastname' => $user->last_name
             );
 
             $message = $this->parser->parse_string($template->body, $data);
@@ -155,7 +176,6 @@ class Auth extends MY_Controller
             // redirect them to the auth page
             $this->session->set_flashdata('success', $this->ion_auth->messages());
             redirect("myskearch/auth/login");
-
         } else {
             // redirect them to the forgot password page
             $this->session->set_flashdata('error', $this->ion_auth->errors());
@@ -179,7 +199,8 @@ class Auth extends MY_Controller
             $this->load->view('my_skearch/pages/forgot_password', $data);
         } else {
             $identity = $this->ion_auth->where('username', $this->input->post('myskearch_id'))->users()->row();
-            print_r($identity); die();
+            print_r($identity);
+            die();
 
             if (empty($identity)) {
                 $this->session->set_flashdata('alert', "Skearch ID not found.");
@@ -277,7 +298,6 @@ class Auth extends MY_Controller
 
             $data['title'] = ucwords("my skearch | change password");
             $this->load->view('my_skearch/pages/change_password', $data);
-
         } else {
 
             $user_id = $this->session->userdata('id');
@@ -285,7 +305,6 @@ class Auth extends MY_Controller
 
             if ($this->_valid_csrf_nonce() === false or $user_id !== $this->input->post('myskearch_id')) {
                 show_error($this->lang->line('error_csrf'));
-
             } else {
 
                 $change = $this->ion_auth->change_password($identity, $this->input->post('old_password'), $this->input->post('new_password'));
@@ -323,12 +342,10 @@ class Auth extends MY_Controller
 
             $data['title'] = ucwords("my skearch | change email address");
             $this->load->view('my_skearch/pages/change_email', $data);
-
         } else {
 
             if ($this->_valid_csrf_nonce() === false or $user->id !== $this->input->post('myskearch_id')) {
                 show_error($this->lang->line('error_csrf'));
-
             } else {
 
                 $email = $this->input->post('new_email');
@@ -344,7 +361,6 @@ class Auth extends MY_Controller
                         $this->session->set_flashdata('error', 'Invalid Password');
                         redirect('myskearch/auth/change_email');
                     }
-
                 } else {
                     $this->session->set_flashdata('error', 'Email already exists');
                     redirect('myskearch/auth/change_email');
@@ -381,5 +397,4 @@ class Auth extends MY_Controller
         }
         return false;
     }
-
 }
