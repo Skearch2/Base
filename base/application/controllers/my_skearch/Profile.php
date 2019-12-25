@@ -1,4 +1,5 @@
 <?php
+
 /**
  * File: ~/application/controller/my_skearch/Profile.php
  */
@@ -31,67 +32,65 @@ class Profile extends MY_Controller
         }
 
         $this->load->model('Util_model', 'Util_model');
-
     }
 
     /**
      * Shows My Skearch member profile
      */
-    public function index($user_id = null)
+    public function index()
     {
 
         if (!file_exists(APPPATH . '/views/my_skearch/pages/profile.php')) {
             show_404();
         }
 
-        $this->form_validation->set_rules('first_name', 'First Name', 'required|trim|alpha');
-        $this->form_validation->set_rules('last_name', 'Last Name', 'required|trim|alpha');
-        $this->form_validation->set_rules('address1', 'Address 1', 'trim');
-        $this->form_validation->set_rules('address2', 'Address 2', 'trim');
-        $this->form_validation->set_rules('organization', 'Organization', 'trim');
-        $this->form_validation->set_rules('city', 'City', 'trim');
-        if (!empty($this->input->post('zip'))) {
-            $this->form_validation->set_rules('zip', 'Zipcode', 'numeric|exact_length[5]');
+        $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
+        $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
+        $this->form_validation->set_rules('username', 'Username', 'required|alpha_numeric|min_length[5]|max_length[12]|trim');
+
+        // check if user is signed in as brand member
+        $is_brandmember = $this->ion_auth->in_group(3);
+
+        if ($is_brandmember == 1) {
+            $this->form_validation->set_rules('organization', 'Organization', 'required|trim');
+            $this->form_validation->set_rules('brand', 'Brand', 'required|trim');
+            $this->form_validation->set_rules('address1', 'Address Line 1', 'required|trim');
+            $this->form_validation->set_rules('address2', 'Address Line 2', 'trim');
+            $this->form_validation->set_rules('phone', 'Phone', 'required|numeric|exact_length[10]');
+            $this->form_validation->set_rules('city', 'City', 'required|trim');
+            $this->form_validation->set_rules('state', 'State', 'required');
+            $this->form_validation->set_rules('country', 'Country', 'required');
+            $this->form_validation->set_rules('zipcode', 'Zipcode', 'required|numeric|exact_length[5]');
         }
-        $this->form_validation->set_rules('phone', 'Phone Number', 'numeric');
-        $this->form_validation->set_rules('gender', 'Gender', 'required');
-        $this->form_validation->set_rules('age_group', 'Age Group', 'required');
 
         if ($this->form_validation->run() === false) {
 
-            $data['csrf'] = $this->_get_csrf_nonce();
-            $data['myskearch_id'] = $this->session->userdata('id');
-
             $data['states'] = $this->Util_model->get_state_list();
             $data['countries'] = $this->Util_model->get_country_list();
-            $data['user_group'] = $this->ion_auth->get_users_groups($this->session->userdata('id'))->row();
+            $data['is_brandmember'] = $is_brandmember;
 
             $data['title'] = ucwords("my skearch | profile");
 
             $this->load->view('my_skearch/pages/profile', $data);
-
         } else {
 
-            //do we have a valid request?
-            if ($this->_valid_csrf_nonce() === false || $user_id !== $this->input->post('myskearch_id')) {
-                show_error($this->lang->line('error_csrf'));
-                die();
-            }
-
             $data = array(
-                'first_name' => $this->input->post('first_name'),
-                'last_name' => $this->input->post('last_name'),
-                'organization' => $this->input->post('organization'),
-                'phone' => $this->input->post('phone'),
-                'gender' => $this->input->post('gender'),
-                'age_group' => $this->input->post('age_group'),
-                'address1' => $this->input->post('address1'),
-                'address2' => $this->input->post('address2'),
-                'city' => $this->input->post('city'),
-                'state' => $this->input->post('state'),
-                'country' => $this->input->post('country'),
-                'zip' => $this->input->post('zip'),
+                'username' => $this->input->post('username'),
+                'firstname' => $this->input->post('firstname'),
+                'lastname' => $this->input->post('lastname')
             );
+
+            if ($is_brandmember) {
+                $data['organization'] = $this->input->post('organization');
+                $data['brand'] = $this->input->post('brand');
+                $data['phone'] = $this->input->post('phone');
+                $data['address1'] = $this->input->post('address1');
+                $data['address2'] = $this->input->post('address2');
+                $data['city'] = $this->input->post('city');
+                $data['state'] = $this->input->post('state');
+                $data['country'] = $this->input->post('country');
+                $data['zipcode'] = $this->input->post('zipcode');
+            }
 
             if ($this->ion_auth->update($this->session->userdata('id'), $data)) {
 
@@ -99,43 +98,11 @@ class Profile extends MY_Controller
                 $this->session->set_userdata($user);
                 $this->session->set_flashdata('success', $this->ion_auth->messages());
                 redirect('myskearch/profile');
-
             } else {
 
                 $this->session->set_flashdata('error', $this->ion_auth->errors());
                 redirect('myskearch/profile');
-
             }
         }
     }
-
-    /**
-     * Generate a CSRF key-value pair
-     *
-     * @return array A CSRF key-value pair
-     */
-    public function _get_csrf_nonce()
-    {
-        $this->load->helper('string');
-        $key = random_string('alnum', 8);
-        $value = random_string('alnum', 20);
-        $this->session->set_flashdata('csrfkey', $key);
-        $this->session->set_flashdata('csrfvalue', $value);
-        return [$key => $value];
-    }
-
-    /**
-     * Validates CSRF token
-     *
-     * @return bool Whether the posted CSRF token matches
-     */
-    public function _valid_csrf_nonce()
-    {
-        $csrfkey = $this->input->post($this->session->flashdata('csrfkey'));
-        if ($csrfkey && $csrfkey === $this->session->flashdata('csrfvalue')) {
-            return true;
-        }
-        return false;
-    }
-
 }

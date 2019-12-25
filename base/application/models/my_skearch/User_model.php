@@ -19,27 +19,25 @@ class User_model extends CI_Model
     public function register($is_brandmember = NULL)
     {
 
-        $username = $this->input->post('myskearch_id');
+        $username = $this->input->post('username');
         $password = $this->input->post('password');
         $email = $this->input->post('email');
-        $group_name = "members";
         $additional_data = array(
-            'first_name' => $this->input->post('first_name'),
-            'last_name' => $this->input->post('last_name'),
+            'firstname' => $this->input->post('firstname'),
+            'lastname' => $this->input->post('lastname'),
             'gender' => $this->input->post('gender'),
-            'age_group' => $this->input->post('age_group'),
-            'group_name' => $group_name,
+            'age_group' => $this->input->post('age_group')
         );
         if ($is_brandmember == 1) {
-            array_push($additional_data, array(
-                'organization' => $this->input->post('organization'),
-                'address1' => $this->input->post('address1'),
-                'address2' => $this->input->post('address2'),
-                'city' => $this->input->post('city'),
-                'state' => $this->input->post('state'),
-                'country' => $this->input->post('country'),
-                'zip' => $this->input->post('zip')
-            ));
+            $additional_data['organization'] = $this->input->post('organization');
+            $additional_data['brand'] = $this->input->post('brand');
+            $additional_data['phone'] = $this->input->post('phone');
+            $additional_data['address1'] = $this->input->post('address1');
+            $additional_data['address2'] = $this->input->post('address2');
+            $additional_data['city'] = $this->input->post('city');
+            $additional_data['state'] = $this->input->post('state');
+            $additional_data['country'] = $this->input->post('country');
+            $additional_data['zipcode'] = $this->input->post('zipcode');
             $group = array('3'); // brand member group
         } else {
             $group = array('5'); // regular member group
@@ -53,8 +51,8 @@ class User_model extends CI_Model
 
         $group_name = $this->ion_auth->group($this->input->post('group'))->result();
         $data = array(
-            'first_name' => $this->input->post('first_name'),
-            'last_name' => $this->input->post('last_name'),
+            'firstname' => $this->input->post('firstname'),
+            'lastname' => $this->input->post('lastname'),
             'address1' => $this->input->post('address1'),
             'address2' => $this->input->post('address2'),
             'organization' => $this->input->post('organization'),

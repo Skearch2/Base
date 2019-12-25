@@ -30,6 +30,7 @@ class Auth extends MY_Controller
 
         $this->load->model('my_skearch/User_model', 'User_model');
         $this->load->model('admin_panel/Template_model_admin', 'Template_model');
+        $this->load->model('Util_model', 'Util_model');
     }
 
     /**
@@ -48,7 +49,7 @@ class Auth extends MY_Controller
 
 
 
-        $this->form_validation->set_rules('myskearch_id', 'MySkearch ID', 'required|trim');
+        $this->form_validation->set_rules('myskearch_id', 'Skearch ID', 'required|trim');
         $this->form_validation->set_rules('password', 'Password', 'required|trim');
 
         if ($this->form_validation->run() === false) {
@@ -60,10 +61,16 @@ class Auth extends MY_Controller
 
             if ($this->ion_auth->login($this->input->post('myskearch_id'), $this->input->post('password'), $remember)) {
                 $user = (array) $this->ion_auth->user()->row();
+
+                // add user group in the user information
+                $user['group'] =  $this->ion_auth->get_users_groups($this->session->userdata('myskearch_id'))->row()->name;
+                $user['groupid'] =  $this->ion_auth->get_users_groups($this->session->userdata('myskearch_id'))->row()->id;
+
                 $this->session->set_userdata($user);
+
                 redirect();
             } else {
-                $this->session->set_flashdata('alert', "Incorrect My Skearch ID or password, please try again.");
+                $this->session->set_flashdata('alert', "Incorrect Skearch ID or password, please try again.");
                 redirect('myskearch/auth/login');
             }
         }
@@ -83,28 +90,28 @@ class Auth extends MY_Controller
             redirect('myskearch/dashboard', 'refresh');
         }
 
+        // check if user is signing up as brand member
         $is_brandmember = $this->input->post("is_brandmember");
 
-        $this->form_validation->set_rules('first_name', 'First Name', 'required|trim|alpha');
-        $this->form_validation->set_rules('last_name', 'Last Name', 'required|trim|alpha');
-        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[skearch_users.email]');
-        $this->form_validation->set_rules('gender', 'Gender', 'required');
-        $this->form_validation->set_rules('age_group', 'Age group', 'required');
-        $this->form_validation->set_rules('myskearch_id', 'MySkearch ID', 'required|trim|min_length[5]');
-        $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[8]');
-        $this->form_validation->set_rules('password2', 'Confirm Password', 'required|trim|matches[password]');
         if (!empty($is_brandmember) && $is_brandmember == 1) {
-            $this->form_validation->set_rules('organization', 'Organization', 'required|trim|xss_clean');
-            $this->form_validation->set_rules('address1', 'Address 1', 'required|trim|xss_clean');
-            $this->form_validation->set_rules('address2', 'Address 2', 'required|trim|xss_clean');
-            $this->form_validation->set_rules('organization', 'Organization', 'required|trim|xss_clean');
+            $this->form_validation->set_rules('organization', 'Organization', 'required|trim');
+            $this->form_validation->set_rules('brand', 'Brand', 'required|trim');
+            $this->form_validation->set_rules('phone', 'Phone', 'required|numeric|exact_length[10]');
+            $this->form_validation->set_rules('address1', 'Address Line 1', 'required|trim');
+            $this->form_validation->set_rules('address2', 'Address Line 2', 'trim');
             $this->form_validation->set_rules('city', 'City', 'required|trim');
             $this->form_validation->set_rules('state', 'State', 'required');
             $this->form_validation->set_rules('country', 'Country', 'required');
-            if (!empty($this->input->post('zip'))) {
-                $this->form_validation->set_rules('zip', 'Zipcode', 'required|numeric|exact_length[5]');
-            }
+            $this->form_validation->set_rules('zipcode', 'Zipcode', 'required|numeric|exact_length[5]');
         }
+        $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
+        $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[skearch_users.email]|trim');
+        $this->form_validation->set_rules('gender', 'Gender', 'required');
+        $this->form_validation->set_rules('age_group', 'Age group', 'required');
+        $this->form_validation->set_rules('username', 'Username', 'required|is_unique[skearch_users.username]|alpha_numeric|min_length[5]|max_length[12]|trim');
+        $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[8]');
+        $this->form_validation->set_rules('password2', 'Confirm Password', 'required|matches[password]|trim');
         $this->form_validation->set_rules(
             'agree',
             'Terms and Conditions',
@@ -114,6 +121,11 @@ class Auth extends MY_Controller
 
 
         if ($this->form_validation->run() === false) {
+            $data['is_brandmember'] = $is_brandmember;
+
+            $data['states'] = $this->Util_model->get_state_list();
+            $data['countries'] = $this->Util_model->get_country_list();
+
             $data['title'] = ucwords('my skearch  | sign up');
             $this->load->view('my_skearch/pages/register', $data);
         } else {
@@ -192,7 +204,7 @@ class Auth extends MY_Controller
             show_404();
         }
 
-        $this->form_validation->set_rules('myskearch_id', 'My Skearch ID', 'required');
+        $this->form_validation->set_rules('myskearch_id', 'Skearch ID', 'required');
 
         if ($this->form_validation->run() === false) {
             $data['title'] = ucwords("my skearch | forgot password");
