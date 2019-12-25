@@ -233,8 +233,8 @@
 														<img src="<?= site_url(ASSETS); ?>/my_skearch/app/media/img/users/user-default.jpg" class="m--img-rounded m--marginless" alt="" />
 													</div>
 													<div class="m-card-user__details">
-														<span class="m-card-user__name m--font-weight-500"><?= $this->session->userdata('first_name') . " " . $this->session->userdata('last_name') ?></span>
-														<a href="" class="m-card-user__email m--font-weight-300 m-link"><?= $this->session->userdata('email'); ?></a>
+														<span class="m-card-user__name m--font-weight-500"><?= $this->session->userdata('firstname') . " " . $this->session->userdata('lastname') ?></span>
+														<span class="m-card-user__email m--font-weight-300"><?= $this->session->userdata('group'); ?></span>
 													</div>
 												</div>
 											</div>
@@ -470,7 +470,7 @@
 													<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner2.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-map"></i><span class="m-menu__link-text">Marketing</span></a></li>
 													<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner2.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-graphic-2"></i><span class="m-menu__link-title"> <span class="m-menu__link-wrap">
 																	<span class="m-menu__link-text">Campaigns</span> <span class="m-menu__link-badge"><span class="m-badge m-badge--success">3</span></span> </span></span></a></li>
-													<li class="m-menu__item  m-menu__item--submenu" m-menu-submenu-toggle="hover" m-menu-link-redirect="1" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i class="m-menu__link-icon flaticon-infinity"></i><span class="m-menu__link-text">Cloud Manager</span><i class="m-menu__hor-arrow la la-angle-right"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+													<li class="m-menu__item  m-menu__item--submenu" m-menu-submenu-toggle="hover" m-menu-link-redirect="1" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Dashboard"><i class="m-menu__link-icon flaticon-infinity"></i><span class="m-menu__link-text">Cloud Manager</span><i class="m-menu__hor-arrow la la-angle-right"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 														<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left"><span class="m-menu__arrow "></span>
 															<ul class="m-menu__subnav">
 																<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner2.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-add"></i><span class="m-menu__link-title"> <span class="m-menu__link-wrap">
@@ -500,7 +500,7 @@
 							<?php //if (!$this->ion_auth->in_group('member')) {
 							?>
 							<li class="m-menu__item <?php if (isset($page) && $page === 'digital assets') echo 'm-menu__item--active  m-menu__item--active-tab';
-													else echo 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="" aria-haspopup="true"><a href="<?= site_url("myskearch"); ?>/digital_assets" class="m-menu__link" title="Non functional dummy link"><span class="m-menu__link-text">Digital Assets</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+													else echo 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="" aria-haspopup="true"><a href="<?= site_url("myskearch"); ?>/digital_assets" class="m-menu__link" title="Digital Assets"><span class="m-menu__link-text">Digital Assets</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 								<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 									<ul class="m-menu__subnav">
 										<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-graphic-2"></i><span class="m-menu__link-text">Revenue</span></a></li>
@@ -524,7 +524,7 @@
 							<?php //}
 							?>
 							<li class="m-menu__item  <?php if (isset($page) && $page === 'private social') echo 'm-menu__item--active  m-menu__item--active-tab';
-														else echo 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="<?= site_url("myskearch"); ?>/private_social" class="m-menu__link" title="Non functional dummy link"><span class="m-menu__link-text">Private Social</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+														else echo 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="<?= site_url("myskearch"); ?>/private_social" class="m-menu__link" title="Private Social"><span class="m-menu__link-text">Private Social</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 								<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 									<ul class="m-menu__subnav">
 										<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-settings-1"></i><span class="m-menu__link-text">Build Tools</span></a></li>
@@ -534,17 +534,16 @@
 									</ul>
 								</div>
 							</li>
-							<?php if ($this->ion_auth->in_group(array('Admin', 'Brand Members'))) : ?>
-								<li class="m-menu__item  <?php if (isset($page) && $page === 'brand direct') echo 'm-menu__item--active  m-menu__item--active-tab';
-																else echo 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="<?= site_url("myskearch"); ?>/brand_direct" class="m-menu__link" title="Non functional dummy link"><span class="m-menu__link-text">Brand Direct</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
-									<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
+							<?php if ($this->session->userdata('groupid') == 3) : ?>
+								<li class="m-menu__item m-menu__item--submenu  m-menu__item--tab m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="https://crm.skearch.com" target="_blank" class="m-menu__link" title="Sign in to Brand Direct"><span class="m-menu__link-text">Brand Direct</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+									<!-- <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 										<ul class="m-menu__subnav">
 											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-settings-1"></i><span class="m-menu__link-text">Build Tools</span></a></li>
 											<li class="m-menu__item " aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-imac"></i><span class="m-menu__link-text">Layout Builder</span></a></li>
 											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-paper-plane"></i><span class="m-menu__link-text">Documentatiion</span></a></li>
 											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner2.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-multimedia"></i><span class="m-menu__link-text">Reviews</span></a></li>
 										</ul>
-									</div>
+									</div> -->
 								</li>
 							<?php endif; ?>
 						</ul>

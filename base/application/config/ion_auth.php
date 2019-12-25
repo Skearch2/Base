@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Name:    Ion Auth
  * Author:  Ben Edmunds

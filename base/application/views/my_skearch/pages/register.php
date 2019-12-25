@@ -14,7 +14,6 @@ $this->load->view('my_skearch/templates/head');
 	<div class="m-grid m-grid--hor m-grid--root m-page">
 		<div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor m-login m-login--signin m-login--2 m-login-2--skin-2" id="m_login" style="background:linear-gradient(0deg,rgba(255, 255, 255, 0.5),rgba(255, 255, 255, 0.5)),url(/assets/my_skearch/app/media/img//bg/bg-3.jpg),url(/assets/my_skearch/app/media/img//bg/bg-3.jpg),url(<?= site_url(ASSETS); ?>/my_skearch/app/media/img//bg/bg-3.jpg); background-size:cover; background-attachment: fixed">
 			<div class="m-grid__item m-grid__item--fluid m-login__wrapper">
-				<?= form_open('', 'id="login_form"'); ?>
 				<div class="m-login__container">
 					<div class="m-login__logo">
 						<a href="<?= base_url(); ?>">
@@ -31,17 +30,62 @@ $this->load->view('my_skearch/templates/head');
 						</div>
 						<fieldset class="m-login__form m-form">
 							<div class="m-login__form-action">
-								<button id="m_signup_regular_member" type="button" onclick="toggle_form_billing()" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn active">Regular Member</button>
+								<button id="m_signup_regular_member" type="button" onclick="toggle_form_brand_member()" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn active">Regular Member</button>
 								&nbsp;
-								<button id="m_signup_brand_member" type="button" onclick="toggle_form_billing('show')" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn">Brand Member</button>
+								<button id="m_signup_brand_member" type="button" onclick="toggle_form_brand_member('show')" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn">Brand Member</button>
 							</div>
 						</fieldset>
-						<fieldset class="m-login__form m-form" method="post" action="">
-							<div class="form-group m-form__group">
-								<input class="form-control m-input" type="text" placeholder="First Name" name="first_name" value="<?= set_value('first_name'); ?>">
+						<?= form_open(''); ?>
+						<fieldset class="m-login__form m-form">
+							<div id="m-login__form m-form__company" style=<?= $is_brandmember ? 'display:block' : 'display:none' ?>>
+								<h4 class="col-6">Company Details</h4>
+								<input id="is_brandmember" name="is_brandmember" type="hidden" value="0">
+								<div class="form-group m-form__group row">
+									<input class="form-control m-input" placeholder="Organization" type="text" name="organization" value="<?= set_value('organization'); ?>">
+								</div>
+								<div class="form-group m-form__group row">
+									<input class="form-control m-input" placeholder="Brand Name" type="text" name="brand" value="<?= set_value('brand'); ?>">
+								</div>
+								<div class="form-group m-form__group">
+									<input class="form-control m-input" type="text" placeholder="Phone" name="phone" value="<?= set_value('phone'); ?>">
+								</div>
+								<div class="form-group m-form__group row">
+									<input class="form-control m-input" placeholder="Address" type="text" name="address1" value="<?= set_value('address1'); ?>">
+									<span class="m-form__help">Street address, P.O box, c/o</span>
+								</div>
+								<div class="form-group m-form__group row">
+									<input class="form-control m-input" placeholder="Address (cont.)" type="text" name="address2" value="<?= set_value('address2'); ?>">
+									<span class="m-form__help">Apartment, suite, unit, buidling, floor, etc</span>
+								</div>
+								<div class="form-group m-form__group row">
+									<input class="form-control m-input" placeholder="City" type="text" name="city" value="<?= set_value('city'); ?>">
+								</div>
+								<div class="form-group m-form__group row">
+									<select class="form-control m-input" id="dropdown" name="state" style="padding:0.9em;">
+										<option value="<?= set_value('gender'); ?>" selected disabled hidden><?php echo ((set_value('state') !== "") ? ucfirst(set_value('state')) : 'State'); ?></option>
+										<?php foreach ($states as $state) : ?>
+											<option value="<?= $state->statecode; ?>"><?= $state->statecode; ?></option>
+										<?php endforeach; ?>
+									</select>
+								</div>
+								<div class="form-group m-form__group row">
+									<select class="form-control m-input" id="dropdown" name="country" style="padding:0.9em;">
+										<option value="<?= set_value('gender'); ?>" selected disabled hidden><?php echo ((set_value('country') !== "") ? ucfirst(set_value('country')) : 'Country'); ?></option>
+										<?php foreach ($countries as $country) : ?>
+											<option value="<?= $country->country_name; ?>"><?= $country->country_name; ?></option>
+										<?php endforeach; ?>
+									</select>
+								</div>
+								<div class="form-group m-form__group row">
+									<input class="form-control m-input" placeholder="Zipcode" type="text" name="zipcode" value="<?= set_value('zipcode'); ?>">
+								</div>
+								<h4 class="col-6">Contact Person</h4>
 							</div>
-							<div class="form-group m-form__group" style="">
-								<input class="form-control m-input" type="text" placeholder="Last Name" name="last_name" value="<?= set_value('last_name'); ?>">
+							<div class="form-group m-form__group">
+								<input class="form-control m-input" type="text" placeholder="First Name" name="firstname" value="<?= set_value('firstname'); ?>">
+							</div>
+							<div class="form-group m-form__group">
+								<input class="form-control m-input" type="text" placeholder="Last Name" name="lastname" value="<?= set_value('lastname'); ?>">
 							</div>
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="text" placeholder="Email" name="email" value="<?= set_value('email'); ?>">
@@ -64,53 +108,13 @@ $this->load->view('my_skearch/templates/head');
 								</select>
 							</div>
 							<div class="form-group m-form__group">
-								<input class="form-control m-input" type="text" placeholder="Skearch ID" name="myskearch_id" value="<?= set_value('myskearch_id'); ?>">
+								<input class="form-control m-input" type="text" placeholder="Username" name="username" value="<?= set_value('username'); ?>">
 							</div>
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="password" placeholder="Password" name="password">
 							</div>
 							<div class="form-group m-form__group">
 								<input class="form-control m-input m-login__form-input--last" type="password" placeholder="Confirm Password" name="password2">
-							</div>
-							<div id="form_billing" style="display:none">
-								<hr>
-								<div id="m-login__form m-form__billing">
-									<label class="col-6 col-form-label">Billing Information</label>
-									<input id="is_brandmember" name="is_brandmember" type="hidden" value="0">
-									<div class="form-group m-form__group row">
-										<input class="form-control m-input" placeholder="Organization" type="text" name="organization" value="<?= $this->session->userdata('organization'); ?>">
-									</div>
-									<div class="form-group m-form__group row">
-										<input class="form-control m-input" placeholder="Address Line 1" type="text" name="address1" value="<?= $this->session->userdata('address1'); ?>">
-										<span class="m-form__help">Street address, P.O box, company name, c/o</span>
-									</div>
-									<div class="form-group m-form__group row">
-										<input class="form-control m-input" placeholder="Address Line 2" type="text" name="address2" value="<?= $this->session->userdata('address2'); ?>">
-										<span class="m-form__help">Apartment, suite, unit, buidling, floor, etc</span>
-									</div>
-									<div class="form-group m-form__group row">
-										<input class="form-control m-input" placeholder="City" type="text" name="city" value="<?= $this->session->userdata('city'); ?>">
-									</div>
-									<div class="form-group m-form__group row">
-										<select class="form-control m-input" id="dropdown" name="state" style="padding:0.9em;">
-											<option value="<?php echo ((set_value('state') !== "") ? set_value('state') : ((($this->session->userdata('state')) ? $this->session->userdata('state') : ''))); ?>" selected disabled hidden><?php echo ((set_value('state') !== "") ? set_value('state') : ((($this->session->userdata('state')) ? $this->session->userdata('state') : 'State'))); ?></option>
-											<?php foreach ($states as $state) : ?>
-												<option value="<?= $state->statecode; ?>"><?= $state->statecode; ?></option>
-											<?php endforeach; ?>
-										</select>
-									</div>
-									<div class="form-group m-form__group row">
-										<select class="form-control m-input" id="dropdown" name="country" style="padding:0.9em;">
-											<option value="<?php echo ((set_value('country') !== "") ? set_value('country') : ((($this->session->userdata('country')) ? $this->session->userdata('country') : ''))); ?>" selected disabled hidden><?php echo ((set_value('country') !== "") ? set_value('country') : ((($this->session->userdata('country')) ? $this->session->userdata('country') : 'Country'))); ?></option>
-											<?php foreach ($countries as $country) : ?>
-												<option value="<?= $country->country_name; ?>"><?= $country->country_name; ?></option>
-											<?php endforeach; ?>
-										</select>
-									</div>
-									<div class="form-group m-form__group row">
-										<input class="form-control m-input" placeholder="Zipcode" type="text" name="zip" value="<?= $this->session->userdata('zip'); ?>">
-									</div>
-								</div>
 							</div>
 							<div class="row form-group m-form__group m-login__form-sub">
 								<div class="col m--align-left">
@@ -129,6 +133,7 @@ $this->load->view('my_skearch/templates/head');
 							</div>
 					</div>
 					</fieldset>
+					<?= form_close(); ?>
 				</div>
 			</div>
 		</div>
@@ -136,8 +141,8 @@ $this->load->view('my_skearch/templates/head');
 	</div>
 
 	<script>
-		function toggle_form_billing(option) {
-			var section = document.getElementById("form_billing");
+		function toggle_form_brand_member(option) {
+			var section = document.getElementById("m-login__form m-form__company");
 			if (option === "show") {
 				section.style.display = "block";
 				$("#is_brandmember").val(1);
