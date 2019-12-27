@@ -120,9 +120,14 @@ $route['admin/auth/logout'] = 'admin_panel/auth/logout';
 $route['admin/auth/redirect/(:any)'] = 'admin_panel/auth/redirect/$1';
 $route['admin/auth/submit'] = 'admin_panel/auth/submit';
 
+/* Link Checker route */
+$route['admin/linkchecker'] = 'admin_panel/linkchecker';
+$route['admin/linkchecker/update_urls_status'] = 'admin_panel/linkchecker/update_urls_status';
+$route['admin/linkchecker/get_bad_urls'] = 'admin_panel/linkchecker/get_bad_urls';
+
 /* User list Routes */
-$route['admin/users/user_list'] = 'admin_panel/users/user_list';
-$route['admin/users/get_user_list'] = 'admin_panel/users/get_user_list';
+$route['admin/users/user_list/(:num)'] = 'admin_panel/users/user_list/$1';
+$route['admin/users/get_user_list/(:num)'] = 'admin_panel/users/get_user_list/$1';
 $route['admin/users/get_users_by_lastname/(:any)'] = 'admin_panel/users/get_users_by_lastname/$1';
 $route['admin/users/create_user'] = 'admin_panel/users/create_user';
 $route['admin/users/edit_user/(:num)'] = 'admin_panel/users/edit_user/$1';

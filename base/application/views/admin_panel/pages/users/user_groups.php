@@ -117,6 +117,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
+						<th>Group ID</th>
 						<th>Group Name</th>
 						<th>Group Description</th>
 						<th>Actions</th>
@@ -153,46 +154,52 @@ $this->load->view('admin_panel/templates/close_html');
 
 <script>
 	function deleteUserGroup(id, groupName) {
-	  var result = confirm("Are you sure you want delete user group: \"" + groupName + "\"?");
-	  if(result) {
-	  $.ajax({
-	    url: '<?= site_url('admin/users/delete_user_group/'); ?>' + id,
-	    type: 'DELETE',
-	    success: function(result) {
-	        location.reload();
-	    }
-	    });
-	  }
+		var result = confirm("Are you sure you want delete user group: \"" + groupName + "\"?");
+		if (result) {
+			$.ajax({
+				url: '<?= site_url('admin/users/delete_user_group/'); ?>' + id,
+				type: 'DELETE',
+				success: function(result) {
+					location.reload();
+				}
+			});
+		}
 	}
 
-	var DatatablesDataSourceAjaxServer= {
-	    init:function() {
-	        $("#m_table_1").DataTable( {
-	            responsive:!0, searchDelay:500, processing:!0, serverSide:!1, ajax:"<?= site_url('admin/users/get_user_groups'); ?>", columns:[ {
-	                data: "name"
-	            }
-	            , {
-	                data: "description"
-	            }
-							, {
-	                data: "Actions"
-	            }
-	            ], columnDefs:[ {
-								targets:-1, title:"Actions", orderable:!1, render:function(a, t, e, n) {
-										return'<a href="<?= site_url()."admin/users/edit_user_group/"?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>'
-										+     '<a onclick=deleteUserGroup("' + e['id'] + '","' + e['name'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i class="la la-trash"></i></a>'
-								}
-	            }
-	            ]
-	        }
-	        )
-	    }
+	var DatatablesDataSourceAjaxServer = {
+		init: function() {
+			$("#m_table_1").DataTable({
+				responsive: !0,
+				searchDelay: 500,
+				processing: !0,
+				serverSide: !1,
+				ajax: "<?= site_url('admin/users/get_user_groups'); ?>",
+				columns: [{
+					data: "id"
+				}, {
+					data: "name"
+				}, {
+					data: "description"
+				}, {
+					data: "Actions"
+				}],
+				columnDefs: [{
+					targets: -1,
+					title: "Actions",
+					orderable: !1,
+					render: function(a, t, e, n) {
+						return '<a href="<?= site_url() . "admin/users/edit_user_group/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+							'<a onclick=deleteUserGroup("' + e['id'] + '","' + e['name'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i class="la la-trash"></i></a>'
+					}
+				}]
+			})
+		}
 	}
 
 	;
 	jQuery(document).ready(function() {
-	    DatatablesDataSourceAjaxServer.init()
-	}
+			DatatablesDataSourceAjaxServer.init()
+		}
 
 	);
 </script>

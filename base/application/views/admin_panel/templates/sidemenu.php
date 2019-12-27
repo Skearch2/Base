@@ -22,7 +22,8 @@
 								<li id="smenu_user" class="m-menu__item " aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-layers"></i><span class="m-menu__link-text">Users</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 									<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 										<ul class="m-menu__subnav">
-											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/user_list"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">User List</span></a></li>
+											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/user_list/5"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Registered Users</span></a></li>
+											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/user_list/4"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Premium Users</span></a></li>
 											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/user_groups"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">User Groups</span></a></li>
 										</ul>
 									</div>
@@ -41,20 +42,24 @@
 									<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 										<ul class="m-menu__subnav">
 											<li class="m-menu__item  m-menu__item--parent" aria-haspopup="true"><span class="m-menu__link"><span class="m-menu__item-here"></span><span class="m-menu__link-text">Brands</span></span></li>
+											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/user_list/3"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Brand Users</span></a></li>
 											<li class="m-menu__item" aria-haspopup="true"><a href="https://crm.skearch.com/admin" target="_blank" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">CRM</span></a></li>
 											<li class="m-menu__item" aria-haspopup="true"><a href="inner.html" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Brand Relationships</span></a></li>
-											<li class="m-menu__item" aria-haspopup="true"><a href="<?= base_url('media-manager'); ?>" target="_blank" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Media Engine</span></a></li>
+											<li class="m-menu__item" aria-haspopup="true"><a href="https://www.skearch.com/media-manager" target="_blank" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Media Engine</span></a></li>
 											<li class="m-menu__item" aria-haspopup="true"><a href="#" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Product</span></a></li>
 											<li class="m-menu__item" aria-haspopup="true"><a href="#" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Sales</span></a></li>
 										</ul>
 									</div>
 								</li>
+
+								<li id="smenu_lcheck" class="m-menu__item" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="<?= site_url("admin/linkchecker"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-clipboard"></i><span class="m-menu__link-text">Link Checker</span></a></li>
+
 								<li class="m-menu__section ">
 									<h4 class="m-menu__section-text">Communications</h4>
 									<i class="m-menu__section-icon flaticon-more-v2"></i>
 								</li>
 
-								<li class="m-menu__item " aria-haspopup="true" m-menu-link-redirect="1"><a href="<?= site_url(); ?>news/admin/posts" target="_blank" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-graphic"></i><span class="m-menu__link-text">Blog</span></a></li>
+								<li class="m-menu__item " aria-haspopup="true" m-menu-link-redirect="1"><a href="https://www.skearch.com/news/admin/posts" target="_blank" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-graphic"></i><span class="m-menu__link-text">Blog</span></a></li>
 								<li class="m-menu__item " aria-haspopup="true" m-menu-link-redirect="1"><a href="<?= site_url("admin/email/members"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-graphic"></i><span class="m-menu__link-text">Email</span></a></li>
 								<li class="m-menu__item " aria-haspopup="true" m-menu-link-redirect="1"><a href="<?= site_url("admin/email/invite"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-network"></i><span class="m-menu__link-text">Invite</span></a></li>
 								<li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-clipboard"></i><span class="m-menu__link-text">Templates</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
