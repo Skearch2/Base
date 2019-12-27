@@ -126,8 +126,8 @@ $route['admin/linkchecker/update_urls_status'] = 'admin_panel/linkchecker/update
 $route['admin/linkchecker/get_bad_urls'] = 'admin_panel/linkchecker/get_bad_urls';
 
 /* User list Routes */
-$route['admin/users/user_list'] = 'admin_panel/users/user_list';
-$route['admin/users/get_user_list'] = 'admin_panel/users/get_user_list';
+$route['admin/users/user_list/(:num)'] = 'admin_panel/users/user_list/$1';
+$route['admin/users/get_user_list/(:num)'] = 'admin_panel/users/get_user_list/$1';
 $route['admin/users/get_users_by_lastname/(:any)'] = 'admin_panel/users/get_users_by_lastname/$1';
 $route['admin/users/create_user'] = 'admin_panel/users/create_user';
 $route['admin/users/edit_user/(:num)'] = 'admin_panel/users/edit_user/$1';
