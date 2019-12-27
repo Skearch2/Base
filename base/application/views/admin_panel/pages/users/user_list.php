@@ -35,7 +35,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-caption">
 				<div class="m-portlet__head-title">
 					<h3 class="m-portlet__head-text">
-						Users List
+						<?= $heading; ?>
 					</h3>
 				</div>
 			</div>
@@ -143,10 +143,8 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Last Name</th>
 						<th>First Name</th>
 						<th>Email Address</th>
-						<th>Organization</th>
 						<th>Gender</th>
 						<th>Status</th>
-						<th>Group</th>
 						<th width=150>Actions</th>
 					</tr>
 				</thead>
@@ -179,183 +177,185 @@ $this->load->view('admin_panel/templates/close_html');
 
 ?>
 <style>
-[role=button]{cursor:pointer}
+	[role=button] {
+		cursor: pointer
+	}
 </style>
 <script>
+	function showUserDetails(user) {
 
-function showUserDetails(user) {
+		$("div.modal-body").html(
 
-$( "div.modal-body" ).html(
-
-	"<p>UserID:</p> "+ user +" \
+			"<p>UserID:</p> " + user + " \
 	<p>This is a test.</p> \
 	<p>This is a test.</p>"
 
 
 
 
-);
-}
+		);
+	}
 
-function deleteUser(id, username) {
-  var result = confirm("Are you sure you want delete user: \"" + username + "\"?");
-  if(result) {
-  $.ajax({
-    url: '<?= site_url('admin/users/delete_user/'); ?>' + id,
-    type: 'DELETE',
-    success: function(result) {
-        location.reload();
-    }
-    });
-  }
-}
-
-/*
-	Reset user password
-	- Email reset link to the user
-*/
-function resetUserPassword(id, username) {
-  var result = confirm("Are you sure you want reset password for user: \"" + username + "\"?");
-	  if(result) {
-		  $.ajax({
-		    url: '<?= site_url('admin/users/reset_user_password/'); ?>' + id,
-		    type: 'GET',
-		    success: function(result) {
-		        toastr.success("A password reset link has been sent to the  user.", "Success");
-		    },
-				error: function (error) {
-    				toastr.error("Unable to reset user password.", "Error");
+	function deleteUser(id, username) {
+		var result = confirm("Are you sure you want delete user: \"" + username + "\"?");
+		if (result) {
+			$.ajax({
+				url: '<?= site_url('admin/users/delete_user/'); ?>' + id,
+				type: 'DELETE',
+				success: function(result) {
+					location.reload();
 				}
-		  });
+			});
 		}
-}
+	}
 
-/* Disable/Enable user*/
-function toggle(id, row) {
-	$.ajax({
-		url: '<?= site_url('admin/users/toggle_user_activation/'); ?>' + id,
-    type: 'GET',
-    success: function(status) {
-			if (status == 0) {
-      	document.getElementById("tablerow"+row).className = "m-badge m-badge--danger m-badge--wide";
-				document.getElementById("tablerow"+row).innerHTML = "Inactive";
-				document.getElementById("tablerow"+row).setAttribute("role","button") = "Inactive";
+	/*
+		Reset user password
+		- Email reset link to the user
+	*/
+	function resetUserPassword(id, username) {
+		var result = confirm("Are you sure you want reset password for user: \"" + username + "\"?");
+		if (result) {
+			$.ajax({
+				url: '<?= site_url('admin/users/reset_user_password/'); ?>' + id,
+				type: 'GET',
+				success: function(result) {
+					toastr.success("A password reset link has been sent to the  user.", "Success");
+				},
+				error: function(error) {
+					toastr.error("Unable to reset user password.", "Error");
+				}
+			});
+		}
+	}
+
+	/* Disable/Enable user*/
+	function toggle(id, row) {
+		$.ajax({
+			url: '<?= site_url('admin/users/toggle_user_activation/'); ?>' + id,
+			type: 'GET',
+			success: function(status) {
+				if (status == 0) {
+					document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
+					document.getElementById("tablerow" + row).innerHTML = "Inactive";
+					document.getElementById("tablerow" + row).setAttribute("role", "button") = "Inactive";
+				} else if (status == 1) {
+					document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
+					document.getElementById("tablerow" + row).innerHTML = "Active";
+					document.getElementById("tablerow" + row).setAttribute("role", "button") = "Inactive";
+				}
+
 			}
-			else if (status == 1) {
-				document.getElementById("tablerow"+row).className = "m-badge m-badge--success m-badge--wide";
-				document.getElementById("tablerow"+row).innerHTML = "Active";
-				document.getElementById("tablerow"+row).setAttribute("role","button") = "Inactive";
-			}
+		});
+	}
 
-    }
-    });
-}
+	var DatatablesDataSourceAjaxServer = {
+		init: function() {
+			$("#m_table_1").DataTable({
+				responsive: !0,
+				searchDelay: 500,
+				processing: !0,
+				serverSide: !1,
+				ajax: "<?= site_url("admin/users/get_user_list/$group"); ?>",
+				columns: [{
+					data: "id"
+				}, {
+					data: "username"
+				}, {
+					data: "lastname"
+				}, {
+					data: "firstname"
+				}, {
+					data: "email"
+				}, {
+					data: "gender"
+				}, {
+					data: "active"
+				}, {
+					data: "Actions"
+				}],
+				columnDefs: [{
+						targets: -1,
+						title: "Actions",
+						orderable: !1,
+						render: function(a, t, e, n) {
 
-var DatatablesDataSourceAjaxServer= {
-    init:function() {
-        $("#m_table_1").DataTable( {
-            responsive:!0, searchDelay:500, processing:!0, serverSide:!1, ajax:"<?= site_url('admin/users/get_user_list/'); ?>", columns:[ {
-							  data: "id"
-					  }
-						,	{
-								data: "username"
-            }
-            , {
-                data: "last_name"
-            }
-            , {
-                data: "first_name"
-            }
-            , {
-                data: "email"
-            }
-            , {
-                data: "organization"
-            }
-            , {
-                data: "gender"
-            }
-            , {
-                data: "active"
-            }
-            , {
-                data: "group_name"
-            }
-						, {
-                data: "Actions"
-            }
-            ], columnDefs:[ {
-							targets:-1, title:"Actions", orderable:!1, render:function(a, t, e, n) {
-
-									return '<a onclick="showUserDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
-									+      '<a onclick=resetUserPassword("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Reset Password"><i class="la la-key"></i></a>'
-									+      '<a href="<?= site_url()."admin/users/edit_user/"?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>'
-									+      '<a onclick=deleteUser("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i class="la la-trash"></i></a>'
-							}
-            }
-            , {
-							targets:8, render:function(a, t, e, n) {
-									var s= {
-											1: {
-													title: "Pending", class: "m-badge--brand"
-											}
-											, 2: {
-													title: "Delivered", class: " m-badge--metal"
-											}
-											, 3: {
-													title: "Member", class: " m-badge--primary"
-											}
-											, 4: {
-													title: "Success", class: " m-badge--success",
-											}
-											, 5: {
-													title: "Info", class: " m-badge--info"
-											}
-											, 6: {
-													title: "Danger", class: " m-badge--danger"
-											}
-											, 7: {
-													title: "Warning", class: " m-badge--warning"
-											}
-									}
-									;
-									return void 0===s[a]?a:'<span class="m-badge '+s[a].class+' m-badge--wide">'+s[a].title+"</span>"
-							}
-					}
-					,
+							return '<a onclick="showUserDetails(' + e['id'] + ')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>' +
+								'<a onclick=resetUserPassword("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Reset Password"><i class="la la-key"></i></a>' +
+								'<a href="<?= site_url() . "admin/users/edit_user/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+								'<a onclick=deleteUser("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i class="la la-trash"></i></a>'
+						}
+					}, {
+						targets: 7,
+						render: function(a, t, e, n) {
+							var s = {
+								1: {
+									title: "Pending",
+									class: "m-badge--brand"
+								},
+								2: {
+									title: "Delivered",
+									class: " m-badge--metal"
+								},
+								3: {
+									title: "Member",
+									class: " m-badge--primary"
+								},
+								4: {
+									title: "Success",
+									class: " m-badge--success",
+								},
+								5: {
+									title: "Info",
+									class: " m-badge--info"
+								},
+								6: {
+									title: "Danger",
+									class: " m-badge--danger"
+								},
+								7: {
+									title: "Warning",
+									class: " m-badge--warning"
+								}
+							};
+							return void 0 === s[a] ? a : '<span class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + "</span>"
+						}
+					},
 					{
-							targets:7, render:function(a, t, e, n) {
-									var s= {
-										2: {
-												title: "Pending", class: "m-badge--brand"
-										}
-										, 1: {
+						targets: 6,
+						render: function(a, t, e, n) {
+							var s = {
+								2: {
+									title: "Pending",
+									class: "m-badge--brand"
+								},
+								1: {
 
-												title: "Active", class: "m-badge--success"
-										}
-										, 0: {
-												title: "Inactive", class: " m-badge--danger"
-											}
-									}
-									;
-									return void 0===s[a]?a:'<span id= tablerow' + n['row'] +' onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge '+s[a].class+' m-badge--wide">'+s[a].title+'</span>'
-							}
-            }
-            ]
-        }
-        )
-    }
-}
+									title: "Active",
+									class: "m-badge--success"
+								},
+								0: {
+									title: "Inactive",
+									class: " m-badge--danger"
+								}
+							};
+							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + '</span>'
+						}
+					}
+				]
+			})
+		}
+	}
 
-;
-jQuery(document).ready(function() {
-    DatatablesDataSourceAjaxServer.init()
-}
+	;
+	jQuery(document).ready(function() {
+			DatatablesDataSourceAjaxServer.init()
+		}
 
-);
+	);
 </script>
 
 
 <script>
-$("#smenu_user").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#smenu_user").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 </script>
