@@ -14,7 +14,7 @@ class ImageExtendedConverter implements ConverterInterface
 
         return array(
             'type' => 'text',
-            'data' => array( 
+            'data' => array(
                 'text' => ' ' . $this->htmlToMarkdown($html)
             )
         );
@@ -22,10 +22,10 @@ class ImageExtendedConverter implements ConverterInterface
 
     public function toHtml(array $data)
     {
-		if (($data['source'] == "") || ($data['source'] == "http://")){
-        return '<img class="img-responsive" src="' . $data['file']['url'] . '" alt="' . $data['caption'] . '" />' . "\n";
-		} else {
-        return '<a href="' . $data['source'] . '" target="_blank"><img class="img-responsive" src="' . $data['file']['url'] . '" alt="' . $data['caption'] . '" /></a>' . "\n";
-		}
+        if (($data['source'] == "") || ($data['source'] == "http://")) {
+            return '<img class="img-responsive" src="' . $data['file']['url'] . '" alt="' . $data['caption'] . '" />' . "\n";
+        } else {
+            return '<a href="' . $data['source'] . '" target="_blank"><img class="img-responsive" src="' . $data['file']['url'] . '" alt="' . $data['caption'] . '" /></a>' . "\n";
+        }
     }
 }

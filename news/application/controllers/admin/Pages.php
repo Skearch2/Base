@@ -1,30 +1,31 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Pages extends CI_Controller {
+class Pages extends CI_Controller
+{
 
 	function __construct()
 	{
 		parent::__construct();
-		define("HOOSK_ADMIN",1);
+		define("HOOSK_ADMIN", 1);
 		$this->load->model('Hoosk_model');
 		$this->load->helper(array('admincontrol', 'url', 'hoosk_admin', 'file', 'form'));
 		//$this->load->library('session');
-		define ('LANG', $this->Hoosk_model->getLang());
+		define('LANG', $this->Hoosk_model->getLang());
 		$this->lang->load('admin', LANG);
 		//Define what page we are on for nav
 		$this->data['current'] = $this->uri->segment(2);
-		define ('SITE_NAME', $this->Hoosk_model->getSiteName());
+		define('SITE_NAME', $this->Hoosk_model->getSiteName());
 		define('THEME', $this->Hoosk_model->getTheme());
-		define ('THEME_FOLDER', BASE_URL.'/theme/'.THEME);
+		define('THEME_FOLDER', BASE_URL . '/theme/' . THEME);
 		//check session exists
-		if (!$this->ion_auth->is_admin()) redirect("http://www.skearch.com/admin");
+		if (!$this->ion_auth->is_admin()) redirect("https://" . parse_url(BASE_URL)['host'] . "/admin");
 	}
 
 	public function index()
 	{
- 		$this->load->library('pagination');
-		$result_per_page =15;  // the number of result per page
-		$config['base_url'] = BASE_URL. '/admin/pages/';
+		$this->load->library('pagination');
+		$result_per_page = 15;  // the number of result per page
+		$config['base_url'] = BASE_URL . '/admin/pages/';
 		$config['total_rows'] = $this->Hoosk_model->countPages();
 		$config['per_page'] = $result_per_page;
 		$this->pagination->initialize($config);
@@ -40,7 +41,7 @@ class Pages extends CI_Controller {
 	public function addPage()
 	{
 		//Load the view
-		$this->data['templates'] = get_filenames('theme/'.THEME.'/templates');
+		$this->data['templates'] = get_filenames('theme/' . THEME . '/templates');
 		$this->data['header'] = $this->load->view('admin/header', $this->data, true);
 		$this->data['footer'] = $this->load->view('admin/footer', '', true);
 		$this->load->view('admin/page_new', $this->data);
@@ -55,17 +56,17 @@ class Pages extends CI_Controller {
 		$this->form_validation->set_rules('pageTitle', 'page title', 'trim|required');
 		$this->form_validation->set_rules('navTitle', 'navigation title', 'trim|required');
 
-		if($this->form_validation->run() == FALSE) {
+		if ($this->form_validation->run() == FALSE) {
 			//Validation failed
 			$this->addPage();
-		}  else  {
+		} else {
 			//Validation passed
 			//Add the page
 			$this->load->library('Sioen');
 			$this->Hoosk_model->createPage();
 			//Return to page list
-			redirect(BASE_URL.'/admin/pages', 'refresh');
-	  	}
+			redirect(BASE_URL . '/admin/pages', 'refresh');
+		}
 	}
 
 	public function editPage()
@@ -73,7 +74,7 @@ class Pages extends CI_Controller {
 		//Get page details from database
 		$this->data['pages'] = $this->Hoosk_model->getPage($this->uri->segment(4));
 		//Load the view
-		$this->data['templates'] = get_filenames('theme/'.THEME.'/templates');
+		$this->data['templates'] = get_filenames('theme/' . THEME . '/templates');
 		$this->data['header'] = $this->load->view('admin/header', $this->data, true);
 		$this->data['footer'] = $this->load->view('admin/footer', '', true);
 		$this->load->view('admin/page_edit', $this->data);
@@ -84,23 +85,23 @@ class Pages extends CI_Controller {
 		//Load the form validation library
 		$this->load->library('form_validation');
 		//Set validation rules
-		if ($this->uri->segment(4) != 1){
-		$this->form_validation->set_rules('pageURL', 'page URL', 'trim|alpha_dash|required|is_unique[hoosk_page_attributes.pageURL.pageID.'.$this->uri->segment(4).']');
+		if ($this->uri->segment(4) != 1) {
+			$this->form_validation->set_rules('pageURL', 'page URL', 'trim|alpha_dash|required|is_unique[hoosk_page_attributes.pageURL.pageID.' . $this->uri->segment(4) . ']');
 		}
 		$this->form_validation->set_rules('pageTitle', 'page title', 'trim|required');
 		$this->form_validation->set_rules('navTitle', 'navigation title', 'trim|required');
 
-		if($this->form_validation->run() == FALSE) {
+		if ($this->form_validation->run() == FALSE) {
 			//Validation failed
 			$this->editPage();
-		}  else  {
+		} else {
 			//Validation passed
 			//Update the page
 			$this->load->library('Sioen');
 			$this->Hoosk_model->updatePage($this->uri->segment(4));
 			//Return to page list
-			redirect(BASE_URL.'/admin/pages', 'refresh');
-	  	}
+			redirect(BASE_URL . '/admin/pages', 'refresh');
+		}
 	}
 
 	public function jumbo()
@@ -119,19 +120,19 @@ class Pages extends CI_Controller {
 	{
 		$this->load->library('Sioen');
 		$this->Hoosk_model->updateJumbotron($this->uri->segment(4));
-		redirect(BASE_URL.'/admin/pages', 'refresh');
+		redirect(BASE_URL . '/admin/pages', 'refresh');
 	}
 
 
 
 	function delete()
 	{
-		if($this->input->post('deleteid')):
+		if ($this->input->post('deleteid')) :
 			$this->Hoosk_model->removePage($this->input->post('deleteid'));
 			redirect('/admin/pages');
-		else:
-			$this->data['form']=$this->Hoosk_model->getPage($this->uri->segment(4));
-			$this->load->view('admin/page_delete.php', $this->data );
+		else :
+			$this->data['form'] = $this->Hoosk_model->getPage($this->uri->segment(4));
+			$this->load->view('admin/page_delete.php', $this->data);
 		endif;
 	}
 
@@ -139,6 +140,4 @@ class Pages extends CI_Controller {
 	{
 		$this->Hoosk_model->pageSearch($this->input->post('term'));
 	}
-
-
 }

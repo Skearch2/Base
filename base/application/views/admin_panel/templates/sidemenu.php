@@ -59,7 +59,7 @@
 									<i class="m-menu__section-icon flaticon-more-v2"></i>
 								</li>
 
-								<li class="m-menu__item " aria-haspopup="true" m-menu-link-redirect="1"><a href="https://www.skearch.com/news/admin/posts" target="_blank" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-graphic"></i><span class="m-menu__link-text">Blog</span></a></li>
+								<li class="m-menu__item " aria-haspopup="true" m-menu-link-redirect="1"><a href="<?= site_url("news/admin/posts"); ?>" target="_blank" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-graphic"></i><span class="m-menu__link-text">Blog</span></a></li>
 								<li class="m-menu__item " aria-haspopup="true" m-menu-link-redirect="1"><a href="<?= site_url("admin/email/members"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-graphic"></i><span class="m-menu__link-text">Email</span></a></li>
 								<li class="m-menu__item " aria-haspopup="true" m-menu-link-redirect="1"><a href="<?= site_url("admin/email/invite"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-network"></i><span class="m-menu__link-text">Invite</span></a></li>
 								<li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-clipboard"></i><span class="m-menu__link-text">Templates</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>

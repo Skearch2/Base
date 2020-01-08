@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -50,7 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 $route['install/complete'] = "admin/admin/complete";
-$route['attachments'] = "admin/admin/upload";
+$route['attachmentss'] = "admin/admin/upload";
 $route['admin'] = "admin/admin";
 $route['admin/login'] = "admin/admin/login";
 $route['admin/login/check'] = "admin/admin/loginCheck";

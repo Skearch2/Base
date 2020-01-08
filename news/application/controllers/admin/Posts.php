@@ -1,35 +1,36 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Posts extends CI_Controller {
+class Posts extends CI_Controller
+{
 
 	function __construct()
 	{
 		parent::__construct();
-		define("HOOSK_ADMIN",1);
+		define("HOOSK_ADMIN", 1);
 		$this->load->model('Hoosk_model');
 		$this->load->helper(array('admincontrol', 'url', 'hoosk_admin', 'file', 'form'));
 		//$this->load->library('session');
-		define ('LANG', $this->Hoosk_model->getLang());
+		define('LANG', $this->Hoosk_model->getLang());
 		$this->lang->load('admin', LANG);
 		//Define what page we are on for nav
 		$this->data['current'] = $this->uri->segment(2);
-		define ('SITE_NAME', $this->Hoosk_model->getSiteName());
+		define('SITE_NAME', $this->Hoosk_model->getSiteName());
 		define('THEME', $this->Hoosk_model->getTheme());
-		define ('THEME_FOLDER', BASE_URL.'/theme/'.THEME);
-		//check session exists
-		if (!$this->ion_auth->is_admin()) redirect("http://www.skearch.com/admin");
+		define('THEME_FOLDER', BASE_URL . '/theme/' . THEME);
+		//check if session exists
+		if (!$this->ion_auth->is_admin()) redirect("https://" . parse_url(BASE_URL)['host'] . "/admin");
 	}
 
 	public function index()
 	{
 
 		$this->load->library('pagination');
-    $result_per_page =15;  // the number of result per page
-    $config['base_url'] = BASE_URL. '/admin/posts/';
-    $config['total_rows'] = $this->Hoosk_model->countPosts();
-    $config['per_page'] = $result_per_page;
+		$result_per_page = 15;  // the number of result per page
+		$config['base_url'] = BASE_URL . '/admin/posts/';
+		$config['total_rows'] = $this->Hoosk_model->countPosts();
+		$config['per_page'] = $result_per_page;
 
-    $this->pagination->initialize($config);
+		$this->pagination->initialize($config);
 
 		//Get posts from database
 		$this->data['posts'] = $this->Hoosk_model->getPosts($result_per_page, $this->uri->segment(3));
@@ -57,25 +58,25 @@ class Posts extends CI_Controller {
 		$this->form_validation->set_rules('postTitle', 'post title', 'trim|required');
 		$this->form_validation->set_rules('postExcerpt', 'post excerpt', 'trim|required');
 
-		if($this->form_validation->run() == FALSE) {
+		if ($this->form_validation->run() == FALSE) {
 
 			//Validation failed
 			$this->addPost();
-		}  else  {
+		} else {
 			//Validation passed
-			if ($this->input->post('postImage') != ""){
-			//path to save the image
-			$path_upload = $_SERVER["DOCUMENT_ROOT"] . '/uploads/';
-			$path_images = $_SERVER["DOCUMENT_ROOT"] . '/images/';
-			//moving temporary file to images folder
-			rename($path_upload . $this->input->post('postImage'), $path_images . $this->input->post('postImage'));
+			if ($this->input->post('postImage') != "") {
+				//path to save the image
+				$path_upload = str_replace("/application/", "", APPPATH) . '/uploads/';
+				$path_images = str_replace("/application/", "", APPPATH) . '/images/';
+				//moving temporary file to images folder
+				rename($path_upload . $this->input->post('postImage'), $path_images . $this->input->post('postImage'));
 			}
 			//Add the post
 			$this->load->library('Sioen');
 			$this->Hoosk_model->createPost();
 			//Return to post list
-			redirect(BASE_URL.'/admin/posts', 'refresh');
-	  	}
+			redirect(BASE_URL . '/admin/posts', 'refresh');
+		}
 	}
 
 	public function editPost()
@@ -97,35 +98,35 @@ class Posts extends CI_Controller {
 		//$this->form_validation->set_rules('postURL', 'post URL', 'trim|alpha_dash|required|is_unique[hoosk_post.postURL.postID.'.$this->uri->segment(4).']');
 		$this->form_validation->set_rules('postTitle', 'post title', 'trim|required');
 
-		if($this->form_validation->run() == FALSE) {
+		if ($this->form_validation->run() == FALSE) {
 			//Validation failed
 			$this->editPost();
-		}  else  {
+		} else {
 			//Validation passed
-			if ($this->input->post('postImage') != ""){
-			//path to save the image
-			$path_upload = $_SERVER["DOCUMENT_ROOT"] . '/uploads/';
-			$path_images = $_SERVER["DOCUMENT_ROOT"] . '/images/';
-			//moving temporary file to images folder
-			rename($path_upload . $this->input->post('postImage'), $path_images . $this->input->post('postImage'));
+			if ($this->input->post('postImage') != "") {
+				//path to save the image
+				$path_upload = str_replace("/application/", "", APPPATH) . '/uploads/';
+				$path_images = str_replace("/application/", "", APPPATH) . '/images/';
+				//moving temporary file to images folder
+				rename($path_upload . $this->input->post('postImage'), $path_images . $this->input->post('postImage'));
 			}
 			//Update the post
 			$this->load->library('Sioen');
 			$this->Hoosk_model->updatePost($this->uri->segment(4));
 			//Return to post list
-			redirect(BASE_URL.'/admin/posts', 'refresh');
-	  	}
+			redirect(BASE_URL . '/admin/posts', 'refresh');
+		}
 	}
 
 
 	function delete()
 	{
-		if($this->input->post('deleteid')):
+		if ($this->input->post('deleteid')) :
 			$this->Hoosk_model->removePost($this->input->post('deleteid'));
-			redirect(BASE_URL.'/admin/posts');
-		else:
-			$this->data['form']=$this->Hoosk_model->getPost($this->uri->segment(4));
-			$this->load->view('admin/post_delete.php', $this->data );
+			redirect(BASE_URL . '/admin/posts');
+		else :
+			$this->data['form'] = $this->Hoosk_model->getPost($this->uri->segment(4));
+			$this->load->view('admin/post_delete.php', $this->data);
 		endif;
 	}
 
@@ -133,5 +134,4 @@ class Posts extends CI_Controller {
 	{
 		$this->Hoosk_model->postSearch($this->input->post('term'));
 	}
-
 }
