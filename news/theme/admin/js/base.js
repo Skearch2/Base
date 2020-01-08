@@ -4,7 +4,7 @@ $( document ).ready(function() {
 	setInterval(function() {
 		if(sessionExist==1){
 		$.ajax({
-				url: "/admin/check/session",
+				url: "/news/admin/check/session",
 			}).done(function(data) {
 				sessionExist = data;
 				if(sessionExist==0){
@@ -20,7 +20,7 @@ $( document ).ready(function() {
 });
 
 $(document).on("click", "#ajaxLoginbtn", function(event){
-	$.post("/admin/ajax/login", {
+	$.post("/news/admin/ajax/login", {
 		username: $('#username').val(),
 		password: $('#password').val()
 	}).done(function(data) {
@@ -86,7 +86,7 @@ $(function(){
 function doPostSearch(){
 	$('#postContainer').html("");
 	$('#loadingSpinner').show();
-	$.post("/admin/ajax/post-search", {
+	$.post("/news/admin/ajax/post-search", {
 		term: $('#searchString').val(),
 	}).done(function(data) {
 		$('#loadingSpinner').hide();
@@ -102,7 +102,7 @@ function doPostSearch(){
 function doPageSearch(){
 	$('#pageContainer').html("");
 	$('#loadingSpinner').show();
-	$.post("/admin/ajax/page-search", {
+	$.post("/news/admin/ajax/page-search", {
 		term: $('#searchString').val(),
 	}).done(function(data) {
 		$('#loadingSpinner').hide();
