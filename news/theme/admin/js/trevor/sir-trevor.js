@@ -46,7 +46,7 @@
     blockLimit: 0,
     blockTypeLimits: {},
     required: [],
-    uploadUrl: '/attachments',
+    uploadUrl: '/news/attachments',
     baseImageUrl: '/sir-trevor-uploads/',
     errorsContainer: undefined
   };

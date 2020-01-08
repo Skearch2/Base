@@ -8,9 +8,9 @@
 				<div class="m-stack__item m-brand m-stack__item--left">
 					<div class="m-stack m-stack--ver m-stack--general m-stack--inline">
 						<div class="m-stack__item m-stack__item--middle m-brand__logo">
-							<a href="<?=site_url();?>" class="m-brand__logo-wrapper">
-								<img alt="" src="<?= site_url(ASSETS);?>/my_skearch/demo/demo8/media/img/logo/logo.png" class="m-brand__logo-default" />
-								<img alt="" src="<?= site_url(ASSETS);?>/my_skearch/demo/demo8/media/img/logo/logo_inverse.png" class="m-brand__logo-inverse" />
+							<a href="<?= site_url(); ?>" class="m-brand__logo-wrapper">
+								<img alt="" src="<?= site_url(ASSETS); ?>/my_skearch/demo/demo8/media/img/logo/logo.png" class="m-brand__logo-default" />
+								<img alt="" src="<?= site_url(ASSETS); ?>/my_skearch/demo/demo8/media/img/logo/logo_inverse.png" class="m-brand__logo-inverse" />
 							</a>
 						</div>
 						<div class="m-stack__item m-stack__item--middle m-brand__tools">
@@ -42,8 +42,7 @@
 				<!-- end::Brand -->
 
 				<!--begin::Search-->
-				<div class="m-stack__item m-stack__item--middle m-dropdown m-dropdown--arrow m-dropdown--large m-dropdown--mobile-full-width m-dropdown--align-right m-dropdown--skin-light m-header-search m-header-search--expandable- m-header-search--skin-"
-				 id="m_quicksearch" m-quicksearch-mode="default">
+				<div class="m-stack__item m-stack__item--middle m-dropdown m-dropdown--arrow m-dropdown--large m-dropdown--mobile-full-width m-dropdown--align-right m-dropdown--skin-light m-header-search m-header-search--expandable- m-header-search--skin-" id="m_quicksearch" m-quicksearch-mode="default">
 
 					<!--begin::Search Form -->
 					<form class="m-header-search__form">
@@ -218,12 +217,12 @@
 								<li class="m-nav__item m-topbar__user-profile  m-dropdown m-dropdown--medium m-dropdown--arrow  m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" m-dropdown-toggle="click">
 									<a href="#" class="m-nav__link m-dropdown__toggle">
 										<span class="m-topbar__userpic">
-											<img src="<?= site_url(ASSETS);?>/my_skearch/app/media/img/users/user-default.jpg" class="m--img-rounded m--marginless m--img-centered" alt="" />
+											<img src="<?= site_url(ASSETS); ?>/my_skearch/app/media/img/users/user-default.jpg" class="m--img-rounded m--marginless m--img-centered" alt="" />
 										</span>
 										<span class="m-nav__link-icon m-topbar__usericon  m--hide">
 											<span class="m-nav__link-icon-wrapper"><i class="flaticon-user-ok"></i></span>
 										</span>
-										<span class="m-topbar__username m--hide"><?=$this->session->userdata('username');?></span>
+										<span class="m-topbar__username m--hide"><?= $this->session->userdata('username'); ?></span>
 									</a>
 									<div class="m-dropdown__wrapper">
 										<span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
@@ -231,11 +230,11 @@
 											<div class="m-dropdown__header m--align-center">
 												<div class="m-card-user m-card-user--skin-light">
 													<div class="m-card-user__pic">
-														<img src="<?= site_url(ASSETS);?>/my_skearch/app/media/img/users/user-default.jpg" class="m--img-rounded m--marginless" alt="" />
+														<img src="<?= site_url(ASSETS); ?>/my_skearch/app/media/img/users/user-default.jpg" class="m--img-rounded m--marginless" alt="" />
 													</div>
 													<div class="m-card-user__details">
-														<span class="m-card-user__name m--font-weight-500"><?=$this->session->userdata('first_name') . " " . $this->session->userdata('last_name')?></span>
-														<a href="" class="m-card-user__email m--font-weight-300 m-link"><?=$this->session->userdata('email');?></a>
+														<span class="m-card-user__name m--font-weight-500"><?= $this->session->userdata('firstname') . " " . $this->session->userdata('lastname') ?></span>
+														<span class="m-card-user__email m--font-weight-300"><?= $this->session->userdata('group'); ?></span>
 													</div>
 												</div>
 											</div>
@@ -246,7 +245,7 @@
 															<span class="m-nav__section-text">Section</span>
 														</li>
 														<li class="m-nav__item">
-															<a href="<?php site_url();?>/myskearch/profile" class="m-nav__link">
+															<a href="<?= base_url("myskearch/profile"); ?>" class="m-nav__link">
 																<i class="m-nav__link-icon flaticon-profile-1"></i>
 																<span class="m-nav__link-title">
 																	<span class="m-nav__link-wrap">
@@ -285,7 +284,7 @@
 														<li class="m-nav__separator m-nav__separator--fit">
 														</li>
 														<li class="m-nav__item">
-															<a href="<?php site_url();?>/myskearch/auth/logout" class="btn m-btn--pill    btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">Logout</a>
+															<a href="<?= site_url("/myskearch/auth/logout"); ?>" class="btn m-btn--pill    btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">Logout</a>
 														</li>
 													</ul>
 												</div>
@@ -316,15 +315,14 @@
 					<button class="m-aside-header-menu-mobile-close  m-aside-header-menu-mobile-close--skin-light " id="m_aside_header_menu_mobile_close_btn"><i class="la la-close"></i></button>
 					<div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-light m-aside-header-menu-mobile--submenu-skin-light ">
 						<ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
-							<li class="m-menu__item  <?php if ($page === 'dashboard') echo 'm-menu__item--active  m-menu__item--active-tab'; else echo 'm-menu__item--submenu  m-menu__item--tab'; ?>  m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="<?= site_url("myskearch"); ?>/." class="m-menu__link"><span class="m-menu__link-text">Dashboard</span><i
-									 class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+							<li class="m-menu__item  <?php if (isset($page) && $page === 'dashboard') echo 'm-menu__item--active  m-menu__item--active-tab';
+														else echo 'm-menu__item--submenu  m-menu__item--tab'; ?>  m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="<?= site_url("myskearch"); ?>/." class="m-menu__link"><span class="m-menu__link-text">Dashboard</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 								<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 									<ul class="m-menu__subnav">
 										<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="dashboard" class="m-menu__link "><i class="m-menu__link-icon flaticon-support"></i><span class="m-menu__link-text">Dashboard</span></a></li>
 										<li class="m-menu__item " aria-haspopup="true"><a href="index.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-file"></i><span class="m-menu__link-text">Reports</span></a></li>
 										<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-coins"></i><span class="m-menu__link-text">Finance</span></a></li>
-										<li class="m-menu__item  m-menu__item--submenu m-menu__item--submenu-tabs" m-menu-submenu-toggle="click" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i class="m-menu__link-icon flaticon-users"></i><span
-												 class="m-menu__link-text">Customers</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+										<li class="m-menu__item  m-menu__item--submenu m-menu__item--submenu-tabs" m-menu-submenu-toggle="click" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i class="m-menu__link-icon flaticon-users"></i><span class="m-menu__link-text">Customers</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 											<div class="m-menu__submenu  m-menu__submenu--fixed-xl m-menu__submenu--center"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 												<div class="m-menu__subnav">
 													<ul class="m-menu__content">
@@ -387,14 +385,12 @@
 												</div>
 											</div>
 										</li>
-										<li class="m-menu__item  m-menu__item--active  m-menu__item--submenu m-menu__item--rel m-menu__item--submenu-tabs" m-menu-submenu-toggle="click" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i
-												 class="m-menu__link-icon flaticon-add"></i><span class="m-menu__link-text">Actions</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+										<li class="m-menu__item  m-menu__item--active  m-menu__item--submenu m-menu__item--rel m-menu__item--submenu-tabs" m-menu-submenu-toggle="click" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i class="m-menu__link-icon flaticon-add"></i><span class="m-menu__link-text">Actions</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 											<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 												<ul class="m-menu__subnav">
 													<li class="m-menu__item  m-menu__item--active " aria-haspopup="true"><a href="inner2.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-diagram"></i><span class="m-menu__link-title"> <span class="m-menu__link-wrap">
 																	<span class="m-menu__link-text">Generate Reports</span> <span class="m-menu__link-badge"><span class="m-badge m-badge--success">2</span></span> </span></span></a></li>
-													<li class="m-menu__item  m-menu__item--submenu" m-menu-submenu-toggle="hover" m-menu-link-redirect="1" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i class="m-menu__link-icon flaticon-business"></i><span
-															 class="m-menu__link-text">Manage Orders</span><i class="m-menu__hor-arrow la la-angle-right"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+													<li class="m-menu__item  m-menu__item--submenu" m-menu-submenu-toggle="hover" m-menu-link-redirect="1" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i class="m-menu__link-icon flaticon-business"></i><span class="m-menu__link-text">Manage Orders</span><i class="m-menu__hor-arrow la la-angle-right"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 														<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--right"><span class="m-menu__arrow "></span>
 															<ul class="m-menu__subnav">
 																<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner2.html" class="m-menu__link "><span class="m-menu__link-text">Latest Orders</span></a></li>
@@ -406,8 +402,7 @@
 															</ul>
 														</div>
 													</li>
-													<li class="m-menu__item  m-menu__item--submenu" m-menu-submenu-toggle="hover" m-menu-link-redirect="1" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i class="m-menu__link-icon flaticon-chat-1"></i><span
-															 class="m-menu__link-text">Customer Feedbacks</span><i class="m-menu__hor-arrow la la-angle-right"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+													<li class="m-menu__item  m-menu__item--submenu" m-menu-submenu-toggle="hover" m-menu-link-redirect="1" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i class="m-menu__link-icon flaticon-chat-1"></i><span class="m-menu__link-text">Customer Feedbacks</span><i class="m-menu__hor-arrow la la-angle-right"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 														<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--right"><span class="m-menu__arrow "></span>
 															<ul class="m-menu__subnav">
 																<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner2.html" class="m-menu__link "><span class="m-menu__link-text">Customer Feedbacks</span></a></li>
@@ -422,8 +417,7 @@
 												</ul>
 											</div>
 										</li>
-										<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel m-menu__item--submenu-tabs" m-menu-submenu-toggle="click" m-menu-link-redirect="1" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i
-												 class="m-menu__link-icon flaticon-line-graph"></i><span class="m-menu__link-text">Reports</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+										<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel m-menu__item--submenu-tabs" m-menu-submenu-toggle="click" m-menu-link-redirect="1" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i class="m-menu__link-icon flaticon-line-graph"></i><span class="m-menu__link-text">Reports</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 											<div class="m-menu__submenu  m-menu__submenu--fixed m-menu__submenu--left" style="width:600px"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 												<div class="m-menu__subnav">
 													<ul class="m-menu__content">
@@ -458,13 +452,11 @@
 												</div>
 											</div>
 										</li>
-										<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel m-menu__item--more m-menu__item--submenu-tabs m-menu__item--icon-only" m-menu-submenu-toggle="click" m-menu-link-redirect="1" aria-haspopup="true"><a href="javascript:;"
-											 class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i class="m-menu__link-icon flaticon-more-v3"></i><span class="m-menu__link-text"></span></a>
+										<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel m-menu__item--more m-menu__item--submenu-tabs m-menu__item--icon-only" m-menu-submenu-toggle="click" m-menu-link-redirect="1" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i class="m-menu__link-icon flaticon-more-v3"></i><span class="m-menu__link-text"></span></a>
 											<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--pull"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 												<ul class="m-menu__subnav">
 													<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner2.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-business"></i><span class="m-menu__link-text">eCommerce</span></a></li>
-													<li class="m-menu__item  m-menu__item--submenu" m-menu-submenu-toggle="hover" m-menu-link-redirect="1" aria-haspopup="true"><a href="crud/datatable_v1.html" class="m-menu__link m-menu__toggle"><i class="m-menu__link-icon flaticon-computer"></i><span
-															 class="m-menu__link-text">Audience</span><i class="m-menu__hor-arrow la la-angle-right"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+													<li class="m-menu__item  m-menu__item--submenu" m-menu-submenu-toggle="hover" m-menu-link-redirect="1" aria-haspopup="true"><a href="crud/datatable_v1.html" class="m-menu__link m-menu__toggle"><i class="m-menu__link-icon flaticon-computer"></i><span class="m-menu__link-text">Audience</span><i class="m-menu__hor-arrow la la-angle-right"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 														<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--right"><span class="m-menu__arrow "></span>
 															<ul class="m-menu__subnav">
 																<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner2.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-users"></i><span class="m-menu__link-text">Active Users</span></a></li>
@@ -478,8 +470,7 @@
 													<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner2.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-map"></i><span class="m-menu__link-text">Marketing</span></a></li>
 													<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner2.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-graphic-2"></i><span class="m-menu__link-title"> <span class="m-menu__link-wrap">
 																	<span class="m-menu__link-text">Campaigns</span> <span class="m-menu__link-badge"><span class="m-badge m-badge--success">3</span></span> </span></span></a></li>
-													<li class="m-menu__item  m-menu__item--submenu" m-menu-submenu-toggle="hover" m-menu-link-redirect="1" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Non functional dummy link"><i class="m-menu__link-icon flaticon-infinity"></i><span
-															 class="m-menu__link-text">Cloud Manager</span><i class="m-menu__hor-arrow la la-angle-right"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+													<li class="m-menu__item  m-menu__item--submenu" m-menu-submenu-toggle="hover" m-menu-link-redirect="1" aria-haspopup="true"><a href="javascript:;" class="m-menu__link m-menu__toggle" title="Dashboard"><i class="m-menu__link-icon flaticon-infinity"></i><span class="m-menu__link-text">Cloud Manager</span><i class="m-menu__hor-arrow la la-angle-right"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 														<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left"><span class="m-menu__arrow "></span>
 															<ul class="m-menu__subnav">
 																<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner2.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-add"></i><span class="m-menu__link-title"> <span class="m-menu__link-wrap">
@@ -506,9 +497,10 @@
 									</ul>
 								</div>
 							</li>
-<?php //if (!$this->ion_auth->in_group('member')) {?>
-							<li class="m-menu__item <?php if ($page === 'digital assets') echo 'm-menu__item--active  m-menu__item--active-tab'; else echo 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="" aria-haspopup="true"><a href="<?= site_url("myskearch"); ?>/digital_assets" class="m-menu__link" title="Non functional dummy link"><span class="m-menu__link-text">Digital Assets</span><i
-									 class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+							<?php //if (!$this->ion_auth->in_group('member')) {
+							?>
+							<li class="m-menu__item <?php if (isset($page) && $page === 'digital assets') echo 'm-menu__item--active  m-menu__item--active-tab';
+													else echo 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="" aria-haspopup="true"><a href="<?= site_url("myskearch"); ?>/digital_assets" class="m-menu__link" title="Digital Assets"><span class="m-menu__link-text">Digital Assets</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 								<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 									<ul class="m-menu__subnav">
 										<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-graphic-2"></i><span class="m-menu__link-text">Revenue</span></a></li>
@@ -529,9 +521,10 @@
 									</ul>
 								</div>
 							</li>
-<?php //}?>
-							<li class="m-menu__item  <?php if ($page === 'private social') echo 'm-menu__item--active  m-menu__item--active-tab'; else echo 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="<?= site_url("myskearch"); ?>/private_social" class="m-menu__link" title="Non functional dummy link"><span class="m-menu__link-text">Private Social</span><i
-									 class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+							<?php //}
+							?>
+							<li class="m-menu__item  <?php if (isset($page) && $page === 'private social') echo 'm-menu__item--active  m-menu__item--active-tab';
+														else echo 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="<?= site_url("myskearch"); ?>/private_social" class="m-menu__link" title="Private Social"><span class="m-menu__link-text">Private Social</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 								<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 									<ul class="m-menu__subnav">
 										<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-settings-1"></i><span class="m-menu__link-text">Build Tools</span></a></li>
@@ -541,19 +534,18 @@
 									</ul>
 								</div>
 							</li>
-							<?php if ($this->ion_auth->in_group(array('admin', 'Brand Members'))): ?>
-								<li class="m-menu__item  <?php if ($page === 'brand direct') echo 'm-menu__item--active  m-menu__item--active-tab'; else echo 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="<?= site_url("myskearch"); ?>/brand_direct" class="m-menu__link" title="Non functional dummy link"><span class="m-menu__link-text">Brand Direct</span><i
-										class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
-									<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
+							<?php if ($this->session->userdata('groupid') == 3) : ?>
+								<li class="m-menu__item m-menu__item--submenu  m-menu__item--tab m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="https://crm.skearch.com" target="_blank" class="m-menu__link" title="Sign in to Brand Direct"><span class="m-menu__link-text">Brand Direct</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+									<!-- <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 										<ul class="m-menu__subnav">
 											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-settings-1"></i><span class="m-menu__link-text">Build Tools</span></a></li>
 											<li class="m-menu__item " aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-imac"></i><span class="m-menu__link-text">Layout Builder</span></a></li>
 											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-paper-plane"></i><span class="m-menu__link-text">Documentatiion</span></a></li>
 											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner2.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-multimedia"></i><span class="m-menu__link-text">Reviews</span></a></li>
 										</ul>
-									</div>
+									</div> -->
 								</li>
-							<?php endif;?>
+							<?php endif; ?>
 						</ul>
 					</div>
 				</div>

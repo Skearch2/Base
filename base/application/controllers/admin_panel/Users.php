@@ -1,4 +1,5 @@
 <?php
+
 /**
  * File: ~/application/controller/admin/Users.php
  */
@@ -38,11 +39,11 @@ class Users extends MY_Controller
     /**
      * Undocumented function
      */
-    public function get_user_list()
+    public function get_user_list($group)
     {
 
         $total_users = $this->db->count_all_results('skearch_users');
-        $users = $this->User_model->get_user_list();
+        $users = $this->User_model->get_user_list($group);
         $result = array(
             'iTotalRecords' => $total_users,
             'iTotalDisplayRecords' => $total_users,
@@ -59,18 +60,19 @@ class Users extends MY_Controller
     /**
      * Undocumented function
      */
-    public function get_users_by_lastname($last_name) {
+    public function get_users_by_lastname($last_name)
+    {
 
-      $result = $this->User_model->get_users_by_lastname($last_name);
-      $this->output
-          ->set_content_type('application/json')
-          ->set_output(json_encode($result));
+        $result = $this->User_model->get_users_by_lastname($last_name);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
     }
 
     /**
      * Undocumented function
      */
-    public function user_list()
+    public function user_list($group)
     {
 
         if (!file_exists(APPPATH . '/views/admin_panel/pages/users/user_list.php')) {
@@ -78,6 +80,18 @@ class Users extends MY_Controller
         }
 
         $data['title'] = ucwords("user list");
+        $data['group'] = $group;
+        if ($group == 1) {
+            $data['heading'] = "Admins";
+        } elseif ($group == 2) {
+            $data['heading'] = "Editors";
+        } elseif ($group == 3) {
+            $data['heading'] = "Brand Users";
+        } elseif ($group == 4) {
+            $data['heading'] = "Premium Users";
+        } else {
+            $data['heading'] = "Registered Users";
+        }
 
         // Load page content
         $this->load->view('admin_panel/pages/users/user_list', $data);
@@ -89,22 +103,22 @@ class Users extends MY_Controller
     public function create_user()
     {
 
-        $this->form_validation->set_rules('username', 'Username', 'required|trim|min_length[5]|max_length[12]|alpha_numeric|is_unique[skearch_users.username]');
-        $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[8]|max_length[12]|alpha_numeric');
-        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[skearch_users.email]');
-        $this->form_validation->set_rules('first_name', 'First Name', 'required|trim|alpha');
-        $this->form_validation->set_rules('last_name', 'Last Name', 'required|trim|alpha');
+        $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
+        $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[skearch_users.email]|trim');
+        $this->form_validation->set_rules('gender', 'Gender', 'required');
+        $this->form_validation->set_rules('age_group', 'Age group', 'required');
+        $this->form_validation->set_rules('username', 'Username', 'required|is_unique[skearch_users.username]|alpha_numeric|min_length[5]|max_length[12]|trim');
+        $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[8]');
+        $this->form_validation->set_rules('password2', 'Confirm Password', 'required|matches[password]|trim');
+        $this->form_validation->set_rules('organization', 'Organization', 'trim');
+        $this->form_validation->set_rules('brand', 'Brand', 'trim');
+        $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
         $this->form_validation->set_rules('address1', 'Address 1', 'trim');
         $this->form_validation->set_rules('address2', 'Address 2', 'trim');
-        $this->form_validation->set_rules('organization', 'Organization', 'trim');
         $this->form_validation->set_rules('city', 'City', 'trim');
-        if (!empty($this->input->post('zip'))) {
-            $this->form_validation->set_rules('zip', 'Zipcode', 'numeric|exact_length[5]');
-        }
-        $this->form_validation->set_rules('address2', 'Address 2', 'trim');
-        $this->form_validation->set_rules('phone', 'Phone Number');
-        $this->form_validation->set_rules('gender', 'Gender', 'required');
-        $this->form_validation->set_rules('age_group', 'Age Group', 'required');
+        $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
+
 
         if ($this->form_validation->run() == false) {
 
@@ -116,7 +130,6 @@ class Users extends MY_Controller
             $data['title'] = ucwords('create user');
 
             $this->load->view('admin_panel/pages/users/create_user', $data);
-
         } else {
 
             $this->User_model->create_user();
@@ -176,7 +189,6 @@ class Users extends MY_Controller
             $data['title'] = ucwords('edit user');
 
             $this->load->view('admin_panel/pages/users/edit_user', $data);
-
         } else {
 
             $user = $this->User_model->update_user($user_id);
@@ -211,7 +223,6 @@ class Users extends MY_Controller
         } else {
             echo json_encode(-1);
         }
-
     }
 
     public function get_user_groups()
@@ -250,7 +261,6 @@ class Users extends MY_Controller
 
             $data['title'] = ucwords('create group');
             $this->load->view('admin_panel/pages/users/create_user_group', $data);
-
         } else {
 
             $this->User_model->create_user_group();
@@ -275,19 +285,16 @@ class Users extends MY_Controller
 
             $data['title'] = ucwords('edit group');
             $this->load->view('admin_panel/pages/users/edit_user_group', $data);
-
         } else {
 
             $group_update = $this->User_model->update_user_group($group_id);
 
             if (!$group_update) {
                 $view_errors = $this->ion_auth->messages();
-
             } else {
                 redirect('admin/users/user_groups');
             }
         }
-
     }
 
     public function delete_user_group($group_id)
@@ -302,20 +309,19 @@ class Users extends MY_Controller
         }
     }
 
-    public function reset_user_password($user_id) {
+    public function reset_user_password($user_id)
+    {
 
-      $identity = $this->ion_auth->where('id', $user_id)->users()->row();
+        $identity = $this->ion_auth->where('id', $user_id)->users()->row();
 
-      // run the forgotten password method to email an activation code to the user
-      $forgotten = $this->ion_auth->forgotten_password($identity->username);
+        // run the forgotten password method to email an activation code to the user
+        $forgotten = $this->ion_auth->forgotten_password($identity->username);
 
-      if ($forgotten) {
-          // if there were no errors
-          return true;
-      } else {
-          return false;
-      }
-
+        if ($forgotten) {
+            // if there were no errors
+            return true;
+        } else {
+            return false;
+        }
     }
-
 }

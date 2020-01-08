@@ -21,9 +21,9 @@ class User_model_admin extends CI_Model
         return $this->ion_auth->user($id)->row();
     }
 
-    public function get_user_list()
+    public function get_user_list($group)
     {
-        return $this->ion_auth->Users()->result();
+        return $this->ion_auth->Users($group)->result();
     }
 
     public function get_users_by_lastname($last_name)
@@ -62,7 +62,6 @@ class User_model_admin extends CI_Model
         );
         $group = array($this->input->post('group'));
         $this->ion_auth->register($username, $password, $email, $additional_data, $group);
-
     }
 
     public function update_user($user_id)
@@ -155,5 +154,4 @@ class User_model_admin extends CI_Model
 
         return $group_delete;
     }
-
 }

@@ -1,11 +1,12 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /** Config **/
 include('skearch_config.php');
 
 //used for echoing in templates
 define('ADMIN_THEME', BASE_URL . '/theme/admin');
+
 
 /*
 |--------------------------------------------------------------------------
