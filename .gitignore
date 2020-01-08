@@ -6,6 +6,7 @@
 *.md
 error_log
 php.ini
+.vscode/
 
 # Codeigniter 3
 /system/*

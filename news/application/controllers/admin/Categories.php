@@ -1,35 +1,36 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Categories extends CI_Controller {
+class Categories extends CI_Controller
+{
 
 	function __construct()
 	{
 		parent::__construct();
-		define("HOOSK_ADMIN",1);
+		define("HOOSK_ADMIN", 1);
 		$this->load->model('Hoosk_model');
 		$this->load->helper(array('admincontrol', 'url', 'file', 'form'));
 		//$this->load->library('session');
-		define ('LANG', $this->Hoosk_model->getLang());
+		define('LANG', $this->Hoosk_model->getLang());
 		$this->lang->load('admin', LANG);
 		//Define what page we are on for nav
 		$this->data['current'] = $this->uri->segment(2);
-		define ('SITE_NAME', $this->Hoosk_model->getSiteName());
+		define('SITE_NAME', $this->Hoosk_model->getSiteName());
 		define('THEME', $this->Hoosk_model->getTheme());
-		define ('THEME_FOLDER', BASE_URL.'/theme/'.THEME);
+		define('THEME_FOLDER', BASE_URL . '/theme/' . THEME);
 		//check session exists
-		if (!$this->ion_auth->is_admin()) redirect("http://www.skearch.com/admin");
+		if (!$this->ion_auth->is_admin()) redirect("https://" . parse_url(BASE_URL)['host'] . "/admin");
 	}
 
 	public function index()
 	{
 		$this->load->library('pagination');
-    $result_per_page =15;  // the number of result per page
-    $config['base_url'] = BASE_URL. '/admin/posts/categories/';
-    $config['total_rows'] = $this->Hoosk_model->countCategories();
+		$result_per_page = 15;  // the number of result per page
+		$config['base_url'] = BASE_URL . '/admin/posts/categories/';
+		$config['total_rows'] = $this->Hoosk_model->countCategories();
 		$config['uri_segment'] = 4;
-    $config['per_page'] = $result_per_page;
+		$config['per_page'] = $result_per_page;
 
-    $this->pagination->initialize($config);
+		$this->pagination->initialize($config);
 		//Get categorys from database
 		$this->data['categories'] = $this->Hoosk_model->getCategoriesAll($result_per_page, $this->uri->segment(4));
 		//Load the view
@@ -54,16 +55,16 @@ class Categories extends CI_Controller {
 		//$this->form_validation->set_rules('categorySlug', 'category slug', 'trim|alpha_dash|required|is_unique[hoosk_post_category.categorySlug]');
 		$this->form_validation->set_rules('categoryTitle', 'category title', 'trim|required');
 
-		if($this->form_validation->run() == FALSE) {
+		if ($this->form_validation->run() == FALSE) {
 			//Validation failed
 			$this->addCategory();
-		}  else  {
+		} else {
 			//Validation passed
 			//Add the category
 			$this->Hoosk_model->createCategory();
 			//Return to category list
-			redirect(BASE_URL.'/admin/posts/categories', 'refresh');
-	  	}
+			redirect(BASE_URL . '/admin/posts/categories', 'refresh');
+		}
 	}
 
 	public function editCategory()
@@ -81,19 +82,19 @@ class Categories extends CI_Controller {
 		//Load the form validation library
 		$this->load->library('form_validation');
 		//Set validation rules
-		$this->form_validation->set_rules('categorySlug', 'category slug', 'trim|alpha_dash|required|is_unique[hoosk_post_category.categorySlug.categoryID.'.$this->uri->segment(5).']');
+		$this->form_validation->set_rules('categorySlug', 'category slug', 'trim|alpha_dash|required|is_unique[hoosk_post_category.categorySlug.categoryID.' . $this->uri->segment(5) . ']');
 		$this->form_validation->set_rules('categoryTitle', 'category title', 'trim|required');
 
-		if($this->form_validation->run() == FALSE) {
+		if ($this->form_validation->run() == FALSE) {
 			//Validation failed
 			$this->editCategory();
-		}  else  {
+		} else {
 			//Validation passed
 			//Update the category
 			$this->Hoosk_model->updateCategory($this->uri->segment(5));
 			//Return to category list
-			redirect(BASE_URL.'/admin/posts/categories', 'refresh');
-	  	}
+			redirect(BASE_URL . '/admin/posts/categories', 'refresh');
+		}
 	}
 
 
@@ -101,13 +102,12 @@ class Categories extends CI_Controller {
 
 	function delete()
 	{
-		if($this->input->post('deleteid')):
+		if ($this->input->post('deleteid')) :
 			$this->Hoosk_model->removeCategory($this->input->post('deleteid'));
-			redirect(BASE_URL.'/admin/posts/categories');
-		else:
-			$this->data['form']=$this->Hoosk_model->getCategory($this->uri->segment(5));
-			$this->load->view('admin/post_category_delete.php', $this->data );
+			redirect(BASE_URL . '/admin/posts/categories');
+		else :
+			$this->data['form'] = $this->Hoosk_model->getCategory($this->uri->segment(5));
+			$this->load->view('admin/post_category_delete.php', $this->data);
 		endif;
 	}
-
 }
