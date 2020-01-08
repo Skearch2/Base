@@ -28,6 +28,16 @@ $this->load->view('admin_panel/templates/start_innerbody');
 $this->load->view('admin_panel/templates/subheader');
 
 ?>
+<style>
+#progressInfo {
+  width: 0%;
+  height: 30px;
+  background-color: #4CAF50;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
+</style>
 
 <div class="m-content">
 	<div class="m-portlet m-portlet--mobile">
@@ -42,11 +52,12 @@ $this->load->view('admin_panel/templates/subheader');
 			
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
-					<li class="m-portlet__nav-item">
-						<span id="progressinfo">10%</span>
+                <span style="margin:5px">Progress:</span> 
+					<li style="width:100px" class="m-portlet__nav-item">
+                        <span id="progressInfo">0%</span>
 					</li>
 					<li class="m-portlet__nav-item">
-						<a href="#" onclick="loadframe();" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+						<a href="#" onclick="runLinkChecker()" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>Run Linkchecker</span>
 						</a>
 					</li>
@@ -103,6 +114,16 @@ $("#smenu_lcheck").addClass("m-menu__item m-menu__item--submenu m-menu__item--op
 </script>
 
 <script>
+
+function runLinkChecker() {
+    $.ajax({
+    url: '<?= site_url(); ?>/admin/linkchecker/update_urls_status/',
+    type: 'GET',
+    success: function(result) {
+        
+    }
+    });
+}
 
 /* Delete Adlink */
 function deleteAdlink(id, title) {
