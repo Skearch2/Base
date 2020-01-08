@@ -63,5 +63,9 @@ class Option extends MY_Controller {
 		$data = $this->input->post(NULL, TRUE);
 		$this->Option_model->brandlinks_status_all($data['enable_status']);
         redirect('admin/option');
-    }
+	}
+	
+	public function get_status_info() {
+		echo $_SESSION["remainingUrls"];
+	}
 }

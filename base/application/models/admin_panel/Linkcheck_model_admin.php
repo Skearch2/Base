@@ -35,7 +35,7 @@ class Linkcheck_model_admin extends CI_Model {
 
     public function get_bad_urls() {
 
-        $query = $this->db->select('id, title, enabled, http_status_code, last_status_check');
+        $query = $this->db->select('id, title, enabled, http_status_code, last_status_check, www');
         $query = $this->db->from('skearch_listings');
         $query = $this->db->where('http_status_code <', 200);
         $query = $this->db->or_where('http_status_code >=', 400);

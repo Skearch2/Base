@@ -33,7 +33,7 @@ class Linkchecker extends MY_Controller {
 		$this->load->view('admin_panel/pages/linkchecker', $data);
 	}
 
-
+	// API to get bad URLs
 	public function get_bad_urls() {
 		$urls = $this->linkcheck_model->get_bad_urls();
    		$total_urls = sizeof($urls);
@@ -50,14 +50,15 @@ class Linkchecker extends MY_Controller {
 	}
 
 	public function update_urls_status() {
-		echo "Status update started\n";
 		$urls = $this->linkcheck_model->get_urls();
+		$totalUrls =  count($urls);
 		foreach ($urls as $url) {
+			$_SESSION["remainingUrls"] = $totalUrls--;
 			$status_code = $this->run_curl_check($url->www);
 			$this->linkcheck_model->update_http_status($url->id, $status_code);
-			echo "Url: " . $url->www . "    Status: " . $status_code;
+			if ($totalUrls <= 4670 ) break;
 		}
-		echo "Status update completed";
+		
 	}
 	
 	public function run_curl_check($url) {

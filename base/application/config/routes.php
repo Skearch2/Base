@@ -124,6 +124,7 @@ $route['admin/auth/submit'] = 'admin_panel/auth/submit';
 $route['admin/linkchecker'] = 'admin_panel/linkchecker';
 $route['admin/linkchecker/update_urls_status'] = 'admin_panel/linkchecker/update_urls_status';
 $route['admin/linkchecker/get_bad_urls'] = 'admin_panel/linkchecker/get_bad_urls';
+$route['admin/linkchecker/get_status_info'] = 'admin_panel/option/get_status_info';
 
 /* User list Routes */
 $route['admin/users/user_list/(:num)'] = 'admin_panel/users/user_list/$1';

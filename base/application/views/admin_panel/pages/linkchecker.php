@@ -28,6 +28,16 @@ $this->load->view('admin_panel/templates/start_innerbody');
 $this->load->view('admin_panel/templates/subheader');
 
 ?>
+<style>
+#progressInfo {
+  width: 0%;
+  height: 30px;
+  background-color: #4CAF50;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
+</style>
 
 <div class="m-content">
 	<div class="m-portlet m-portlet--mobile">
@@ -39,75 +49,17 @@ $this->load->view('admin_panel/templates/subheader');
 					</h3>
 				</div>
 			</div>
+			
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
-					<!-- <li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/categories/create_category"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
-							<span>
-								<i class="la la-cart-plus"></i>
-								<span>Add Item</span>
-							</span>
-						</a>
-					</li> -->
-					<li class="m-portlet__nav-item"></li>
+                <span style="margin:5px">Progress:</span> 
+					<li style="width:100px" class="m-portlet__nav-item">
+                        <span id="progressInfo">0%</span>
+					</li>
 					<li class="m-portlet__nav-item">
-						<div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push" m-dropdown-toggle="hover" aria-expanded="true">
-							<a href="#" class="m-portlet__nav-link btn btn-lg btn-secondary  m-btn m-btn--icon m-btn--icon-only m-btn--pill  m-dropdown__toggle">
-								<i class="la la-ellipsis-h m--font-brand"></i>
-							</a>
-							<div class="m-dropdown__wrapper">
-								<span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
-								<div class="m-dropdown__inner">
-									<div class="m-dropdown__body">
-										<div class="m-dropdown__content">
-											<ul class="m-nav">
-												<li class="m-nav__section m-nav__section--first">
-													<span class="m-nav__section-text">Quick Actions</span>
-												</li>
-												<li class="m-nav__item">
-													<a href="" class="m-nav__link">
-														<i class="m-nav__link-icon flaticon-share"></i>
-														<span class="m-nav__link-text">Create Post</span>
-													</a>
-												</li>
-												<li class="m-nav__item">
-													<a href="" class="m-nav__link">
-														<i class="m-nav__link-icon flaticon-chat-1"></i>
-														<span class="m-nav__link-text">Send Messages</span>
-													</a>
-												</li>
-												<li class="m-nav__item">
-													<a href="" class="m-nav__link">
-														<i class="m-nav__link-icon flaticon-multimedia-2"></i>
-														<span class="m-nav__link-text">Upload File</span>
-													</a>
-												</li>
-												<li class="m-nav__section">
-													<span class="m-nav__section-text">Useful Links</span>
-												</li>
-												<li class="m-nav__item">
-													<a href="" class="m-nav__link">
-														<i class="m-nav__link-icon flaticon-info"></i>
-														<span class="m-nav__link-text">FAQ</span>
-													</a>
-												</li>
-												<li class="m-nav__item">
-													<a href="" class="m-nav__link">
-														<i class="m-nav__link-icon flaticon-lifebuoy"></i>
-														<span class="m-nav__link-text">Support</span>
-													</a>
-												</li>
-												<li class="m-nav__separator m-nav__separator--fit m--hide">
-												</li>
-												<li class="m-nav__item m--hide">
-													<a href="#" class="btn btn-outline-danger m-btn m-btn--pill m-btn--wide btn-sm">Submit</a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+						<a href="#" onclick="runLinkChecker()" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+							<span>Run Linkchecker</span>
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -162,6 +114,16 @@ $("#smenu_lcheck").addClass("m-menu__item m-menu__item--submenu m-menu__item--op
 </script>
 
 <script>
+
+function runLinkChecker() {
+    $.ajax({
+    url: '<?= site_url(); ?>/admin/linkchecker/update_urls_status/',
+    type: 'GET',
+    success: function(result) {
+        
+    }
+    });
+}
 
 /* Delete Adlink */
 function deleteAdlink(id, title) {
@@ -233,6 +195,12 @@ var DatatablesDataSourceAjaxServer= {
                             +     '<a onclick=deleteAdlink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
                         }
                     },
+                    {
+						targets:1, render:function(a, t, e, n) {
+								return '<a href="'+ e.www + '" target="_blank" >' + e.title + '</a></a>';
+
+						}
+					},
                     {
 						targets:3, render:function(a, t, e, n) {
 							if(e['http_status_code'] == 0)
