@@ -161,78 +161,78 @@ $this->load->view('admin_panel/templates/subheader');
 		<div class="col-xl-4">
 
 			<!--begin:: Packages-->
-				<div class="m-portlet m--bg-primary m-portlet--bordered-semi m-portlet--full-height ">
-					<div class="m-portlet__head">
-						<div class="m-portlet__head-caption">
-							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text m--font-light">
-									Site Statistics
-								</h3>
-							</div>
+			<div class="m-portlet m--bg-primary m-portlet--bordered-semi m-portlet--full-height ">
+				<div class="m-portlet__head">
+					<div class="m-portlet__head-caption">
+						<div class="m-portlet__head-title">
+							<h3 class="m-portlet__head-text m--font-light">
+								Site Statistics
+							</h3>
 						</div>
-					</div>
-					<div class="m-portlet__body">
-
-						<!--begin::Widget 29-->
-						<div class="m-widget29">
-							<div class="m-widget_content">
-								<h3 class="m-widget_content-title">Umbrellas</h3>
-								<div class="m-widget_content-items">
-									<div class="m-widget_content-item">
-										<span>Active</span>
-										<span><a class="m--font-success" href="<?= site_url() . "admin/categories/category_list/active";?>"><?= $total_active_umbrellas; ?></a></span>
-									</div>
-									<div class="m-widget_content-item">
-										<span>Inactive</span>
-										<span><a class="m--font-danger" href="<?= site_url() . "admin/categories/category_list/inactive";?>"><?= $total_umbrellas - $total_active_umbrellas; ?></a></span>
-									</div>
-									<div class="m-widget_content-item">
-										<span>Total</span>
-										<span><a class="m--font-primary" href="<?= site_url() . "admin/categories/category_list/all";?>"><?= $total_umbrellas; ?></a></span>
-									</div>
-								</div>
-							</div>
-							<div class="m-widget_content">
-								<h3 class="m-widget_content-title">Fields</h3>
-								<div class="m-widget_content-items">
-									<div class="m-widget_content-item">
-										<span>Active</span>
-										<span><a class="m--font-success" href="<?= site_url() . "admin/categories/subcategory_list/all/active";?>"><?= $total_active_fields; ?></a></span>
-									</div>
-									<div class="m-widget_content-item">
-										<span>Inactive</span>
-										<span><a class="m--font-danger" href="<?= site_url() . "admin/categories/subcategory_list/all/inactive";?>"><?= $total_fields - $total_active_fields; ?></a></span>
-									</div>
-									<div class="m-widget_content-item">
-										<span>Total</span>
-										<span><a class="m--font-primary" href="<?= site_url() . "admin/categories/subcategory_list/all";?>"><?= $total_fields; ?></a></span>
-									</div>
-								</div>
-							</div>
-							<div class="m-widget_content">
-								<h3 class="m-widget_content-title">Results</h3>
-								<div class="m-widget_content-items">
-									<div class="m-widget_content-item">
-										<span>Active</span>
-										<span><a class="m--font-success" href="<?= site_url() . "admin/categories/result_list/all/active";?>"><?= $total_active_results; ?></a></span>
-									</div>
-									<div class="m-widget_content-item">
-										<span>Inactive</span>
-										<span><a class="m--font-danger" href="<?= site_url() . "admin/categories/result_list/all/inactive";?>"><?= $total_results - $total_active_results; ?></a></span>
-									</div>
-									<div class="m-widget_content-item">
-										<span>Total</span>
-										<span><a class="m--font-primary" href="<?= site_url() . "admin/categories/result_list/all";?>"><?= $total_results; ?></a></span>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<!--end::Widget 29-->
 					</div>
 				</div>
+				<div class="m-portlet__body">
 
-				<!--end:: Packages-->
+					<!--begin::Widget 29-->
+					<div class="m-widget29">
+						<div class="m-widget_content">
+							<h3 class="m-widget_content-title">Umbrellas</h3>
+							<div class="m-widget_content-items">
+								<div class="m-widget_content-item">
+									<span>Active</span>
+									<span><a class="m--font-success" href="<?= site_url() . "admin/categories/category_list/active"; ?>"><?= $total_active_umbrellas; ?></a></span>
+								</div>
+								<div class="m-widget_content-item">
+									<span>Inactive</span>
+									<span><a class="m--font-danger" href="<?= site_url() . "admin/categories/category_list/inactive"; ?>"><?= $total_umbrellas - $total_active_umbrellas; ?></a></span>
+								</div>
+								<div class="m-widget_content-item">
+									<span>Total</span>
+									<span><a class="m--font-primary" href="<?= site_url() . "admin/categories/category_list/all"; ?>"><?= $total_umbrellas; ?></a></span>
+								</div>
+							</div>
+						</div>
+						<div class="m-widget_content">
+							<h3 class="m-widget_content-title">Fields</h3>
+							<div class="m-widget_content-items">
+								<div class="m-widget_content-item">
+									<span>Active</span>
+									<span><a class="m--font-success" href="<?= site_url() . "admin/categories/subcategory_list/all/active"; ?>"><?= $total_active_fields; ?></a></span>
+								</div>
+								<div class="m-widget_content-item">
+									<span>Inactive</span>
+									<span><a class="m--font-danger" href="<?= site_url() . "admin/categories/subcategory_list/all/inactive"; ?>"><?= $total_fields - $total_active_fields; ?></a></span>
+								</div>
+								<div class="m-widget_content-item">
+									<span>Total</span>
+									<span><a class="m--font-primary" href="<?= site_url() . "admin/categories/subcategory_list/all"; ?>"><?= $total_fields; ?></a></span>
+								</div>
+							</div>
+						</div>
+						<div class="m-widget_content">
+							<h3 class="m-widget_content-title">Results</h3>
+							<div class="m-widget_content-items">
+								<div class="m-widget_content-item">
+									<span>Active</span>
+									<span><a class="m--font-success" href="<?= site_url() . "admin/categories/result_list/all/active"; ?>"><?= $total_active_results; ?></a></span>
+								</div>
+								<div class="m-widget_content-item">
+									<span>Inactive</span>
+									<span><a class="m--font-danger" href="<?= site_url() . "admin/categories/result_list/all/inactive"; ?>"><?= $total_results - $total_active_results; ?></a></span>
+								</div>
+								<div class="m-widget_content-item">
+									<span>Total</span>
+									<span><a class="m--font-primary" href="<?= site_url() . "admin/categories/result_list/all"; ?>"><?= $total_results; ?></a></span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!--end::Widget 29-->
+				</div>
+			</div>
+
+			<!--end:: Packages-->
 		</div>
 		<div class="col-xl-4">
 
@@ -382,114 +382,34 @@ $this->load->view('admin_panel/templates/subheader');
 		<div class="col-xl-4">
 
 			<!--begin:: Widgets/Top Products-->
-			<div class="m-portlet m-portlet--full-height m-portlet--fit  m-portlet--unair">
+			<div class="m-portlet m-portlet--half-height m-portlet--fit  m-portlet--unair">
 				<div class="m-portlet__head">
 					<div class="m-portlet__head-caption">
 						<div class="m-portlet__head-title">
 							<h3 class="m-portlet__head-text">
-								Top Products
+								Link Checker
 							</h3>
 						</div>
 					</div>
 					<div class="m-portlet__head-tools">
-						<ul class="m-portlet__nav">
-							<li class="m-portlet__nav-item m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push" m-dropdown-toggle="hover" aria-expanded="true">
-								<a href="#" class="m-portlet__nav-link m-dropdown__toggle dropdown-toggle btn btn--sm m-btn--pill btn-secondary m-btn m-btn--label-brand">
-									All
-								</a>
-								<div class="m-dropdown__wrapper">
-									<span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust" style="left: auto; right: 36.5px;"></span>
-									<div class="m-dropdown__inner">
-										<div class="m-dropdown__body">
-											<div class="m-dropdown__content">
-												<ul class="m-nav">
-													<li class="m-nav__item">
-														<a href="" class="m-nav__link">
-															<i class="m-nav__link-icon flaticon-share"></i>
-															<span class="m-nav__link-text">Activity</span>
-														</a>
-													</li>
-													<li class="m-nav__item">
-														<a href="" class="m-nav__link">
-															<i class="m-nav__link-icon flaticon-chat-1"></i>
-															<span class="m-nav__link-text">Messages</span>
-														</a>
-													</li>
-													<li class="m-nav__item">
-														<a href="" class="m-nav__link">
-															<i class="m-nav__link-icon flaticon-info"></i>
-															<span class="m-nav__link-text">FAQ</span>
-														</a>
-													</li>
-													<li class="m-nav__item">
-														<a href="" class="m-nav__link">
-															<i class="m-nav__link-icon flaticon-lifebuoy"></i>
-															<span class="m-nav__link-text">Support</span>
-														</a>
-													</li>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-							</li>
-						</ul>
+						<button type="button" class="btn btn-primary btn-sm m-btn m-btn--icon m-btn--pill"><i class="la la-play"></i></button>
+						<button type="button" class="btn btn-danger btn-sm m-btn m-btn--icon m-btn--pill"><i class="la la-stop"></i></button>
 					</div>
 				</div>
+
 				<div class="m-portlet__body">
 
 					<!--begin::Widget5-->
 					<div class="m-widget4 m-widget4--chart-bottom" style="min-height: 480px">
-						<div class="m-widget4__item">
-							<div class="m-widget4__img m-widget4__img--logo">
-								<img src="<?php site_url(); ?>/assets/admin_panel/app/media/img/client-logos/logo3.png" alt="">
+						<div class="m-section m-section--last">
+							<div class="m-section__content">
+								<div class="m--space-10"></div>
+								<div class="progress">
+									<div class="progress-bar progress-bar-striped progress-bar-animated " role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 70%" title="70%" data-toggle="m-tooltip" data-placement="bottom" data-skin="dark"></div>
+								</div>
+								<div class="m--space-10"></div>
+								<button type="button" class="m-btn btn btn-success">View Links<i class="la la-external-link"></i></button>
 							</div>
-							<div class="m-widget4__info">
-								<span class="m-widget4__title">
-									Phyton
-								</span><br>
-								<span class="m-widget4__sub">
-									A Programming Language
-								</span>
-							</div>
-							<span class="m-widget4__ext">
-								<span class="m-widget4__number m--font-brand">+$17</span>
-							</span>
-						</div>
-						<div class="m-widget4__item">
-							<div class="m-widget4__img m-widget4__img--logo">
-								<img src="<?php site_url(); ?>/assets/admin_panel/app/media/img/client-logos/logo1.png" alt="">
-							</div>
-							<div class="m-widget4__info">
-								<span class="m-widget4__title">
-									FlyThemes
-								</span><br>
-								<span class="m-widget4__sub">
-									A Let's Fly Fast Again Language
-								</span>
-							</div>
-							<span class="m-widget4__ext">
-								<span class="m-widget4__number m--font-brand">+$300</span>
-							</span>
-						</div>
-						<div class="m-widget4__item">
-							<div class="m-widget4__img m-widget4__img--logo">
-								<img src="<?php site_url(); ?>/assets/admin_panel/app/media/img/client-logos/logo4.png" alt="">
-							</div>
-							<div class="m-widget4__info">
-								<span class="m-widget4__title">
-									Starbucks
-								</span><br>
-								<span class="m-widget4__sub">
-									Good Coffee & Snacks
-								</span>
-							</div>
-							<span class="m-widget4__ext">
-								<span class="m-widget4__number m--font-brand">+$300</span>
-							</span>
-						</div>
-						<div class="m-widget4__chart m-portlet-fit--sides m--margin-top-20" style="height:260px;">
-							<canvas id="m_chart_trends_stats_2"></canvas>
 						</div>
 					</div>
 
@@ -889,10 +809,10 @@ $this->load->view('admin_panel/templates/subheader');
 										AEOL Meeting With
 									</div>
 									<div class="m-list-pics m-list-pics--sm m--padding-left-20">
-										<a href="#"><img src="<?php site_url(); ?>/assets/admin_panel/app/media/img/users/100_4.jpg" title=""></a>
-										<a href="#"><img src="<?php site_url(); ?>/assets/admin_panel/app/media/img/users/100_13.jpg" title=""></a>
-										<a href="#"><img src="<?php site_url(); ?>/assets/admin_panel/app/media/img/users/100_11.jpg" title=""></a>
-										<a href="#"><img src="<?php site_url(); ?>/assets/admin_panel/app/media/img/users/100_14.jpg" title=""></a>
+										<a href="#"><img src="<?= site_url(ASSETS); ?>/admin_panel/app/media/img/users/100_4.jpg" title=""></a>
+										<a href="#"><img src="<?= site_url(ASSETS); ?>/admin_panel/app/media/img/users/100_13.jpg" title=""></a>
+										<a href="#"><img src="<?= site_url(ASSETS); ?>/admin_panel/app/media/img/users/100_11.jpg" title=""></a>
+										<a href="#"><img src="<?= site_url(ASSETS); ?>/admin_panel/app/media/img/users/100_14.jpg" title=""></a>
 									</div>
 								</div>
 								<div class="m-timeline-2__item m--margin-top-30">
@@ -1852,5 +1772,5 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-$("#smenu_dash").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#smenu_dash").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 </script>
