@@ -419,7 +419,7 @@
 																<img src="<?= site_url(ASSETS); ?>/admin_panel/app/media/img/users/user4.jpg" class="m--img-rounded m--marginless" alt="" />
 															</div>
 															<div class="m-card-user__details">
-																<span class="m-card-user__name m--font-weight-500"><?php echo $headeruser->first_name . " " . $headeruser->last_name; ?></span>
+																<span class="m-card-user__name m--font-weight-500"><?php echo $headeruser->firstname . " " . $headeruser->lastname; ?></span>
 																<a href="" class="m-card-user__email m--font-weight-300 m-link"><?php echo $headeruser->email; ?></a>
 															</div>
 														</div>
