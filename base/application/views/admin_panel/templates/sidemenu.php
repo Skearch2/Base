@@ -42,7 +42,8 @@
 									<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 										<ul class="m-menu__subnav">
 											<li class="m-menu__item  m-menu__item--parent" aria-haspopup="true"><span class="m-menu__link"><span class="m-menu__item-here"></span><span class="m-menu__link-text">Brands</span></span></li>
-											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/user_list/3"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Brand Users</span></a></li>
+											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands/brandleads"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Leads</span></a></li>
+											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/user_list/3"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Members</span></a></li>
 											<li class="m-menu__item" aria-haspopup="true"><a href="https://crm.skearch.com/admin" target="_blank" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">CRM</span></a></li>
 											<li class="m-menu__item" aria-haspopup="true"><a href="inner.html" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Brand Relationships</span></a></li>
 											<li class="m-menu__item" aria-haspopup="true"><a href="https://www.skearch.com/media-manager" target="_blank" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Media Engine</span></a></li>

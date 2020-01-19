@@ -187,12 +187,8 @@ $this->load->view('admin_panel/templates/close_html');
 		$("div.modal-body").html(
 
 			"<p>UserID:</p> " + user + " \
-	<p>This is a test.</p> \
-	<p>This is a test.</p>"
-
-
-
-
+			<p>This is a test.</p> \
+			<p>This is a test.</p>"
 		);
 	}
 
@@ -204,6 +200,9 @@ $this->load->view('admin_panel/templates/close_html');
 				type: 'DELETE',
 				success: function(result) {
 					location.reload();
+				},
+				error: function(xhr, status, error) {
+					console.log("Unable to delete user!");
 				}
 			});
 		}
