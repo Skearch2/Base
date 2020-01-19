@@ -175,6 +175,11 @@ $route['admin/categories/change_priority/(:any)/(:any)'] = 'admin_panel/categori
 $route['admin/categories/get_links_priority/(:any)'] = 'admin_panel/categories/get_links_priority/$1';
 $route['admin/categories/search_adlink/(:any)'] = 'admin_panel/categories/search_adlink/$1';
 
+/* Brand Routes */
+$route['admin/brands/brandleads'] = 'admin_panel/brandleads';
+$route['admin/brands/brandleads/get'] = 'admin_panel/brandleads/get';
+$route['admin/brands/brandleads/delete/(:num)'] = 'admin_panel/brandleads/delete/$1';
+
 /* Homepage Routes */
 $route['admin/frontend/homepage'] = 'admin_panel/frontend/homepage';
 $route['admin/frontend/field_suggestions'] = 'admin_panel/frontend/field_suggestions';
