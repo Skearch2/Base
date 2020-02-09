@@ -40,12 +40,11 @@ $this->load->view('admin_panel/templates/subheader');
               <div class="m-portlet__body">
                 <div class="form-group m-form__group m--margin-top-10 m--show">
                   <?php if ($this->session->flashdata('success') == 1) : ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
                       <div class="alert-icon">
-                        <p class="flaticon-like"> Success:</p>
                         Research link has been successfully added.
                       </div>
                     </div>

@@ -112,8 +112,18 @@ $this->load->view('admin_panel/templates/subheader');
 				</ul>
 			</div>
 		</div>
-		<div class="m-portlet__body">
 
+		<div class="m-portlet__body">
+			<?php if ($this->session->flashdata('success') == 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The link has successfully been made.
+					</div>
+				</div>
+			<?php endif; ?>
 			<!--begin: Datatable -->
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
