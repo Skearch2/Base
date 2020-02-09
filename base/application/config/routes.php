@@ -143,7 +143,7 @@ $route['admin/users/edit_user_group/(:num)'] = 'admin_panel/users/edit_user_grou
 $route['admin/users/get_user_groups'] = 'admin_panel/users/get_user_groups';
 $route['admin/users/user_groups'] = 'admin_panel/users/user_groups';
 
-/* Categories Routes */
+/* Results Routes */
 $route['admin/categories/category_list/(:any)'] = 'admin_panel/categories/category_list/$1';
 $route['admin/categories/get_category_list/(:any)'] = 'admin_panel/categories/get_category_list/$1';
 $route['admin/categories/subcategory_list'] = 'admin_panel/categories/subcategory_list';
@@ -174,6 +174,14 @@ $route['admin/categories/toggle_redirect/(:any)'] = 'admin_panel/categories/togg
 $route['admin/categories/change_priority/(:any)/(:any)'] = 'admin_panel/categories/change_priority/$1/$2';
 $route['admin/categories/get_links_priority/(:any)'] = 'admin_panel/categories/get_links_priority/$1';
 $route['admin/categories/search_adlink/(:any)'] = 'admin_panel/categories/search_adlink/$1';
+
+/* Research Routes */
+$route['admin/results/research/add'] = 'admin_panel/results/research/create';
+$route['admin/results/research/delete/(:num)'] = 'admin_panel/results/research/delete/$1';
+$route['admin/results/research/get'] = 'admin_panel/results/research/get';
+$route['admin/results/research/get/(:num)'] = 'admin_panel/results/research/get/$1';
+$route['admin/results/research/list'] = 'admin_panel/results/research';
+$route['admin/results/research/make_link/(:num)'] = 'admin_panel/results/research/make_link/$1';
 
 /* Brand Routes */
 $route['admin/brands/brandleads'] = 'admin_panel/brandleads';

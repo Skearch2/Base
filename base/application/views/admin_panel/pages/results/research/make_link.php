@@ -27,6 +27,7 @@ $this->load->view('admin_panel/templates/start_innerbody');
 // Load subheader in inner body
 $this->load->view('admin_panel/templates/subheader');
 
+
 ?>
 
 <div class="m-content">
@@ -35,18 +36,28 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet m-portlet--full-height m-portlet--tabs m-portlet--unair">
 				<div class="tab-content">
 					<div class="tab-pane active" id="m_user_profile_tab_1">
-						<form class="m-form m-form--fit m-form--label-align-right" role="form" method="POST">
-							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+						<form class="m-form m-form--fit m-form--label-align-right" method="POST">
+							<input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>" />
 							<div class="m-portlet__body">
 								<div class="form-group m-form__group m--margin-top-10 m--show">
-									<?php echo $this->session->tempdata('success-msg'); ?>
+									<?php if ($this->session->flashdata('success') == 1) : ?>
+										<div class="alert alert-success alert-dismissible fade show" role="alert">
+											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+											<div class="alert-icon">
+												<p class="flaticon-like"> Success:</p>
+												Link has been successfully made.
+											</div>
+										</div>
+									<?php endif; ?>
 									<?php if (validation_errors()) : ?>
 										<div class="alert alert-danger alert-dismissible fade show" role="alert">
 											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 												<span aria-hidden="true">&times;</span>
 											</button>
 											<div class="alert-icon">
-												<p class="flaticon-warning"> Error:</p>
+												<p class="flaticon-danger"> Error:</p>
 												<?= validation_errors(); ?>
 											</div>
 										</div>
@@ -54,64 +65,55 @@ $this->load->view('admin_panel/templates/subheader');
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">Subcategory Information</h3>
+										<h3 class="m-form__section">Make Link</h3>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Title</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="title" value="<?php if (form_error('title') == '') echo set_value('title'); ?>" required>
-									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Description</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="description" value="<?php if (form_error('description') == '') echo set_value('description'); ?>">
+										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title') ?>" required>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Short Description</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="description_short" value="<?php if (form_error('description_short') == '') echo set_value('description_short'); ?>" required>
+										<input class="form-control m-input" type="text" name="description_short" style="background-color: gainsboro;" value="<?= $description ?>" required readonly>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Umbrella Page</label>
+									<label for="example-text-input" class="col-2 col-form-label">Display Url</label>
 									<div class="col-7">
-										<select id="select" class="form-control" name="parent_id" required>
-											<?php
-											foreach ($category_list as $item) { ?>
-												<!-- <option <?php //if (isset($subcategory_parent) && (in_array($item->id, $subcategory_parent))) echo "selected"; else echo set_select("parent_id",$item->id); 
-																?> value="<?= $item->id ?>"><?= $item->title ?></option> -->
-												<option <?php echo set_select("parent_id", $item->id); ?> value="<?= $item->id ?>"><?= $item->title ?></option>
-											<?php } ?>
+										<input class="form-control m-input" type="text" name="display_url" value="<?= set_value('display_url') ?>">
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<label for="example-text-input" class="col-2 col-form-label">https</label>
+									<div class="col-7">
+										<input class="form-control m-input" type="text" name="www" style="background-color: gainsboro;" value="<?= $url ?>" required readonly>
+										<span class="m-form__help">Url of the webiste</span>
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<label for="example-text-input" class="col-2 col-form-label">Field</label>
+									<div class="col-7">
+										<select class="form-control" name="field_id" style="background-color: gainsboro;" required readonly>
+											<option value="<?= $field['id'] ?>" selected><?= $field['name'] ?></option>
 										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Home Display Name</label>
+									<label for="example-text-input" class="col-2 col-form-label">Priority</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="home_display" value="<?php if (form_error('home_display') == '') echo set_value('home_display'); ?>">
-									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Keywords</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="keywords" value="<?php if (form_error('keywords') == '') echo set_value('keywords'); ?>" required>
-										<span class="m-form__help">Seperated by comma (,)</span>
-									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Featured</label>
-									<div class="col-7">
-										<input type="hidden" name="featured" value="0">
-										<span class="m-switch m-switch--icon-check">
-											<label>
-												<input type="checkbox" name="featured" value="1" checked>
-												<span></span>
-											</label>
-										</span>
-										<!-- <div class="m-form__help">Allow aside minimizing</div> -->
+										<select class="form-control" id="priorities" name="priority" required>
+											<option selected value="0">Select</option>
+											<?php for ($i = 1; $i <= 250; $i++) : ?>
+												<?php if (in_array($i, $priorities)) : ?>
+													<option style="background-color: #99ff99" value="<?= $i ?> <?= set_select("priority", $i) ?>" disabled><?= $i ?></option>
+												<?php else : ?>
+													<option value="<?= $i ?>"><?= $i ?></option>
+												<?php endif; ?>
+											<?php endfor; ?>
+										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -124,7 +126,18 @@ $this->load->view('admin_panel/templates/subheader');
 												<span></span>
 											</label>
 										</span>
-										<!-- <div class="m-form__help">Allow aside minimizing</div> -->
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<label for="example-text-input" class="col-2 col-form-label">Brand Link</label>
+									<div class="col-7">
+										<input type="hidden" name="redirect" value="0">
+										<span class="m-switch m-switch--icon-check">
+											<label>
+												<input type="checkbox" name="redirect" value="1" checked>
+												<span></span>
+											</label>
+										</span>
 									</div>
 								</div>
 							</div>
@@ -153,7 +166,6 @@ $this->load->view('admin_panel/templates/subheader');
 </div>
 
 <?php
-
 // End page body
 $this->load->view('admin_panel/templates/end_pagebody');
 
@@ -171,39 +183,4 @@ $this->load->view('admin_panel/templates/scrolltop');
 
 // Close body and html (contains some javascripts links)
 $this->load->view('admin_panel/templates/close_html');
-
-
 ?>
-
-<script>
-	jQuery(document).ready(function() {
-		Dashboard.init(); // init metronic core componets
-		toastr.options = {
-			"closeButton": true,
-			"debug": false,
-			"positionClass": "toast-bottom-right",
-			"onclick": null,
-			"showDuration": "500",
-			"hideDuration": "500",
-			"timeOut": "3000",
-			"extendedTimeOut": "1000",
-			"showEasing": "swing",
-			"hideEasing": "linear",
-			"showMethod": "fadeIn",
-			"hideMethod": "fadeOut"
-		};
-	});
-
-	var last_valid_selection = null;
-	$("#select").change(function(event) {
-		//swal("Here's a message!");
-		if ($(this).val().length > 3) {
-			toastr.warning("Maximum of 3 Umbrella pages can be selected.", "Maximum Limit Reached");
-			$(this).val(last_valid_selection);
-		} else {
-			last_valid_selection = $(this).val();
-		}
-	});
-
-	$("#smenu_data").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-</script>

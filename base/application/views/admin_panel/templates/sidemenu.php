@@ -32,9 +32,10 @@
 									<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 										<ul class="m-menu__subnav">
 											<li class="m-menu__item  m-menu__item--parent" aria-haspopup="true"><span class="m-menu__link"><span class="m-menu__item-here"></span><span class="m-menu__link-text">Data</span></span></li>
-											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/categories/category_list/all"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Umbrella Page List</span></a></li>
-											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/categories/subcategory_list/all"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Field List</span></a></li>
-											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/categories/result_list/all"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Ad Links</span></a></li>
+											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/categories/category_list/all"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Umbrellas</span></a></li>
+											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/categories/subcategory_list/all"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Fields</span></a></li>
+											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/categories/result_list/all"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Links</span></a></li>
+											<li class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/research/list"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Research</span></a></li>
 										</ul>
 									</div>
 								</li>
