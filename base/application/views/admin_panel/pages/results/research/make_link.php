@@ -77,7 +77,7 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Short Description</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="description_short" style="background-color: gainsboro;" value="<?= $description ?>" required readonly>
+										<input class="form-control m-input" type="text" name="description_short" value="<?= $description ?>" required>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -89,14 +89,14 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">https</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="www" style="background-color: gainsboro;" value="<?= $url ?>" required readonly>
+										<input class="form-control m-input" type="text" name="www" value="<?= $url ?>" required>
 										<span class="m-form__help">Url of the webiste</span>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Field</label>
 									<div class="col-7">
-										<select class="form-control" name="field_id" style="background-color: gainsboro;" required readonly>
+										<select class="form-control" name="field_id" required>
 											<option value="<?= $field['id'] ?>" selected><?= $field['name'] ?></option>
 										</select>
 									</div>

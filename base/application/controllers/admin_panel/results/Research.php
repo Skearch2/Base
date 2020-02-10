@@ -82,7 +82,7 @@ class Research extends MY_Controller
             show_404();
         }
 
-        $this->form_validation->set_rules('description', 'Short Description', 'required|alpha_numeric_spaces|max_length[140]');
+        $this->form_validation->set_rules('description', 'Short Description', 'required|max_length[85]');
         $this->form_validation->set_rules('url', 'URL', 'required|valid_url');
         $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
 
@@ -119,7 +119,7 @@ class Research extends MY_Controller
         }
 
         $this->form_validation->set_rules('title', 'Title', 'required');
-        $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]');
+        $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[85]');
         $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
         $this->form_validation->set_rules('priority', 'Priority', 'required|numeric');
         $this->form_validation->set_rules('display_url', 'Home Display');
