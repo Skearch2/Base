@@ -21,7 +21,7 @@ class Research extends MY_Controller
 {
 
     /**
-     * Undocumented function
+     * Constructor
      */
     public function __construct()
     {
@@ -37,7 +37,9 @@ class Research extends MY_Controller
     }
 
     /**
-     * Undocumented function
+     * Get research links from database in JSON format
+     * 
+     * @return void
      */
     public function get()
     {
@@ -54,9 +56,10 @@ class Research extends MY_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($result));
     }
-
     /**
-     * Undocumented function
+     * Show research link page
+     * 
+     * @return void
      */
     public function index()
     {
@@ -73,7 +76,9 @@ class Research extends MY_Controller
     }
 
     /**
-     * Undocumented function
+     * Shows create page for research link and add research links on POST
+     * 
+     * @return void
      */
     public function create()
     {
@@ -112,7 +117,9 @@ class Research extends MY_Controller
     }
 
     /**
-     * Undocumented function
+     * Shows make link page for research link and create add link or save research link on POST
+     * 
+     * @return void
      */
     public function make_link($id)
     {
@@ -198,7 +205,9 @@ class Research extends MY_Controller
     }
 
     /**
-     * Undocumented function
+     * Delete research link
+     * 
+     * @return void
      */
     public function delete($id)
     {
