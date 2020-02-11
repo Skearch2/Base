@@ -45,7 +45,16 @@ $this->load->view('admin_panel/templates/subheader');
                         <span aria-hidden="true">&times;</span>
                       </button>
                       <div class="alert-icon">
-                        Research link has been successfully added.
+                        The research link has successfully been made.
+                      </div>
+                    </div>
+                  <?php elseif ($this->session->flashdata('failure') == 1) : ?>
+                    <div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      <div class="alert-icon">
+                        Unable to make the research link.
                       </div>
                     </div>
                   <?php endif; ?>
@@ -69,7 +78,7 @@ $this->load->view('admin_panel/templates/subheader');
                 <div class="form-group m-form__group row">
                   <label for="example-text-input" class="col-2 col-form-label">Short Description</label>
                   <div class="col-7">
-                    <input class="form-control m-input" type="text" name="description" value="<?= set_value('description') ?>" required>
+                    <input class="form-control m-input" type="text" name="description_short" value="<?= set_value('description_short') ?>" required>
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
