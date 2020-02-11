@@ -40,14 +40,22 @@ $this->load->view('admin_panel/templates/subheader');
 							<input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>" />
 							<div class="m-portlet__body">
 								<div class="form-group m-form__group m--margin-top-10 m--show">
-									<?php if ($this->session->flashdata('success') == 1) : ?>
-										<div class="alert alert-success alert-dismissible fade show" role="alert">
+									<?php if ($this->session->flashdata('submit_success') == 1) : ?>
+										<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
 											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 												<span aria-hidden="true">&times;</span>
 											</button>
 											<div class="alert-icon">
-												<p class="flaticon-like"> Success:</p>
-												Link has been successfully made.
+												The research link has successfully been made.
+											</div>
+										</div>
+									<?php elseif ($this->session->flashdata('submit_failure') == 1) : ?>
+										<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+											<div class="alert-icon">
+												Unable to make the research link.
 											</div>
 										</div>
 									<?php endif; ?>
@@ -71,26 +79,25 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Title</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title') ?>" required>
+										<input class="form-control m-input" type="text" name="title" value="<?= !empty(set_value('title')) ? set_value('title') : $link_title ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Short Description</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="description_short" value="<?= $description ?>" required>
+										<input class="form-control m-input" type="text" name="description_short" value="<?= !empty(set_value('description_short')) ? set_value('description_short') : $description_short ?>" required>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Display Url</label>
+									<label for="example-text-input" class="col-2 col-form-label">Display URL</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="display_url" value="<?= set_value('display_url') ?>">
+										<input class="form-control m-input" type="text" name="display_url" value="<?= !empty(set_value('display_url')) ? set_value('display_url') : $display_url ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">https</label>
+									<label for="example-text-input" class="col-2 col-form-label">URL</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="www" value="<?= $url ?>" required>
-										<span class="m-form__help">Url of the webiste</span>
+										<input class="form-control m-input" type="text" name="url" value="<?= !empty(set_value('url')) ? set_value('url') : $url ?>" required>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -104,25 +111,26 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Priority</label>
 									<div class="col-7">
-										<select class="form-control" id="priorities" name="priority" required>
-											<option selected value="0">Select</option>
+										<select class="form-control" id="priorities" name="priority">
+											<option selected value="">Select</option>
 											<?php for ($i = 1; $i <= 250; $i++) : ?>
 												<?php if (in_array($i, $priorities)) : ?>
-													<option style="background-color: #99ff99" value="<?= $i ?> <?= set_select("priority", $i) ?>" disabled><?= $i ?></option>
+													<option style="background-color: #99ff99" value="<?= $i ?>" disabled><?= $i ?></option>
 												<?php else : ?>
-													<option value="<?= $i ?>"><?= $i ?></option>
+													<option value="<?= $i ?> <?= set_select("priority", $i) ?>"><?= $i ?></option>
 												<?php endif; ?>
 											<?php endfor; ?>
 										</select>
+										<span class="m-form__help">Priority wont be saved</span>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Enabled</label>
 									<div class="col-7">
-										<input type="hidden" name="enabled" value="0">
+										<input type="hidden" name="enabled" value="0" <?= $enabled == 0 ? '' : 'checked' ?>>
 										<span class="m-switch m-switch--icon-check">
 											<label>
-												<input type="checkbox" name="enabled" value="1" checked>
+												<input type="checkbox" name="enabled" value="1" <?= $enabled == 0 ? '' : 'checked' ?>>
 												<span></span>
 											</label>
 										</span>
@@ -131,10 +139,10 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Brand Link</label>
 									<div class="col-7">
-										<input type="hidden" name="redirect" value="0">
+										<input type="hidden" name="redirect" value="0" <?= $redirect == 0 ? '' : 'checked' ?>>
 										<span class="m-switch m-switch--icon-check">
 											<label>
-												<input type="checkbox" name="redirect" value="1" checked>
+												<input type="checkbox" name="redirect" value="1" <?= $redirect == 0 ? '' : 'checked' ?>>
 												<span></span>
 											</label>
 										</span>
@@ -147,17 +155,13 @@ $this->load->view('admin_panel/templates/subheader');
 										<div class="col-2">
 										</div>
 										<div class="col-7">
-											<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>&nbsp;&nbsp;
-											<button type="reset" class="btn btn-secondary m-btn m-btn--air m-btn--custom">Reset</button>
+											<button type="submit" name="action" value="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>&nbsp;&nbsp;
+											<button type="submit" name="action" value="save" class="btn btn-primary m-btn m-btn--air m-btn--custom">Save</button>
 										</div>
 									</div>
 								</div>
 							</div>
 						</form>
-					</div>
-					<div class="tab-pane " id="m_user_profile_tab_2">
-					</div>
-					<div class="tab-pane " id="m_user_profile_tab_3">
 					</div>
 				</div>
 			</div>

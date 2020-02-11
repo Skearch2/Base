@@ -114,13 +114,40 @@ $this->load->view('admin_panel/templates/subheader');
 		</div>
 
 		<div class="m-portlet__body">
-			<?php if ($this->session->flashdata('success') == 1) : ?>
+			<?php if ($this->session->flashdata('submit_success') == 1) : ?>
 				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						The link has successfully been made.
+						The research link has successfully been made.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('submit_failure') == 1) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to make the research link.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('save_success') == 1) : ?>
+				<div id="alert" class="alert alert-info alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The research link has been saved.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('save_failure') == 1) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to save the research link.
 					</div>
 				</div>
 			<?php endif; ?>
@@ -201,7 +228,7 @@ $this->load->view('admin_panel/templates/close_html');
 				columns: [{
 					data: "id"
 				}, {
-					data: "description"
+					data: "description_short"
 				}, {
 					data: "url"
 				}, {
