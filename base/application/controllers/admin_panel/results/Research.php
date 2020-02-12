@@ -189,9 +189,12 @@ class Research extends MY_Controller
         $data['url'] = $research->url;
         $data['display_url'] = $research->display_url;
         $data['field']['id'] = $research->field_id;
-        $data['field']['name'] = $research->field;
+        $data['field']['title'] = $research->field;
         $data['enabled'] = $research->enabled;
         $data['redirect'] = $research->redirect;
+
+
+        $data['fields'] = $this->fields->get_subcategories();
 
         $prioritiesObject = $this->fields->get_links_priority($research->field_id);
         $priorities = array();
