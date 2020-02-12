@@ -42,10 +42,10 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
 					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/categories/create_category"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+						<a href="<?= site_url("admin/results/research/add"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
 								<i class="la la-cart-plus"></i>
-								<span>Add Item</span>
+								<span>Add Research</span>
 							</span>
 						</a>
 					</li>
@@ -112,18 +112,54 @@ $this->load->view('admin_panel/templates/subheader');
 				</ul>
 			</div>
 		</div>
-		<div class="m-portlet__body">
 
+		<div class="m-portlet__body">
+			<?php if ($this->session->flashdata('submit_success') == 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The research link has successfully been made.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('submit_failure') == 1) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to make the research link.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('save_success') == 1) : ?>
+				<div id="alert" class="alert alert-info alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The research link has been saved.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('save_failure') == 1) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to save the research link.
+					</div>
+				</div>
+			<?php endif; ?>
 			<!--begin: Datatable -->
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
 						<th>ID</th>
-						<th>Title</th>
 						<th>Short Description</th>
-						<th>Fields</th>
-						<th>Featured</th>
-						<th>Status</th>
+						<th>URL</th>
+						<th>Field</th>
+						<th>Date Created</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -163,13 +199,12 @@ $this->load->view('admin_panel/templates/close_html');
 
 <script>
 	/* Deletes item*/
-	function deleteCategory(id, title) {
-		var title = title.replace(/%20/g, ' ');
-		var result = confirm("Are you sure you want delete item \"" + title + "\"?");
+	function deleteLink(id) {
+		var result = confirm("Are you sure you want delete link id \"" + id + "\"?");
 		if (result) {
 			$.ajax({
 				//changes
-				url: '<?= site_url(); ?>/admin/categories/delete_category/' + id,
+				url: '<?= site_url(); ?>/admin/results/research/delete/' + id,
 				type: 'DELETE',
 				success: function(result) {
 					$("#" + id).fadeOut("slow");
@@ -182,150 +217,41 @@ $this->load->view('admin_panel/templates/close_html');
 		}
 	}
 
-	/* Disable/Enable item*/
-	function toggle(id, row) {
-		$.ajax({
-			url: '<?= site_url(); ?>/admin/categories/toggle_category/' + id,
-			type: 'GET',
-			success: function(status) {
-				if (status == 0) {
-					document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
-					document.getElementById("tablerow" + row).innerHTML = "Off";
-				} else {
-					document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
-					document.getElementById("tablerow" + row).innerHTML = "Active";
-				}
-			},
-			error: function() {
-				alert("Unable to toggle item.");
-			}
-		});
-	}
-
 	var DatatablesDataSourceAjaxServer = {
 		init: function() {
 			$("#m_table_1").DataTable({
 				responsive: !0,
-				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
 				rowId: "id",
-				order: [
-					[1, 'asc']
-				],
-				searchDelay: 500,
-				lengthMenu: [
-					[50, 100, -1],
-					[50, 100, "ALL"]
-				],
 				processing: !0,
 				serverSide: !1,
-				ajax: "<?= site_url(); ?>/admin/categories/get_category_list/<?= $status; ?>",
+				ajax: "<?= site_url(); ?>admin/results/research/get",
 				columns: [{
 					data: "id"
 				}, {
-					data: "title"
-				}, {
 					data: "description_short"
 				}, {
-					data: "Fields"
+					data: "url"
 				}, {
-					data: "featured"
+					data: "field"
 				}, {
-					data: "enabled"
+					data: "date_created"
 				}, {
 					data: "Actions"
 				}],
 				columnDefs: [{
-						targets: -1,
-						title: "Actions",
-						orderable: !1,
-						render: function(a, t, e, n) {
-							var title = e['title'].replace(/ /g, '%20');
-							var row = (n.row).toString().slice(-1);
-							return '<a href="<?php echo site_url() . "admin/categories/update_category/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-								'<a onclick=deleteCategory("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
-						}
-					}, {
-						targets: 3,
-						title: "Fields",
-						render: function(a, t, e, n) {
-							return e['totalFields'] + " " +
-								'<a href="<?php echo site_url() . "admin/categories/subcategory_list/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
-
-						}
-					}, {
-						targets: 6,
-						render: function(a, t, e, n) {
-							var s = {
-								1: {
-									title: "Pending",
-									class: "m-badge--brand"
-								},
-								2: {
-									title: "Delivered",
-									class: " m-badge--metal"
-								},
-								3: {
-									title: "Member",
-									class: " m-badge--primary"
-								},
-								4: {
-									title: "Success",
-									class: " m-badge--success"
-								},
-								5: {
-									title: "Info",
-									class: " m-badge--info"
-								},
-								6: {
-									title: "Danger",
-									class: " m-badge--danger"
-								},
-								7: {
-									title: "Warning",
-									class: " m-badge--warning"
-								}
-							};
-							return void 0 === s[a] ? a : '<span class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + "</span>"
-						}
-					}, {
-						targets: 4,
-						render: function(a, t, e, n) {
-							var s = {
-								0: {
-									title: "No",
-									state: "danger"
-								},
-								1: {
-									title: "Yes",
-									state: "accent"
-								}
-							};
-							// return void 0===s[a]?a:'<span class="m-badge m-badge--'+s[a].state+' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-'+s[a].state+'">'+s[a].title+"</span>"
-							return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
-						}
-					},
-					{
-						targets: 5,
-						render: function(a, t, e, n) {
-							var s = {
-								2: {
-									title: "Pending",
-									class: "m-badge--brand"
-								},
-								1: {
-
-									title: "Active",
-									class: " m-badge--success"
-								},
-								0: {
-									title: "Off",
-									class: " m-badge--danger"
-								}
-							};
-							return void 0 === s[a] ? a : '<span style="cursor: pointer;" id= tablerow' + n['row'] + ' onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + '</span>'
-						}
+					targets: -1,
+					title: "Actions",
+					orderable: !1,
+					render: function(a, t, e, n) {
+						return '<a href="<?= site_url() . "admin/results/research/make_link/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Make Link"><i class="la la-anchor"></i></a>' +
+							'<a onclick=deleteLink(' + e['id'] + ') class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
-				]
+				}, {
+					targets: 2,
+					render: function(a, t, e, n) {
+						return '<a href="' + e['url'] + '" target="_blank">' + e['url'] + '</a>'
+					}
+				}]
 			})
 		}
 	}
