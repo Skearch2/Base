@@ -40,8 +40,13 @@ $this->load->view('templates/header');
             <div class="main-box">
                 <div class="box">
                     <h3>Browse All Fields</h3>
-                    <div class="right-btn pull-right"> <a href="#" id="sort-btn">A - Z</a>
-                    </div>
+                    <?php if (!empty($this->uri->segment(2))) : ?>
+                        <div class="right-btn pull-right"> <a href="<?= BASE_URL ?>browse" id="sort-btn">A - Z</a>
+                        </div>
+                    <?php else : ?>
+                        <div class="right-btn pull-right"> <a href="<?= BASE_URL ?>browse/desc" id="sort-btn">Z - A</a>
+                        </div>
+                    <?php endif ?>
                 </div>
                 <div class="middle-inner browse-inner">
                     <div class="row category_list_home accessorize-list" id="GFG_UP">
@@ -65,36 +70,6 @@ $this->load->view('templates/header');
         </div>
     </div>
 </section>
-
-<!-- Sort Umbrellas -->
-<script type="text/javascript">
-    function sortUnorderedList(ul, sortDescending) {
-        if (typeof ul == "string")
-            ul = document.getElementById(ul);
-        var lis = ul.getElementsByTagName("a");
-        var vals = [];
-
-        for (var i = 0, l = lis.length; i < l; i++)
-            vals.push(lis[i].innerHTML);
-
-        vals.sort();
-
-        if (sortDescending)
-            vals.reverse();
-
-        for (var i = 0, l = lis.length; i < l; i++)
-            lis[i].innerHTML = vals[i];
-    }
-
-    window.onload = function() {
-        var desc = false;
-        document.getElementById("sort-btn").onclick = function() {
-            sortUnorderedList("GFG_UP", desc);
-            desc = !desc;
-            return false;
-        }
-    }
-</script>
 
 <?php
 
