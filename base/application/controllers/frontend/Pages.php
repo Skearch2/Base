@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File: ~/application/controller/Pages.php
+ * File: ~/application/controller/frontend.php
  */
 
 if (!defined('BASEPATH')) {
@@ -9,13 +9,13 @@ if (!defined('BASEPATH')) {
 }
 
 /**
- * Control default pages for My Skearch
+ * Control default pages for Skearch frontend
  *
  * Shows default fields on the homepage
  *
  * @version      2.0
  * @author       Iftikhar Ejaz <ejaziftikhar@gmail.com>
- * @copyright    Copyright (c) 2018 Skearch LLC
+ * @copyright    Copyright (c) 2020 Skearch LLC
  */
 
 class Pages extends MY_Controller
@@ -28,30 +28,23 @@ class Pages extends MY_Controller
     $this->load->model('admin_panel/Option_model_admin', 'Option_model');
   }
 
-  public function index($page = 'default')
+  public function index()
   {
 
-    if (!$page) {
-      show_error(404);
-    }
-
-    if (!file_exists(APPPATH . '/views/pages/home.php')) {
+    if (!file_exists(APPPATH . '/views/frontend/home.php')) {
       show_404();
     }
 
     // get fields for homepage
-    if ($page === 'default') {
-      $data['fields'] = $this->Category_model->get_homepage_fields();
-    }
+    $data['fields'] = $this->Category_model->get_homepage_fields();
 
     $data['user'] = $this->ion_auth->user()->row();
     $data['admin'] = $this->ion_auth->is_admin();
-    $data['page'] = $page;
     $data['version'] = $this->Option_model->get_skearch_ver();
 
     // set page title
     $data['title'] = ucwords('Skearch Home');
-    $this->load->view('pages/home', $data);
+    $this->load->view('frontend/home', $data);
   }
 
   /**
@@ -60,7 +53,7 @@ class Pages extends MY_Controller
   public function browse_all($order = 'asc')
   {
 
-    if (!file_exists(APPPATH . '/views/pages/browse.php')) {
+    if (!file_exists(APPPATH . '/views/frontend/browse.php')) {
       show_404();
     }
 
@@ -89,7 +82,7 @@ class Pages extends MY_Controller
     // page title
     $data['title'] = ucfirst('browse all fields');
 
-    $this->load->view('pages/browse', $data);
+    $this->load->view('frontend/browse', $data);
   }
 
 
@@ -99,7 +92,7 @@ class Pages extends MY_Controller
   public function browse_umbrella($umbrella_name)
   {
 
-    if (!file_exists(APPPATH . '/views/pages/umbrella.php')) {
+    if (!file_exists(APPPATH . '/views/frontend/umbrella.php')) {
       show_404();
     }
 
@@ -193,14 +186,14 @@ class Pages extends MY_Controller
 
       // set page title
       $data['title'] = ucfirst(urldecode($umbrella_name));
-      $this->load->view('pages/umbrella', $data);
+      $this->load->view('frontend/umbrella', $data);
     }
   }
 
   public function browse_field($umbrella_name, $field_name)
   {
 
-    if (!file_exists(APPPATH . '/views/pages/field.php')) {
+    if (!file_exists(APPPATH . '/views/frontend/field.php')) {
       show_404();
     }
 
@@ -298,7 +291,7 @@ class Pages extends MY_Controller
         // set page title
         $data['title'] = ucwords(urldecode($umbrella_name) . " - " . urldecode($field_name));
 
-        $this->load->view('pages/field', $data);
+        $this->load->view('frontend/field', $data);
       }
     }
   }
