@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>skearch</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  	<script src="js/custom.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+
+	function sortUnorderedList(ul, sortDescending) {
+		if(typeof ul == "string")
+			ul = document.getElementById(ul);
+		var lis = ul.getElementsByTagName("a");
+		var vals = [];
+
+		for(var i = 0, l = lis.length; i < l; i++)
+			vals.push(lis[i].innerHTML);
+
+		vals.sort();
+
+		if(sortDescending)
+			vals.reverse();
+
+		for(var i = 0, l = lis.length; i < l; i++)
+			lis[i].innerHTML = vals[i];
+	}
+
+	window.onload = function() {
+		var desc = false;
+		document.getElementById("button_order").onclick = function() {
+			sortUnorderedList("GFG_UP", desc);
+			desc = !desc;
+			return false;
+		}
+	}
+	</script>
+
+<!--dasdfas--->
+
+<script>
+$('#button_shuffle').click(function() {
+	shuffleElements( $('li') );
+});
+
+function shuffleElements($elements) {
+	var i, index1, index2, temp_val;
+
+	var count = $elements.length;
+	var $parent = $elements.parent();
+	var shuffled_array = [];
+
+
+	// populate array of indexes
+	for (i = 0; i < count; i++) {
+		shuffled_array.push(i);
+	}
+
+	// shuffle indexes
+	for (i = 0; i < count; i++) {
+		index1 = (Math.random() * count) | 0;
+		index2 = (Math.random() * count) | 0;
+
+		temp_val = shuffled_array[index1];
+		shuffled_array[index1] = shuffled_array[index2];
+		shuffled_array[index2] = temp_val;
+	}
+
+	// apply random order to elements
+	$elements.detach();
+	for (i = 0; i < count; i++) {
+		$parent.append( $elements.eq(shuffled_array[i]) );
+	}
+}
+
+</script>
+
+
+<!--sd/sdfsdf-->
+
+
+
+</head>
+
+<body>
+	<header>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-4 col-xs-7 logo">
+					<img src="images/logo.png" class="img-responsive" alt="logo" />
+				</div>
+				<div class="col-sm-2 col-xs-5 field-btn">
+					<a class="btn-cat" href="#"></a>
+          <a class="theme-change" href="#">
+              <img src="images/moon_theme.png" class="theme-change moon" alt="" />
+              <img src="images/sun_theme.png" class="theme-change sun" alt="" />
+          </a>
+
+				</div>
+				<div class="col-sm-6 col-xs-12 search-box">
+					<div class="search-bar">
+						<input type="text" size="64" class="google-input" placeholder="Enter Keywords...">
+						<button class="search-btn" border="0" type="submit"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+	<!--ad-->
+	<section class="ad">
+			<div class="container">
+					<img src="images/ad.png" class="img-responsive" alt="" />
+			</div>
+	</section>
+
+	<section class="field-main">
+		<div class="container">
+			<div class="row1">
+				<div class="main-box no-border">
+					<h1> Big Store</h1>
+					<div class="box inline-box">
+						<h3>Related Fields</h3>
+					</div>
+					<div class="middle-inner browse-inner border-box">
+
+							<div class="row category_list_home accessorize-list">
+								<div class="col-sm-9">
+								<!--	Get user top level categories from 'skearch_categories' -->
+							<div class="col-sm-4 f-box">
+								<a href="#" title="Gift">Gift</a>
+							</div>
+							<div class="col-sm-4 f-box">
+								<a href="#" title="Made in USA">Made in USA</a>
+							</div>
+						</div>
+						<div class="col-sm-3 um-link">
+								<a href="shop.html" title="shop">Shop</a>
+						</div>
+            </div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="list-section">
+			<div class="container">
+					<div class="row">
+								<div class="col-md-8 col-sm-9">
+									<div class="skearch-result-blue">
+												<div class="rhead">
+														<div class="row">
+															<div class="col-md-6 skearch-result-hd-blue">
+																	<a title="Display results in priority order" style="cursor: pointer" id="priority_logo">
+																	<img src="https://dev.skearch.com/base/assets/style/images/logo-result.png" width="100"></a>
+															</div>
+															<div class="col-md-6 result-btn-right-blue">
+																	<a id="button_order" value="asc" title="Display results in ascending order" class="btn-a2z">A-Z</a>
+																	<a id="button_shuffle" title="Display results in shuffling order" class="btn-shuffle">Shuffle</a>
+															</div>
+														</div>
+											</div>
+											<div class="result-listing-blue">
+	<div id="container_vertical" >
+		<ul class="result-listing" tabindex="0" id = "GFG_UP">
+			<li>
+				<div>1. <a href="http://www.amazon.com/" title="amazon" target="_blank">amazon</a>
+				</div>
+				<p>Online Shopping for Electronics, Apparel, Computers, Books, DVDs &amp; more...
+					<br>	<span><a href="http://www.amazon.com/" title="amazon" target="_blank">www.amazon.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>2. <a href="http://www.target.com/" title="Target" target="_blank">Target</a>
+				</div>
+				<p>Target.com: Furniture, Baby, Electronics, Toys...
+					<br>	<span><a href="http://www.target.com/" title="Target" target="_blank">www.target.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>3. <a href="http://www.ebay.com/" title="eBay" target="_blank">eBay</a>
+				</div>
+				<p>The world's largest online marketplace...
+					<br>	<span><a href="http://www.ebay.com/" title="eBay" target="_blank">www.ebay.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>4. <a href="http://www.containerstore.com" title="The Container Store" target="_blank">The Container Store</a>
+				</div>
+				<p>The Original Storage &amp; Organization Store...
+					<br>	<span><a href="http://www.containerstore.com" title="The Container Store" target="_blank">www.containerstore.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>5. <a href="http://www.ikea.com/us/en/" title="IKEA" target="_blank">IKEA</a>
+				</div>
+				<p>Home furnishings, kitchens, appliances, sofas, beds, mattresses - IKEA...
+					<br>	<span><a href="http://www.ikea.com/us/en/" title="IKEA" target="_blank">www.ikea.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>6. <a href="http://www.dsw.com" title="DSW" target="_blank">DSW</a>
+				</div>
+				<p>Designer Shoes, Women's Shoes, Men's Shoes, Kid's Shoes, Boots, Sandals...
+					<br>	<span><a href="http://www.dsw.com" title="DSW" target="_blank">www.dsw.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>7. <a href="http://www.barnesandnoble.com" title="BARNES &amp; NOBLE" target="_blank">BARNES &amp; NOBLE</a>
+				</div>
+				<p>Books, Text Books, eBooks, Toys, Games, DVD's and More...
+					<br>	<span><a href="http://www.barnesandnoble.com" title="BARNES &amp; NOBLE" target="_blank">www.barnesandnoble.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>8. <a href="http://www.tjmaxx.com" title="T.J.Maxx" target="_blank">T.J.Maxx</a>
+				</div>
+				<p>Desginer &amp; Brand Name Clothing, Accessories &amp; Home Decor...
+					<br>	<span><a href="http://www.tjmaxx.com" title="T.J.Maxx" target="_blank">www.tjmaxx.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>9. <a href="http://www.macys.com/" title="macy's" target="_blank">macy's</a>
+				</div>
+				<p>the magic of Macy's - Shop Fashion Clothing &amp; Accessories...
+					<br>	<span><a href="http://www.macys.com/" title="macy's" target="_blank">www.macys.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>10. <a href="http://www.crateandbarrel.com" title="Crate&amp;Barrel" target="_blank">Crate&amp;Barrel</a>
+				</div>
+				<p>Shop All Departents, Inspiration, Gift Registry...
+					<br>	<span><a href="http://www.crateandbarrel.com" title="Crate&amp;Barrel" target="_blank">www.crateandbarrel.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>11. <a href="https://needsupply.com" title="Need Supply Co." target="_blank">Need Supply Co.</a>
+				</div>
+				<p>A clothing &amp; lifestyle store based out of Richmond, VA
+					<br>	<span><a href="https://needsupply.com" title="Need Supply Co." target="_blank">www.needsupply.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>12. <a href="http://www.potterybarn.com" title="POTTERY BARN" target="_blank">POTTERY BARN</a>
+				</div>
+				<p>Home Furnishings, Home Decor, Outdoor Furniture &amp; Modern Furniture...
+					<br>	<span><a href="http://www.potterybarn.com" title="POTTERY BARN" target="_blank">www.potterybarn.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>13. <a href="http://www.bloomingdales.com" title="bloomingdale's" target="_blank">bloomingdale's</a>
+				</div>
+				<p>Designers, Women, Men, Kids, Shoes, Handbags...
+					<br>	<span><a href="http://www.bloomingdales.com" title="bloomingdale's" target="_blank">www.bloomingdales.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>14. <a href="http://shop.nordstrom.com" title="Nordstrom" target="_blank">Nordstrom</a>
+				</div>
+				<p>Women, Men, Juniors, Kids, Brands, Specialty Shops, Gifts...
+					<br>	<span><a href="http://shop.nordstrom.com" title="Nordstrom" target="_blank">www.shop.nordstrom.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>15. <a href="http://www.samsclub.com" title="Sam's CLUB" target="_blank">Sam's CLUB</a>
+				</div>
+				<p>Memberships, Shopping, Products...
+					<br>	<span><a href="http://www.samsclub.com" title="Sam's CLUB" target="_blank">www.samsclub.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>16. <a href="https://www.neimanmarcus.com" title="Neiman Marcus" target="_blank">Neiman Marcus</a>
+				</div>
+				<p>Designer Clothing, Shoes, Handbags &amp; Beauty
+					<br>	<span><a href="https://www.neimanmarcus.com" title="Neiman Marcus" target="_blank">www.neimanmarcus.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>17. <a href="http://www.costco.com" title="COSTCO" target="_blank">COSTCO</a>
+				</div>
+				<p>Welcome to Costco Wholesale
+					<br>	<span><a href="http://www.costco.com" title="COSTCO" target="_blank">www.costco.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>18. <a href="http://www.saksfifthavenue.com" title="Sak's Fifth Avenue" target="_blank">Sak's Fifth Avenue</a>
+				</div>
+				<p>Women's &amp; Men's Designer Apparel, Shoes, Handbags...
+					<br>	<span><a href="http://www.saksfifthavenue.com" title="Sak's Fifth Avenue" target="_blank">www.saksfifthavenue.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>19. <a href="http://www.dillards.com/" title="Dillard's" target="_blank">Dillard's</a>
+				</div>
+				<p>Official Site of Dillard's Department Stores | The Style of Your Life...
+					<br>	<span><a href="http://www.dillards.com/" title="Dillard's" target="_blank">www.dillards.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>20. <a href="http://www.landsend.com" title="LANDS' END" target="_blank">LANDS' END</a>
+				</div>
+				<p>Swimwear, Outerwear, Casual Clothing &amp; more...
+					<br>	<span><a href="http://www.landsend.com" title="LANDS' END" target="_blank">www.landsend.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>21. <a href="http://www.belk.com" title="belk" target="_blank">belk</a>
+				</div>
+				<p>This is where southern style lives...
+					<br>	<span><a href="http://www.belk.com" title="belk" target="_blank">www.belk.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>22. <a href="http://www.vonmaur.com" title="Von Maur" target="_blank">Von Maur</a>
+				</div>
+				<p>Women, Special Occasion, Men, Juniors, Children...
+					<br>	<span><a href="http://www.vonmaur.com" title="Von Maur" target="_blank">www.vonmaur.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>23. <a href="http://www.kohls.com/" title="KOHL'S" target="_blank">KOHL'S</a>
+				</div>
+				<p>Shop Clothing, Shoes, Home, Kitchen, Bedding, Toys &amp; more...
+					<br>	<span><a href="http://www.kohls.com/" title="KOHL'S" target="_blank">www.kohls.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>24. <a href="http://www.anthropologie.com" title="ANTHROPOLOGIE" target="_blank">ANTHROPOLOGIE</a>
+				</div>
+				<p>Clothing, the Dress Shop, Shoes, Accessories, House &amp; Home...
+					<br>	<span><a href="http://www.anthropologie.com" title="ANTHROPOLOGIE" target="_blank">www.anthropologie.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>25. <a href="http://www.williams-sonoma.com" title="WILLIAMS-SONOMA" target="_blank">WILLIAMS-SONOMA</a>
+				</div>
+				<p>Cookware, Cooking Utensils, Kitchen Decor &amp; Gourmet Foods...
+					<br>	<span><a href="http://www.williams-sonoma.com" title="WILLIAMS-SONOMA" target="_blank">www.williams-sonoma.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>26. <a href="http://www.skymall.com/" title="SkyWall" target="_blank">SkyWall</a>
+				</div>
+				<p>SkyMall | Online Shopping Catalog, Unique Gifts &amp; Travel Accessories ...
+					<br>	<span><a href="http://www.skymall.com/" title="SkyWall" target="_blank">www.skymall.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>27. <a href="http://www.tiffany.com" title="TIFFANY &amp; CO." target="_blank">TIFFANY &amp; CO.</a>
+				</div>
+				<p>THE WORLD OF TIFFANY - Engagement, Jewelry, Watches, Designers...
+					<br>	<span><a href="http://www.tiffany.com" title="TIFFANY &amp; CO." target="_blank">www.tiffany.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>28. <a href="http://www.disneystore.com" title="DISNEY STORE" target="_blank">DISNEY STORE</a>
+				</div>
+				<p>Official Site for Disney Merchandise...
+					<br>	<span><a href="http://www.disneystore.com" title="DISNEY STORE" target="_blank">www.disneystore.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>29. <a href="http://www.walmart.com/" title="Walmart" target="_blank">Walmart</a>
+				</div>
+				<p>Walmart.com: Save money | Live better...
+					<br>	<span><a href="http://www.walmart.com/" title="Walmart" target="_blank">www.walmart.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>30. <a href="http://www.sears.com/" title="SEARS" target="_blank">SEARS</a>
+				</div>
+				<p>Sears | In-Store &amp; Online Shopping: Appliances, Clothing &amp; more...
+					<br>	<span><a href="http://www.sears.com/" title="SEARS" target="_blank">www.sears.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>31. <a href="http://www.jcpenney.com/" title="jcp" target="_blank">jcp</a>
+				</div>
+				<p>Women's Clothing, Men's Clothing, Boy's &amp; Girl's Clothing, Furniture...
+					<br>	<span><a href="http://www.jcpenney.com/" title="jcp" target="_blank">www.jcpenney.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>32. <a href="https://www.shopwithscrip.com/" title="ShopWithScrip" target="_blank">ShopWithScrip</a>
+				</div>
+				<p>Powered by Great Lakes Scrip Center...
+					<br>	<span><a href="https://www.shopwithscrip.com/" title="ShopWithScrip" target="_blank">www.shopwithscrip.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>33. <a href="http://www.fao.com" title="FAO SCHWARZ" target="_blank">FAO SCHWARZ</a>
+				</div>
+				<p>Home of the legendary toy company...
+					<br>	<span><a href="http://www.fao.com" title="FAO SCHWARZ" target="_blank">www.fao.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>34. <a href="http://www.toysrus.com" title="Toys R Us" target="_blank">Toys R Us</a>
+				</div>
+				<p>The Official Toys R Us Site - Toys, Games &amp; More...
+					<br>	<span><a href="http://www.toysrus.com" title="Toys R Us" target="_blank">www.toysrus.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>35. <a href="http://www.buy.com/" title="Rakuten.com" target="_blank">Rakuten.com</a>
+				</div>
+				<p>Computers, Electronics, Digital Cameras, Books, DVDs, Music, Games...
+					<br>	<span><a href="http://www.buy.com/" title="Rakuten.com" target="_blank">www.rakuten.com</a></span>
+				</p>
+			</li>
+			<li>
+				<div>36. <a href="http://www.mikasa.com" title="MIKASA" target="_blank">MIKASA</a>
+				</div>
+				<p>By Pattern, DIning, Drinkware, Flatware, Home Decor, Outlet...
+					<br>	<span><a href="http://www.mikasa.com" title="MIKASA" target="_blank">www.mikasa.com</a></span>
+				</p>
+			</li>
+		</ul>
+	</div>
+</div>
+
+										</div>
+								</div>
+								<div class="col-md-4 col-sm-3">
+									<img src="images/ad-hor.png" class="img-responsive" alt="" />
+								</div>
+					</div>
+			</div>
+	</section>
+
+
+
+
+
+  <footer>
+    <div class="container">
+      <div class="row">
+        		<div class="footer-link">
+
+        			<a href="#">About</a>
+        			<a href="#">Brands</a>
+        			<a href="#">Privacy Policy</a>
+        			<a href="#">Terms of Service</a>
+        			<a href="#">News</a>
+
+        			<p class="copy-right">
+        				Copyright © 2020 Skearch, LLC All rights reserved<br>
+        			</p>
+        		</div>
+      	</div>
+        	</div>
+  	</footer>
+
+</body>
+
+</html>
