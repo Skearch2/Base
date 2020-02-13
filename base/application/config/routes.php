@@ -51,33 +51,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 
 // Reserved
-$route['default_controller'] = 'pages/index';
+$route['default_controller'] = 'frontend/pages/index';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = false;
 
 /*
-Skearch static pages Routes
+Skearch Frontend Routes
  */
-$route['brands'] = 'pages/static/brands';
-
-
-/*
-Skearch Categories Routes
- */
-$route['browse'] = 'pages/browse_all';
-$route['browse/desc'] = 'pages/browse_all/desc';
-$route['browse/get_data/umbrella'] = 'pages/get_data/umbrella';
-$route['browse/get_data/field'] = 'pages/get_data/field';
-$route['browse/(:any)'] = 'pages/browse_umbrella/$1';
-$route['browse/(:any)/(:any)'] = 'pages/browse_field/$1/$2';
-$route['browse/get_field_results/(:any)/(:any)'] = 'pages/get_field_results/$1/$2';
-
-
+$route['browse'] = 'frontend/pages/browse_all';
+$route['browse/desc'] = 'frontend/pages/browse_all/desc';
+$route['browse/get_data/umbrella'] = 'frontend/pages/get_data/umbrella';
+$route['browse/get_data/field'] = 'frontend/pages/get_data/field';
+$route['browse/(:any)'] = 'frontend/pages/browse_umbrella/$1';
+$route['browse/(:any)/(:any)'] = 'frontend/pages/browse_field/$1/$2';
+$route['browse/get_field_results/(:any)/(:any)'] = 'frontend/pages/get_field_results/$1/$2';
 
 /*
 Search Routes
  */
-$route['search'] = 'search';
+$route['search'] = 'frontend/search';
 
 /*
 My Skearch Routes
@@ -214,7 +206,7 @@ $route['admin/option/brandlinks_status_all'] = 'admin_panel/option/brandlinks_st
 /*
 CSS Routes
  */
-$route['setchange'] = 'setchange';
+$route['setchange'] = 'frontend/setchange';
 
 // test datatables
 $route['datatable/show'] = 'datatable_test/show';
@@ -223,5 +215,5 @@ $route['datatable/get'] = 'datatable_test/get';
 /*
 Media Engine Api
  */
-$route['redirect/link/id/(:num)'] = 'media/media_redirect/$1';
-$route['impression/image/id/(:num)'] = 'media/update_image_impression/$1';
+$route['redirect/link/id/(:num)'] = 'frontend/media/media_redirect/$1';
+$route['impression/image/id/(:num)'] = 'frontend/media/update_image_impression/$1';
