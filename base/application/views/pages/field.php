@@ -9,68 +9,73 @@ $this->load->view('templates/head');
 // Start body element
 $this->load->view('templates/startbody');
 
+// Load appropriate header
+$this->load->view('templates/header');
+
 ?>
 
 <script type="text/javascript">
-	var t;
+    // var t;
 
-	var start = $('#myCarouselB').find('.active').attr('data-interval');
-	t = setTimeout("$('#myCarouselB').carousel({interval: 1000});", start-1000);
+    // var start = $('#myCarouselB').find('.active').attr('data-interval');
+    // t = setTimeout("$('#myCarouselB').carousel({interval: 1000});", start - 1000);
 
-	$('#myCarouselB').on('slid.bs.carousel', function () {
-			 clearTimeout(t);
-			 var duration = $(this).find('.active').attr('data-interval');
+    // $('#myCarouselB').on('slid.bs.carousel', function() {
+    //     clearTimeout(t);
+    //     var duration = $(this).find('.active').attr('data-interval');
 
-			 $('#myCarouselB').carousel('pause');
-			 t = setTimeout("$('#myCarouselB').carousel();", duration-1000);
-	})
+    //     $('#myCarouselB').carousel('pause');
+    //     t = setTimeout("$('#myCarouselB').carousel();", duration - 1000);
+    // })
 </script>
 
 <script>
-	$(document).ready(function(){
-	    $.fn.showResults = function(value) {
-			  $.ajaxSetup({ cache: false });
-			  var uri = "<?=site_url('browse/get_field_results/' . $field_id . '/');?>" + value;
-	        $.getJSON( uri, function( response ) {
-				$(".result-listing").html("");
-				var items = [];
-				$.each( response, function( key, val ) {
-						items.push("\
+    $(document).ready(function() {
+        $.fn.showResults = function(value) {
+            $.ajaxSetup({
+                cache: false
+            });
+            var uri = "<?= site_url('browse/get_field_results/' . $field_id . '/'); ?>" + value;
+            $.getJSON(uri, function(response) {
+                $(".result-listing").html("");
+                var items = [];
+                $.each(response, function(key, val) {
+                    items.push("\
 						<li>\
-							<div>"+(++key)+". <a href='"+(val.www)+"' title='"+(val.title)+"' target='_blank'>"+(val.title)+"</a></div>\
-							<p>"+(val.description_short)+"</br>\
-							<span><a href='"+(val.www)+"' title='"+(val.title)+"' target='_blank'>"+(val.display_url)+"</a>\</span>\
-              </p>\
+							<div>" + (++key) + ". <a href='" + (val.www) + "' title='" + (val.title) + "' target='_blank'>" + (val.title) + "</a></div>\
+							<p>" + (val.description_short) + "</br>\
+							    <span><a href='" + (val.www) + "' title='" + (val.title) + "' target='_blank'>" + (val.display_url) + "</a>\</span>\
+                            </p>\
 						</li>\
 						");
-				});
-				$( "<ul/>", {
-					"class": "result-listing",
-	            "tabindex": 0,
-					html: items.join( "" )
-				}).appendTo( "#container_vertical" );
-			});
-	   }
+                });
+                $("<ul/>", {
+                    "class": "result-listing",
+                    "tabindex": 0,
+                    "id": "GFG_UP",
+                    html: items.join("")
+                }).appendTo("#container_vertical");
+            });
+        }
 
-        $("#button_shuffle").click(function(){
+        $("#button_shuffle").click(function() {
             $.fn.showResults("random");
         });
 
-        $("#priority_logo").click(function(){
+        $("#priority_logo").click(function() {
             $.fn.showResults("priority");
         });
 
-        $("#button_order").click(function(){
+        $("#button_order").click(function() {
             var order = $(this).attr('value');
             if (order === 'asc') {
                 $("#button_order").removeClass('btn-a2z').addClass('btn-z2a');
-                $("#button_order").attr('value','desc');
+                $("#button_order").attr('value', 'desc');
                 $("#button_order").html("Z-A")
                 $("#button_order").prop('title', 'Display results in descending order');
-            }
-            else if (order === 'desc') {
+            } else if (order === 'desc') {
                 $("#button_order").removeClass('btn-z2a').addClass('btn-a2z');
-                $("#button_order").attr('value','asc');
+                $("#button_order").attr('value', 'asc');
                 $("#button_order").html("A-Z");
                 $("#button_order").prop('title', 'Display results in ascending order');
             }
@@ -79,131 +84,103 @@ $this->load->view('templates/startbody');
 
         $.fn.showResults("priority");
 
-	});
+    });
 </script>
 
-<div class="top-inner">
-	<div class="logo-result">
-         <a href="<?=site_url();?>"><img src="<?=site_url(ASSETS);?>/style/images/logo-result.png" alt="" /></a>
-    </div>
-	<div class="top-inner-right-result">
-	    <div class="search-box-top">
-        <form action="javascript:void(0)" onsubmit="ajaxSearch(document.getElementById('ajaxsearch').value)">
-                        <input id="ajaxsearch" type="text" size="64" class="google-input" placeholder="Enter Keywords...">
-	                    <div class="relative">
-		                    <button class="search-btn" border="0" onclick="searchBtn()" type="submit"/>
-	                    </div>
-                    </form>
-		</div>
-        <div class="result-btn-div">
-            <a class="btn-cat" href="<?=site_url();?>browse" style="float: left;">&nbsp;</a>
+<!-- Media Box A -->
+<section class="ad">
+    <div class="container">
+        <div id="myCarouselA" class="carousel slide carousel-fade" data-ride="carousel">
+            <div class="carousel-inner">
+                <?php $media_box_a_index = 0; ?>
+                <?php foreach ($media_box_a as $banner) : ?>
+                    <div class="<?= ($media_box_a_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
+                        <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
+                            <img class="responsive" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
+                        </a>
+                    </div>
+                    <?php $media_box_a_index++; ?>
+                <?php endforeach ?>
+            </div>
         </div>
     </div>
-    <div id="main" role="main">
-        <section class="slider">
-            <div class="flexslider" style="background: none repeat scroll 0 0 #fff;border: -px solid #97afb1;border-radius: 6px;">
-							<div id="myCarouselA" class="carousel slide carousel-fade">
-                <div class="carousel-inner">
-                  <?php $media_box_a_index = 0; ?>
-                  <?php foreach($media_box_a as $banner) : ?>
-										<div class="<?php echo ($media_box_a_index == 0 ?  "carousel-item active" : "carousel-item"); ?>" data-imageid="<?= $banner['imageid']; ?>" data-interval="<?= $banner['duration']; ?>">
-											<a href='<?= site_url("redirect/link/id/".$banner['imageid']); ?>'  target='_blank' title='<?= $banner['title']; ?>'>
-												<img src="<?= $banner['image']; ?>" alt="<?= $banner['description']; ?>" />
-											</a>
-										</div>
-                    <?php $media_box_a_index++; ?>
-                  <?php endforeach; ?>
+</section>
+
+
+<section class="field-main">
+    <div class="container">
+        <div class="row1">
+            <div class="main-box no-border">
+                <h1><?= ucwords($field_name) ?></h1>
+                <div class="box inline-box">
+                    <h3>Related Fields</h3>
                 </div>
-              </div>
+                <div class="middle-inner browse-inner border-box">
+                    <div class="row category_list_home accessorize-list">
+                        <div class="col-sm-9">
+                            <? if (!empty($suggest_fields)) : ?>
+                                <?php foreach ($suggest_fields as $field) : ?>
+                                    <?php if (!strcasecmp($field->suggest_field_title, $field_name)) continue ?>
+                                    <div class="col-sm-4 f-box">
+                                        <a href="<?= BASE_URL ?>browse/<?= $umbrella_name ?>/<?= $field->suggest_field_title ?>" title="<?= $field->suggest_field_title ?>"><?= $field->suggest_field_title ?></a>
+                                    </div>
+                                <?php endforeach ?>
+                            <? endif ?>
+                        </div>
+                        <div class="col-sm-3 um-link">
+                            <a href="<?= BASE_URL ?>browse/<?= $umbrella_name ?>" title="<?= $umbrella_name ?>"><?= $umbrella_name ?></a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
     </div>
-</div>
-                    <div class='middle-inner'>
-												<div class='feed-info-hd-blue'> <?=ucwords($field_name);?></div>
-                    <div class='result-btn-area-blue-field singlerows'>
-                        <div class='related'>Related Fields</div>
-                        <!--  Need to be inside related field block always on the upper right corner -->
-                       <div class="rel-links">
-                        <ul class='related_fields'>
+</section>
 
-                            <!-- Loop through subcategories and get all related fields -->
-
-                            <?php
-                            if(!$suggest_fields) echo "<li>Suggestions not set</li>";
-                            else {
-                                foreach ($suggest_fields as $field):?>
-                                    <?php
-                                        if (!strcasecmp($field->suggest_field_title, $field_name)) {
-                                            continue;
-                                        }
-
-                                        $ft = $field->suggest_field_title;
-                                        ?>
-                                    <li class='category_list_home'>
-                                    <?php echo anchor("browse/" . strtolower($umbrella_name) . "/" . strtolower($ft), "<span>" . ucfirst($ft) . "</span>", array('title' => $ft, 'rel' => 'noindex,nofollow'));?>
-                                    </li>
-
-                            <?php endforeach; }?>
-
-                        </ul>
-						<div class="um-link">
-									<?php echo anchor("browse/" . strtolower($umbrella_name) . "/", "<span>" . ucfirst($umbrella_name) . "</span>", array('title' => $umbrella_name, 'rel' => 'noindex,nofollow'));?>
-									</div>
-									</div>
-
+<section class="list-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-sm-9">
+                <div class="skearch-result-blue">
+                    <div class="rhead">
+                        <div class="row">
+                            <div class="col-md-6 skearch-result-hd-blue">
+                                <a title="Display results in priority order" style="cursor: pointer" id="priority_logo">
+                                    <img src="<?= base_url(ASSETS) ?>/frontend/images/logo-result.png" width="100"></a>
+                            </div>
+                            <div class="col-md-6 result-btn-right-blue">
+                                <a id="button_order" value="asc" title="Display results in ascending order" class="btn-a2z">A-Z</a>
+                                <a id="button_shuffle" title="Display results in shuffling order" class="btn-shuffle">Shuffle</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-listing-blue">
+                        <div id="container_vertical">
+                            <!-- Result listing goes here through ajax query -->
+                        </div>
                     </div>
 
-                    <div class='midd-result-con singlerows'>
-					<div class="row mp0">
-
-                        <aside class='midd-result-left col-md-8'>
-                        <div class='skearch-result-blue'>
-                            <div class="rhead">
-																<div class="row">
-			                            <div class='col-md-6 skearch-result-hd-blue'>
-			                                <a title = "Display results in priority order" style="cursor: pointer" id="priority_logo"><img src='<?=site_url(ASSETS);?>/style/images/logo-result.png' width="100"></a>
-			                            </div>
-																	<div class='col-md-6 result-btn-right-blue'>
-			                                <a id= 'button_order' value='asc' title='Display results in ascending order' class='btn-a2z'>A-Z</a>
-																			<a id='button_shuffle' title='Display results in shuffling order' class='btn-shuffle'>Shuffle</a>
-					                        </div>
-																</div>
-													</div>
-                            <div class='result-listing-blue'>
-                                <div id='container_vertical'>
-                                </div>
-                            </div>
-                        </div>
-						 </aside>
-						  <aside class="result-right col-md-4">
-                            <div id="feature-right-banner">
-                                <div style="text-align:center;" id="feature_side_slideshow" class="horiz-scroll-right banner-container-right">
-                                    <section class="slider_right">
-                                        <div class="flexslider_right">
-																					<div id="myCarouselB" class="carousel slide carousel-fade">
-														                <div class="carousel-inner">
-														                  <?php $media_box_b_index = 0; ?>
-														                  <?php foreach($media_box_b as $banner) : ?>
-																								<div class="<?php echo ($media_box_b_index == 0 ?  "carousel-item active" : "carousel-item"); ?>" data-imageid="<?= $banner['imageid']; ?>" data-interval="<?= $banner['duration']; ?>">
-																									<a href='<?= site_url("redirect/link/id/".$banner['imageid']); ?>'  target='_blank' title='<?= $banner['title']; ?>'>
-																										<img src="<?= $banner['image']; ?>" alt="<?= $banner['description']; ?>" />
-																									</a>
-																								</div>
-														                    <?php $media_box_b_index++; ?>
-														                  <?php endforeach; ?>
-														                </div>
-														              </div>
-                                        </div>
-                                    </section>
-                                </div>
-                            </div>
-                        </aside>
-						</div>
-                        </div>
-
-
                 </div>
+            </div>
+            <div class="col-md-4 col-sm-3">
+                <div id="myCarouselB" class="carousel slide carousel-fade" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <?php $media_box_b_index = 0; ?>
+                        <?php foreach ($media_box_b as $banner) : ?>
+                            <div class="<?= ($media_box_b_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
+                                <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
+                                    <img class="responsive" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
+                                </a>
+                            </div>
+                            <?php $media_box_b_index++; ?>
+                        <?php endforeach ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <?php
 
 // Load default footer.
