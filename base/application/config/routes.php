@@ -51,13 +51,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 
 // Reserved
-$route['default_controller'] = 'frontend/pages/index';
+$route['default_controller'] = 'landing/index';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = false;
 
 /*
 Skearch Frontend Routes
  */
+$route['home'] = 'frontend/pages';
 $route['browse'] = 'frontend/pages/browse_all';
 $route['browse/desc'] = 'frontend/pages/browse_all/desc';
 $route['browse/get_data/umbrella'] = 'frontend/pages/get_data/umbrella';
