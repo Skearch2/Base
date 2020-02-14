@@ -17,7 +17,7 @@ $this->load->view('templates/header');
 <!-- Media Box VA -->
 <section class="ad">
     <div class="container">
-        <div id="myCarouselVA" class="carousel slide carousel-fade" data-ride="carousel">
+        <div id="mediabox-va" class="carousel slide carousel-fade" data-ride="carousel">
             <div class="carousel-inner">
                 <?php $media_box_va_index = 0; ?>
                 <?php foreach ($media_box_va as $banner) : ?>

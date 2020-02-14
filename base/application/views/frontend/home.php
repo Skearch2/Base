@@ -46,8 +46,9 @@ $this->load->view('templates/nav');
             <div class="col-sm-6 col-xs-12 search-box">
                 <div class="search-bar">
                     <form action="javascript:void(0)" onsubmit="ajaxSearch(document.getElementById('ajaxsearch').value)">
-                        <input type="text" size="64" class="google-input" placeholder="Enter Keywords...">
+                        <input id="ajaxsearch" type="text" size="64" class="google-input" placeholder="Enter Keywords...">
                         <button class="search-btn" border="0" onclick="searchBtn()" type="submit"></button>
+                    </form>
                 </div>
             </div>
         </div>

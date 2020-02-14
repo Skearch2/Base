@@ -505,15 +505,15 @@ img.theme-change {
     padding: 45px 25px 15px 25px;
 
 }
-  .footer-link a {
+.footer-link a {
 
-      display: block;
-      margin-bottom: 15px;
-  }
-  .acz-sublist{
-    width: 100%;
-    min-width: 100%;
-  }
+    display: block;
+    margin-bottom: 15px;
+}
+.acz-sublist{
+width: 100%;
+min-width: 100%;
+}
 
 .ad {
     padding: 0px 0px 30px;
