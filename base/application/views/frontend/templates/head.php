@@ -82,47 +82,32 @@
     <!-- Search -->
     <script type="text/javascript">
         function ajaxSearch(keyword) {
-            $.ajax({
-                url: '<?= site_url(); ?>/search?search_keyword=' + keyword,
-                type: 'GET',
-                async: false,
-                success: function(data) {
-                    urlObj = JSON.parse(data);
-                    if (urlObj.type == 'external')
-                        window.open(urlObj.url);
-                    else if (urlObj.type == 'internal')
-                        window.location.replace(urlObj.url);
-                },
-                error: function(data) {
-                    alert("Something went wrong. Can't Search");
-                }
+            if (keyword.length > 0) {
+                $.ajax({
+                    url: '<?= site_url(); ?>/search?search_keyword=' + keyword,
+                    type: 'GET',
+                    async: false,
+                    success: function(data) {
+                        urlObj = JSON.parse(data);
+                        if (urlObj.type == 'external') {
+                            var is_safari = navigator.userAgent.indexOf("Safari") > -1;
+                            if (is_safari) {
+                                // open url on current page
+                                window.location.replace(urlObj.url);
+                            } else {
+                                // open url on new page
+                                window.open(urlObj.url);
+                            }
+                        } else if (urlObj.type == 'internal')
+                            window.location.replace(urlObj.url);
+                    },
+                    error: function(data) {
+                        alert("Something went wrong. Can't Search");
+                    }
 
-            });
-        }
-
-        function searchBtn() {
-            toastr.success("Searching for results...");
-        }
-
-        jQuery(document).ready(function() {
-            toastr.options = {
-                "closeButton": true,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-bottom-right",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
+                });
             }
-        });
+        }
     </script>
 
     <!-- Update media impressions shown on media box -->

@@ -1,16 +1,16 @@
 <?php
 
 // Set DocType and declare HTML protocol
-$this->load->view('templates/starthtml');
+$this->load->view('frontend/templates/starthtml');
 
 // Load default head (metadata & linking).
-$this->load->view('templates/head');
+$this->load->view('frontend/templates/head');
 
 // Start body element
-$this->load->view('templates/startbody');
+$this->load->view('frontend/templates/startbody');
 
-// Load appropriate header
-$this->load->view('templates/header');
+// Load appropriate header (logged in, admin options, etc.)
+$this->load->view('frontend/templates/header');
 
 ?>
 
@@ -184,9 +184,9 @@ $this->load->view('templates/header');
 <?php
 
 // Load default footer.
-$this->load->view('templates/footer');
+$this->load->view('frontend/templates/footer');
 
 // Close body and html elements.
-$this->load->view('templates/closepage');
+$this->load->view('frontend/templates/closepage');
 
 ?>
