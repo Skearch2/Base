@@ -41,10 +41,10 @@ $this->load->view('frontend/templates/header');
                 <div class="box">
                     <h3>Browse All Fields</h3>
                     <?php if (!empty($this->uri->segment(2))) : ?>
-                        <div class="right-btn pull-right"> <a href="<?= BASE_URL ?>browse" id="sort-btn">A - Z</a>
+                        <div class="right-btn ml-auto"> <a href="<?= BASE_URL ?>browse" id="sort-btn">A - Z</a>
                         </div>
                     <?php else : ?>
-                        <div class="right-btn pull-right"> <a href="<?= BASE_URL ?>browse/desc" id="sort-btn">Z - A</a>
+                        <div class="right-btn ml-auto"> <a href="<?= BASE_URL ?>browse/desc" id="sort-btn">Z - A</a>
                         </div>
                     <?php endif ?>
                 </div>
