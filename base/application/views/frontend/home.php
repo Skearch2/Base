@@ -1,16 +1,16 @@
 <?php
 
 // Set DocType and declare HTML protocol
-$this->load->view('templates/starthtml');
+$this->load->view('frontend/templates/starthtml');
 
 // Load default head (metadata & linking).
-$this->load->view('templates/head');
+$this->load->view('frontend/templates/head');
 
 // Start body element
-$this->load->view('templates/startbody');
+$this->load->view('frontend/templates/startbody');
 
-// Load navigation panel (sign up, login, admin options, etc.)
-$this->load->view('templates/nav');
+// Load appropriate header (logged in, admin options, etc.)
+$this->load->view('frontend/templates/nav');
 
 ?>
 
@@ -46,8 +46,9 @@ $this->load->view('templates/nav');
             <div class="col-sm-6 col-xs-12 search-box">
                 <div class="search-bar">
                     <form action="javascript:void(0)" onsubmit="ajaxSearch(document.getElementById('ajaxsearch').value)">
+                        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                         <input id="ajaxsearch" type="text" size="64" class="google-input" placeholder="Enter Keywords...">
-                        <button class="search-btn" border="0" onclick="searchBtn()" type="submit"></button>
+                        <button class="search-btn" border="0"></button>
                     </form>
                 </div>
             </div>
@@ -58,9 +59,9 @@ $this->load->view('templates/nav');
 <?php
 
 // Load default footer.
-$this->load->view('templates/footer');
+$this->load->view('frontend/templates/footer');
 
 // Close body and html elements.
-$this->load->view('templates/closepage');
+$this->load->view('frontend/templates/closepage');
 
 ?>

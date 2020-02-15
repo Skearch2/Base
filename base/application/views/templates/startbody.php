@@ -1,3 +1,0 @@
-<!--  Start body element -->
-
-<body>
