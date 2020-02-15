@@ -9,51 +9,49 @@ $this->load->view('frontend/templates/head');
 // Start body element
 $this->load->view('frontend/templates/startbody');
 
-// Load appropriate header (logged in, admin options, etc.)
+// Load nav bar (logged in, admin options, etc.)
 $this->load->view('frontend/templates/nav');
 
 ?>
-
-<section>
-    <div class="logo-home">
-        <img src="<?= base_url(ASSETS) . "/style/images/fl.png"; ?>" alt="<?= $title; ?>">
-    </div>
-    <div class="clearfix"></div>
+<section class="logo">
     <div class="container">
-        <div id="center" class="column mgtop clearfix" style='position:relative;'>
-            <div class="home-browse">
-                <div class="browse-field-auto">
-                    <?= anchor('browse', 'Browse All <span>Fields</span>', array('class' => 'anchorbrowse'))  ?>
-                    <div class="cat-bg home-catlist">
-                        <ul class="category_list_home">
-                            <?php foreach ($fields as $field) : ?>
-                                <?php if ($field->title == 'empty') : ?>
-                                    <li style='opacity: 0;'><a style='cursor: default' href='#'>Empty</a></li>
-                                <?php else : ?>
-                                    <li <?= ($field->parent_title == null) ? "style='box-shadow: 0 0 100px 1px black inset; border-radius: 7px;'" : ""; ?>>
-                                        <?php if ($field->parent_title != null) {
-                                            echo anchor("browse/" . strtolower($field->parent_title) . "/" . strtolower($field->title), $field->title, array('title' => $field->title));
-                                        } else {
-                                            echo anchor("browse/" . strtolower($field->title), $field->title, array('title' => $field->title));
-                                        } ?>
-                                    </li>
-                                <?php endif ?>
-                            <?php endforeach ?>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-xs-12 search-box">
-                <div class="search-bar">
-                    <form action="javascript:void(0)" onsubmit="ajaxSearch(document.getElementById('ajaxsearch').value)">
-                        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
-                        <input id="ajaxsearch" type="text" size="64" class="google-input" placeholder="Enter Keywords...">
-                        <button class="search-btn" border="0"></button>
-                    </form>
-                </div>
+        <div class="row">
+            <div class="col-sm-12 logo-bar">
+                <img src="<?= base_url(ASSETS) ?>/frontend/images/home-logo.png" class="logo light-logo" alt="" />
+                <img src="<?= base_url(ASSETS) ?>/frontend/images/dark-logo.png" class="logo dark-logo" alt="" />
             </div>
         </div>
     </div>
+</section>
+
+<section class="button-section">
+    <div class="container">
+        <a href="browse">
+            <h1>Browse All<span>Fields</span></h1>
+        </a>
+        <?php foreach ($fields as $field) : ?>
+            <?php if ($field->title == 'empty') : ?>
+                <button style="visibility: hidden;" class="btn btn-link disabled"></button>
+            <?php else : ?>
+                <?php if ($field->parent_title != null) : ?>
+                    <a href="browse/<?= strtolower($field->parent_title) ?>/<?= strtolower($field->title) ?>" class="btn btn-link" role="button"><?= $field->parent_title ?></a>
+                <?php else : ?>
+                    <a href="browse/<?= strtolower($field->title) ?>" class="btn btn-link" role="button"><?= $field->title ?></a>
+                <?php endif ?>
+            <?php endif ?>
+        <?php endforeach ?>
+    </div>
+</section>
+
+<section class="search-box search-bot">
+    <div class="container">
+        <div class="search-bar">
+            <form action="javascript:void(0)" onsubmit="ajaxSearch(document.getElementById('ajaxsearch').value)">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+                <input id="ajaxsearch" type="text" size="64" class="google-input" placeholder="Enter Keywords...">
+                <button class="search-btn" border="0"></button>
+            </form>
+        </div>
 </section>
 
 <?php
