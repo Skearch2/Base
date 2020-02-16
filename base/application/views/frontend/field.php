@@ -109,7 +109,7 @@ $this->load->view('frontend/templates/header');
 
 <section class="field-main">
     <div class="container">
-        <div class="row1">
+        <div class="row">
             <div class="main-box no-border">
                 <h1><?= ucwords($field_name) ?></h1>
                 <div class="box inline-box">
@@ -118,14 +118,16 @@ $this->load->view('frontend/templates/header');
                 <div class="middle-inner browse-inner border-box">
                     <div class="row category_list_home accessorize-list">
                         <div class="col-sm-9">
-                            <? if (!empty($suggest_fields)) : ?>
-                                <?php foreach ($suggest_fields as $field) : ?>
-                                    <?php if (!strcasecmp($field->suggest_field_title, $field_name)) continue ?>
-                                    <div class="col-sm-4 f-box">
-                                        <a href="<?= BASE_URL ?>browse/<?= $umbrella_name ?>/<?= $field->suggest_field_title ?>" title="<?= $field->suggest_field_title ?>"><?= $field->suggest_field_title ?></a>
-                                    </div>
-                                <?php endforeach ?>
-                            <? endif ?>
+                            <div class="row">
+                                <? if (!empty($suggest_fields)) : ?>
+                                    <?php foreach ($suggest_fields as $field) : ?>
+                                        <?php if (!strcasecmp($field->suggest_field_title, $field_name)) continue ?>
+                                        <div class="col-sm-4 f-box">
+                                            <a href="<?= BASE_URL ?>browse/<?= $umbrella_name ?>/<?= $field->suggest_field_title ?>" title="<?= $field->suggest_field_title ?>"><?= $field->suggest_field_title ?></a>
+                                        </div>
+                                    <?php endforeach ?>
+                                <? endif ?>
+                            </div>
                         </div>
                         <div class="col-sm-3 um-link">
                             <a href="<?= BASE_URL ?>browse/<?= $umbrella_name ?>" title="<?= $umbrella_name ?>"><?= $umbrella_name ?></a>
