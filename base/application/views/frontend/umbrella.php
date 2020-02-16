@@ -35,14 +35,12 @@ $this->load->view('frontend/templates/header');
 
 <section class="field-main">
   <div class="container">
-    <div class="row1">
+    <div class="row">
       <div class="main-box no-border">
         <div class="box inline-box">
           <h3><?= ucfirst($umbrella_name); ?></h3>
-
         </div>
         <div class="middle-inner browse-inner border-box">
-
           <div class="row category_list_home accessorize-list">
             <?php $count = 0 ?>
             <?php foreach ($fields as $index => $field) : ?>
