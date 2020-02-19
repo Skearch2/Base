@@ -35,7 +35,7 @@ $this->load->view('my_skearch/templates/head');
 								<button id="m_signup_brand" type="button" onclick="show_form_brand()" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn <?= !$is_regular ? 'active' : '' ?>">Brand</button>
 							</div>
 						</fieldset>
-						<?= form_open(''); ?>
+						<?= form_open('', 'onsubmit="unMaskFields()"'); ?>
 						<fieldset class="m-login__form m-form">
 							<input id="is_regular_signup" name="is_regular_signup" type="hidden" value="<?= $is_regular; ?>">
 							<div id="m-login__form m-form__user" style=<?= $is_regular ? 'display:block' : 'display:none' ?>>
@@ -138,6 +138,10 @@ $this->load->view('my_skearch/templates/head');
 			$("#is_regular_signup").val(0);
 			$('#m_signup_user').removeClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn active').addClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn');
 			$("#m_signup_brand").removeClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn').addClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn active');
+		}
+
+		function unMaskFields() {
+			$('#phone').unmask();
 		}
 	</script>
 

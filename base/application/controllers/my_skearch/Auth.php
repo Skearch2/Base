@@ -107,7 +107,7 @@ class Auth extends MY_Controller
             );
         } else {
             $this->form_validation->set_rules('name', 'Name', 'required|trim');
-            $this->form_validation->set_rules('brandname', 'Brand Name', 'required|trim');
+            $this->form_validation->set_rules('brandname', 'Brand Name', 'is_unique[skearch_brand_leads.brandname]|required|trim');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email|trim');
             $this->form_validation->set_rules('phone', 'Phone', 'required|numeric|exact_length[10]');
         }
