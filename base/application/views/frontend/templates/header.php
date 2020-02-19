@@ -17,6 +17,10 @@
 			</div>
 			<div class="col-sm-2 col-xs-6 field-btn">
 				<a class="btn-cat" href="<?= site_url('browse') ?>"></a>
+				<a class="theme-change" href="#">
+					<img src="<?= base_url(ASSETS) ?>/frontend/images/moon_theme.png" class="theme-change moon" alt="" />
+					<img src="<?= base_url(ASSETS) ?>/frontend/images/sun_theme.png" class="theme-change sun" alt="" />
+				</a>
 			</div>
 		</div>
 	</div>

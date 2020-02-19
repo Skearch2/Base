@@ -409,7 +409,7 @@
 										<div class="m-dropdown__header m--align-center">
 											<div class="m-card-user m-card-user--skin-light">
 												<div class="m-card-user__pic">
-													<img src="<?= site_url(ASSETS); ?>/admin_panel/app/media/img/users/user4.jpg" class="m--img-rounded m--marginless" alt="" />
+													<img src="<?= site_url(ASSETS); ?>/admin_panel/app/media/img/users/user-default.jpg" class="m--img-rounded m--marginless" alt="" />
 												</div>
 												<div class="m-card-user__details">
 													<span class="m-card-user__name m--font-weight-500"><?php echo $headeruser->firstname . " " . $headeruser->lastname; ?></span>
