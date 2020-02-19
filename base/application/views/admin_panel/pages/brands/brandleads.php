@@ -89,8 +89,9 @@ $this->load->view('admin_panel/templates/close_html');
 	}
 </style>
 <script>
+	// delete the entry
 	function deleteEntry(id) {
-		var result = confirm("Are you sure you want delete this entry?");
+		var result = confirm("Are you sure you want delete the entry with ID: " + id + "?");
 		if (result) {
 			$.ajax({
 				url: "<?= site_url("admin/brands/brandleads/delete/"); ?>" + id,
@@ -103,6 +104,11 @@ $this->load->view('admin_panel/templates/close_html');
 				}
 			});
 		}
+	}
+
+	// convert phone entry to US format
+	function formatUSNumber(number) {
+		return number.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
 	}
 
 	var DatatablesDataSourceAjaxServer = {
@@ -127,13 +133,20 @@ $this->load->view('admin_panel/templates/close_html');
 					data: "Actions"
 				}],
 				columnDefs: [{
-					targets: -1,
-					title: "Actions",
-					orderable: !1,
-					render: function(a, t, e, n) {
-						return '<a onclick=deleteEntry("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i class="la la-trash"></i></a>'
+						targets: -1,
+						title: "Actions",
+						orderable: !1,
+						render: function(a, t, e, n) {
+							return '<a onclick=deleteEntry("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i class="la la-trash"></i></a>'
+						}
+					},
+					{
+						targets: 4,
+						render: function(a, t, e, n) {
+							return formatUSNumber(e['phone']);
+						}
 					}
-				}]
+				]
 			})
 		}
 	}

@@ -91,13 +91,13 @@ $this->load->view('my_skearch/templates/head');
 									<input class="form-control m-input" type="text" placeholder="Name" name="name" value="<?= set_value('name'); ?>">
 								</div>
 								<div class="form-group m-form__group row">
-									<input class="form-control m-input" placeholder="Brand Name" type="text" name="brandname" value="<?= set_value('brand'); ?>">
+									<input class="form-control m-input" type="text" placeholder="Brand Name" name="brandname" value="<?= set_value('brand'); ?>">
 								</div>
 								<div class="form-group m-form__group">
-									<input class="form-control m-input" type="text" placeholder="Email" name="email" value="<?= set_value('email'); ?>">
+									<input class="form-control m-input" type="email" placeholder="Email" name="email" value="<?= set_value('email'); ?>">
 								</div>
 								<div class="form-group m-form__group">
-									<input class="form-control m-input" type="text" placeholder="Phone" name="phone" value="<?= set_value('phone'); ?>">
+									<input class="form-control m-input" id="phone" type="text" placeholder="Phone" name="phone" value="<?= set_value('phone'); ?>">
 								</div>
 							</div>
 							<div class="m-login__form-action">
@@ -138,7 +138,6 @@ $this->load->view('my_skearch/templates/head');
 			$("#is_regular_signup").val(0);
 			$('#m_signup_user').removeClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn active').addClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn');
 			$("#m_signup_brand").removeClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn').addClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn active');
-
 		}
 	</script>
 
