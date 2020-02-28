@@ -1,0 +1,53 @@
+body.dark{
+      background-color: #122949;
+}
+.dark .login-bar span,.dark .button-section h1{
+  color:#fff;
+}
+.dark .box{
+  background: #fff;
+}
+.dark .box h3{
+  color: #000;
+}
+.dark .main-box{
+  background: #122949;
+  border: 1px solid #fff;
+}
+.dark .main-box h1,.dark .um-link a{
+    color:#fff
+}
+
+.dark .result-listing li:nth-child(odd) {
+    background: transparent;
+    box-shadow: none;
+}
+.dark .result-listing li div {
+    color: #608112;
+}
+.dark .result-listing li p {
+    color: #fff;
+}
+.dark .result-listing li:nth-child(even) {
+    background: transparent;
+    box-shadow: none;
+}
+.dark .result-btn-right-blue a {
+    background: #122949;
+    border: 1px solid #7a911b;
+    color: #fff;
+}
+.dark footer a,.dark .copy-right{
+  color: #fff;
+  text-shadow: none;
+}
+.dark .right-btn a,.dark  .accessorize-list .f-box>a {
+
+    border: 1px solid #a6c102;
+    background: #122949;
+    color: #fff;
+
+}
+.dark .acz-sublist{
+  box-shadow: none;
+}

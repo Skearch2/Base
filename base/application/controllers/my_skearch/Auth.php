@@ -46,8 +46,6 @@ class Auth extends MY_Controller
             redirect('myskearch/dashboard', 'refresh');
         }
 
-
-
         $this->form_validation->set_rules('myskearch_id', 'Skearch ID', 'required|trim');
         $this->form_validation->set_rules('password', 'Password', 'required|trim');
 
@@ -109,7 +107,7 @@ class Auth extends MY_Controller
             );
         } else {
             $this->form_validation->set_rules('name', 'Name', 'required|trim');
-            $this->form_validation->set_rules('brandname', 'Brand Name', 'required|trim');
+            $this->form_validation->set_rules('brandname', 'Brand Name', 'is_unique[skearch_brand_leads.brandname]|required|trim');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email|trim');
             $this->form_validation->set_rules('phone', 'Phone', 'required|numeric|exact_length[10]');
         }
@@ -128,7 +126,7 @@ class Auth extends MY_Controller
                 if ($is_regular) {
                     $this->session->set_flashdata('success', 'An email has been sent to you for account activation.');
                 } else {
-                    $this->session->set_flashdata('success', 'We have received your inquiry and will soon contact you.');
+                    $this->session->set_flashdata('success', 'Thank You for your inquiry! Someone from Skearch will be contacting you soon.');
                 }
 
                 redirect('myskearch/auth/login');

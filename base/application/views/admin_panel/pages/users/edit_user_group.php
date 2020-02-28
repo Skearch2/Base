@@ -37,32 +37,32 @@ $this->load->view('admin_panel/templates/subheader');
 				<div class="tab-content">
 					<div class="tab-pane active" id="m_user_profile_tab_1">
 						<form class="m-form m-form--fit m-form--label-align-right" role="form" method="POST">
-              <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 							<div class="m-portlet__body">
 								<div class="form-group m-form__group m--margin-top-10 m--show">
-                  <?php if (validation_errors()) : ?>
-  									<div class="alert alert-danger" role="alert">
-  										<?= validation_errors(); ?>
-  									</div>
-                  <?php endif; ?>
+									<?php if (validation_errors()) : ?>
+										<div class="alert alert-danger" role="alert">
+											<?= validation_errors(); ?>
+										</div>
+									<?php endif; ?>
 								</div>
-                <div class="form-group m-form__group row">
-                  <div class="col-10 ml-auto">
-                    <h3 class="m-form__section">1. Group Information</h3>
-                  </div>
-                </div>
-                <div class="form-group m-form__group row">
-                  <label for="groupname" class="col-2 col-form-label">Group Name<font color="red"><sup>*</sup></font></label>
-                  <div class="col-7">
-                    <input class="form-control m-input" type="text" name="groupname" value="<?= $groupname; ?>">
-                  </div>
-                </div>
-                <div class="form-group m-form__group row">
-                  <label for="description" class="col-2 col-form-label">Group Description</label>
-                  <div class="col-7">
-                    <textarea class="form-control m-input" name="description" rows="3"><?= $description; ?></textarea>
-                  </div>
-                </div>
+								<div class="form-group m-form__group row">
+									<div class="col-10 ml-auto">
+										<h3 class="m-form__section">1. Group Information</h3>
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<label for="groupname" class="col-2 col-form-label">Group Name<font color="red"><sup>*</sup></font></label>
+									<div class="col-7">
+										<input class="form-control m-input" type="text" name="groupname" value="<?= $groupname; ?>">
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<label for="description" class="col-2 col-form-label">Group Description</label>
+									<div class="col-7">
+										<textarea class="form-control m-input" name="description" rows="3"><?= $description; ?></textarea>
+									</div>
+								</div>
 								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 							</div>
 							<div class="m-portlet__foot m-portlet__foot--fit">
@@ -112,5 +112,5 @@ $this->load->view('admin_panel/templates/close_html');
 
 
 <script>
-$("#smenu_user").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#smenu_user").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 </script>

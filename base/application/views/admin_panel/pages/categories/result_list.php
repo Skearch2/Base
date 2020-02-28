@@ -113,25 +113,25 @@ $this->load->view('admin_panel/templates/subheader');
 			</div>
 		</div>
 
-    <!--begin::Modal-->
-    <div class="modal fade" id="m_modal_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Result Details</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body"></div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
+		<!--begin::Modal-->
+		<div class="modal fade" id="m_modal_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">Result Details</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-    <!--end::Modal-->
+		<!--end::Modal-->
 
 		<div class="m-portlet__body">
 
@@ -142,10 +142,10 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Priority</th>
 						<th>Title</th>
 						<th>Description</th>
-         		<th>Category</th>
+						<th>Category</th>
 						<th>Display Url</th>
 						<th>Status</th>
-            <th width="150">Actions</th>
+						<th width="150">Actions</th>
 					</tr>
 				</thead>
 			</table>
@@ -178,180 +178,189 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
+	// function showResultDetails(id) {
 
-// function showResultDetails(id) {
+	//   $( "div.modal-body" ).html(
+	// 	   "<p>Result ID:</p> "+ id +" \
+	// 	    <p>This is a test.</p> "
+	//   );
+	// }
 
-//   $( "div.modal-body" ).html(
-// 	   "<p>Result ID:</p> "+ id +" \
-// 	    <p>This is a test.</p> "
-//   );
-// }
+	function deleteCategory(id, title) {
+		var title = title.replace(/%20/g, ' ');
+		var result = confirm("Are you sure you want delete listing \"" + title + "\"?");
+		if (result) {
+			$.ajax({
+				url: '<?= site_url(); ?>/admin/categories/delete_result_listing/' + id,
+				type: 'DELETE',
+				success: function(result) {
+					$("#" + id).fadeOut("slow");
+					//$('#m_table_1').DataTable().ajax.reload(null, false);
+				}
+			});
+		}
+	}
 
-function deleteCategory(id, title) {
-  var title = title.replace(/%20/g, ' ');
-  var result = confirm("Are you sure you want delete listing \"" + title + "\"?");
-  if(result) {
-  $.ajax({
-    url: '<?= site_url(); ?>/admin/categories/delete_result_listing/' + id,
-    type: 'DELETE',
-    success: function(result) {
-        $("#" + id).fadeOut("slow");
-		//$('#m_table_1').DataTable().ajax.reload(null, false);
-    }
-    });
-  }
-}
-
-/* Disable/Enable item*/
-function toggle(id, row) {
-	$.ajax({
-    url: '<?= site_url(); ?>/admin/categories/toggle_result/' + id,
-    type: 'GET',
-    success: function(status) {
-			if (status == 0) {
-      	        document.getElementById("tablerow"+row).className = "m-badge m-badge--danger m-badge--wide";
-				document.getElementById("tablerow"+row).innerHTML = "Off";
+	/* Disable/Enable item*/
+	function toggle(id, row) {
+		$.ajax({
+			url: '<?= site_url(); ?>/admin/categories/toggle_result/' + id,
+			type: 'GET',
+			success: function(status) {
+				if (status == 0) {
+					document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
+					document.getElementById("tablerow" + row).innerHTML = "Off";
+				} else {
+					document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
+					document.getElementById("tablerow" + row).innerHTML = "Active";
+				}
+			},
+			error: function(err) {
+				alert("Error toggle Ad-link");
 			}
-			else {
-				document.getElementById("tablerow"+row).className = "m-badge m-badge--success m-badge--wide";
-				document.getElementById("tablerow"+row).innerHTML = "Active";
+		});
+	}
+
+	/* Disable/Enable redirection*/
+	function toggle_redirect(id) {
+		$.ajax({
+			url: '<?= site_url(); ?>/admin/categories/toggle_redirect/' + id,
+			type: 'GET',
+			success: function(status) {
+				if (status == 0) {
+					document.getElementById("redirect" + id).style.color = "red";
+				} else {
+					document.getElementById("redirect" + id).style.color = "#34bfa3";
+				}
+			},
+			error: function(err) {
+				alert("Error toggle Priority");
 			}
-    },
-		error: function(err) {
-        alert("Error toggle Ad-link");
-      }
-    });
-}
+		});
+	}
 
-/* Disable/Enable redirection*/
-function toggle_redirect(id) {
-	$.ajax({
-    url: '<?= site_url(); ?>/admin/categories/toggle_redirect/' + id,
-    type: 'GET',
-    success: function(status) {
-			if (status == 0) {
-        document.getElementById("redirect"+id).style.color = "red";
+	/* Disable/Enable redirection*/
+	function change_priority(id, priorityO, priorityN) {
+		$('#m_table_1').fadeOut("slow");
+		$.ajax({
+			url: '<?= site_url(); ?>/admin/categories/change_priority/' + id + '/' + priorityO + '/' + priorityN,
+			type: 'GET',
+			success: function(status) {
+				get_links_priority();
+				$('#m_table_1').DataTable().ajax.reload(null, false);
+			},
+			error: function(err) {
+				alert("Error changing Priority");
 			}
-			else {
-				document.getElementById("redirect"+id).style.color = "#34bfa3";
-			}
-    },
-		error: function(err) {
-        alert("Error toggle Priority");
-    }
-  });
-}
+		});
+	}
 
-/* Disable/Enable redirection*/
-function change_priority(id, priorityO, priorityN) {
-	$('#m_table_1').fadeOut("slow");
-	$.ajax({
-    url: '<?= site_url(); ?>/admin/categories/change_priority/' + id + '/' + priorityO + '/' + priorityN,
-    type: 'GET',
-    success: function(status) {
-			get_links_priority();
-			$('#m_table_1').DataTable().ajax.reload(null, false);
-    },
-		error: function(err) {
-        alert("Error changing Priority");
-    }
-  });
-}
-
-var DatatablesDataSourceAjaxServer= {
-    init:function() {
-        $("#m_table_1").DataTable( {
-            responsive:!0, rowId: "id", order: [[ 0, 'asc' ]], searchDelay:500, lengthMenu:[[50,100,-1],[50,100,"ALL"]], processing:!0, serverSide:!1, ajax:"<?= site_url(); ?>/admin/categories/get_result_list/<?= $subcategoryid; ?>/<?= $status; ?>", columns:[
-						{
-								data: "priority"
-						},
-						{
-                data: "title"
-            }
-            , {
-                data: "description_short"
-            }
-            , {
-                data: "stitle"
-            }
-            , {
-                data: "display_url"
-            }
-            , {
-                data: "enabled"
-            }
-						, {
-                data: "Actions"
-            }
-            ], columnDefs:[
-						{
-							targets:-1, title:"Actions", orderable:!1,   render:function(a, t, e, n) {
-									var redirectVal;
-									if(e['redirect'] == 0) redirectVal= "red"; else redirectVal= "#34bfa3";
-								  var title = e['title'].replace(/ /g, '%20');
-                                  var row = (n.row).toString().slice(-1);
-									//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
-									return'<a href="<?php echo site_url()."admin/categories/update_result/"?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>'
-									+     '<a onclick=toggle_redirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] +'" class="la la-globe"></i></a>'
-                  +     '<a onclick=deleteCategory("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
-              }
-            },
-						{
-							targets:5, render:function(a, t, e, n) {
-									var s= {
-										2: {
-												title: "Pending", class: "m-badge--brand"
-										}
-										, 1: {
-												title: "Active", class: " m-badge--success"
-										}
-										, 0: {
-												title: "Off", class: " m-badge--danger"
-											}
-									}
-									;
-									return void 0===s[a]?a:'<span style="cursor: pointer;" id= tablerow' + n['row'] +' onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge '+s[a].class+' m-badge--wide">'+s[a].title+"</span>"
-							}
-            }
-            ]
-        }
-        )
-    }
-}
+	var DatatablesDataSourceAjaxServer = {
+		init: function() {
+			$("#m_table_1").DataTable({
+				responsive: !0,
+				rowId: "id",
+				order: [
+					[0, 'asc']
+				],
+				searchDelay: 500,
+				lengthMenu: [
+					[50, 100, -1],
+					[50, 100, "ALL"]
+				],
+				processing: !0,
+				serverSide: !1,
+				ajax: "<?= site_url(); ?>/admin/categories/get_result_list/<?= $subcategoryid; ?>/<?= $status; ?>",
+				columns: [{
+						data: "priority"
+					},
+					{
+						data: "title"
+					}, {
+						data: "description_short"
+					}, {
+						data: "stitle"
+					}, {
+						data: "display_url"
+					}, {
+						data: "enabled"
+					}, {
+						data: "Actions"
+					}
+				],
+				columnDefs: [{
+						targets: -1,
+						title: "Actions",
+						orderable: !1,
+						render: function(a, t, e, n) {
+							var redirectVal;
+							if (e['redirect'] == 0) redirectVal = "red";
+							else redirectVal = "#34bfa3";
+							var title = e['title'].replace(/ /g, '%20');
+							var row = (n.row).toString().slice(-1);
+							//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
+							return '<a href="<?= site_url() . "admin/categories/update_result/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+								'<a onclick=toggle_redirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-globe"></i></a>' +
+								'<a onclick=deleteCategory("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+						}
+					},
+					{
+						targets: 5,
+						render: function(a, t, e, n) {
+							var s = {
+								2: {
+									title: "Pending",
+									class: "m-badge--brand"
+								},
+								1: {
+									title: "Active",
+									class: " m-badge--success"
+								},
+								0: {
+									title: "Off",
+									class: " m-badge--danger"
+								}
+							};
+							return void 0 === s[a] ? a : '<span style="cursor: pointer;" id= tablerow' + n['row'] + ' onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + "</span>"
+						}
+					}
+				]
+			})
+		}
+	}
 
 
-var obj;
+	var obj;
 
-jQuery(document).ready(function() {
+	jQuery(document).ready(function() {
 		//get_links_priority();
 		DatatablesDataSourceAjaxServer.init();
-});
+	});
 
-function get_links_priority() {
-	$.ajax({
-    	url: '<?= site_url(); ?>/admin/categories/get_links_priority/' + <?php echo $subcategoryid; ?>,
-	  	type: 'GET',
-    	success: function(result) {
-			 obj = JSON.parse(result);
-             $('#m_table_1').fadeIn("slow");
-    	},
+	function get_links_priority() {
+		$.ajax({
+			url: '<?= site_url(); ?>/admin/categories/get_links_priority/' + <?php echo $subcategoryid; ?>,
+			type: 'GET',
+			success: function(result) {
+				obj = JSON.parse(result);
+				$('#m_table_1').fadeIn("slow");
+			},
 			error: function(err) {
-        alert("Error getting priority links");
-      }
-  	});
-}
+				alert("Error getting priority links");
+			}
+		});
+	}
 
-function searchArray(key, array){
-	for (var i=0; i < array.length; i++) {
-        if (array[i].priority == key) {
-            return array[i];
-        }
-    }
-    return false;
-}
-
+	function searchArray(key, array) {
+		for (var i = 0; i < array.length; i++) {
+			if (array[i].priority == key) {
+				return array[i];
+			}
+		}
+		return false;
+	}
 </script>
 
 <script>
-$("#smenu_data").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#smenu_data").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 </script>

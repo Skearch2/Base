@@ -51,39 +51,38 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 
 // Reserved
-$route['default_controller'] = 'pages/index';
+$route['default_controller'] = 'landing/index';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = false;
 
-/*
-Skearch static pages Routes
- */
-$route['brands'] = 'pages/static/brands';
 
 
-/*
-Skearch Categories Routes
- */
-$route['browse'] = 'pages/browse_all';
-$route['browse/desc'] = 'pages/browse_all/desc';
-$route['browse/get_data/umbrella'] = 'pages/get_data/umbrella';
-$route['browse/get_data/field'] = 'pages/get_data/field';
-$route['browse/(:any)'] = 'pages/browse_umbrella/$1';
-$route['browse/(:any)/(:any)'] = 'pages/browse_field/$1/$2';
-$route['browse/get_field_results/(:any)/(:any)'] = 'pages/get_field_results/$1/$2';
+/**********************************************  Skearch Frontend Routes  **********************************************/
+
+/* Pages */
+$route['home'] = 'frontend/pages';
+$route['browse'] = 'frontend/pages/browse_all';
+$route['browse/desc'] = 'frontend/pages/browse_all/desc';
+$route['browse/get_data/umbrella'] = 'frontend/pages/get_data/umbrella';
+$route['browse/get_data/field'] = 'frontend/pages/get_data/field';
+$route['browse/(:any)'] = 'frontend/pages/browse_umbrella/$1';
+$route['browse/(:any)/(:any)'] = 'frontend/pages/browse_field/$1/$2';
+$route['browse/get_field_results/(:any)/(:any)'] = 'frontend/pages/get_field_results/$1/$2';
+
+/* Search */
+$route['search'] = 'frontend/search';
+
+/* Media Engine Api  */
+$route['redirect/link/id/(:num)'] = 'frontend/media/media_redirect/$1';
+$route['impression/image/id/(:num)'] = 'frontend/media/update_image_impression/$1';
 
 
 
-/*
-Search Routes
- */
-$route['search'] = 'search';
 
-/*
-My Skearch Routes
- */
 
-/* Authentication Routes */
+/**********************************************  My Skearch Routes  ***************************************************/
+
+/* Authentication */
 $route['myskearch/auth/login'] = 'my_skearch/auth/login';
 $route['myskearch/auth/logout'] = 'my_skearch/auth/logout';
 $route['myskearch/auth/signup'] = 'my_skearch/auth/signup';
@@ -93,26 +92,29 @@ $route['myskearch/auth/forgot_password'] = 'my_skearch/auth/forgot_password';
 $route['myskearch/auth/reset_password/(:any)'] = 'my_skearch/auth/reset_password/$1';
 $route['myskearch/auth/change_email'] = 'my_skearch/auth/change_email';
 
-/* User panel Routes */
+/* User panel */
 $route['myskearch'] = 'my_skearch/dashboard';
 $route['myskearch/dashboard'] = 'my_skearch/dashboard';
 $route['myskearch/profile'] = 'my_skearch/profile';
 $route['myskearch/profile/(:num)'] = 'my_skearch/profile/index/$1';
 
-/* Digital assets Routes */
+/* Digital assets */
 $route['myskearch/digital_assets'] = 'my_skearch/digital_assets';
 
-/* Private social Routes */
+/* Private social */
 $route['myskearch/private_social'] = 'my_skearch/private_social';
 
-/* Brand direct Routes */
+/* Brand direct */
 $route['myskearch/brand_direct'] = 'my_skearch/brand_direct';
 
-/*
-Admin Panel Routes
- */
 
-/* Authentication Routes */
+
+
+
+
+/**********************************************  Admin Panel Routes  *************************************************/
+
+/* Authentication */
 $route['admin'] = 'admin_panel/dashboard';
 $route['admin/dashboard'] = 'admin_panel/dashboard';
 $route['admin/auth/login'] = 'admin_panel/auth/login';
@@ -120,13 +122,7 @@ $route['admin/auth/logout'] = 'admin_panel/auth/logout';
 $route['admin/auth/redirect/(:any)'] = 'admin_panel/auth/redirect/$1';
 $route['admin/auth/submit'] = 'admin_panel/auth/submit';
 
-/* Link Checker route */
-$route['admin/linkchecker'] = 'admin_panel/linkchecker';
-$route['admin/linkchecker/update_urls_status'] = 'admin_panel/linkchecker/update_urls_status';
-$route['admin/linkchecker/get_bad_urls'] = 'admin_panel/linkchecker/get_bad_urls';
-$route['admin/linkchecker/get_status_info'] = 'admin_panel/option/get_status_info';
-
-/* User list Routes */
+/* Users */
 $route['admin/users/user_list/(:num)'] = 'admin_panel/users/user_list/$1';
 $route['admin/users/get_user_list/(:num)'] = 'admin_panel/users/get_user_list/$1';
 $route['admin/users/get_users_by_lastname/(:any)'] = 'admin_panel/users/get_users_by_lastname/$1';
@@ -135,15 +131,16 @@ $route['admin/users/edit_user/(:num)'] = 'admin_panel/users/edit_user/$1';
 $route['admin/users/delete_user/(:num)'] = 'admin_panel/users/delete_user/$1';
 $route['admin/users/reset_user_password/(:num)'] = 'admin_panel/users/reset_user_password/$1';
 $route['admin/users/toggle_user_activation/(:num)'] = 'admin_panel/users/toggle_user_activation/$1';
-
-/* User groups Routes */
 $route['admin/users/create_user_group'] = 'admin_panel/users/create_user_group';
 $route['admin/users/delete_user_group/(:num)'] = 'admin_panel/users/delete_user_group/$1';
 $route['admin/users/edit_user_group/(:num)'] = 'admin_panel/users/edit_user_group/$1';
 $route['admin/users/get_user_groups'] = 'admin_panel/users/get_user_groups';
 $route['admin/users/user_groups'] = 'admin_panel/users/user_groups';
 
-/* Results Routes */
+/* 
+    Results
+*/
+
 $route['admin/categories/category_list/(:any)'] = 'admin_panel/categories/category_list/$1';
 $route['admin/categories/get_category_list/(:any)'] = 'admin_panel/categories/get_category_list/$1';
 $route['admin/categories/subcategory_list'] = 'admin_panel/categories/subcategory_list';
@@ -175,7 +172,20 @@ $route['admin/categories/change_priority/(:any)/(:any)'] = 'admin_panel/categori
 $route['admin/categories/get_links_priority/(:any)'] = 'admin_panel/categories/get_links_priority/$1';
 $route['admin/categories/search_adlink/(:any)'] = 'admin_panel/categories/search_adlink/$1';
 
-/* Research Routes */
+/* Links */
+$route['admin/results/links/get']                                             = 'admin_panel/results/links/get';
+$route['admin/results/links/get/id/(:num)']                                   = 'admin_panel/results/links/get/$1';
+$route['admin/results/links/duplicate/id/(:num)/field/(:num)/priority/(:num)'] = 'admin_panel/results/links/duplicate/$1/$2/$3';
+$route['admin/results/links/move/id/(:num)/field/(:num)/priority/(:num)']      = 'admin_panel/results/links/move/$1/$2/$3';
+
+/* Link Checker */
+$route['admin/linkchecker'] = 'admin_panel/linkchecker';
+$route['admin/linkchecker/get'] = 'admin_panel/linkchecker/get';
+$route['admin/linkchecker/get_status_info'] = 'admin_panel/option/get_status_info';
+$route['admin/linkchecker/remove/id/(:num)'] = 'admin_panel/linkchecker/remove/$1';
+$route['admin/linkchecker/update_urls_status'] = 'admin_panel/linkchecker/update_urls_status';
+
+/* Research */
 $route['admin/results/research/add'] = 'admin_panel/results/research/create';
 $route['admin/results/research/delete/(:num)'] = 'admin_panel/results/research/delete/$1';
 $route['admin/results/research/get'] = 'admin_panel/results/research/get';
@@ -183,12 +193,12 @@ $route['admin/results/research/get/(:num)'] = 'admin_panel/results/research/get/
 $route['admin/results/research/list'] = 'admin_panel/results/research';
 $route['admin/results/research/make_link/(:num)'] = 'admin_panel/results/research/make_link/$1';
 
-/* Brand Routes */
+/* Brands */
 $route['admin/brands/brandleads'] = 'admin_panel/brandleads';
 $route['admin/brands/brandleads/get'] = 'admin_panel/brandleads/get';
 $route['admin/brands/brandleads/delete/(:num)'] = 'admin_panel/brandleads/delete/$1';
 
-/* Homepage Routes */
+/* Frontend */
 $route['admin/frontend/homepage'] = 'admin_panel/frontend/homepage';
 $route['admin/frontend/field_suggestions'] = 'admin_panel/frontend/field_suggestions';
 $route['admin/frontend/umbrella_suggestions'] = 'admin_panel/frontend/umbrella_suggestions';
@@ -198,30 +208,13 @@ $route['admin/frontend/get_field_suggestions/(:any)'] = 'admin_panel/frontend/ge
 $route['admin/frontend/get_umbrella_suggestions/(:any)'] = 'admin_panel/frontend/get_umbrella_suggestions/$1';
 
 
-/* Email Routes */
+/* Email */
 $route['admin/email/members'] = 'admin_panel/email/members';
 $route['admin/email/invite'] = 'admin_panel/email/invite';
 $route['admin/email/send_email'] = 'admin_panel/email/send_email';
-
-/* Email Templates Routes */
 $route['admin/email/templates/(:any)'] = 'admin_panel/templates/get/$1';
 
 /* Option Routes */
 $route['admin/option'] = 'admin_panel/option';
 $route['admin/option/update_option'] = 'admin_panel/option/update_option';
 $route['admin/option/brandlinks_status_all'] = 'admin_panel/option/brandlinks_status_all';
-
-/*
-CSS Routes
- */
-$route['setchange'] = 'setchange';
-
-// test datatables
-$route['datatable/show'] = 'datatable_test/show';
-$route['datatable/get'] = 'datatable_test/get';
-
-/*
-Media Engine Api
- */
-$route['redirect/link/id/(:num)'] = 'media/media_redirect/$1';
-$route['impression/image/id/(:num)'] = 'media/update_image_impression/$1';

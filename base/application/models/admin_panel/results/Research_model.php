@@ -4,7 +4,7 @@ if (!defined('BASEPATH')) {
 }
 
 /**
- * File:    ~/application/models/admin_panel/results/Research.php
+ * File:    ~/application/models/admin_panel/results/Research_model.php
  *
  * Model for Research
  * 
@@ -13,7 +13,7 @@ if (!defined('BASEPATH')) {
  * @copyright    Copyright (c) 2020
  * @version      2.0
  */
-class Research_Link extends CI_Model
+class Research_model extends CI_Model
 {
     /**
      * Get a research link or list of research links

@@ -138,11 +138,11 @@ class User_model_admin extends CI_Model
     {
 
         $group_name = $this->input->post('groupname');
-        $group_description = $this->input->post('description');
+        $additional_data = array(
+            'description' => $this->input->post('description')
+        );
 
-        $group_update = $this->ion_auth->update_group($group_id, $group_name, $group_description);
-
-        //die("hahahaha");
+        $group_update = $this->ion_auth->update_group($group_id, $group_name, $additional_data);
 
         return $group_update;
     }
