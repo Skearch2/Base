@@ -90,9 +90,9 @@ $this->load->view('admin_panel/templates/subheader');
                   <div class="col-7">
                     <select class="form-control" name="sub_id" onchange="updatePriority(this.value)" required>
                       <option value="">Choose Field</option>
-                      <?php foreach ($subcategory_list as $item) { ?>
+                      <?php foreach ($subcategory_list as $item) : ?>
                         <option <?php if (isset($result[0]->sub_id) && ($item->id == $result[0]->sub_id)) echo "selected"; ?> value="<?= $item->id ?>"><?= $item->title ?> </option>
-                      <?php } ?>
+                      <?php endforeach ?>
                     </select>
                   </div>
                 </div>

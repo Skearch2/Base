@@ -39,6 +39,7 @@
 	-->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
     <link href='<?= base_url(ASSETS); ?>/frontend/css/theme.css' rel="stylesheet" />
+    <link href='<?= base_url(ASSETS); ?>/frontend/css/dark-style.css' rel="stylesheet" />
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
@@ -67,10 +68,13 @@
 	* 		Skearch icon file (page)
 	* 		Skearch icon file (shortcut)
 	-->
-    <link rel='icon' href='<?= base_url(ASSETS); ?>/style/images/favicon.png' type='image/png' />
-    <link rel='shortcut icon' href='<?= base_url(ASSETS); ?>/style/images/favicon.png' type='image/png' />
+    <link rel='icon' href='<?= base_url(ASSETS); ?>/frontend/images/favicon.png' type='image/png' />
+    <link rel='shortcut icon' href='<?= base_url(ASSETS); ?>/frontend/images/favicon.png' type='image/png' />
 
-    <!--    Page title  -->
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Lobster&display=swap" rel="stylesheet">
+
+    <!-- Page title -->
     <title><?= $title; ?></title>
 
     <script type="text/javascript">
@@ -111,7 +115,7 @@
     </script>
 
     <!-- Update media impressions shown on media box -->
-    <script>
+    <script type="text/javascript">
         $(function() {
             $('.carousel').on('slide.bs.carousel', function(event) {
                 imageid = $(event.relatedTarget).attr('data-imageid');
