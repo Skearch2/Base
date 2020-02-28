@@ -18,7 +18,7 @@ $this->load->view('frontend/templates/nav');
         <div class="row">
             <div class="col-sm-12 logo-bar">
                 <img src="<?= base_url(ASSETS) ?>/frontend/images/home-logo.png" class="logo light-logo" alt="" />
-                <img src="<?= base_url(ASSETS) ?>/frontend/images/dark-logo.png" class="logo dark-logo" alt="" />
+                <img src="<?= base_url(ASSETS) ?>/frontend/images/dark-logo.png" class="logo dark-logo" alt="" style="display:none" />
             </div>
         </div>
     </div>

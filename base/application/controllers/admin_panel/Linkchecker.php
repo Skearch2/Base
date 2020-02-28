@@ -1,5 +1,5 @@
 <?php
-if (! defined('BASEPATH')) exit('No direct script access allowed');
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * File:    ~/application/controller/linkchecker.php
@@ -9,20 +9,48 @@ if (! defined('BASEPATH')) exit('No direct script access allowed');
  * @copyright	Copyright (c) 2019
  * @version		2.0
  */
-class Linkchecker extends MY_Controller {
+class Linkchecker extends MY_Controller
+{
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
-		if (!$this->ion_auth->is_admin())
-		{
+		if (!$this->ion_auth->is_admin()) {
 			// redirect non-admin to the login page
 			redirect('admin/auth/login', 'refresh');
 		}
 		$this->load->model('admin_panel/Linkcheck_model_admin', 'linkcheck_model');
 	}
 
-	public function index() {	
-		if (!file_exists(APPPATH.'/views/admin_panel/pages/linkchecker.php')) {
+	/**
+	 * Get all bad URLs in JSON
+	 *
+	 * @return void
+	 */
+	public function get()
+	{
+		$urls = $this->linkcheck_model->get();
+		$total_urls = sizeof($urls);
+		$result = array(
+			'iTotalRecords' => $total_urls,
+			'iTotalDisplayRecords' => $total_urls,
+			'sEcho' => 0,
+			'sColumns' => "",
+			'aaData' => $urls
+		);
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($result));
+	}
+
+	/**
+	 * Show a page list of all links in the link checker
+	 *
+	 * @return void
+	 */
+	public function index()
+	{
+		if (!file_exists(APPPATH . '/views/admin_panel/pages/linkchecker.php')) {
 			show_404();
 		}
 
@@ -33,37 +61,33 @@ class Linkchecker extends MY_Controller {
 		$this->load->view('admin_panel/pages/linkchecker', $data);
 	}
 
-	// API to get bad URLs
-	public function get_bad_urls() {
-		$urls = $this->linkcheck_model->get_bad_urls();
-   		$total_urls = sizeof($urls);
-		$result = array(
-			'iTotalRecords' => $total_urls,
-			'iTotalDisplayRecords' => $total_urls,
-			'sEcho' => 0,
-			'sColumns' => "",
-			'aaData' => $urls
-		);
-			$this->output
-			->set_content_type('application/json')
-			->set_output(json_encode($result));
+	/**
+	 * Remove link check
+	 *
+	 * @param int $id ID of the link
+	 * @return void
+	 */
+	public function remove($id)
+	{
+		$action = $this->linkcheck_model->remove($id);
+
+		if ($action) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	public function update_urls_status() {
-		$urls = $this->linkcheck_model->get_urls();
-		$totalUrls =  count($urls);
-		foreach ($urls as $url) {
-			$_SESSION["remainingUrls"] = $totalUrls--;
-			$status_code = $this->run_curl_check($url->www);
-			$this->linkcheck_model->update_http_status($url->id, $status_code);
-			if ($totalUrls <= 4670 ) break;
-		}
-		
-	}
-	
-	public function run_curl_check($url) {
+	/**
+	 * Check an individual link status
+	 *
+	 * @param String $url URL of the link
+	 * @return void
+	 */
+	private function run_curl_check($url)
+	{
 		$ch = curl_init($url);
-		
+
 		$options = array(
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_FOLLOWLOCATION => true,
@@ -78,8 +102,24 @@ class Linkchecker extends MY_Controller {
 		$response = curl_exec($ch);
 		$httpinfo = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);
-		
+
 		return $httpinfo;
 	}
 
+	/**
+	 * Run a link checker and check all the links status
+	 *
+	 * @return void
+	 */
+	public function update_urls_status()
+	{
+		$urls = $this->linkcheck_model->get_urls();
+		$totalUrls =  count($urls);
+		foreach ($urls as $url) {
+			$_SESSION["remainingUrls"] = $totalUrls--;
+			$status_code = $this->run_curl_check($url->www);
+			$this->linkcheck_model->update_http_status($url->id, $status_code);
+			if ($totalUrls <= 4670) break;
+		}
+	}
 }

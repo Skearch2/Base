@@ -271,8 +271,8 @@ class Users extends MY_Controller
     public function edit_user_group($group_id)
     {
 
-        $this->form_validation->set_rules('groupname', 'Group Name', 'required|trim|min_length[5]|is_unique[skearch_groups.name]');
-        $this->form_validation->set_rules('description', 'Group Description', 'trim|min_length[8]');
+        $this->form_validation->set_rules('groupname', 'Group Name', 'required|trim|min_length[5]');
+        $this->form_validation->set_rules('description', 'Group Description', 'trim');
 
         if ($this->form_validation->run() == false) {
 

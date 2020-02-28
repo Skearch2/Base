@@ -32,7 +32,7 @@ class Research extends MY_Controller
             redirect('admin/auth/login');
         }
 
-        $this->load->model('admin_panel/results/research_link', 'research');
+        $this->load->model('admin_panel/results/research_model', 'research');
         $this->load->model('admin_panel/category_model_admin', 'fields');
     }
 

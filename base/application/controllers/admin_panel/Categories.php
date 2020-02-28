@@ -122,7 +122,7 @@ class Categories extends MY_Controller
 			->set_output(json_encode($result));
 	}
 
-	public function result_list($subcategoryid = "all", $status = NULL)
+	public function result_list($field = "all", $status = NULL)
 	{
 
 		if (!file_exists(APPPATH . '/views/admin_panel/pages/categories/result_list.php')) {
@@ -130,14 +130,23 @@ class Categories extends MY_Controller
 		}
 
 		$data['title'] = ucfirst("Ad Links List");
-		$data['subcategoryid'] = $subcategoryid;
+		$data['subcategoryid'] = $field;
 		$data['status'] = $status;
 
-		if ($subcategoryid != "all") {
-			$subCatTitle = $this->categoryModel->get_single_subcategory($subcategoryid)[0]->title;
+		$data['fields'] = $this->categoryModel->get_subcategories();
+
+		$prioritiesObject = $this->categoryModel->get_links_priority($field);
+		$priorities = array();
+		foreach ($prioritiesObject as $item) {
+			array_push($priorities, $item->priority);
+		}
+		$data['priorities'] = $priorities;
+
+		if ($field != "all") {
+			$subCatTitle = $this->categoryModel->get_single_subcategory($field)[0]->title;
 			$data['subTitle'] = ucfirst("Ad Links under \"" . $subCatTitle . "\"");
 			$this->load->view('admin_panel/pages/categories/result_list_sub', $data);
-		} elseif ($subcategoryid == "all" && ($status == 'active' || $status == 'inactive')) {
+		} elseif ($field == "all" && ($status == 'active' || $status == 'inactive')) {
 			$this->load->view('admin_panel/pages/categories/result_list', $data);
 		} else {
 			$data['subTitle'] = ucfirst("Ad Links List");
@@ -440,7 +449,7 @@ class Categories extends MY_Controller
 		// 	array_push($data['subcategory_parent'], $item->cat_id);
 		// }
 		$data['category_list'] = $this->categoryModel->get_categories();
-		$this->load->view('admin_panel/pages/categories/create_subcategory', $data);
+		$this->load->view('admin_panel/pages/categories/edit_subcategory', $data);
 	}
 
 	public function update_result($id)
