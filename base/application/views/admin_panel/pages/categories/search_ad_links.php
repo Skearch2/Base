@@ -162,7 +162,7 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="col-9">
 									<div class="m-radio-inline">
 										<label class="m-radio">
-											<input type="radio" name="option-select" value="1"> Duplicate
+											<input type="radio" name="option-select" value="1" checked> Duplicate
 											<span></span>
 										</label>
 										<label class="m-radio">
