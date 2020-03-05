@@ -35,3 +35,9 @@
 			</div>
 		</div><!-- /.container -->
 	</nav><!-- /.navbar -->
+	
+	<div class="container">
+	<a class="navbar-brand" href="https://<?= $_SERVER['HTTP_HOST'] ; ?>">
+		<img src="<?= BASE_URL; ?>/images/logo.jpg" alt="<?= $settings['siteTitle']; ?>">
+	</a>
+</div>
