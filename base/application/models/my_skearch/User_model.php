@@ -4,19 +4,26 @@ if (!defined('BASEPATH')) {
 }
 
 /**
- * File:    ~/application/models/Category_model.php
+ * File:    ~/application/models/my_skearch/User_model.php
  *
  * This model fetch data based on category and its subcategory.
  * It also provides category listing.
+ * 
  * @package        Skearch
- * @author        Iftikhar Ejaz <ejaziftikhar@gmail.com>
- * @copyright    Copyright (c) 2018
+ * @author         Iftikhar Ejaz <ejaziftikhar@gmail.com>
+ * @copyright      Copyright (c) 2020
  * @version        2.0
  */
 class User_model extends CI_Model
 {
 
-    public function register($is_regular = 1)
+    /**
+     * Create user
+     *
+     * @param int $is_regular Is a user signing up as regular member
+     * @return void
+     */
+    public function create($is_regular = 1)
     {
 
         if ($is_regular) {
@@ -40,8 +47,10 @@ class User_model extends CI_Model
             // $additional_data['zipcode'] = $this->input->post('zipcode');
 
             // $group = array('5'); // regular member group
-
-            return $this->ion_auth->register($username, $password, $email, $additional_data);
+            $user_id = $this->ion_auth->register($username, $password, $email, $additional_data);
+            if ($user_id) {
+                $this->_create_settings($user_id);
+            }
         } else {
             $data = array(
                 'name' => $this->input->post('name'),
@@ -54,27 +63,97 @@ class User_model extends CI_Model
         }
     }
 
-    public function update_profile($user_id)
+    /**
+     * Create customized user settings with default values
+     *
+     * @param int $id ID of the user
+     * @return void
+     */
+    private function _create_settings($id)
     {
+        $data = array(
+            'user_id' => $id,
+            'search_engine' => 'duckduckgo',
+            'theme' => 'light'
+        );
+        $this->db->insert('skearch_users_settings', $data);
+    }
 
-        $group_name = $this->ion_auth->group($this->input->post('group'))->result();
+
+    /**
+     * Get user customized settings
+     *
+     * @param int $id ID of the user
+     * @return void
+     */
+    public function get_settings($id, $columns = '*')
+    {
+        $this->db->select($columns);
+        $this->db->from('skearch_users_settings');
+        $this->db->where('user_id', $id);
+        $query = $this->db->get();
+
+        if ($query) {
+            return $query->row();
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Update user
+     *
+     * @param int $id ID of the user
+     * @return void
+     */
+    public function update($id)
+    {
         $data = array(
             'firstname' => $this->input->post('firstname'),
             'lastname' => $this->input->post('lastname'),
             'address1' => $this->input->post('address1'),
             'address2' => $this->input->post('address2'),
             'organization' => $this->input->post('organization'),
+            'brand' => $this->input->post('brand'),
             'city' => $this->input->post('city'),
             'state' => $this->input->post('state'),
             'country' => $this->input->post('country'),
             'zip' => $this->input->post('zip'),
             'phone' => $this->input->post('phone'),
             'active' => $this->input->post('active'),
-            'group' => $group_name,
             'gender' => $this->input->post('gender'),
-            'age_group' => $this->input->post('age_group'),
+            'age_group' => $this->input->post('age_group')
         );
 
-        $this->ion_auth->update($user_id, $data);
+        $this->ion_auth->update($id, $data);
+    }
+
+    /**
+     * Update customized settings for user
+     *
+     * @param int $id ID of the user
+     * @param int $search_engine Search engine for Skearch frontend
+     * @param int $theme Skearch frontend theme
+     * @return void
+     */
+    public function update_settings($id, $search_engine, $theme)
+    {
+
+        if (!is_null($search_engine))            $data['search_engine']          = $search_engine;
+        if (!is_null($theme))                    $data['theme']                  = $theme;
+
+        // check if POST data is null
+        if (!isset($data)) {
+            return FALSE;
+        }
+
+        $this->db->where('user_id', $id);
+        $query = $this->db->update('skearch_users_settings', $data);
+
+        if ($query) {
+            return $query;
+        } else {
+            return FALSE;
+        }
     }
 }

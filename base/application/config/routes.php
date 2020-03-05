@@ -92,11 +92,10 @@ $route['myskearch/auth/forgot_password'] = 'my_skearch/auth/forgot_password';
 $route['myskearch/auth/reset_password/(:any)'] = 'my_skearch/auth/reset_password/$1';
 $route['myskearch/auth/change_email'] = 'my_skearch/auth/change_email';
 
-/* User panel */
+/* Dashboard */
 $route['myskearch'] = 'my_skearch/dashboard';
 $route['myskearch/dashboard'] = 'my_skearch/dashboard';
-$route['myskearch/profile'] = 'my_skearch/profile';
-$route['myskearch/profile/(:num)'] = 'my_skearch/profile/index/$1';
+$route['myskearch/dashboard/settings/update'] = 'my_skearch/dashboard/update_settings';
 
 /* Digital assets */
 $route['myskearch/digital_assets'] = 'my_skearch/digital_assets';
@@ -106,6 +105,10 @@ $route['myskearch/private_social'] = 'my_skearch/private_social';
 
 /* Brand direct */
 $route['myskearch/brand_direct'] = 'my_skearch/brand_direct';
+
+/* Profile */
+$route['myskearch/profile'] = 'my_skearch/profile';
+$route['myskearch/profile/(:num)'] = 'my_skearch/profile/index/$1';
 
 
 

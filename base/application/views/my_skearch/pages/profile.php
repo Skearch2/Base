@@ -131,13 +131,13 @@ $this->load->view('my_skearch/templates/start_pagebody');
 					<div class="m-portlet__head-tools">
 						<ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--left m-tabs-line--primary" role="tablist">
 							<li class="nav-item m-tabs__item">
-								<a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_user_profile_tab_1" role="tab">
+								<a class="nav-link m-tabs__link active" data-toggle="tab" href="#profile" role="tab">
 									<i class="flaticon-share m--hide"></i>
 									Profile
 								</a>
 							</li>
 							<li class="nav-item m-tabs__item">
-								<a class="nav-link m-tabs__link" data-toggle="tab" href="#m_user_profile_tab_2" role="tab">
+								<a class="nav-link m-tabs__link" data-toggle="tab" href="#settings" role="tab">
 									Settings
 								</a>
 							</li>
@@ -193,7 +193,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 					</div>
 				</div>
 				<div class="tab-content">
-					<div class="tab-pane active" id="m_user_profile_tab_1">
+					<div class="tab-pane active" id="profile">
 						<?= form_open('myskearch/profile/', 'id="login_form"'); ?>
 						<fieldset class="m-form m-form--fit m-form--label-align-right">
 							<div class="m-portlet__body">
@@ -334,14 +334,13 @@ $this->load->view('my_skearch/templates/start_pagebody');
 						</fieldset>
 						<?= form_close(); ?>
 					</div>
-					<div class="tab-pane" id="m_user_profile_tab_2">
+					<div class="tab-pane" id="settings">
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
 
 <?php
 
@@ -360,7 +359,39 @@ $this->load->view('my_skearch/templates/quick_sidebar');
 // Load scrolltop button
 $this->load->view('my_skearch/templates/scrolltop');
 
-// Close body and html (contains some javascripts links)
+// Load global JS files
+$this->load->view('my_skearch/templates/js_global');
+
+?>
+
+<!-- Page Scripts -->
+<script>
+	function update_settings($id) {
+		// var csrf_name = '<?= $this->security->get_csrf_token_name() ?>';
+		// var csrf_hash = '<?= $this->security->get_csrf_hash() ?>';
+
+		$.ajax({
+			url: '<?= site_url(); ?>myskearch/profile/settings/update',
+			type: 'GET',
+			// dataType: 'json',
+			data: {
+				// csrf_name: csrf_hash,
+				search_engine: $('#search_engine').val()
+			},
+			success: function(data, status) {
+				toastr.success("", "Settings updated.");
+			},
+			error: function(xhr, status, error) {
+				toastr.error("", "Unable to update settings.");
+			}
+		});
+	}
+</script>
+<!--end::Page Scripts -->
+
+<?php
+
+// Close body and html
 $this->load->view('my_skearch/templates/close_html');
 
 ?>
