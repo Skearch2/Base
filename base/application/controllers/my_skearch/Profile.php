@@ -14,11 +14,12 @@ if (!defined('BASEPATH')) {
  * Shows member's profile and allow member to edit profile
  *
  * @version        2.0
- * @author        Iftikhar Ejaz <ejaziftikhar@gmail.com>
- * @copyright    Copyright (c) 2018 Skearch LLC
+ * @author         Iftikhar Ejaz <ejaziftikhar@gmail.com>
+ * @copyright      Copyright (c) 2020 Skearch LLC
  */
 class Profile extends MY_Controller
 {
+    var $user_id;
 
     /**
      * Checks if the user is logged in and load required models
@@ -31,11 +32,13 @@ class Profile extends MY_Controller
             redirect('myskearch/auth/login', 'refresh');
         }
 
-        $this->load->model('Util_model', 'Util_model');
+        $this->load->model('Util_model', 'Util');
     }
 
     /**
-     * Shows My Skearch member profile
+     * Shows My Skearch user profile
+     *
+     * @return void
      */
     public function index()
     {
@@ -65,8 +68,8 @@ class Profile extends MY_Controller
 
         if ($this->form_validation->run() === false) {
 
-            $data['states'] = $this->Util_model->get_state_list();
-            $data['countries'] = $this->Util_model->get_country_list();
+            $data['states'] = $this->Util->get_state_list();
+            $data['countries'] = $this->Util->get_country_list();
             $data['is_brandmember'] = $is_brandmember;
 
             $data['title'] = ucwords("my skearch | profile");
@@ -92,7 +95,7 @@ class Profile extends MY_Controller
                 $data['zipcode'] = $this->input->post('zipcode');
             }
 
-            if ($this->ion_auth->update($this->session->userdata('id'), $data)) {
+            if ($this->ion_auth->update($this->user_id, $data)) {
 
                 $user = (array) $this->ion_auth->user()->row();
                 $this->session->set_userdata($user);
