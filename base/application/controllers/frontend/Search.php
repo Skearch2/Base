@@ -9,8 +9,8 @@ if (!defined('BASEPATH')) {
  * This model fetch data based on category and its subcategory.
  * It also provides category listing.
  * @package        Skearch
- * @author        zaawar Ejaz <zaawar@yaho.com>
- * @copyright    Copyright (c) 201
+ * @author         Zaawar Ejaz <zaawar@yahoo.com>
+ * @copyright      Copyright (c) 2019
  * @version        2.0
  */
 
@@ -96,7 +96,7 @@ class Search extends MY_Controller
         if ($settings->search_engine === 'startpage') {
             $search_url = 'https://www.startpage.com/do/dsearch?query=';
         } elseif ($settings->search_engine === 'google') {
-            $search_url = 'http://www.google.com/?q=';
+            $search_url = 'http://www.google.com/search?q=';
         } else {
             $search_url = 'http://www.duckduckgo.com/?q=';
         }
