@@ -38,8 +38,8 @@
     *       Toastr
 	-->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
-    <link href='<?= base_url(ASSETS); ?>/frontend/css/theme.css' rel="stylesheet" />
-    <link href='<?= base_url(ASSETS); ?>/frontend/css/dark-style.css' rel="stylesheet" />
+    <link href='<?= base_url(ASSETS); ?>/frontend/css/light.css' rel="stylesheet" />
+    <!-- <link href='<?= base_url(ASSETS); ?>/frontend/css/dark.css' rel="stylesheet" /> -->
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
@@ -88,7 +88,7 @@
         function ajaxSearch(keyword) {
             if (keyword.length > 0) {
                 $.ajax({
-                    url: '<?= site_url(); ?>/search?search_keyword=' + keyword,
+                    url: '<?= site_url(); ?>search?search_keyword=' + keyword,
                     type: 'GET',
                     async: false,
                     success: function(data) {

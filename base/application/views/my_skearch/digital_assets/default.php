@@ -38,10 +38,10 @@ $this->load->view('my_skearch/templates/end_page');
 // Load quick sidebar
 $this->load->view('my_skearch/templates/quick_sidebar');
 
-// Load scrolltop button
-$this->load->view('my_skearch/templates/scrolltop');
+// Load global JS files
+$this->load->view('my_skearch/templates/js_global');
 
-// Close body and html (contains some javascripts links)
+// Close body and html
 $this->load->view('my_skearch/templates/close_html');
 
 ?>

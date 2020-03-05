@@ -122,7 +122,7 @@ class Auth extends MY_Controller
             $data['title'] = ucwords('my skearch  | sign up');
             $this->load->view('my_skearch/pages/register', $data);
         } else {
-            if ($this->User_model->register($is_regular)) {
+            if ($this->User_model->create($is_regular)) {
                 if ($is_regular) {
                     $this->session->set_flashdata('success', 'An email has been sent to you for account activation.');
                 } else {
