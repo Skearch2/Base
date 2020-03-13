@@ -14,9 +14,8 @@
                     <a href="myskearch/auth/signup" class="btn btn-danger" role="button">Sign Up</a>
                     <a href="myskearch/auth/login" class="btn btn-danger" role="button">Login</a>
                 <?php endif ?>
-                <a class="theme-change" href="#">
-                    <img src="<?= base_url(ASSETS) ?>/frontend/images/moon_theme.png" class="theme-change moon" alt="" />
-                    <img src="<?= base_url(ASSETS) ?>/frontend/images/sun_theme.png" class="theme-change sun" alt="" />
+                <a class="theme-change" onclick="changeTheme()" title="Change theme">
+                    <img class="theme-change icon">
                 </a>
             </div>
         </div>

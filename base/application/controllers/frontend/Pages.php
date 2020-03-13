@@ -24,8 +24,15 @@ class Pages extends MY_Controller
   public function __construct()
   {
     parent::__construct();
+
+    $this->load->model('my_skearch/User_model', 'User');
     $this->load->model('Category_model', 'Category_model');
     $this->load->model('admin_panel/Option_model_admin', 'Option_model');
+
+    // set default skearch theme
+    if (empty($this->session->userdata('theme'))) {
+      $this->session->set_userdata('theme', 'light');
+    }
   }
 
   public function index()
@@ -292,6 +299,28 @@ class Pages extends MY_Controller
         $data['title'] = ucwords(urldecode($umbrella_name) . " - " . urldecode($field_name));
 
         $this->load->view('frontend/field', $data);
+      }
+    }
+  }
+
+  /**
+   * Change Skeach frontend theme
+   *
+   * @return void
+   */
+  public function change_theme()
+  {
+    $user_id = $this->ion_auth->user()->row()->id;
+
+    if ($this->session->userdata('theme') === 'light') {
+      $this->session->set_userdata('theme', 'dark');
+      if ($this->ion_auth->logged_in()) {
+        $this->User->update_settings($user_id, NULL, 'dark');
+      }
+    } else if ($this->session->userdata('theme') === 'dark') {
+      $this->session->set_userdata('theme', 'light');
+      if ($this->ion_auth->logged_in()) {
+        $this->User->update_settings($user_id, NULL, 'light');
       }
     }
   }

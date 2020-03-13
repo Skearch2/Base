@@ -369,7 +369,7 @@ class Category_model_admin extends CI_Model
 
     // Delete from homepage fields table as well
     $this->db->where('field_id', $id);
-    $this->db->delete('sskearch_homepage_fields');
+    $this->db->delete('skearch_homepage_fields');
 
     // Delete from field suggestion table as well
     $this->db->where('umbrella_id', $id);
