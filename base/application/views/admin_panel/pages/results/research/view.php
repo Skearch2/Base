@@ -194,27 +194,30 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-	$("#smenu_data").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-</script>
-
-<script>
-	/* Deletes item*/
+	// delete research link
 	function deleteLink(id) {
-		var result = confirm("Are you sure you want delete link id \"" + id + "\"?");
-		if (result) {
+		swal({
+			title: "Are you sure?",
+			text: "Are you sure you want delete the research link with id: \"" + id + "\"?",
+			type: "warning",
+			confirmButtonClass: "btn btn-danger",
+			confirmButtonText: "Yes, delete it!",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
 			$.ajax({
-				//changes
-				url: '<?= site_url(); ?>/admin/results/research/delete/' + id,
+				url: '<?= site_url('admin/results/research/delete/'); ?>' + id,
 				type: 'DELETE',
-				success: function(result) {
-					$("#" + id).fadeOut("slow");
-					//$('#m_table_1').DataTable().ajax.reload(null, false);
+				success: function(data, status) {
+					swal("Success!", "The research link has been deleted.", "success")
+					$("#" + id).remove();
 				},
-				error: function() {
-					alert("Unable to delete item.");
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to delete the research link.", "error")
 				}
 			});
-		}
+		});
 	}
 
 	var DatatablesDataSourceAjaxServer = {
@@ -262,4 +265,10 @@ $this->load->view('admin_panel/templates/close_html');
 		}
 
 	);
+</script>
+
+<!-- Sidemenu class -->
+<script>
+	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-results-research").addClass("m-menu__item  m-menu__item--active");
 </script>

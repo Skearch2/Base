@@ -158,35 +158,51 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-    function deleteSubcategory(id, title) {
-        var title = title.replace(/%20/g, ' ');
-        var result = confirm("Are you sure you want delete category \"" + title + "\"?");
-        if (result) {
+    function deleteField(id, field) {
+        var field = field.replace(/%20/g, ' ');
+
+        swal({
+            title: "Are you sure?",
+            text: "Are you sure you want delete the field: \"" + field + "\"?",
+            type: "warning",
+            confirmButtonClass: "btn btn-danger",
+            confirmButtonText: "Yes, delete it!",
+            showCancelButton: true,
+            timer: 5000
+        }).then(function(e) {
+            if (!e.value) return;
             $.ajax({
-                url: '<?= site_url(); ?>/admin/categories/delete_subcategory/' + id,
+                url: '<?= site_url('admin/categories/delete_subcategory/'); ?>' + id,
                 type: 'DELETE',
-                success: function(result) {
-                    $("#" + id).fadeOut("slow");
-                    //$('#m_table_1').DataTable().ajax.reload(null, false);
+                success: function(data, status) {
+                    swal("Success!", "The field has been deleted.", "success")
+                    $("#" + id).remove();
+                },
+                error: function(xhr, status, error) {
+                    swal("Error!", "Unable to delete the field.", "error")
                 }
             });
-        }
+        });
     }
 
 
-    /* Disable/Enable item*/
-    function toggle(id, status, row) {
+    // Toggle field active status
+    function toggle(id, row) {
         $.ajax({
-            url: '<?= site_url(); ?>/admin/categories/toggle_subcategory/' + id,
+            url: '<?= site_url('admin/categories/toggle_subcategory/'); ?>' + id,
             type: 'GET',
-            success: function(status) {
-                if (status == 0) {
+            success: function(data, status) {
+                if (data == 0) {
                     document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
                     document.getElementById("tablerow" + row).innerHTML = "Off";
-                } else {
+                } else if (data == 1) {
                     document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
                     document.getElementById("tablerow" + row).innerHTML = "Active";
                 }
+                toastr.success("", "Status updated.");
+            },
+            error: function(xhr, status, error) {
+                toastr.error("", "Unable to change the status.");
             }
         });
     }
@@ -234,8 +250,8 @@ $this->load->view('admin_panel/templates/close_html');
                         render: function(a, t, e, n) {
                             var title = e['title'].replace(/ /g, '%20');
                             var row = (n.row).toString().slice(-1);
-                            return '<a href="<?php echo site_url() . "admin/categories/update_subcategory/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-                                '<a onclick=deleteSubcategory("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+                            return '<a href="<?= site_url() . "admin/categories/update_subcategory/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+                                '<a onclick=deleteField("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
                         }
                     },
                     {
@@ -243,44 +259,8 @@ $this->load->view('admin_panel/templates/close_html');
                         title: "Adlinks",
                         render: function(a, t, e, n) {
                             return e['totalResults'] + " " +
-                                '<a href="<?php echo site_url() . "admin/categories/result_list/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
+                                '<a href="<?= site_url() . "admin/categories/result_list/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
 
-                        }
-                    },
-                    {
-                        targets: 7,
-                        render: function(a, t, e, n) {
-                            var s = {
-                                1: {
-                                    title: "Pending",
-                                    class: "m-badge--brand"
-                                },
-                                2: {
-                                    title: "Delivered",
-                                    class: " m-badge--metal"
-                                },
-                                3: {
-                                    title: "Member",
-                                    class: " m-badge--primary"
-                                },
-                                4: {
-                                    title: "Success",
-                                    class: " m-badge--success"
-                                },
-                                5: {
-                                    title: "Info",
-                                    class: " m-badge--info"
-                                },
-                                6: {
-                                    title: "Danger",
-                                    class: " m-badge--danger"
-                                },
-                                7: {
-                                    title: "Warning",
-                                    class: " m-badge--warning"
-                                }
-                            };
-                            return void 0 === s[a] ? a : '<span class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + "</span>"
                         }
                     }, {
                         targets: 5,
@@ -303,10 +283,6 @@ $this->load->view('admin_panel/templates/close_html');
                         targets: 6,
                         render: function(a, t, e, n) {
                             var s = {
-                                2: {
-                                    title: "Pending",
-                                    class: "m-badge--brand"
-                                },
                                 1: {
                                     title: "Active",
                                     class: " m-badge--success"
@@ -316,7 +292,7 @@ $this->load->view('admin_panel/templates/close_html');
                                     class: " m-badge--danger"
                                 }
                             };
-                            return void 0 === s[a] ? a : '<span style="cursor: pointer;" id= tablerow' + n['row'] + ' onclick=toggle(' + e['id'] + ',' + e['enabled'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + "</span>"
+                            return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
                         }
                     }
                 ]
@@ -330,8 +306,6 @@ $this->load->view('admin_panel/templates/close_html');
 
     });
 
-
-
     $('#m_table_1 tbody').on('click', 'tablerow1', function() {
         $('#m_table_1').DataTable()
             .row($(this).parents('tr'))
@@ -340,6 +314,8 @@ $this->load->view('admin_panel/templates/close_html');
     });
 </script>
 
+<!-- Sidemenu class -->
 <script>
-    $("#smenu_data").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+    $("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+    $("#submenu-results-fields").addClass("m-menu__item  m-menu__item--active");
 </script>

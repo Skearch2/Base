@@ -81,7 +81,6 @@ class Researches extends CI_Model
         }
     }
 
-
     /**
      * Save research link
      *

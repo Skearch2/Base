@@ -46,7 +46,7 @@ $this->load->view('admin_panel/templates/subheader');
 												<span aria-hidden="true">&times;</span>
 											</button>
 											<div class="alert-icon">
-												<p class="flaticon-warning"> Error:</p>
+												<p class="flaticon-danger"> Error:</p>
 												<?= validation_errors(); ?>
 											</div>
 										</div>
@@ -54,7 +54,7 @@ $this->load->view('admin_panel/templates/subheader');
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">Subcategory Information</h3>
+										<h3 class="m-form__section">Umbrella Information</h3>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -76,23 +76,16 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Umbrella Page</label>
+									<label for="example-text-input" class="col-2 col-form-label">Umbrella Name</label>
 									<div class="col-7">
-										<select id="select" class="form-control" name="parent_id" required>
-											<?php
-											foreach ($category_list as $item) { ?>
-												<!-- <option <?php //if (isset($subcategory_parent) && (in_array($item->id, $subcategory_parent))) echo "selected"; else echo set_select("parent_id",$item->id); 
-																?> value="<?= $item->id ?>"><?= $item->title ?></option> -->
-												<option <?php echo set_select("parent_id", $item->id); ?> value="<?= $item->id ?>"><?= $item->title ?></option>
-											<?php } ?>
-										</select>
+										<input class="form-control m-input" type="text" name="umbrella_name" value="<?php if (form_error('umbrella_name') == '') echo set_value('umbrella_name'); ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Home Display Name</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="home_display" value="<?php if (form_error('home_display') == '') echo set_value('home_display'); ?>">
-									</div>
+									</div>x
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Keywords</label>
@@ -111,7 +104,6 @@ $this->load->view('admin_panel/templates/subheader');
 												<span></span>
 											</label>
 										</span>
-										<!-- <div class="m-form__help">Allow aside minimizing</div> -->
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -124,7 +116,6 @@ $this->load->view('admin_panel/templates/subheader');
 												<span></span>
 											</label>
 										</span>
-										<!-- <div class="m-form__help">Allow aside minimizing</div> -->
 									</div>
 								</div>
 							</div>
@@ -172,38 +163,10 @@ $this->load->view('admin_panel/templates/scrolltop');
 // Close body and html (contains some javascripts links)
 $this->load->view('admin_panel/templates/close_html');
 
-
 ?>
 
+<!-- Sidemenu class -->
 <script>
-	jQuery(document).ready(function() {
-		Dashboard.init(); // init metronic core componets
-		toastr.options = {
-			"closeButton": true,
-			"debug": false,
-			"positionClass": "toast-bottom-right",
-			"onclick": null,
-			"showDuration": "500",
-			"hideDuration": "500",
-			"timeOut": "3000",
-			"extendedTimeOut": "1000",
-			"showEasing": "swing",
-			"hideEasing": "linear",
-			"showMethod": "fadeIn",
-			"hideMethod": "fadeOut"
-		};
-	});
-
-	var last_valid_selection = null;
-	$("#select").change(function(event) {
-		//swal("Here's a message!");
-		if ($(this).val().length > 3) {
-			toastr.warning("Maximum of 3 Umbrella pages can be selected.", "Maximum Limit Reached");
-			$(this).val(last_valid_selection);
-		} else {
-			last_valid_selection = $(this).val();
-		}
-	});
-
-	$("#smenu_data").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-results-umbrellas").addClass("m-menu__item  m-menu__item--active");
 </script>
