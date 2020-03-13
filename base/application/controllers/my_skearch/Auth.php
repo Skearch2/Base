@@ -60,8 +60,8 @@ class Auth extends MY_Controller
                 $user = (array) $this->ion_auth->user()->row();
 
                 // add user group in the user information
-                $user['groupid'] =  $this->ion_auth->get_users_groups($user->id)->row()->id;
-                $user['group'] =  $this->ion_auth->get_users_groups($user->id)->row()->name;
+                $user['groupid'] =  $this->ion_auth->get_users_groups($user['id'])->row()->id;
+                $user['group'] =  $this->ion_auth->get_users_groups($user['id'])->row()->name;
 
                 // add user set theme
                 $user['theme'] = $this->User->get_settings($user['id'], 'theme')->theme;
