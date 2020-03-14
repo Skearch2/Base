@@ -17,7 +17,7 @@ $this->load->view('frontend/templates/nav');
     <div class="container">
         <div class="row">
             <div class="col-sm-12 logo-bar">
-                <img class="logo-img">
+                <div class="logo-img"></div>
             </div>
         </div>
     </div>
