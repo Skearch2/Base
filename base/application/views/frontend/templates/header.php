@@ -3,7 +3,7 @@
 		<div class="row">
 			<a href="<?= site_url() ?>">
 				<div class="col-sm-4 col-xs-6 logo">
-					<img src="<?= base_url(ASSETS) ?>/frontend/images/logo.png" class="img-responsive" alt="logo" />
+					<div class="logo-header"></div>
 				</div>
 			</a>
 			<div class="col-sm-6 col-xs-12 search-box">
@@ -18,7 +18,7 @@
 			<div class="col-sm-2 col-xs-6 field-btn">
 				<a class="btn-cat" href="<?= site_url('browse') ?>"></a>
 				<a class="theme-change" onclick="changeTheme()" title="Change theme">
-					<img class="theme-change icon">
+					<div class="theme-change icon"></div>
 				</a>
 			</div>
 		</div>
