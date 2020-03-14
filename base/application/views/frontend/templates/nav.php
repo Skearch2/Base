@@ -15,7 +15,7 @@
                     <a href="myskearch/auth/login" class="btn btn-danger" role="button">Login</a>
                 <?php endif ?>
                 <a class="theme-change" onclick="changeTheme()" title="Change theme">
-                    <img class="theme-change icon">
+                    <div class="theme-change icon"></div>
                 </a>
             </div>
         </div>
