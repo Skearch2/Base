@@ -38,7 +38,7 @@ ul {
 	padding: 25px 0px;
 }
 
-.login-bar img.theme-change {
+.login-bar .theme-change {
 	margin-top: 3px;
 	margin-left: 13px;
 }
@@ -67,6 +67,7 @@ ul {
 	background-size: 100%;
 	width: 480px;
 	height: 240px;
+	margin: 0 auto; 
 }
 
 .button-section h1 {
@@ -342,10 +343,10 @@ p.copy-right {
 	margin-top: 25px;
 }
 
-img.theme-change {
+.theme-change {
 	width: 27px;
 	float: right;
-	margin-top: 13px;
+	margin-top: 6.5px;
 }
 
 .sun {
@@ -634,7 +635,7 @@ media
 	header {
 		padding-top: 16px;
 	}
-	img.theme-change {
+	.theme-change {
 		margin-right: 12px;
 	}
 	.right-btn.pull-right {
@@ -694,4 +695,12 @@ media
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     transition: transform .6s ease-in-out,-webkit-transform .6s ease-in-out;
+}
+.logo .logo-header {
+	background-image: url(../images/logo-light.png);
+	background-repeat: no-repeat;
+	background-size: 100%;
+	width: 250px;
+	height: 100px;
+	cursor: pointer;
 }

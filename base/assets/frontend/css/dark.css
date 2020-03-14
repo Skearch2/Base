@@ -47,7 +47,7 @@ ul {
 	padding: 25px 0px;
 }
 
-.login-bar img.theme-change {
+.login-bar .theme-change {
 	margin-top: 3px;
 	margin-left: 13px;
 }
@@ -76,6 +76,7 @@ ul {
 	background-size: 100%;
 	width: 480px;
 	height: 240px;
+	margin: 0 auto; 
 }
 
 .button-section h1 {
@@ -368,10 +369,10 @@ p.copy-right {
 	color: #fff;
 }
 
-img.theme-change {
+.theme-change {
 	width: 27px;
 	float: right;
-	margin-top: 13px;
+	margin-top: 6.5px;
 }
 
 .result-listing li div a {
@@ -684,7 +685,7 @@ media
 		padding-top: 16px;
 	}
 	
-	img.theme-change {
+	.theme-change {
 		margin-right: 12px;
 	}
 	
@@ -750,4 +751,18 @@ media
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     transition: transform .6s ease-in-out,-webkit-transform .6s ease-in-out;
+}
+footer a {
+    color: #ffffff;
+    font-size: 16px;
+    text-decoration: none;
+    margin: 0 8px;
+    font-family: 'helveticaneueregular', Arial, Helvetica, sans-serif;
+}
+.logo .logo-header {
+	background-image: url(../images/header-logo-dark.png);
+	background-repeat: no-repeat;
+	width: 250px;
+	height: 100px;
+	cursor: pointer;
 }
