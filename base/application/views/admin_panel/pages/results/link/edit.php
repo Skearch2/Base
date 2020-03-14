@@ -205,9 +205,6 @@ $this->load->view('admin_panel/templates/close_html');
     };
   });
 
-  $("#smenu_data").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-  //$( "#priorities" ).prop( "disabled", true );
-
   function updatePriority(id) {
     toastr.info("", "Updating Priority...");
 
@@ -259,4 +256,10 @@ $this->load->view('admin_panel/templates/close_html');
     }
     return false;
   }
+</script>
+
+<!-- Sidemenu class -->
+<script>
+  $("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+  $("#submenu-results-links").addClass("m-menu__item  m-menu__item--active");
 </script>

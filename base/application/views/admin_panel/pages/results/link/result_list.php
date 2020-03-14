@@ -178,81 +178,112 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-	// function showResultDetails(id) {
-
-	//   $( "div.modal-body" ).html(
-	// 	   "<p>Result ID:</p> "+ id +" \
-	// 	    <p>This is a test.</p> "
-	//   );
-	// }
-
-	function deleteCategory(id, title) {
-		var title = title.replace(/%20/g, ' ');
-		var result = confirm("Are you sure you want delete listing \"" + title + "\"?");
-		if (result) {
+	// Deletes link
+	function deleteLink(id, link) {
+		var link = link.replace(/%20/g, ' ');
+		swal({
+			title: "Are you sure?",
+			text: "Are you sure you want delete the link: \"" + link + "\"?",
+			type: "warning",
+			confirmButtonClass: "btn btn-danger",
+			confirmButtonText: "Yes, delete it!",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
 			$.ajax({
-				url: '<?= site_url(); ?>/admin/categories/delete_result_listing/' + id,
+				url: '<?= site_url('admin/categories/delete_result_listing/'); ?>' + id,
 				type: 'DELETE',
-				success: function(result) {
-					$("#" + id).fadeOut("slow");
-					//$('#m_table_1').DataTable().ajax.reload(null, false);
+				success: function(data, status) {
+					swal("Success!", "The link has been deleted.", "success")
+					$("#" + id).remove();
+				},
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to delete the link.", "error")
 				}
 			});
-		}
+		});
 	}
 
-	/* Disable/Enable item*/
+	//Toggles link active status
 	function toggle(id, row) {
 		$.ajax({
-			url: '<?= site_url(); ?>/admin/categories/toggle_result/' + id,
+			url: '<?= site_url('admin/categories/toggle_result/'); ?>' + id,
 			type: 'GET',
-			success: function(status) {
-				if (status == 0) {
+			success: function(data, status) {
+				if (data == 0) {
 					document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
-					document.getElementById("tablerow" + row).innerHTML = "Off";
-				} else {
+					document.getElementById("tablerow" + row).innerHTML = "Inactive";
+					toastr.success("", "Status updated.");
+				} else if (data == 1) {
 					document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
 					document.getElementById("tablerow" + row).innerHTML = "Active";
+					toastr.success("", "Status updated.");
 				}
 			},
-			error: function(err) {
-				alert("Error toggle Ad-link");
+			error: function(xhr, status, error) {
+				toastr.error("", "Unable to change the status.");
 			}
 		});
 	}
 
-	/* Disable/Enable redirection*/
-	function toggle_redirect(id) {
+	//Toggles link redirection
+	function toggleRedirect(id) {
 		$.ajax({
-			url: '<?= site_url(); ?>/admin/categories/toggle_redirect/' + id,
+			url: '<?= site_url(); ?>admin/categories/toggle_redirect/' + id,
 			type: 'GET',
-			success: function(status) {
-				if (status == 0) {
+			success: function(data, status) {
+				if (data == 0) {
 					document.getElementById("redirect" + id).style.color = "red";
-				} else {
+				} else if (data == 1) {
 					document.getElementById("redirect" + id).style.color = "#34bfa3";
 				}
+				toastr.success("", "Redirection updated.");
 			},
-			error: function(err) {
-				alert("Error toggle Priority");
+			error: function(xhr, status, error) {
+				toastr.error("", "Unable to take action.");
 			}
 		});
 	}
 
-	/* Disable/Enable redirection*/
-	function change_priority(id, priorityO, priorityN) {
+	// change field priority
+	function change_priority(id, priority) {
 		$('#m_table_1').fadeOut("slow");
 		$.ajax({
-			url: '<?= site_url(); ?>/admin/categories/change_priority/' + id + '/' + priorityO + '/' + priorityN,
+			url: '<?= site_url(); ?>/admin/categories/change_priority/' + id + '/' + priority,
 			type: 'GET',
 			success: function(status) {
 				get_links_priority();
 				$('#m_table_1').DataTable().ajax.reload(null, false);
+				toastr.success("", "Priority updated.");
 			},
 			error: function(err) {
-				alert("Error changing Priority");
+				toastr.error("", "Unable to update priority.");
 			}
 		});
+	}
+
+	function get_links_priority() {
+		$.ajax({
+			url: '<?= site_url(); ?>/admin/categories/get_links_priority/' + <?php echo $subcategoryid; ?>,
+			type: 'GET',
+			success: function(result) {
+				obj = JSON.parse(result);
+				$('#m_table_1').fadeIn("fast");
+			},
+			error: function(err) {
+				toastr.error("", "Unable to get priorities for the link.");
+			}
+		});
+	}
+
+	function searchArray(key, array) {
+		for (var i = 0; i < array.length; i++) {
+			if (array[i].priority == key) {
+				return array[i];
+			}
+		}
+		return false;
 	}
 
 	var DatatablesDataSourceAjaxServer = {
@@ -300,18 +331,14 @@ $this->load->view('admin_panel/templates/close_html');
 							var row = (n.row).toString().slice(-1);
 							//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
 							return '<a href="<?= site_url() . "admin/categories/update_result/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-								'<a onclick=toggle_redirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-globe"></i></a>' +
-								'<a onclick=deleteCategory("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+								'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-globe"></i></a>' +
+								'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 						}
 					},
 					{
 						targets: 5,
 						render: function(a, t, e, n) {
 							var s = {
-								2: {
-									title: "Pending",
-									class: "m-badge--brand"
-								},
 								1: {
 									title: "Active",
 									class: " m-badge--success"
@@ -321,7 +348,7 @@ $this->load->view('admin_panel/templates/close_html');
 									class: " m-badge--danger"
 								}
 							};
-							return void 0 === s[a] ? a : '<span style="cursor: pointer;" id= tablerow' + n['row'] + ' onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + "</span>"
+							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 						}
 					}
 				]
@@ -329,36 +356,9 @@ $this->load->view('admin_panel/templates/close_html');
 		}
 	}
 
-
-	var obj;
-
 	jQuery(document).ready(function() {
-		//get_links_priority();
 		DatatablesDataSourceAjaxServer.init();
 	});
-
-	function get_links_priority() {
-		$.ajax({
-			url: '<?= site_url(); ?>/admin/categories/get_links_priority/' + <?php echo $subcategoryid; ?>,
-			type: 'GET',
-			success: function(result) {
-				obj = JSON.parse(result);
-				$('#m_table_1').fadeIn("slow");
-			},
-			error: function(err) {
-				alert("Error getting priority links");
-			}
-		});
-	}
-
-	function searchArray(key, array) {
-		for (var i = 0; i < array.length; i++) {
-			if (array[i].priority == key) {
-				return array[i];
-			}
-		}
-		return false;
-	}
 </script>
 
 <script>

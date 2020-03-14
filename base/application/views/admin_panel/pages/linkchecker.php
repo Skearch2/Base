@@ -125,41 +125,59 @@ $this->load->view('admin_panel/templates/close_html');
     }
 
     /* Removes link from the link checker list */
-    function removeFromList(id, title) {
-        var title = title.replace(/%20/g, ' ');
-        var result = confirm("Are you sure you want remove this link from link check \"" + title + "\"?");
-        if (result) {
+    function removeFromList(id, link) {
+
+        var link = link.replace(/%20/g, ' ');
+        swal({
+            title: "Are you sure?",
+            text: "Are you sure you want remove the link: \"" + link + "\"?",
+            type: "warning",
+            confirmButtonClass: "btn btn-danger",
+            confirmButtonText: "Yes, remove it!",
+            showCancelButton: true,
+            timer: 5000
+        }).then(function(e) {
+            if (!e.value) return;
             $.ajax({
-                url: '<?= site_url(); ?>admin/linkchecker/remove/id/' + id,
-                type: 'GET',
+                url: '<?= site_url('admin/linkchecker/remove/id/'); ?>' + id,
+                type: 'UPDATE',
                 success: function(data, status) {
-                    $("#" + id).fadeOut("slow");
+                    swal("Success!", "The link has been removed.", "success")
+                    $("#" + id).remove();
                 },
                 error: function(xhr, status, error) {
-                    alert("Error removing link from link checker");
-                    console.log(xhr);
+                    swal("Error!", "Unable to remove the link.", "error")
                 }
             });
-        }
+        });
     }
 
     /* Deletes a Link */
-    function deleteLink(id, title) {
-        var title = title.replace(/%20/g, ' ');
-        var result = confirm("Are you sure you want delete listing \"" + title + "\"?");
-        if (result) {
+    function deleteLink(id, link) {
+        var link = link.replace(/%20/g, ' ');
+
+        swal({
+            title: "Are you sure?",
+            text: "Are you sure you want delete the link: \"" + link + "\"?",
+            type: "warning",
+            confirmButtonClass: "btn btn-danger",
+            confirmButtonText: "Yes, delete it!",
+            showCancelButton: true,
+            timer: 5000
+        }).then(function(e) {
+            if (!e.value) return;
             $.ajax({
-                url: '<?= site_url(); ?>admin/categories/delete_result_listing/' + id,
+                url: '<?= site_url('admin/categories/delete_result_listing/'); ?>' + id,
                 type: 'DELETE',
                 success: function(data, status) {
-                    $("#" + id).fadeOut("slow");
-                    //$('#m_table_1').DataTable().ajax.reload(null, false);
+                    swal("Success!", "The link has been deleted.", "success")
+                    $("#" + id).remove();
                 },
                 error: function(xhr, status, error) {
-                    alert("Error deleting link");
+                    swal("Error!", "Unable to delete the link.", "error")
                 }
             });
-        }
+        });
     }
 
     /* Disable/Enable link*/

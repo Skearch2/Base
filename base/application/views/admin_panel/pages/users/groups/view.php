@@ -42,7 +42,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
 					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/users/create_user_group"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+						<a href="<?= site_url("admin/users/group/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
 								<i class="la la-users"></i>
 								<span>Add Group</span>
@@ -112,6 +112,25 @@ $this->load->view('admin_panel/templates/subheader');
 			</div>
 		</div>
 		<div class="m-portlet__body">
+			<?php if ($this->session->flashdata('success') === 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The group has been created or updated.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to create or update the group.
+					</div>
+				</div>
+			<?php endif ?>
 
 			<!--begin: Datatable -->
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
@@ -153,17 +172,33 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-	function deleteUserGroup(id, groupName) {
-		var result = confirm("Are you sure you want delete user group: \"" + groupName + "\"?");
-		if (result) {
+	// Deletes group
+	function deleteGroup(id, groupName) {
+		// escape characters
+		groupName = groupName.replace(/%20/g, " ");
+
+		swal({
+			title: "Are you sure?",
+			text: "Are you sure you want delete user group: \"" + groupName + "\"?",
+			type: "warning",
+			confirmButtonClass: "btn btn-danger",
+			confirmButtonText: "Yes, delete it!",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
 			$.ajax({
-				url: '<?= site_url('admin/users/delete_user_group/'); ?>' + id,
+				url: '<?= site_url('admin/users/group/delete/id/'); ?>' + id,
 				type: 'DELETE',
-				success: function(result) {
-					location.reload();
+				success: function(data, status) {
+					swal("Success!", "The group has been deleted.", "success")
+					$("#" + id).remove();
+				},
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to delete the group.", "error")
 				}
 			});
-		}
+		});
 	}
 
 	var DatatablesDataSourceAjaxServer = {
@@ -173,7 +208,8 @@ $this->load->view('admin_panel/templates/close_html');
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
-				ajax: "<?= site_url('admin/users/get_user_groups'); ?>",
+				rowId: "id",
+				ajax: "<?= site_url('admin/users/groups/get'); ?>",
 				columns: [{
 					data: "id"
 				}, {
@@ -188,8 +224,8 @@ $this->load->view('admin_panel/templates/close_html');
 					title: "Actions",
 					orderable: !1,
 					render: function(a, t, e, n) {
-						return '<a href="<?= site_url() . "admin/users/edit_user_group/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-							'<a onclick=deleteUserGroup("' + e['id'] + '","' + e['name'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i class="la la-trash"></i></a>'
+						return '<a href="<?= site_url() . "admin/users/group/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+							'<a onclick=deleteGroup("' + e['id'] + '","' + escape(e['name']) + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}]
 			})
@@ -204,7 +240,8 @@ $this->load->view('admin_panel/templates/close_html');
 	);
 </script>
 
-
+<!-- Sidemenu class -->
 <script>
-	$("#smenu_user").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-users-groups").addClass("m-menu__item  m-menu__item--active");
 </script>

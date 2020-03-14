@@ -31,15 +31,14 @@
 	* 		**Stylesheets**
 	* 		
     * 		Bootstrap
-    *       Global
+    *       Theme
     *	 	Font Awesome
     *       Bootstrap Toggle
     *       jQuery UI
     *       Toastr
 	-->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
-    <link href='<?= base_url(ASSETS); ?>/frontend/css/light.css' rel="stylesheet" />
-    <!-- <link href='<?= base_url(ASSETS); ?>/frontend/css/dark.css' rel="stylesheet" /> -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href='<?= base_url(ASSETS) ?>/frontend/css/<?= $this->session->userdata('theme') ?>.css' rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
@@ -51,14 +50,12 @@
     * 		jQuery
     *       Bootstrap
     * 		Popper
-    * 		Global
 	* 		Bootstrap Toggle
 	*       jQuery UI
     -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="<?= base_url(ASSETS); ?>/frontend/js/theme.js"></script>
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
@@ -72,7 +69,7 @@
     <link rel='shortcut icon' href='<?= base_url(ASSETS); ?>/frontend/images/favicon.png' type='image/png' />
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Lobster&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i&display=swap" rel="stylesheet">
 
     <!-- Page title -->
     <title><?= $title; ?></title>
@@ -111,6 +108,22 @@
 
                 });
             }
+        }
+    </script>
+
+    <script>
+        function changeTheme() {
+            $.ajax({
+                url: '<?= base_url('theme/change'); ?>',
+                type: 'GET',
+                success: function(data, status) {
+                    location.reload(true);
+                },
+                error: function(xhr, status, error) {
+                    alert("Unable to change the theme.");
+                }
+
+            });
         }
     </script>
 

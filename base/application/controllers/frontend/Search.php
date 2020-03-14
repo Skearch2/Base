@@ -91,16 +91,21 @@ class Search extends MY_Controller
             }
         }
 
-        $settings = $this->User->get_settings($this->user_id, 'search_engine');
+        // default skearch search engine
+        $search_url = 'http://www.duckduckgo.com/?q=';
 
-        if ($settings->search_engine === 'startpage') {
-            $search_url = 'https://www.startpage.com/do/dsearch?query=';
-        } elseif ($settings->search_engine === 'google') {
-            $search_url = 'http://www.google.com/search?q=';
-        } else {
-            $search_url = 'http://www.duckduckgo.com/?q=';
+        // get user set search engine
+        if ($this->ion_auth->logged_in()) {
+
+            $settings = $this->User->get_settings($this->user_id, 'search_engine');
+
+            if ($settings->search_engine === 'startpage') {
+                $search_url = 'https://www.startpage.com/do/dsearch?query=';
+            } elseif ($settings->search_engine === 'google') {
+                $search_url = 'http://www.google.com/search?q=';
+            }
         }
-        /* Else rediect to duckduckgo with given keyword */
+
         echo json_encode(array("type" => "external", "url" => $search_url . $keyword));
         return;
     }

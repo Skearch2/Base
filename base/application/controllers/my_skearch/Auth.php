@@ -28,8 +28,8 @@ class Auth extends MY_Controller
     {
         parent::__construct();
 
-        $this->load->model('my_skearch/User_model', 'User_model');
-        $this->load->model('Util_model', 'Util_model');
+        $this->load->model('my_skearch/User_model', 'User');
+        $this->load->model('Util_model', 'Util');
     }
 
     /**
@@ -60,9 +60,13 @@ class Auth extends MY_Controller
                 $user = (array) $this->ion_auth->user()->row();
 
                 // add user group in the user information
-                $user['group'] =  $this->ion_auth->get_users_groups($this->session->userdata('myskearch_id'))->row()->name;
-                $user['groupid'] =  $this->ion_auth->get_users_groups($this->session->userdata('myskearch_id'))->row()->id;
+                $user['groupid'] =  $this->ion_auth->get_users_groups($user['id'])->row()->id;
+                $user['group'] =  $this->ion_auth->get_users_groups($user['id'])->row()->name;
 
+                // add user set theme
+                $user['theme'] = $this->User->get_settings($user['id'], 'theme')->theme;
+
+                // add user data to session
                 $this->session->set_userdata($user);
 
                 redirect();
@@ -116,13 +120,13 @@ class Auth extends MY_Controller
         if ($this->form_validation->run() === false) {
 
             $data['is_regular'] = $is_regular;
-            $data['states'] = $this->Util_model->get_state_list();
-            $data['countries'] = $this->Util_model->get_country_list();
+            $data['states'] = $this->Util->get_state_list();
+            $data['countries'] = $this->Util->get_country_list();
 
             $data['title'] = ucwords('my skearch  | sign up');
             $this->load->view('my_skearch/pages/register', $data);
         } else {
-            if ($this->User_model->create($is_regular)) {
+            if ($this->User->create($is_regular)) {
                 if ($is_regular) {
                     $this->session->set_flashdata('success', 'An email has been sent to you for account activation.');
                 } else {

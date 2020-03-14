@@ -35,19 +35,20 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-caption">
 				<div class="m-portlet__head-title">
 					<h3 class="m-portlet__head-text">
-						<?= $heading; ?>
+						<?= $title; ?>
 					</h3>
 				</div>
 			</div>
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
 					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/users/create_user"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+						<a href="<?= site_url("admin/categories/create_category"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
-								<i class="la la-user-plus"></i>
-								<span>Add User</span>
+								<i class="la la-cart-plus"></i>
+								<span>Add Item</span>
 							</span>
 						</a>
+					</li>
 					<li class="m-portlet__nav-item"></li>
 					<li class="m-portlet__nav-item">
 						<div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push" m-dropdown-toggle="hover" aria-expanded="true">
@@ -111,27 +112,6 @@ $this->load->view('admin_panel/templates/subheader');
 				</ul>
 			</div>
 		</div>
-
-		<!--begin::Modal-->
-		<div class="modal fade" id="m_modal_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLongTitle">User Details</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body"></div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!--end::Modal-->
-
 		<div class="m-portlet__body">
 
 			<!--begin: Datatable -->
@@ -139,13 +119,12 @@ $this->load->view('admin_panel/templates/subheader');
 				<thead>
 					<tr>
 						<th>ID</th>
-						<th>Username</th>
-						<th>Last Name</th>
-						<th>First Name</th>
-						<th>Email Address</th>
-						<th>Gender</th>
+						<th>Title</th>
+						<th>Short Description</th>
+						<th>Fields</th>
+						<th>Featured</th>
 						<th>Status</th>
-						<th width=150>Actions</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 			</table>
@@ -154,6 +133,7 @@ $this->load->view('admin_panel/templates/subheader');
 
 	<!-- END EXAMPLE TABLE PORTLET-->
 </div>
+
 
 <?php
 
@@ -176,74 +156,59 @@ $this->load->view('admin_panel/templates/scrolltop');
 $this->load->view('admin_panel/templates/close_html');
 
 ?>
-<style>
-	[role=button] {
-		cursor: pointer
-	}
-</style>
+
+<!-- Sidemenu class -->
 <script>
-	function showUserDetails(user) {
+	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-results-umbrellas").addClass("m-menu__item  m-menu__item--active");
+</script>
 
-		$("div.modal-body").html(
+<script>
+	//Deletes umbrella
+	function deleteUmbrella(id, umbrella) {
+		var umbrella = umbrella.replace(/%20/g, ' ');
 
-			"<p>UserID:</p> " + user + " \
-			<p>This is a test.</p> \
-			<p>This is a test.</p>"
-		);
-	}
-
-	function deleteUser(id, username) {
-		var result = confirm("Are you sure you want delete user: \"" + username + "\"?");
-		if (result) {
+		swal({
+			title: "Are you sure?",
+			text: "Are you sure you want delete the umbrella: \"" + umbrella + "\"?",
+			type: "warning",
+			confirmButtonClass: "btn btn-danger",
+			confirmButtonText: "Yes, delete it!",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
 			$.ajax({
-				url: '<?= site_url('admin/users/delete_user/'); ?>' + id,
+				url: '<?= site_url('admin/categories/delete_category/'); ?>' + id,
 				type: 'DELETE',
-				success: function(result) {
-					location.reload();
+				success: function(data, status) {
+					swal("Success!", "The umbrella has been deleted.", "success")
+					$("#" + id).remove();
 				},
 				error: function(xhr, status, error) {
-					console.log("Unable to delete user!");
+					swal("Error!", "Unable to delete the umbrella.", "error")
 				}
 			});
-		}
+		});
 	}
 
-	/*
-		Reset user password
-		- Email reset link to the user
-	*/
-	function resetUserPassword(id, username) {
-		var result = confirm("Are you sure you want reset password for user: \"" + username + "\"?");
-		if (result) {
-			$.ajax({
-				url: '<?= site_url('admin/users/reset_user_password/'); ?>' + id,
-				type: 'GET',
-				success: function(result) {
-					toastr.success("A password reset link has been sent to the  user.", "Success");
-				},
-				error: function(error) {
-					toastr.error("Unable to reset user password.", "Error");
-				}
-			});
-		}
-	}
-
-	/* Disable/Enable user*/
+	// Toggle umbrella active status
 	function toggle(id, row) {
 		$.ajax({
-			url: '<?= site_url('admin/users/toggle_user_activation/'); ?>' + id,
+			url: '<?= site_url('admin/categories/toggle_category/'); ?>' + id,
 			type: 'GET',
-			success: function(status) {
-				if (status == 0) {
+			success: function(data, status) {
+				if (data == 0) {
 					document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
-					document.getElementById("tablerow" + row).innerHTML = "Inactive";
-					document.getElementById("tablerow" + row).setAttribute("role", "button") = "Inactive";
-				} else if (status == 1) {
+					document.getElementById("tablerow" + row).innerHTML = "Off";
+				} else if (data == 1) {
 					document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
 					document.getElementById("tablerow" + row).innerHTML = "Active";
-					document.getElementById("tablerow" + row).setAttribute("role", "button") = "Inactive";
 				}
-
+				toastr.success("", "Status updated.");
+			},
+			error: function(xhr, status, error) {
+				toastr.error("", "Unable to change the status.");
 			}
 		});
 	}
@@ -252,109 +217,90 @@ $this->load->view('admin_panel/templates/close_html');
 		init: function() {
 			$("#m_table_1").DataTable({
 				responsive: !0,
+				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
+				rowId: "id",
+				order: [
+					[1, 'asc']
+				],
 				searchDelay: 500,
+				lengthMenu: [
+					[50, 100, -1],
+					[50, 100, "ALL"]
+				],
 				processing: !0,
 				serverSide: !1,
-				ajax: "<?= site_url("admin/users/get_user_list/$group"); ?>",
+				ajax: "<?= site_url(); ?>/admin/categories/get_category_list/<?= $status; ?>",
 				columns: [{
 					data: "id"
 				}, {
-					data: "username"
+					data: "title"
 				}, {
-					data: "lastname"
+					data: "description_short"
 				}, {
-					data: "firstname"
+					data: "Fields"
 				}, {
-					data: "email"
+					data: "featured"
 				}, {
-					data: "gender"
-				}, {
-					data: "active"
+					data: "enabled"
 				}, {
 					data: "Actions"
 				}],
 				columnDefs: [{
-						targets: -1,
-						title: "Actions",
-						orderable: !1,
-						render: function(a, t, e, n) {
-
-							return '<a onclick="showUserDetails(' + e['id'] + ')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>' +
-								'<a onclick=resetUserPassword("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Reset Password"><i class="la la-key"></i></a>' +
-								'<a href="<?= site_url() . "admin/users/edit_user/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-								'<a onclick=deleteUser("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i class="la la-trash"></i></a>'
-						}
-					}, {
-						targets: 7,
-						render: function(a, t, e, n) {
-							var s = {
-								1: {
-									title: "Pending",
-									class: "m-badge--brand"
-								},
-								2: {
-									title: "Delivered",
-									class: " m-badge--metal"
-								},
-								3: {
-									title: "Member",
-									class: " m-badge--primary"
-								},
-								4: {
-									title: "Success",
-									class: " m-badge--success",
-								},
-								5: {
-									title: "Info",
-									class: " m-badge--info"
-								},
-								6: {
-									title: "Danger",
-									class: " m-badge--danger"
-								},
-								7: {
-									title: "Warning",
-									class: " m-badge--warning"
-								}
-							};
-							return void 0 === s[a] ? a : '<span class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + "</span>"
-						}
-					},
-					{
-						targets: 6,
-						render: function(a, t, e, n) {
-							var s = {
-								2: {
-									title: "Pending",
-									class: "m-badge--brand"
-								},
-								1: {
-
-									title: "Active",
-									class: "m-badge--success"
-								},
-								0: {
-									title: "Inactive",
-									class: " m-badge--danger"
-								}
-							};
-							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + '</span>'
-						}
+					targets: -1,
+					title: "Actions",
+					orderable: !1,
+					render: function(a, t, e, n) {
+						var title = e['title'].replace(/ /g, '%20');
+						var row = (n.row).toString().slice(-1);
+						return '<a href="<?= site_url() . "admin/categories/update_category/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+							'<a onclick=deleteUmbrella("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
-				]
+				}, {
+					targets: 3,
+					title: "Fields",
+					render: function(a, t, e, n) {
+						return e['totalFields'] + " " +
+							'<a href="<?= site_url() . "admin/categories/subcategory_list/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
+					}
+				}, {
+					targets: 4,
+					render: function(a, t, e, n) {
+						var s = {
+							0: {
+								title: "No",
+								state: "danger"
+							},
+							1: {
+								title: "Yes",
+								state: "accent"
+							}
+						};
+						return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
+					}
+				}, {
+					targets: 5,
+					render: function(a, t, e, n) {
+						var s = {
+							1: {
+								title: "Active",
+								class: " m-badge--success"
+							},
+							0: {
+								title: "Off",
+								class: " m-badge--danger"
+							}
+						};
+						return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
+					}
+				}]
 			})
 		}
 	}
 
 	;
 	jQuery(document).ready(function() {
-			DatatablesDataSourceAjaxServer.init()
+			DatatablesDataSourceAjaxServer.init();
 		}
 
 	);
-</script>
-
-
-<script>
-	$("#smenu_user").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 </script>

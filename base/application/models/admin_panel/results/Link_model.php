@@ -25,9 +25,9 @@ class Link_model extends CI_Model
      * @param String $display_url
      * @param String $www
      * @param int $field_id
-     * @param bool $redirect
-     * @param bool $enabled
-     * @return bool
+     * @param boolean $redirect
+     * @param boolean $enabled
+     * @return boolean
      */
     public function create($priority, $title, $description_short, $display_url, $www, $field_id, $redirect, $enabled)
     {
@@ -55,7 +55,7 @@ class Link_model extends CI_Model
      * Deletes link
      *
      * @param int $id
-     * @return bool
+     * @return boolean
      */
     public function delete($id)
     {
@@ -94,9 +94,6 @@ class Link_model extends CI_Model
 
     /**
      * Undocumented function
-     *
-     * @param [type] $title
-     * @return void
      */
     public function search_adlink($title)
     {

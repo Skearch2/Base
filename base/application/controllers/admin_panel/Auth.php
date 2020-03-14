@@ -1,8 +1,8 @@
 <?php
-if (! defined('BASEPATH')) exit('No direct script access allowed');
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * File:    ~/application/controller/admin_panel/auth.php
+ * File:    ~/application/controller/admin_panel/Auth.php
  *
  * This is an authentication ontroller for admin panel.
  * @package		Skearch
@@ -10,23 +10,31 @@ if (! defined('BASEPATH')) exit('No direct script access allowed');
  * @copyright	Copyright (c) 2019
  * @version		2.0
  */
-class Auth extends MY_Controller {
+class Auth extends MY_Controller
+{
 
-	public function __construct() {
+	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
 		parent::__construct();
+
+		$this->load->model('my_skearch/User_model', 'User');
 	}
 
-	public function login() {
-
-		if (!file_exists(APPPATH.'/views/admin_panel/pages/login.php')) {
-			show_404();
+	/**
+	 * Allow access to admin panel
+	 *
+	 * @return void
+	 */
+	public function login()
+	{
+		if ($this->ion_auth->is_admin()) {
+			redirect('admin/dashboard', 'refresh');
 		}
 
-    if ($this->ion_auth->logged_in() && $this->ion_auth->is_admin()) {
-      redirect('admin/dashboard', 'refresh');
-    }
-
-		$this->form_validation->set_rules('login_id', 'Skearch ID', 'required|trim');
+		$this->form_validation->set_rules('id', 'Admin ID', 'required|trim');
 		$this->form_validation->set_rules('password', 'Password', 'required|trim');
 
 		if ($this->form_validation->run() === FALSE) {
@@ -34,33 +42,47 @@ class Auth extends MY_Controller {
 			$data['title'] = ucwords("admin panel | login");
 
 			$this->load->view('admin_panel/pages/login', $data);
-
 		} else {
 
-			$remember = (bool)$this->input->post('remember');
+			$remember = (bool) $this->input->post('remember');
 
-			if ($this->ion_auth->login($this->input->post('login_id'), $this->input->post('password'), $remember)) {
-				redirect('admin/dashboard', 'refresh');
+			if ($this->ion_auth->login($this->input->post('id'), $this->input->post('password'), $remember)) {
 
+				if (!$this->ion_auth->is_admin()) {
+					redirect(base_url());
+				} else {
+					$user = (array) $this->ion_auth->user()->row();
+
+					// add user group in the user information
+					$user['groupid'] =  $this->ion_auth->get_users_groups($user['id'])->row()->id;
+					$user['group'] =  $this->ion_auth->get_users_groups($user['id'])->row()->name;
+	
+					// add user set theme
+					$user['theme'] = $this->User->get_settings($user['id'], 'theme')->theme;
+	
+					// add user data to session
+					$this->session->set_userdata($user);
+	
+					redirect('admin/dashboard', 'refresh');
+				}
 			} else {
 
 				$data['title'] = ucwords("admin panel | login");
 
 				$this->load->view('admin_panel/pages/login', $data);
 			}
-
 		}
 	}
 
-	public function logout() {
+	/**
+	 * Logout from admin panel
+	 *
+	 * @return void
+	 */
+	public function logout()
+	{
 		$this->ion_auth->logout();
-		$this->session->set_flashdata('logout', 'You have successfully logged out.');
+		$this->session->set_flashdata('logout', true);
 		redirect('admin/auth/login');
 	}
-
-	public function redirect($url) {
-		print_r($this->session->userdata());
-	}
-
-
 }

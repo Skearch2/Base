@@ -49,16 +49,12 @@ class Categories extends MY_Controller
 	public function category_list($status = NULL)
 	{
 
-		if (!file_exists(APPPATH . '/views/admin_panel/pages/categories/category_list.php')) {
-			show_404();
-		}
-
 		$data['title'] = ucfirst("Umbrella Page list");
 		$data['subTitle'] = ucfirst("Showing All");
 		$data['status'] = $status;
 
 		// Load page content
-		$this->load->view('admin_panel/pages/categories/category_list', $data);
+		$this->load->view('admin_panel/pages/results/umbrella/view', $data);
 	}
 
 	public function get_subcategory_list($categoryid = NULL, $status = NULL)
@@ -87,11 +83,6 @@ class Categories extends MY_Controller
 
 	public function subcategory_list($categoryid = NULL, $status = NULL)
 	{
-
-		if (!file_exists(APPPATH . '/views/admin_panel/pages/categories/subcategory_list.php')) {
-			show_404();
-		}
-
 		if ($categoryid != NULL && is_numeric($categoryid)) {
 			$catTitle = $this->categoryModel->get_single_category($categoryid)[0]->title;
 			$data['subTitle'] = ucfirst("Fields under \"" . $catTitle . "\"");
@@ -100,7 +91,7 @@ class Categories extends MY_Controller
 		$data['title'] = ucfirst("Field list");
 		$data['categoryid'] = $categoryid;
 		$data['status'] = $status;
-		$this->load->view('admin_panel/pages/categories/subcategory_list', $data);
+		$this->load->view('admin_panel/pages/results/field/view', $data);
 	}
 
 	public function get_result_list($subcategoryid, $status = NULL)
@@ -125,10 +116,6 @@ class Categories extends MY_Controller
 	public function result_list($field = "all", $status = NULL)
 	{
 
-		if (!file_exists(APPPATH . '/views/admin_panel/pages/categories/result_list.php')) {
-			show_404();
-		}
-
 		$data['title'] = ucfirst("Ad Links List");
 		$data['subcategoryid'] = $field;
 		$data['status'] = $status;
@@ -145,12 +132,12 @@ class Categories extends MY_Controller
 		if ($field != "all") {
 			$subCatTitle = $this->categoryModel->get_single_subcategory($field)[0]->title;
 			$data['subTitle'] = ucfirst("Ad Links under \"" . $subCatTitle . "\"");
-			$this->load->view('admin_panel/pages/categories/result_list_sub', $data);
+			$this->load->view('admin_panel/pages/results/link/result_list_sub', $data);
 		} elseif ($field == "all" && ($status == 'active' || $status == 'inactive')) {
-			$this->load->view('admin_panel/pages/categories/result_list', $data);
+			$this->load->view('admin_panel/pages/results/link/result_list', $data);
 		} else {
 			$data['subTitle'] = ucfirst("Ad Links List");
-			$this->load->view('admin_panel/pages/categories/search_ad_links', $data);
+			$this->load->view('admin_panel/pages/results/link/search_ad_links', $data);
 		}
 	}
 
@@ -194,11 +181,6 @@ class Categories extends MY_Controller
 
 	public function create_category()
 	{
-
-		if (!file_exists(APPPATH . '/views/admin_panel/pages/categories/create_category.php')) {
-			show_404();
-		}
-
 		$this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces');
 		$this->form_validation->set_rules('description', 'Description', 'max_length[500]');
 		$this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]');
@@ -241,16 +223,11 @@ class Categories extends MY_Controller
 		}
 
 		$data['title'] = ucfirst("Add New Umbrella");
-		$this->load->view('admin_panel/pages/categories/create_category', $data);
+		$this->load->view('admin_panel/pages/results/umbrella/create', $data);
 	}
 
 	public function create_subcategory()
 	{
-
-		if (!file_exists(APPPATH . '/views/admin_panel/pages/categories/create_subcategory.php')) {
-			show_404();
-		}
-
 		$this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces');
 		$this->form_validation->set_rules('description', 'Description', 'max_length[500]');
 		$this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]');
@@ -292,15 +269,11 @@ class Categories extends MY_Controller
 
 		$data['title'] = ucfirst("Add New Field");
 		$data['category_list'] = $this->categoryModel->get_categories();
-		$this->load->view('admin_panel/pages/categories/create_subcategory', $data);
+		$this->load->view('admin_panel/pages/results/field/create', $data);
 	}
 
 	public function create_result()
 	{
-
-		if (!file_exists(APPPATH . '/views/admin_panel/pages/categories/create_result.php')) {
-			show_404();
-		}
 
 		$this->form_validation->set_rules('title', 'Title', 'required');
 		$this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]');
@@ -343,15 +316,11 @@ class Categories extends MY_Controller
 
 		$data['priorities'] = $priorities;
 
-		$this->load->view('admin_panel/pages/categories/create_result', $data);
+		$this->load->view('admin_panel/pages/results/link/create', $data);
 	}
 
 	public function update_category($id)
 	{
-
-		if (!file_exists(APPPATH . '/views/admin_panel/pages/categories/edit_category.php')) {
-			show_404();
-		}
 
 		$this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces');
 		$this->form_validation->set_rules('description', 'Description', 'max_length[500]');
@@ -393,15 +362,11 @@ class Categories extends MY_Controller
 
 		$data['title'] = ucfirst("Edit Umbrella");
 		$data['category'] = $this->categoryModel->get_single_category($id);
-		$this->load->view('admin_panel/pages/categories/edit_category', $data);
+		$this->load->view('admin_panel/pages/results/umbrella/edit', $data);
 	}
 
 	public function update_subcategory($id)
 	{
-
-		if (!file_exists(APPPATH . '/views/admin_panel/pages/categories/edit_subcategory.php')) {
-			show_404();
-		}
 
 		$this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces');
 		$this->form_validation->set_rules('description', 'Description', 'max_length[500]');
@@ -449,15 +414,11 @@ class Categories extends MY_Controller
 		// 	array_push($data['subcategory_parent'], $item->cat_id);
 		// }
 		$data['category_list'] = $this->categoryModel->get_categories();
-		$this->load->view('admin_panel/pages/categories/edit_subcategory', $data);
+		$this->load->view('admin_panel/pages/results/field/edit', $data);
 	}
 
 	public function update_result($id)
 	{
-
-		if (!file_exists(APPPATH . '/views/admin_panel/pages/categories/edit_result.php')) {
-			show_404();
-		}
 
 		$this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces');
 		$this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]');
@@ -497,7 +458,7 @@ class Categories extends MY_Controller
 		}
 
 		$data['priorities'] = $priorities;
-		$this->load->view('admin_panel/pages/categories/edit_result', $data);
+		$this->load->view('admin_panel/pages/results/link/edit', $data);
 	}
 
 	public function get_links_priority($fieldid)

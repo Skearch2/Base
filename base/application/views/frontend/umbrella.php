@@ -46,7 +46,7 @@ $this->load->view('frontend/templates/header');
             <?php foreach ($fields as $index => $field) : ?>
               <?php $count++ ?>
               <?php if ($index == 10) break ?>
-              <div class="col-sm-4 f-box">
+              <div class="col-sm-3 f-box">
                 <a href="<?= BASE_URL ?>browse/<?= $umbrella_name ?>/<?= $field->title ?>" title="<?= $field->title ?>"><?= $field->title ?></a>
               </div>
             <?php endforeach; ?>
