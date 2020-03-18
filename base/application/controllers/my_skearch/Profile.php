@@ -19,8 +19,6 @@ if (!defined('BASEPATH')) {
  */
 class Profile extends MY_Controller
 {
-    var $user_id;
-
     /**
      * Checks if the user is logged in and load required models
      */
@@ -52,7 +50,7 @@ class Profile extends MY_Controller
         $this->form_validation->set_rules('username', 'Username', 'required|alpha_numeric|min_length[5]|max_length[12]|trim');
 
         // check if user is signed in as brand member
-        $is_brandmember = $this->ion_auth->in_group(3);
+        $is_brandmember = $this->ion_auth->in_group(1, 3);
 
         if ($is_brandmember == 1) {
             $this->form_validation->set_rules('organization', 'Organization', 'required|trim');

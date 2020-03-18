@@ -97,6 +97,8 @@ $this->load->view('admin_panel/templates/close_html');
 			type: "warning",
 			confirmButtonClass: "btn btn-danger",
 			confirmButtonText: "Yes, delete it!",
+			showCancelButton: true,
+			timer: 5000
 		}).then(function(e) {
 			if (!e.value) return;
 			$.ajax({

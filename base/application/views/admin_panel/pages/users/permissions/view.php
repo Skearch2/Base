@@ -42,13 +42,12 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
 					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/results/research/add"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+						<a href="<?= site_url("admin/users/permission/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
-								<i class="la la-cart-plus"></i>
-								<span>Add Research</span>
+								<i class="la la-user-plus"></i>
+								<span>Add Permission</span>
 							</span>
 						</a>
-					</li>
 					<li class="m-portlet__nav-item"></li>
 					<li class="m-portlet__nav-item">
 						<div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push" m-dropdown-toggle="hover" aria-expanded="true">
@@ -114,53 +113,33 @@ $this->load->view('admin_panel/templates/subheader');
 		</div>
 
 		<div class="m-portlet__body">
-			<?php if ($this->session->flashdata('submit_success') == 1) : ?>
+			<?php if ($this->session->flashdata('success') === 1) : ?>
 				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						The research link has successfully been made.
+						The permission has been updated.
 					</div>
 				</div>
-			<?php elseif ($this->session->flashdata('submit_failure') == 1) : ?>
+			<?php elseif ($this->session->flashdata('success') === 0) : ?>
 				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						Unable to make the research link.
+						Unable to update the permission.
 					</div>
 				</div>
-			<?php elseif ($this->session->flashdata('save_success') == 1) : ?>
-				<div id="alert" class="alert alert-info alert-dismissible fade show" role="alert">
-					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<div class="alert-icon">
-						The research link has been saved.
-					</div>
-				</div>
-			<?php elseif ($this->session->flashdata('save_failure') == 1) : ?>
-				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
-					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<div class="alert-icon">
-						Unable to save the research link.
-					</div>
-				</div>
-			<?php endif; ?>
+			<?php endif ?>
+
 			<!--begin: Datatable -->
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
-						<th>ID</th>
-						<th>Short Description</th>
-						<th>URL</th>
-						<th>Field</th>
-						<th>Date Created</th>
-						<th>Actions</th>
+						<th>Description</th>
+						<th>Key</th>
+						<th width=150>Actions</th>
 					</tr>
 				</thead>
 			</table>
@@ -169,7 +148,6 @@ $this->load->view('admin_panel/templates/subheader');
 
 	<!-- END EXAMPLE TABLE PORTLET-->
 </div>
-
 
 <?php
 
@@ -194,11 +172,14 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-	// delete research link
-	function deleteLink(id) {
+	// Deletes permission
+	function deletePermission(id, description) {
+		// escape characters
+		description = description.replace(/%20/g, " ");
+
 		swal({
 			title: "Are you sure?",
-			text: "Are you sure you want delete the research link with id: \"" + id + "\"?",
+			text: "Are you sure you want delete the permission: \"" + description + "\"?",
 			type: "warning",
 			confirmButtonClass: "btn btn-danger",
 			confirmButtonText: "Yes, delete it!",
@@ -207,14 +188,14 @@ $this->load->view('admin_panel/templates/close_html');
 		}).then(function(e) {
 			if (!e.value) return;
 			$.ajax({
-				url: '<?= site_url('admin/results/research/delete/'); ?>' + id,
+				url: '<?= site_url('admin/users/permission/delete/id/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
-					swal("Success!", "The research link has been deleted.", "success")
+					swal("Success!", "The permission has been deleted.", "success")
 					$("#" + id).remove();
 				},
 				error: function(xhr, status, error) {
-					swal("Error!", "Unable to delete the research link.", "error")
+					swal("Error!", "Unable to delete the permission.", "error")
 				}
 			});
 		});
@@ -224,20 +205,15 @@ $this->load->view('admin_panel/templates/close_html');
 		init: function() {
 			$("#m_table_1").DataTable({
 				responsive: !0,
-				rowId: "id",
+				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
-				ajax: "<?= site_url(); ?>admin/results/research/get",
+				rowId: "id",
+				ajax: "<?= site_url("admin/users/permissions/get"); ?>",
 				columns: [{
-					data: "id"
+					data: "name"
 				}, {
-					data: "description_short"
-				}, {
-					data: "url"
-				}, {
-					data: "field"
-				}, {
-					data: "date_created"
+					data: "key"
 				}, {
 					data: "Actions"
 				}],
@@ -246,29 +222,22 @@ $this->load->view('admin_panel/templates/close_html');
 					title: "Actions",
 					orderable: !1,
 					render: function(a, t, e, n) {
-						return '<a href="<?= site_url() . "admin/results/research/make_link/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Make Link"><i class="la la-link"></i></a>' +
-							'<a onclick=deleteLink(' + e['id'] + ') class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
-					}
-				}, {
-					targets: 2,
-					render: function(a, t, e, n) {
-						return '<a href="' + e['url'] + '" target="_blank">' + e['url'] + '</a>'
+						return '<a href="<?= site_url() . "admin/users/permission/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+							'<a onclick=deletePermission("' + e['id'] + '","' + escape(e['name']) + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}]
 			})
 		}
 	}
 
-	;
 	jQuery(document).ready(function() {
-			DatatablesDataSourceAjaxServer.init();
-		}
-
-	);
+		DatatablesDataSourceAjaxServer.init()
+	});
 </script>
+
 
 <!-- Sidemenu class -->
 <script>
-	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-results-research").addClass("m-menu__item  m-menu__item--active");
+	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-users-permissions").addClass("m-menu__item  m-menu__item--active");
 </script>

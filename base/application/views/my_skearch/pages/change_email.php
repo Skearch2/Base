@@ -26,7 +26,7 @@ $this->load->view('my_skearch/templates/head');
 						</div>
 						<fieldset class="m-login__form m-form" form='login_form' name='login_fields'>
 							<?php $this->load->view('my_skearch/templates/notifications'); ?>
-							<input type="hidden" id="myskearch_id" name="myskearch_id" value=<?= $myskearch_id; ?>>
+							<input type="hidden" id="skearch_id" name="myskearch_id" value=<?= $skearch_id; ?>>
 							<?php echo form_hidden($csrf); ?>
 							<div class="form-group m-form__group">
 								<input class="form-control m-input m-login__form-input--last" id="new_email" name="new_email" type="email" placeholder="New Email Address" value=<?= set_value('new_email'); ?>>
@@ -51,14 +51,12 @@ $this->load->view('my_skearch/templates/head');
 		</div>
 	</div>
 
-	<!--begin::Global Theme Bundle -->
+	<!--begin::Page Scripts -->
 	<script src="<?= site_url(ASSETS); ?>/my_skearch/vendors/base/vendors.bundle.js" type="text/javascript"></script>
-	<script src="<?= site_url(ASSETS); ?>/my_skearch/demo/demo8/base/scripts.bundle.js" type="text/javascript"></script>
-	<!--end::Global Theme Bundle -->
+	<!--end::Page Scripts -->
 
-	<?php
+</body>
 
-	// Close body and html (contains some javascripts links)
-	$this->load->view('admin_panel/templates/close_html');
+<!-- end::Body -->
 
-	?>
+</html>

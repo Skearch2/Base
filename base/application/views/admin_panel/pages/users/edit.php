@@ -71,18 +71,27 @@ $this->load->view('admin_panel/templates/subheader');
 										<h3 class="m-form__section">2. Personal Details</h3>
 									</div>
 								</div>
-								<div class="form-group m-form__group row">
-									<label for="first_name" class="col-2 col-form-label">First Name<font color="red"><sup>*</sup></font></label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="firstname" value="<?= set_value('firstname', $firstname); ?>">
+								<?php if (in_array($group->id, array(1, 2, 3))) : ?>
+									<div class="form-group m-form__group row">
+										<label for="first_name" class="col-2 col-form-label">First Name<font color="red"><sup>*</sup></font></label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="firstname" value="<?= set_value('firstname', $firstname); ?>">
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="last_name" class="col-2 col-form-label">Last Name<font color="red"><sup>*</sup></font></label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="lastname" value="<?= set_value('lastname', $lastname); ?>">
+									<div class="form-group m-form__group row">
+										<label for="last_name" class="col-2 col-form-label">Last Name<font color="red"><sup>*</sup></font></label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="lastname" value="<?= set_value('lastname', $lastname); ?>">
+										</div>
 									</div>
-								</div>
+								<?php elseif (in_array($group->id, array(4, 5))) : ?>
+									<div class="form-group m-form__group row">
+										<label for="first_name" class="col-2 col-form-label">Name<font color="red"><sup>*</sup></font></label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="name" value="<?= set_value('name', $name) ?>">
+										</div>
+									</div>
+								<?php endif ?>
 								<div class="form-group m-form__group row">
 									<label for="gender" class="col-2 col-form-label">Gender<font color="red"><sup>*</sup></font></label>
 									<div class="col-3">
@@ -106,78 +115,82 @@ $this->load->view('admin_panel/templates/subheader');
 										</select>
 									</div>
 								</div>
-								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
-								<div class="form-group m-form__group row">
-									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">3. Organizational Details</h3>
+								<?php if (in_array($group->id, array(1, 2, 3))) : ?>
+									<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+									<div class="form-group m-form__group row">
+										<div class="col-10 ml-auto">
+											<h3 class="m-form__section">3. Organizational Details</h3>
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="organization" class="col-2 col-form-label">Organization</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="organization" value="<?= set_value('organization', $organization); ?>">
+									<div class="form-group m-form__group row">
+										<label for="organization" class="col-2 col-form-label">Organization</label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="organization" value="<?= set_value('organization', $organization); ?>">
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="brand" class="col-2 col-form-label">Brand</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="brand" value="<?= set_value('brand', $brand); ?>">
+									<?php if (in_array($group->id, array(3))) : ?>
+										<div class="form-group m-form__group row">
+											<label for="brand" class="col-2 col-form-label">Brand</label>
+											<div class="col-7">
+												<input class="form-control m-input" type="text" name="brand" value="<?= set_value('brand', $brand); ?>">
+											</div>
+										</div>
+									<?php endif ?>
+									<div class="form-group m-form__group row">
+										<label for="phone" class="col-2 col-form-label">Phone No.</label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="phone" value="<?= set_value('phone', $phone); ?>">
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="phone" class="col-2 col-form-label">Phone No.</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="phone" value="<?= set_value('phone', $phone); ?>">
+									<div class="form-group m-form__group row">
+										<label for="address1" class="col-2 col-form-label">Address Line 1</label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="address1" value="<?= set_value('address1', $address1); ?>">
+											<span class="m-form__help">Street address, P.O box, company name, c/o</span>
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="address1" class="col-2 col-form-label">Address Line 1</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="address1" value="<?= set_value('address1', $address1); ?>">
-										<span class="m-form__help">Street address, P.O box, company name, c/o</span>
+									<div class="form-group m-form__group row">
+										<label for="address2" class="col-2 col-form-label">Address Line 2</label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="address2" value="<?= set_value('address2', $address2); ?>">
+											<span class="m-form__help">Apartment, suite, unit, buidling, floor, etc</span>
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="address2" class="col-2 col-form-label">Address Line 2</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="address2" value="<?= set_value('address2', $address2); ?>">
-										<span class="m-form__help">Apartment, suite, unit, buidling, floor, etc</span>
+									<div class="form-group m-form__group row">
+										<label for="city" class="col-2 col-form-label">City</label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="city" value="<?= set_value('city', $city); ?>">
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="city" class="col-2 col-form-label">City</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="city" value="<?= set_value('city', $city); ?>">
+									<div class="form-group m-form__group row">
+										<label for="state" class="col-2 col-form-label">State</label>
+										<div class="col-2">
+											<select class="form-control m-input" id="exampleSelect1" name="state">
+												<option value="<?= $state ?>" <?= set_select("state", $state, TRUE) ?>><?= $state ?></option>
+												<?php foreach ($states as $state) : ?>
+													<option value="<?= $state->statecode; ?>" <?= set_select("state", $state->statecode) ?>><?= $state->statecode; ?></option>
+												<?php endforeach; ?>
+											</select>
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="state" class="col-2 col-form-label">State</label>
-									<div class="col-2">
-										<select class="form-control m-input" id="exampleSelect1" name="state">
-											<option value="<?= $state ?>" <?= set_select("state", $state, TRUE) ?>><?= $state ?></option>
-											<?php foreach ($states as $state) : ?>
-												<option value="<?= $state->statecode; ?>" <?= set_select("state", $state->statecode) ?>><?= $state->statecode; ?></option>
-											<?php endforeach; ?>
-										</select>
+									<div class="form-group m-form__group row">
+										<label for="country" class="col-2 col-form-label">Country</label>
+										<div class="col-3">
+											<select class="form-control m-input" id="exampleSelect1" name="country">
+												<option value="<?= $country ?>" <?= set_select("country", $country, TRUE) ?>><?= $country ?></option>
+												<?php foreach ($countries as $country) : ?>
+													<option value="<?= $country->country_name ?>" <?= set_select("country", $country->country_name) ?>><?= $country->country_name; ?></option>
+												<?php endforeach; ?>
+											</select>
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="country" class="col-2 col-form-label">Country</label>
-									<div class="col-3">
-										<select class="form-control m-input" id="exampleSelect1" name="country">
-											<option value="<?= $country ?>" <?= set_select("country", $country, TRUE) ?>><?= $country ?></option>
-											<?php foreach ($countries as $country) : ?>
-												<option value="<?= $country->country_name ?>" <?= set_select("country", $country->country_name) ?>><?= $country->country_name; ?></option>
-											<?php endforeach; ?>
-										</select>
+									<div class="form-group m-form__group row">
+										<label for="zipcode" class="col-2 col-form-label">Zipcode</label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="zipcode" value="<?= set_value('zipcode', $zipcode); ?>">
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="zipcode" class="col-2 col-form-label">Zipcode</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="zipcode" value="<?= set_value('zipcode', $zipcode); ?>">
-									</div>
-								</div>
+								<?php endif ?>
 								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
@@ -189,8 +202,8 @@ $this->load->view('admin_panel/templates/subheader');
 									<div class="col-3">
 										<select class="form-control m-input" id="exampleSelect1" name="group">
 											<option value="<?= $group->id ?>" <?= set_select("group", $group->id, TRUE) ?>><?= $group->name ?></option>
-											<?php foreach ($users_groups as $group) : ?>
-												<option value="<?= $group->id ?>" <?= set_select("group", $group->id) ?>><?= $group->name; ?></option>
+											<?php foreach ($groups as $grp) : ?>
+												<option value="<?= $grp->id ?>" <?= set_select("group", $grp->id) ?>><?= $grp->name; ?></option>
 											<?php endforeach; ?>
 										</select>
 									</div>
@@ -251,5 +264,17 @@ $this->load->view('admin_panel/templates/close_html');
 
 <!-- Sidemenu class -->
 <script>
-	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	<?php if ($group->id == 1 || $group->id == 2) : ?>
+		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+		$("#submenu-users-staff").addClass("m-menu__item  m-menu__item--active");
+	<?php elseif ($group->id == 3) : ?>
+		$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+		$("#submenu-brands-members").addClass("m-menu__item  m-menu__item--active");
+	<?php elseif ($group->id == 4) : ?>
+		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+		$("#submenu-users-premium").addClass("m-menu__item  m-menu__item--active");
+	<?php elseif ($group->id == 5) : ?>
+		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+		$("#submenu-users-registered").addClass("m-menu__item  m-menu__item--active");
+	<?php endif ?>
 </script>

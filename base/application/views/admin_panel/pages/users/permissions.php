@@ -1,5 +1,4 @@
 <?php
-//echo "<pre>"; print_r($users_groups); die();
 // Set DocType and declare HTML protocol
 $this->load->view('admin_panel/templates/start_html');
 
@@ -47,31 +46,13 @@ $this->load->view('admin_panel/templates/subheader');
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">1. Group Information</h3>
-									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="groupname" class="col-2 col-form-label">Name<font color="red"><sup>*</sup></font></label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="name" value="<?= set_value('name', $name) ?>">
-									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="description" class="col-2 col-form-label">Description</label>
-									<div class="col-7">
-										<textarea class="form-control m-input" name="description" rows="3"><?= set_value('description', $description) ?></textarea>
-									</div>
-								</div>
-								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
-								<div class="form-group m-form__group row">
-									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">2. Permissions</h3>
+										<h3 class="m-form__section">Permissions</h3>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<ul class="list-group col-9" style="margin:auto">
-										<?php foreach ($group_permissions as $acl) : ?>
-											<li class="list-group-item"><?php if ($this->ion_auth_acl->has_permission($acl['key'], $group_permissions)) : ?><i style="color:green" class="la la-check"></i><?php else : ?><i style="color:red" class="la la-close"></i><?php endif; ?>&emsp;<?= $acl['name']; ?></li>
+										<?php foreach ($users_permissions as $acl) : ?>
+											<li class="list-group-item"><?php if ($this->ion_auth_acl->has_permission($acl['key'], $users_permissions)) : ?><i style="color:green" class="la la-check"></i><?php else : ?><i style="color:red" class="la la-close"></i><?php endif; ?>&emsp;<?= $acl['name']; ?><?php if ($acl['inherited']) : ?>&emsp;<i class="la la-group"></i><?php endif; ?></li>
 										<?php endforeach; ?>
 									</ul>
 								</div>
@@ -83,7 +64,7 @@ $this->load->view('admin_panel/templates/subheader');
 													<th>Permission</th>
 													<th>Allow</th>
 													<th>Deny</th>
-													<th>Ignore</th>
+													<th>Inherited From Group</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -91,16 +72,15 @@ $this->load->view('admin_panel/templates/subheader');
 													<?php foreach ($permissions as $k => $v) : ?>
 														<tr>
 															<td><?= $v['name']; ?></td>
-															<td><?= form_radio("perm_{$v['id']}", '1', set_radio("perm_{$v['id']}", '1', (array_key_exists($v['key'], $group_permissions) && $group_permissions[$v['key']]['value'] === TRUE) ? TRUE : FALSE)); ?></td>
-															<td><?= form_radio("perm_{$v['id']}", '0', set_radio("perm_{$v['id']}", '0', (array_key_exists($v['key'], $group_permissions) && $group_permissions[$v['key']]['value'] != TRUE) ? TRUE : FALSE)); ?></td>
-															<td><?= form_radio("perm_{$v['id']}", 'X', set_radio("perm_{$v['id']}", 'X', (!array_key_exists($v['key'], $group_permissions)) ? TRUE : FALSE)); ?></td>
+															<td><?= form_radio("perm_{$v['id']}", '1', set_radio("perm_{$v['id']}", '1', $this->ion_auth_acl->is_allowed($v['key'], $users_permissions))); ?></td>
+															<td><?= form_radio("perm_{$v['id']}", '0', set_radio("perm_{$v['id']}", '0', $this->ion_auth_acl->is_denied($v['key'], $users_permissions))) ?></td>
+															<td><?= form_radio("perm_{$v['id']}", 'X', set_radio("perm_{$v['id']}", 'X', ($this->ion_auth_acl->is_inherited($v['key'], $users_permissions) || !array_key_exists($v['key'], $users_permissions)) ? TRUE : FALSE)); ?> Inherit (<b><?= ($this->ion_auth_acl->is_inherited($v['key'], $group_permissions, 'value')) ? "Allow" : "Deny"; ?></b>)</td>
+														<?php endforeach; ?>
+													<?php else : ?>
+														<tr>
+															<td colspan="4">There are currently no permissions to manage, please add some permissions</td>
 														</tr>
-													<?php endforeach; ?>
-												<?php else : ?>
-													<tr>
-														<td colspan="4">There are currently no permissions to manage, please add some permissions</td>
-													</tr>
-												<?php endif; ?>
+													<?php endif; ?>
 											</tbody>
 										</table>
 									</div>
@@ -149,6 +129,17 @@ $this->load->view('admin_panel/templates/close_html');
 
 <!-- Sidemenu class -->
 <script>
-	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-users-groups").addClass("m-menu__item  m-menu__item--active");
+	<?php if ($group == 1 || $group == 2) : ?>
+		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+		$("#submenu-users-staff").addClass("m-menu__item  m-menu__item--active");
+	<?php elseif ($group == 3) : ?>
+		$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+		$("#submenu-brands-members").addClass("m-menu__item  m-menu__item--active");
+	<?php elseif ($group == 4) : ?>
+		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+		$("#submenu-users-premium").addClass("m-menu__item  m-menu__item--active");
+	<?php else : ?>
+		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+		$("#submenu-users-registered").addClass("m-menu__item  m-menu__item--active");
+	<?php endif ?>
 </script>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Name:    Ion Auth Model
  * Author:  Ben Edmunds
@@ -285,8 +286,10 @@ class Ion_auth_model extends CI_Model
         // Check for empty password, or password containing null char, or password above limit
         // Null char may pose issue: http://php.net/manual/en/function.password-hash.php#118603
         // Long password may pose DOS issue (note: strlen gives size in bytes and not in multibyte symbol)
-        if (empty($password) || strpos($password, "\0") !== false ||
-            strlen($password) > self::MAX_PASSWORD_SIZE_BYTES) {
+        if (
+            empty($password) || strpos($password, "\0") !== false ||
+            strlen($password) > self::MAX_PASSWORD_SIZE_BYTES
+        ) {
             return false;
         }
 
@@ -316,8 +319,10 @@ class Ion_auth_model extends CI_Model
         // Check for empty id or password, or password containing null char, or password above limit
         // Null char may pose issue: http://php.net/manual/en/function.password-hash.php#118603
         // Long password may pose DOS issue (note: strlen gives size in bytes and not in multibyte symbol)
-        if (empty($password) || empty($hash_password_db) || strpos($password, "\0") !== false
-            || strlen($password) > self::MAX_PASSWORD_SIZE_BYTES) {
+        if (
+            empty($password) || empty($hash_password_db) || strpos($password, "\0") !== false
+            || strlen($password) > self::MAX_PASSWORD_SIZE_BYTES
+        ) {
             return false;
         }
 
@@ -1314,7 +1319,11 @@ class Ion_auth_model extends CI_Model
             //     $this->tables['users_groups'] . '.' . $this->join['users'] . '=' . $this->tables['users'] . '.id',
             //     'inner'
             // );
-
+            // $this->db->join(
+            //     $this->tables['groups'],
+            //     $this->tables['groups'] . '.id' . '=' . $this->tables['users_groups'] . '.group_id',
+            //     'inner'
+            // );
         }
 
         // filter by group id(s) if passed
@@ -1326,10 +1335,19 @@ class Ion_auth_model extends CI_Model
 
             // join and then run a where_in against the group ids
             if (isset($groups) && !empty($groups)) {
+                $this->db->select([
+                    $this->tables['users_groups'] . '.group_id as group_id',
+                    $this->tables['groups'] . '.name as group_name'
+                ]);
                 $this->db->distinct();
                 $this->db->join(
                     $this->tables['users_groups'],
                     $this->tables['users_groups'] . '.' . $this->join['users'] . '=' . $this->tables['users'] . '.id',
+                    'inner'
+                );
+                $this->db->join(
+                    $this->tables['groups'],
+                    $this->tables['groups'] . '.id' . '=' . $this->tables['users_groups'] . '.group_id',
                     'inner'
                 );
             }
@@ -1343,7 +1361,6 @@ class Ion_auth_model extends CI_Model
                 } else {
                     $group_names[] = $group;
                 }
-
             }
             $or_where_in = (!empty($group_ids) && !empty($group_names)) ? 'or_where_in' : 'where_in';
             // if group name was used we do one more join with groups
@@ -1520,9 +1537,13 @@ class Ion_auth_model extends CI_Model
         // Then insert each into the database
         foreach ($group_ids as $group_id) {
             // Cast to float to support bigint data type
-            if ($this->db->insert($this->tables['users_groups'],
-                [$this->join['groups'] => (float) $group_id,
-                    $this->join['users'] => (float) $user_id])) {
+            if ($this->db->insert(
+                $this->tables['users_groups'],
+                [
+                    $this->join['groups'] => (float) $group_id,
+                    $this->join['users'] => (float) $user_id
+                ]
+            )) {
                 if (isset($this->_cache_groups[$group_id])) {
                     $group_name = $this->_cache_groups[$group_id];
                 } else {
@@ -1850,10 +1871,14 @@ class Ion_auth_model extends CI_Model
         $token = $this->_generate_selector_validator_couple();
 
         if ($token->validator_hashed) {
-            $this->db->update($this->tables['users'],
-                ['remember_selector' => $token->selector,
-                    'remember_code' => $token->validator_hashed],
-                [$this->identity_column => $identity]);
+            $this->db->update(
+                $this->tables['users'],
+                [
+                    'remember_selector' => $token->selector,
+                    'remember_code' => $token->validator_hashed
+                ],
+                [$this->identity_column => $identity]
+            );
 
             if ($this->db->affected_rows() > -1) {
                 // if the user_expire is set to zero we'll set the expiration two years from now.
@@ -2387,7 +2412,6 @@ class Ion_auth_model extends CI_Model
                 if (array_key_exists($column, $data)) {
                     $filtered_data[$column] = $data[$column];
                 }
-
             }
         }
 
@@ -2447,13 +2471,13 @@ class Ion_auth_model extends CI_Model
             case 'bcrypt':
                 $params = [
                     'cost' => $is_admin ? $this->config->item('bcrypt_admin_cost', 'ion_auth')
-                    : $this->config->item('bcrypt_default_cost', 'ion_auth'),
+                        : $this->config->item('bcrypt_default_cost', 'ion_auth'),
                 ];
                 break;
 
             case 'argon2':
                 $params = $is_admin ? $this->config->item('argon2_admin_params', 'ion_auth')
-                : $this->config->item('argon2_default_params', 'ion_auth');
+                    : $this->config->item('argon2_default_params', 'ion_auth');
                 break;
 
             default:

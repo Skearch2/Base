@@ -1,5 +1,5 @@
 <?php
-//echo "<pre>"; print_r($users_groups); die();
+
 // Set DocType and declare HTML protocol
 $this->load->view('admin_panel/templates/start_html');
 
@@ -29,7 +29,6 @@ $this->load->view('admin_panel/templates/subheader');
 
 ?>
 
-
 <div class="m-content">
 	<div class="row">
 		<div class="col-xl-9 col-lg-8">
@@ -37,30 +36,35 @@ $this->load->view('admin_panel/templates/subheader');
 				<div class="tab-content">
 					<div class="tab-pane active" id="m_user_profile_tab_1">
 						<form class="m-form m-form--fit m-form--label-align-right" role="form" method="POST">
-							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+							<input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
 							<div class="m-portlet__body">
 								<div class="form-group m-form__group m--margin-top-10 m--show">
 									<?php if (validation_errors()) : ?>
 										<div class="alert alert-danger" role="alert">
-											<?= validation_errors(); ?>
+											<div class="alert-icon">
+												<p class="flaticon-danger"> Error:</p>
+												<?= validation_errors(); ?>
+											</div>
 										</div>
 									<?php endif; ?>
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">Group Information</h3>
+										<h3 class="m-form__section">Permission Details</h3>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="groupname" class="col-2 col-form-label">Name<font color="red"><sup>*</sup></font></label>
+									<label for="description" class="col-2 col-form-label">Description<font color="red"><sup>*</sup></font>
+									</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="name" value="<?= set_value('name'); ?>">
+										<input class="form-control m-input" type="text" name="description" value="<?= set_value('description', $description); ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="description" class="col-2 col-form-label">Description</label>
+									<label for="key" class="col-2 col-form-label">Key<font color="red"><sup>*</sup></font>
+									</label>
 									<div class="col-7">
-										<textarea class="form-control m-input" name="description" rows="3"><?= set_value('description'); ?></textarea>
+										<input class="form-control m-input" type="text" name="key" value="<?= $key ?>" disabled>
 									</div>
 								</div>
 							</div>
@@ -70,17 +74,12 @@ $this->load->view('admin_panel/templates/subheader');
 										<div class="col-2">
 										</div>
 										<div class="col-7">
-											<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Create</button>&nbsp;&nbsp;
-											<button type="reset" class="btn btn-secondary m-btn m-btn--air m-btn--custom">Reset</button>
+											<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Update</button>&nbsp;&nbsp;
 										</div>
 									</div>
 								</div>
 							</div>
 						</form>
-					</div>
-					<div class="tab-pane " id="m_user_profile_tab_2">
-					</div>
-					<div class="tab-pane " id="m_user_profile_tab_3">
 					</div>
 				</div>
 			</div>
@@ -113,5 +112,5 @@ $this->load->view('admin_panel/templates/close_html');
 <!-- Sidemenu class -->
 <script>
 	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-users-groups").addClass("m-menu__item  m-menu__item--active");
+	$("#submenu-users-permissions").addClass("m-menu__item  m-menu__item--active");
 </script>
