@@ -118,7 +118,6 @@ $this->load->view('admin_panel/templates/subheader');
             <table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Title</th>
                         <th>Short Description</th>
                         <th>Parent Umbrella</th>
@@ -226,8 +225,6 @@ $this->load->view('admin_panel/templates/close_html');
                 serverSide: !1,
                 ajax: "<?= site_url(); ?>/admin/categories/get_subcategory_list/<?= $categoryid; ?>/<?= $status; ?>",
                 columns: [{
-                    data: "id"
-                }, {
                     data: "title"
                 }, {
                     data: "description_short"
@@ -255,7 +252,7 @@ $this->load->view('admin_panel/templates/close_html');
                         }
                     },
                     {
-                        targets: 4,
+                        targets: 3,
                         title: "Adlinks",
                         render: function(a, t, e, n) {
                             return e['totalResults'] + " " +
@@ -263,7 +260,7 @@ $this->load->view('admin_panel/templates/close_html');
 
                         }
                     }, {
-                        targets: 5,
+                        targets: 4,
                         render: function(a, t, e, n) {
                             var s = {
                                 0: {
@@ -280,7 +277,7 @@ $this->load->view('admin_panel/templates/close_html');
                         }
                     },
                     {
-                        targets: 6,
+                        targets: 5,
                         render: function(a, t, e, n) {
                             var s = {
                                 1: {

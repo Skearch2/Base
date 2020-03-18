@@ -1,4 +1,5 @@
 <?php
+
 /**
  * File: ~/application/controller/admin/Email.php
  */
@@ -31,11 +32,13 @@ class Email extends MY_Controller
             redirect('admin/auth/login');
         }
 
-        $this->load->model('admin_panel/User_model_admin', 'User_model');
+        $this->load->model('admin_panel/users/User_model', 'User_model');
     }
 
     /**
      * Undocumented function
+     *
+     * @return void
      */
     public function members()
     {
@@ -44,18 +47,15 @@ class Email extends MY_Controller
             show_404();
         }
 
-        if ($this->form_validation->run() == FALSE)
-        {
+        if ($this->form_validation->run() == FALSE) {
 
             $data['user_groups'] = $this->ion_auth->groups()->result();
-            $users = $this->User_model->get_user_list();
+            //$users = $this->User_model->get_user_list();
 
             $data['title'] = ucwords("Email Member");
 
             $this->load->view('admin_panel/pages/email_members', $data);
-        }
-        else
-        {
+        } else {
 
             $subject = $this->input->post('subject');
             $content = $this->input->post('content');
@@ -82,7 +82,7 @@ class Email extends MY_Controller
             $this->email->subject($subject);
             $this->email->message($content);
 
-            if($this->email->send()) {
+            if ($this->email->send()) {
                 $this->session->set_flashdata('email_sent_success', 'The Email has been sent!');
             } else {
                 $this->session->set_flashdata('email_sent_fail', 'Unable to send email!');
@@ -94,24 +94,23 @@ class Email extends MY_Controller
 
     /**
      * Undocumented function
+     *
+     * @return void
      */
     public function invite()
     {
 
         $this->form_validation->set_rules('recipents', 'Recipents', 'required|callback_email_check');
 
-        if ($this->form_validation->run() === FALSE)
-        {
+        if ($this->form_validation->run() === FALSE) {
 
-          if (!file_exists(APPPATH . '/views/admin_panel/pages/email_invite.php')) {
-              show_404();
-          }
+            if (!file_exists(APPPATH . '/views/admin_panel/pages/email_invite.php')) {
+                show_404();
+            }
 
             $data['title'] = ucwords("Email Invite");
             $this->load->view('admin_panel/pages/email_invite', $data);
-        }
-        else
-        {
+        } else {
             $recipents = explode(";", $this->input->post('recipents'));
             $subject = $this->input->post('subject');
             $content = $this->input->post('content');
@@ -138,7 +137,7 @@ class Email extends MY_Controller
             $this->email->subject($subject);
             $this->email->message($content);
 
-            if($this->email->send()) {
+            if ($this->email->send()) {
                 $this->session->set_flashdata('email_sent_success', 'The Email has been sent!');
             } else {
                 $this->session->set_flashdata('email_sent_fail', 'Unable to send email!');
@@ -148,20 +147,25 @@ class Email extends MY_Controller
         }
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param [type] $sString
+     * @return void
+     */
     public function email_check($sString)
     {
 
-      $sEmailAddresses = preg_split( "/; |;/", $sString);
-      foreach($sEmailAddresses AS $sEmailAddress) {
-          $bValid = filter_var($sEmailAddress, FILTER_VALIDATE_EMAIL);
-      }
+        $sEmailAddresses = preg_split("/; |;/", $sString);
+        foreach ($sEmailAddresses as $sEmailAddress) {
+            $bValid = filter_var($sEmailAddress, FILTER_VALIDATE_EMAIL);
+        }
 
         if (!$bValid) {
-              $this->form_validation->set_message('email_check', 'One or more email addresses are incorrect.');
-              return FALSE;
+            $this->form_validation->set_message('email_check', 'One or more email addresses are incorrect.');
+            return FALSE;
         } else {
-              return TRUE;
+            return TRUE;
         }
     }
-
 }

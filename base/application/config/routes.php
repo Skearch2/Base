@@ -42,9 +42,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |
 | This is not exactly a route, but allows you to automatically route
 | controller and method names that contain dashes. '-' isn't a valid
-| class or method name character, so it requires translation.
-| When you set this option to TRUE, it will replace ALL dashes in the
-| controller and method URI segments.
+| class or method naoption to TRUE, it will replace ALL dashes in the
+| controller and mme character, so it requires translation.
+| When you set this ethod URI segments.
 |
 | Examples:    my-controller/index    -> my_controller/index
 |        my-controller/my-method    -> my_controller/my_method
@@ -55,18 +55,29 @@ $route['default_controller'] = 'landing/index';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = false;
 
+$route['acl'] = 'acl/dashboard';
+$route['acl/admin'] = 'acl/admin';
+$route['acl/admin/permissions'] = 'acl/admin/permissions';
+$route['acl/admin/add-permission'] = 'acl/admin/add_permission';
+$route['acl/admin/update-permission/(:num)'] = 'acl/admin/update_permission';
+$route['acl/admin/delete-permission/(:num)'] = 'acl/admin/delete_permission';
+$route['acl/admin/groups'] = 'acl/admin/groups';
+$route['acl/admin/group-permissions/(:num)'] = 'acl/admin/group_permissions';
+$route['acl/admin/users'] = 'acl/admin/users';
+$route['acl/admin/user-permissions/(:num)'] = 'acl/admin/user_permissions';
+$route['acl/admin/manage-user/(:num)'] = 'acl/admin/manage_user';
 
 
 /**********************************************  Skearch Frontend Routes  **********************************************/
 
 /* Pages */
-$route['home'] = 'frontend/pages';
-$route['browse'] = 'frontend/pages/browse_all';
-$route['browse/desc'] = 'frontend/pages/browse_all/desc';
-$route['browse/get_data/umbrella'] = 'frontend/pages/get_data/umbrella';
-$route['browse/get_data/field'] = 'frontend/pages/get_data/field';
-$route['browse/(:any)'] = 'frontend/pages/browse_umbrella/$1';
-$route['browse/(:any)/(:any)'] = 'frontend/pages/browse_field/$1/$2';
+$route['home']                                   = 'frontend/pages';
+$route['browse']                                 = 'frontend/pages/browse_all';
+$route['browse/desc']                            = 'frontend/pages/browse_all/desc';
+$route['browse/get_data/umbrella']               = 'frontend/pages/get_data/umbrella';
+$route['browse/get_data/field']                  = 'frontend/pages/get_data/field';
+$route['browse/(:any)']                          = 'frontend/pages/browse_umbrella/$1';
+$route['browse/(:any)/(:any)']                   = 'frontend/pages/browse_field/$1/$2';
 $route['browse/get_field_results/(:any)/(:any)'] = 'frontend/pages/get_field_results/$1/$2';
 
 /* Search */
@@ -76,10 +87,8 @@ $route['search'] = 'frontend/search';
 $route['theme/change'] = 'frontend/pages/change_theme';
 
 /* Media Engine Api  */
-$route['redirect/link/id/(:num)'] = 'frontend/media/media_redirect/$1';
+$route['redirect/link/id/(:num)']    = 'frontend/media/media_redirect/$1';
 $route['impression/image/id/(:num)'] = 'frontend/media/update_image_impression/$1';
-
-
 
 
 
@@ -115,32 +124,31 @@ $route['myskearch/profile/(:num)'] = 'my_skearch/profile/index/$1';
 
 
 
-
-
-
 /**********************************************  Admin Panel Routes  *************************************************/
 
 /* Authentication */
-$route['admin'] = 'admin_panel/dashboard';
-$route['admin/dashboard'] = 'admin_panel/dashboard';
-$route['admin/auth/login'] = 'admin_panel/auth/login';
-$route['admin/auth/logout'] = 'admin_panel/auth/logout';
+$route['admin']                      = 'admin_panel/dashboard';
+$route['admin/dashboard']            = 'admin_panel/dashboard';
+$route['admin/auth/login']           = 'admin_panel/auth/login';
+$route['admin/auth/logout']          = 'admin_panel/auth/logout';
 $route['admin/auth/redirect/(:any)'] = 'admin_panel/auth/redirect/$1';
-$route['admin/auth/submit'] = 'admin_panel/auth/submit';
+$route['admin/auth/submit']          = 'admin_panel/auth/submit';
 
 /* 
     USERS 
 */
 
 // Users
-$route['admin/user/create']                    = 'admin_panel/users/users/create';
-$route['admin/user/delete/id/(:num)']          = 'admin_panel/users/users/delete/$1';
-$route['admin/user/reset/id/(:num)']           = 'admin_panel/users/users/reset/$1';
-$route['admin/user/toggle/id/(:num)']          = 'admin_panel/users/users/toggle/$1';
-$route['admin/user/update/id/(:num)']          = 'admin_panel/users/users/update/$1';
-$route['admin/user/get/id/(:num)']             = 'admin_panel/users/users/get/$1';
-$route['admin/users/get/group/id/(:num)']      = 'admin_panel/users/users/get/$1/1';
-$route['admin/users/group/id/(:num)']          = 'admin_panel/users/users/index/$1';
+$route['admin/user/create/group/id/(:num)']     = 'admin_panel/users/users/create/$1';
+$route['admin/user/delete/id/(:num)']           = 'admin_panel/users/users/delete/$1';
+$route['admin/user/reset/id/(:num)']            = 'admin_panel/users/users/reset/$1';
+$route['admin/user/toggle/id/(:num)']           = 'admin_panel/users/users/toggle/$1';
+$route['admin/user/update/id/(:num)']           = 'admin_panel/users/users/update/$1';
+$route['admin/user/get/id/(:num)']              = 'admin_panel/users/users/get/$1';
+$route['admin/user/get/permissions/id/(:num)']  = 'admin_panel/users/users/permissions/$1';
+$route['admin/users/get/group/id/(:num)']       = 'admin_panel/users/users/get/$1/1';
+$route['admin/users/get/lastname/(:any)']       = 'admin_panel/users/users/get_by_lastname/$1';
+$route['admin/users/group/id/(:num)']           = 'admin_panel/users/users/index/$1';
 
 // Groups
 $route['admin/users/group/create']             = 'admin_panel/users/groups/create';
@@ -148,6 +156,13 @@ $route['admin/users/group/delete/id/(:num)']   = 'admin_panel/users/groups/delet
 $route['admin/users/group/update/id/(:num)']   = 'admin_panel/users/groups/update/$1';
 $route['admin/users/groups']                   = 'admin_panel/users/groups';
 $route['admin/users/groups/get']               = 'admin_panel/users/groups/get';
+
+// Permissions
+$route['admin/users/permission/create']           = 'admin_panel/users/permissions/create';
+$route['admin/users/permission/delete/id/(:num)'] = 'admin_panel/users/permissions/delete/$1';
+$route['admin/users/permission/update/id/(:num)'] = 'admin_panel/users/permissions/update/$1';
+$route['admin/users/permissions']                 = 'admin_panel/users/permissions';
+$route['admin/users/permissions/get']             = 'admin_panel/users/permissions/get';
 
 /* 
     RESULTS

@@ -118,7 +118,6 @@ $this->load->view('admin_panel/templates/subheader');
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
-						<th>ID</th>
 						<th>Title</th>
 						<th>Short Description</th>
 						<th>Fields</th>
@@ -231,8 +230,6 @@ $this->load->view('admin_panel/templates/close_html');
 				serverSide: !1,
 				ajax: "<?= site_url(); ?>/admin/categories/get_category_list/<?= $status; ?>",
 				columns: [{
-					data: "id"
-				}, {
 					data: "title"
 				}, {
 					data: "description_short"
@@ -256,14 +253,14 @@ $this->load->view('admin_panel/templates/close_html');
 							'<a onclick=deleteUmbrella("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}, {
-					targets: 3,
+					targets: 2,
 					title: "Fields",
 					render: function(a, t, e, n) {
 						return e['totalFields'] + " " +
 							'<a href="<?= site_url() . "admin/categories/subcategory_list/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
 					}
 				}, {
-					targets: 4,
+					targets: 3,
 					render: function(a, t, e, n) {
 						var s = {
 							0: {
@@ -278,7 +275,7 @@ $this->load->view('admin_panel/templates/close_html');
 						return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
 					}
 				}, {
-					targets: 5,
+					targets: 4,
 					render: function(a, t, e, n) {
 						var s = {
 							1: {

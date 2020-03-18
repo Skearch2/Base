@@ -46,9 +46,9 @@ class Groups extends MY_Controller
             $create = $this->Group->create_user_group();
 
             if ($create) {
-                $this->session->set_flashdata('success', 1);
+                $this->session->set_flashdata('create_success', 1);
             } else {
-                $this->session->set_flashdata('success', 0);
+                $this->session->set_flashdata('create_success', 0);
             }
             redirect('admin/users/groups');
         }
@@ -121,16 +121,46 @@ class Groups extends MY_Controller
                 'description' => $group->description,
             );
 
+            $data['permissions'] = $this->ion_auth_acl->permissions('full', 'perm_key');
+            $data['group_permissions'] = $this->ion_auth_acl->get_group_permissions($id);
+
             $data['title'] = ucwords('edit group');
             $this->load->view('admin_panel/pages/users/groups/edit', $data);
         } else {
 
-            $update = $this->Group->update($id);
+            $name = $this->input->post('name');
+            $additional_data = array(
+                'description' => $this->input->post('description')
+            );
+
+            $update = TRUE;
+
+            // update group info
+            if ($this->Group->update($id, $name, $additional_data) === FALSE) {
+                $update = FALSE;
+            }
+
+            // update group permissions
+            foreach ($this->input->post() as $k => $v) {
+                if (substr($k, 0, 5) == 'perm_') {
+                    $permission_id  =   str_replace("perm_", "", $k);
+
+                    if ($v == "X") {
+                        if ($this->ion_auth_acl->remove_permission_from_group($id, $permission_id) === FALSE) {
+                            $update = FALSE;
+                        }
+                    } else {
+                        if ($this->ion_auth_acl->add_permission_to_group($id, $permission_id, $v) === FALSE) {
+                            $update = FALSE;
+                        }
+                    }
+                }
+            }
 
             if ($update) {
-                $this->session->set_flashdata('success', 1);
+                $this->session->set_flashdata('update_success', 1);
             } else {
-                $this->session->set_flashdata('success', 0);
+                $this->session->set_flashdata('update_success', 0);
             }
             redirect('admin/users/groups');
         }

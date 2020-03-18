@@ -178,14 +178,6 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-	// function showResultDetails(id) {
-
-	//   $( "div.modal-body" ).html(
-	// 	   "<p>Result ID:</p> "+ id +" \
-	// 	    <p>This is a test.</p> "
-	//   );
-	// }
-
 	// Deletes link
 	function deleteLink(id, link) {
 		var link = link.replace(/%20/g, ' ');
@@ -230,7 +222,7 @@ $this->load->view('admin_panel/templates/close_html');
 				}
 			},
 			error: function(xhr, status, error) {
-				toastr.error("", "Unable to change the status.");
+				toastr.error("", "Unable to update status.");
 			}
 		});
 	}
@@ -249,7 +241,7 @@ $this->load->view('admin_panel/templates/close_html');
 				toastr.success("", "Redirection updated.");
 			},
 			error: function(xhr, status, error) {
-				toastr.error("", "Unable to take action.");
+				toastr.error("", "Unable to update redirection.");
 			}
 		});
 	}
@@ -331,6 +323,20 @@ $this->load->view('admin_panel/templates/close_html');
 					title: "Actions",
 					orderable: !1,
 					render: function(a, t, e, n) {
+						var redirectVal;
+						if (e['redirect'] == 0) redirectVal = "red";
+						else redirectVal = "#34bfa3";
+						var title = e['title'].replace(/ /g, '%20');
+						var row = (n.row).toString().slice(-1);
+
+						//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
+						return '<a href="<?= site_url() . "admin/categories/update_result/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+							'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
+							'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+					}
+				}, {
+					targets: 0,
+					render: function(a, t, e, n) {
 						var $select = $("<select onchange= change_priority(" + e['id'] + ",this.value)></select>", {
 							"id": "priority" + e['id'],
 						});
@@ -349,21 +355,7 @@ $this->load->view('admin_panel/templates/close_html');
 							$select.append($option);
 						}
 
-						var redirectVal;
-						if (e['redirect'] == 0) redirectVal = "red";
-						else redirectVal = "#34bfa3";
-						var title = e['title'].replace(/ /g, '%20');
-						var row = (n.row).toString().slice(-1);
-						//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
-						return $select.prop("outerHTML") +
-							'<a href="<?= site_url() . "admin/categories/update_result/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-							'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-globe"></i></a>' +
-							'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
-					}
-				}, {
-					targets: 0,
-					render: function(a, t, e, n) {
-						return e['priority'];
+						return e['priority'] + '&emsp;' + $select.prop("outerHTML")
 					}
 				}, {
 					targets: 5,

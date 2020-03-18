@@ -34,36 +34,52 @@ class Users extends MY_Controller
     /**
      * Create user
      *
+     * @param int $group ID of the group
      * @return void
      */
-    public function create()
+    public function create($group)
     {
-        $this->form_validation->set_rules('username', 'Username', 'required|is_unique[skearch_users.username]|alpha_numeric|min_length[5]|max_length[12]|trim');
-        $this->form_validation->set_rules('password', 'Password', 'required|min_length[8]|max_length[15]|trim');
+        $this->form_validation->set_rules('username', 'Username', 'required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']|trim');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[skearch_users.email]|trim');
-        $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
-        $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
+        // only show to admin, editor, and brand member groups
+        if (in_array($group, array(1, 2, 3))) {
+            $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
+            $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
+        }
+        // only show to regular and premium user groups
+        else if (in_array($group, array(4, 5))) {
+            $this->form_validation->set_rules('name', 'Name', 'required|alpha|trim');
+        }
         $this->form_validation->set_rules('gender', 'Gender', 'required');
         $this->form_validation->set_rules('age_group', 'Age group', 'required');
-        $this->form_validation->set_rules('organization', 'Organization', 'trim');
-        $this->form_validation->set_rules('brand', 'Brand', 'trim');
-        if (strlen($this->input->post('phone'))) {
-            $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
-        }
-        $this->form_validation->set_rules('address1', 'Address 1', 'trim');
-        $this->form_validation->set_rules('address2', 'Address 2', 'trim');
-        $this->form_validation->set_rules('city', 'City', 'trim');
-        if (strlen($this->input->post('zipcode'))) {
-            $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
+
+        // only show to admin, editor, and brand member groups
+        if (in_array($group, array(1, 2, 3))) {
+            $this->form_validation->set_rules('organization', 'Organization', 'trim');
+            // only show to brand member group
+            if (in_array($group, array(3))) {
+                $this->form_validation->set_rules('brand', 'Brand', 'trim');
+            }
+            if (strlen($this->input->post('phone'))) {
+                $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
+            }
+            $this->form_validation->set_rules('address1', 'Address 1', 'trim');
+            $this->form_validation->set_rules('address2', 'Address 2', 'trim');
+            $this->form_validation->set_rules('city', 'City', 'trim');
+            if (strlen($this->input->post('zipcode'))) {
+                $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
+            }
         }
         $this->form_validation->set_rules('group', 'Group', 'required');
 
 
         if ($this->form_validation->run() == false) {
 
+            $data['group'] = $group;
+
             $data['states'] = $this->Util_model->get_state_list();
             $data['countries'] = $this->Util_model->get_country_list();
-            $data['users_groups'] = $this->ion_auth->groups()->result();
 
             // set page title
             $data['title'] = ucwords('create user');
@@ -74,30 +90,40 @@ class Users extends MY_Controller
             $username = $this->input->post('username');
             $password = $this->input->post('password');
             $email = $this->input->post('email');
-            $additional_data = array(
-                'firstname' => $this->input->post('firstname'),
-                'lastname' => $this->input->post('lastname'),
-                'gender' => $this->input->post('gender'),
-                'age_group' => $this->input->post('age_group'),
-                'organization' => $this->input->post('organization'),
-                'brand' => $this->input->post('brand'),
-                'phone' => $this->input->post('phone'),
-                'address1' => $this->input->post('address1'),
-                'address2' => $this->input->post('address2'),
-                'city' => $this->input->post('city'),
-                'state' => $this->input->post('state'),
-                'country' => $this->input->post('country'),
-                'zipcode' => $this->input->post('zipcode'),
-                'active' => $this->input->post('active'),
-            );
-            $group = array($this->input->post('group'));
+            // only show to admin, editor, and brand member groups
+            if (in_array($group, array(1, 2, 3))) {
+                $additional_data['firstname'] = $this->input->post('firstname');
+                $additional_data['lastname'] = $this->input->post('lastname');
+            }
+            // only show to regular and premium user groups
+            elseif (in_array($group, array(4, 5))) {
+                $additional_data['firstname'] = $this->input->post('name');
+            }
+            $additional_data['gender'] = $this->input->post('gender');
+            $additional_data['age_group'] = $this->input->post('age_group');
+            // only show to admin, editor, and brand member groups
+            if (in_array($group, array(3))) {
+                $additional_data['organization'] = $this->input->post('organization');
+                // only show to brand member group
+                if (in_array($group, array(3))) {
+                    $additional_data['brand'] = $this->input->post('brand');
+                }
+                $additional_data['phone'] = $this->input->post('phone');
+                $additional_data['address1'] = $this->input->post('address1');
+                $additional_data['address2'] = $this->input->post('address2');
+                $additional_data['city'] = $this->input->post('city');
+                $additional_data['state'] = $this->input->post('state');
+                $additional_data['country'] = $this->input->post('country');
+                $additional_data['zipcode'] = $this->input->post('zipcode');
+            }
+            $additional_data['active'] = $this->input->post('active');
 
             $create = $this->User->create($username, $password, $email, $additional_data, $group);
 
             if ($create) {
-                $this->session->set_flashdata('success', 1);
+                $this->session->set_flashdata('create_success', 1);
             } else {
-                $this->session->set_flashdata('success', 0);
+                $this->session->set_flashdata('create_success', 0);
             }
             redirect('admin/users/group/id/5');
         }
@@ -164,6 +190,20 @@ class Users extends MY_Controller
     }
 
     /**
+     * Get users by last name
+     *
+     * @param String $lastname Last nae of the user
+     * @return object
+     */
+    public function get_by_lastname($lastname)
+    {
+        $result = $this->User->get_by_lastname($lastname);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
+
+    /**
      * Show user list based on group
      *
      * @param int $group ID of the user group
@@ -184,127 +224,65 @@ class Users extends MY_Controller
         $data['group'] = $id;
 
         $data['title'] = $group;
-        $this->load->view('admin_panel/pages/users/view', $data);
+        if (in_array($id, array(1, 2, 3))) {
+            $this->load->view('admin_panel/pages/users/view_123', $data);
+        } elseif (in_array($id, array(4, 5))) {
+            $this->load->view('admin_panel/pages/users/view_45', $data);
+        }
     }
 
     /**
-     * Update user data
+     * Change user permissions
      *
      * @param int $id ID of the user
      * @return void
      */
-    public function update($id)
+    public function permissions($id)
     {
+        $group = $this->ion_auth->get_users_groups($id)->row()->id;
 
-        $this->form_validation->set_rules('username', 'Username', 'required|callback_username_check|alpha_numeric|min_length[5]|max_length[12]|trim');
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_email_check|trim');
-        $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
-        $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
-        $this->form_validation->set_rules('gender', 'Gender', 'required');
-        $this->form_validation->set_rules('age_group', 'Age group', 'required');
-        $this->form_validation->set_rules('organization', 'Organization', 'trim');
-        $this->form_validation->set_rules('brand', 'Brand', 'trim');
-        if (strlen($this->input->post('phone'))) {
-            $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
-        }
-        $this->form_validation->set_rules('address1', 'Address 1', 'trim');
-        $this->form_validation->set_rules('address2', 'Address 2', 'trim');
-        $this->form_validation->set_rules('city', 'City', 'trim');
-        if (strlen($this->input->post('zipcode'))) {
-            $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
-        }
-        $this->form_validation->set_rules('group', 'Group', 'required');
+        $update = TRUE;
 
-        if ($this->form_validation->run() == false) {
+        if ($this->input->post()) {
+            foreach ($this->input->post() as $k => $v) {
+                if (substr($k, 0, 5) == 'perm_') {
+                    $permission_id  =   str_replace("perm_", "", $k);
 
-            $user = $this->User->get($id);
+                    if ($v == "X") {
+                        if ($this->ion_auth_acl->remove_permission_from_user($id, $permission_id) === FALSE) {
+                            $update = FALSE;
+                        }
+                    } else {
+                        if ($this->ion_auth_acl->add_permission_to_user($id, $permission_id, $v) === FALSE) {
+                            $update = FALSE;
+                        }
+                    }
+                }
+            }
 
-            $data = array(
-                'id' => $user->id,
-                'username' => $user->username,
-                'email' => $user->email,
-                'firstname' => $user->firstname,
-                'lastname' => $user->lastname,
-                'gender' => $user->gender,
-                'age_group' => $user->age_group,
-                'organization' => $user->organization,
-                'brand' => $user->brand,
-                'phone' => $user->phone,
-                'address1' => $user->address1,
-                'address2' => $user->address2,
-                'city' => $user->city,
-                'state' => $user->state,
-                'country' => $user->country,
-                'zipcode' => $user->zipcode,
-                'active' => $user->active,
-                'group' => $this->Group->get($id)
-            );
-
-            $data['states'] = $this->Util_model->get_state_list();
-            $data['countries'] = $this->Util_model->get_country_list();
-            $data['users_groups'] = $this->Group->get();
-
-            $data['title'] = ucwords('edit user');
-
-            $this->load->view('admin_panel/pages/users/edit', $data);
-        } else {
-            $user_data = array(
-                'username' => $this->input->post('username'),
-                'email' => $this->input->post('email'),
-                'firstname' => $this->input->post('firstname'),
-                'lastname' => $this->input->post('lastname'),
-                'gender' => $this->input->post('gender'),
-                'age_group' => $this->input->post('age_group'),
-                'organization' => $this->input->post('organization'),
-                'brand' => $this->input->post('brand'),
-                'phone' => $this->input->post('phone'),
-                'address1' => $this->input->post('address1'),
-                'address2' => $this->input->post('address2'),
-                'city' => $this->input->post('city'),
-                'state' => $this->input->post('state'),
-                'country' => $this->input->post('country'),
-                'zipcode' => $this->input->post('zipcode'),
-                'active' => $this->input->post('active'),
-            );
-
-            $update = $this->User->update($id, $user_data);
             if ($update) {
-                $this->session->set_flashdata('success', 1);
+                $this->session->set_flashdata('permission_success', 1);
             } else {
-                $this->session->set_flashdata('success', 0);
+                $this->session->set_flashdata('permission_success', 0);
             }
-            redirect('admin/users/group/id/5');
+
+            redirect("admin/users/group/id/{$group}");
+        } else {
+
+            $user_groups    =   $this->ion_auth_acl->get_user_groups($id);
+
+            $data['user_id']                =   $id;
+            $data['group']                  =   $group;
+            $data['permissions']            =   $this->ion_auth_acl->permissions('full', 'perm_key');
+            $data['group_permissions']      =   $this->ion_auth_acl->get_group_permissions($user_groups);
+            $data['users_permissions']      =   $this->ion_auth_acl->build_acl($id);
+
+            // set page title
+            $data['title'] = ucwords('User Permissions');
+
+            $this->load->view('admin_panel/pages/users/permissions', $data);
         }
     }
-
-    /**
-     * Callback for username validation
-     *
-     * @param String $username Username of the user
-     * @return void
-     */
-    public function username_check($username)
-    {
-        $id =  $this->input->post('id');
-
-        if ($this->ion_auth->username_check($username)) {
-            if ($this->User->get($id)->username !== $username) {
-                $this->form_validation->set_message('username_check', 'The username already exists.');
-                return FALSE;
-            }
-        }
-
-        return TRUE;
-    }
-
-    // public function get_users_by_lastname($last_name)
-    // {
-
-    //     $result = $this->User->get_users_by_lastname($last_name);
-    //     $this->output
-    //         ->set_content_type('application/json')
-    //         ->set_output(json_encode($result));
-    // }
 
     /**
      * Reset user password
@@ -353,5 +331,154 @@ class Users extends MY_Controller
         } else {
             echo json_encode(-1);
         }
+    }
+
+    /**
+     * Update user data
+     *
+     * @param int $id ID of the user
+     * @return void
+     */
+    public function update($id)
+    {
+        // get user group
+        $group = $this->ion_auth->get_users_groups($id)->row()->id;
+
+        $this->form_validation->set_rules('username', 'Username', 'required|callback_username_check|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']|trim');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_email_check|trim');
+        // only show to admin, editor, and brand member groups
+        if (in_array($group, array(1, 2, 3))) {
+            $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
+            $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
+        }
+        // only show to regular and premium user groups
+        else if (in_array($group, array(4, 5))) {
+            $this->form_validation->set_rules('name', 'Name', 'required|alpha|trim');
+        }
+        $this->form_validation->set_rules('gender', 'Gender', 'required');
+        $this->form_validation->set_rules('age_group', 'Age group', 'required');
+
+        // only show to admin, editor, and brand member groups
+        if (in_array($group, array(1, 2, 3))) {
+            $this->form_validation->set_rules('organization', 'Organization', 'trim');
+            // only show to brand member group
+            if (in_array($group, array(3))) {
+                $this->form_validation->set_rules('brand', 'Brand', 'trim');
+            }
+            if (strlen($this->input->post('phone'))) {
+                $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
+            }
+            $this->form_validation->set_rules('address1', 'Address 1', 'trim');
+            $this->form_validation->set_rules('address2', 'Address 2', 'trim');
+            $this->form_validation->set_rules('city', 'City', 'trim');
+            if (strlen($this->input->post('zipcode'))) {
+                $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
+            }
+        }
+        $this->form_validation->set_rules('group', 'Group', 'required');
+
+        if ($this->form_validation->run() == false) {
+
+            $user = $this->User->get($id);
+
+            $data['id'] = $user->id;
+            $data['username'] = $user->username;
+            $data['email'] = $user->email;
+            // only show to admin, editor, and brand member groups
+            if (in_array($group, array(1, 2, 3))) {
+                $data['firstname'] = $user->firstname;
+                $data['lastname'] = $user->lastname;
+            }
+            // only show to regular and premium user groups
+            else if (in_array($group, array(4, 5))) {
+                $data['name'] = $user->firstname;
+            }
+            $data['gender'] = $user->gender;
+            $data['age_group'] = $user->age_group;
+            // only show to admin, editor, and brand member groups
+            if (in_array($group, array(1, 2, 3))) {
+                $data['organization'] = $user->organization;
+                // only show to brand member group
+                if (in_array($group, array(3))) {
+                    $data['brand'] = $user->brand;
+                }
+                $data['phone'] = $user->phone;
+                $data['address1'] = $user->address1;
+                $data['address2'] = $user->address2;
+                $data['city'] = $user->city;
+                $data['state'] = $user->state;
+                $data['country'] = $user->country;
+                $data['zipcode'] = $user->zipcode;
+            }
+            $data['active'] = $user->active;
+            $data['group'] = $this->ion_auth->get_users_groups($id)->row();
+
+            $data['states'] = $this->Util_model->get_state_list();
+            $data['countries'] = $this->Util_model->get_country_list();
+            $data['groups'] = $this->Group->get();
+
+            $data['title'] = ucwords('edit user');
+
+            $this->load->view('admin_panel/pages/users/edit', $data);
+        } else {
+            $user_data['username'] = $this->input->post('username');
+            $user_data['email'] = $this->input->post('email');
+            // only show to admin, editor, and brand member groups
+            if (in_array($group, array(1, 2, 3))) {
+                $user_data['firstname'] = $this->input->post('firstname');
+                $user_data['lastname'] = $this->input->post('lastname');
+            }
+            // only show to regular and premium user groups
+            elseif (in_array($group, array(4, 5))) {
+                $user_data['firstname'] = $this->input->post('name');
+            }
+            $user_data['gender'] = $this->input->post('gender');
+            $user_data['age_group'] = $this->input->post('age_group');
+            // only show to admin, editor, and brand member groups
+            if (in_array($group, array(1, 2, 3))) {
+                $user_data['organization'] = $this->input->post('organization');
+                // only show to brand member group
+                if (in_array($group, array(3))) {
+                    $user_data['brand'] = $this->input->post('brand');
+                }
+                $user_data['phone'] = $this->input->post('phone');
+                $user_data['address1'] = $this->input->post('address1');
+                $user_data['address2'] = $this->input->post('address2');
+                $user_data['city'] = $this->input->post('city');
+                $user_data['state'] = $this->input->post('state');
+                $user_data['country'] = $this->input->post('country');
+                $user_data['zipcode'] = $this->input->post('zipcode');
+            }
+            $user_data['group'] = $this->input->post('group');
+            $user_data['active'] = $this->input->post('active');
+
+            $update = $this->User->update($id, $user_data);
+            if ($update) {
+                $this->session->set_flashdata('update_success', 1);
+            } else {
+                $this->session->set_flashdata('update_success', 0);
+            }
+            redirect("admin/users/group/id/{$group}");
+        }
+    }
+
+    /**
+     * Callback for username validation
+     *
+     * @param String $username Username of the user
+     * @return void
+     */
+    public function username_check($username)
+    {
+        $id =  $this->input->post('id');
+
+        if ($this->ion_auth->username_check($username)) {
+            if ($this->User->get($id)->username !== $username) {
+                $this->form_validation->set_message('username_check', 'The username already exists.');
+                return FALSE;
+            }
+        }
+
+        return TRUE;
     }
 }

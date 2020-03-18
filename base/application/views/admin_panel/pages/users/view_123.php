@@ -42,7 +42,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
 					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/user/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+						<a href="<?= site_url("admin/user/create/group/id/{$group}"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
 								<i class="la la-user-plus"></i>
 								<span>Add User</span>
@@ -133,22 +133,62 @@ $this->load->view('admin_panel/templates/subheader');
 		<!--end::Modal-->
 
 		<div class="m-portlet__body">
-		<?php if ($this->session->flashdata('success') === 1) : ?>
+			<?php if ($this->session->flashdata('create_success') === 1) : ?>
 				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						The user has been created or updated.
+						The user has been created.
 					</div>
 				</div>
-			<?php elseif ($this->session->flashdata('success') === 0) : ?>
+			<?php elseif ($this->session->flashdata('create_success') === 0) : ?>
 				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						Unable to create or update the user.
+						Unable to create the user.
+					</div>
+				</div>
+			<?php endif ?>
+
+			<?php if ($this->session->flashdata('update_success') === 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The user information has been updated.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('update_success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to update user information.
+					</div>
+				</div>
+			<?php endif ?>
+
+			<?php if ($this->session->flashdata('permission_success') === 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The user permissions has been updated.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('permission_success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to update user permissions.
 					</div>
 				</div>
 			<?php endif ?>
@@ -157,12 +197,12 @@ $this->load->view('admin_panel/templates/subheader');
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
-						<th>ID</th>
 						<th>Username</th>
 						<th>Last Name</th>
 						<th>First Name</th>
 						<th>Email Address</th>
 						<th>Gender</th>
+						<th>Group</th>
 						<th>Status</th>
 						<th width=150>Actions</th>
 					</tr>
@@ -204,8 +244,7 @@ $this->load->view('admin_panel/templates/close_html');
 			type: 'GET',
 			success: function(data, status) {
 				$("div.modal-body").html(
-					"<p>User ID: " + data.id + " </p>\
-					<p>Username: " + data.username + " </p>\
+					"<p>Username: " + data.username + " </p>\
 					<p>Email Address: " + data.email + " </p>\
 					<p>First Name: " + data.firstname + " </p>\
 					<p>Last Name: " + data.lastname + " </p>\
@@ -323,8 +362,6 @@ $this->load->view('admin_panel/templates/close_html');
 				rowId: "id",
 				ajax: "<?= site_url("admin/users/get/group/id/$group"); ?>",
 				columns: [{
-					data: "id"
-				}, {
 					data: "username"
 				}, {
 					data: "lastname"
@@ -334,6 +371,8 @@ $this->load->view('admin_panel/templates/close_html');
 					data: "email"
 				}, {
 					data: "gender"
+				}, {
+					data: "group_name"
 				}, {
 					data: "active"
 				}, {
@@ -345,7 +384,8 @@ $this->load->view('admin_panel/templates/close_html');
 					orderable: !1,
 					render: function(a, t, e, n) {
 						return '<a onclick=showUserDetails("' + e['id'] + '") data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>' +
-							'<a onclick=reset("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Reset Password"><i class="la la-key"></i></a>' +
+							'<a href="<?= site_url() . "admin/user/get/permissions/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Permissions"><i class="la la-key"></i></a>' +
+							'<a onclick=reset("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Reset Password"><i class="la la-gear"></i></a>' +
 							'<a href="<?= site_url() . "admin/user/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 							'<a onclick=deleteUser("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}

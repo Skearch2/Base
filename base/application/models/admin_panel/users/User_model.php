@@ -56,8 +56,8 @@ class User_model extends CI_Model
     {
         if ($is_group) {
             // return all users from the group
-            if ($id === 1 or $id === 2) {
-                return $this->ion_auth->users(1, 2)->result();
+            if ($id == 1 or $id == 2) {
+                return $this->ion_auth->users(array(1, 2))->result();
             } else {
                 return $this->ion_auth->users($id)->result();
             }
@@ -67,16 +67,22 @@ class User_model extends CI_Model
         }
     }
 
-    // public function get_users_by_lastname($last_name)
-    // {
-    //     $this->db->select('last_name, first_name, username, email');
-    //     $this->db->from('skearch_users');
-    //     $this->db->like('last_name', $last_name, 'after');
-    //     $this->db->order_by('last_name', 'ASC');
-    //     $query = $this->db->get();
+    /**
+     * Get users by lastname
+     *
+     * @param String $lastname Last name of the user
+     * @return object
+     */
+    public function get_by_lastname($lastname)
+    {
+        $this->db->select('lastname, firstname, username, email');
+        $this->db->from('skearch_users');
+        $this->db->like('lastname', $lastname, 'after');
+        $this->db->order_by('lastname', 'ASC');
+        $query = $this->db->get();
 
-    //     return $query->result();
-    // }
+        return $query->result();
+    }
 
     /**
      * Updates user data

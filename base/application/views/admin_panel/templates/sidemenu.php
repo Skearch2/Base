@@ -23,7 +23,8 @@
 											<li id="submenu-users-registered" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/group/id/5"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Registered Users</span></a></li>
 											<li id="submenu-users-premium" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/group/id/4"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Premium Users</span></a></li>
 											<li id="submenu-users-staff" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/group/id/1"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Staff</span></a></li>
-											<li id="submenu-users-groups" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/groups"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">User Groups</span></a></li>
+											<li id="submenu-users-groups" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/groups"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Groups</span></a></li>
+											<li id="submenu-users-permissions" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/permissions"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Permissions</span></a></li>
 										</ul>
 									</div>
 								</li>
