@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
  *
  * This is an authentication ontroller for admin panel.
  * @package		Skearch
- * @author		Iftikhar Ejaz <i.ejaz@skearch.net>
+ * @author		Iftikhar Ejaz <ejaziftikhar@gmail.com>
  * @copyright	Copyright (c) 2019
  * @version		2.0
  */
@@ -30,11 +30,18 @@ class Auth extends MY_Controller
 	 */
 	public function login()
 	{
-		if ($this->ion_auth->is_admin()) {
-			redirect('admin/dashboard', 'refresh');
+		if ($this->ion_auth->logged_in()) {
+			if ($this->ion_auth->in_group($this->config->item('staff', 'ion_auth'))) {
+				$this->session->set_flashdata('no_access', 1);
+				// redirect to admin dashboard
+				redirect('admin/dashboard', 'refresh');
+			} else {
+				// redirect to myskearch
+				redirect('myskearch', 'refresh');
+			}
 		}
 
-		$this->form_validation->set_rules('id', 'Admin ID', 'required|trim');
+		$this->form_validation->set_rules('id', 'Staff ID', 'required|trim');
 		$this->form_validation->set_rules('password', 'Password', 'required|trim');
 
 		if ($this->form_validation->run() === FALSE) {
@@ -48,28 +55,22 @@ class Auth extends MY_Controller
 
 			if ($this->ion_auth->login($this->input->post('id'), $this->input->post('password'), $remember)) {
 
-				if (!$this->ion_auth->is_admin()) {
-					redirect(base_url());
-				} else {
-					$user = (array) $this->ion_auth->user()->row();
+				$user = (array) $this->ion_auth->user()->row();
 
-					// add user group in the user information
-					$user['groupid'] =  $this->ion_auth->get_users_groups($user['id'])->row()->id;
-					$user['group'] =  $this->ion_auth->get_users_groups($user['id'])->row()->name;
-	
-					// add user set theme
-					$user['theme'] = $this->User->get_settings($user['id'], 'theme')->theme;
-	
-					// add user data to session
-					$this->session->set_userdata($user);
-	
-					redirect('admin/dashboard', 'refresh');
-				}
+				// add user group in the user information
+				$user['groupid'] =  $this->ion_auth->get_users_groups($user['id'])->row()->id;
+				$user['group'] =  $this->ion_auth->get_users_groups($user['id'])->row()->name;
+
+				// add user set theme
+				$user['theme'] = $this->User->get_settings($user['id'], 'theme')->theme;
+
+				// add user data to session
+				$this->session->set_userdata($user);
+
+				redirect('admin/dashboard', 'refresh');
 			} else {
-
-				$data['title'] = ucwords("admin panel | login");
-
-				$this->load->view('admin_panel/pages/login', $data);
+				$this->session->set_flashdata('errors', $this->ion_auth->errors());
+				redirect('admin/auth/login');
 			}
 		}
 	}

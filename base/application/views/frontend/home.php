@@ -13,6 +13,14 @@ $this->load->view('frontend/templates/startbody');
 $this->load->view('frontend/templates/nav');
 
 ?>
+<style>
+    @media screen and (max-width: 415px) {
+        .logo {
+            width: 100%;
+        }
+    }
+</style>
+
 <section class="logo">
     <div class="container">
         <div class="row">

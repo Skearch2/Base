@@ -224,7 +224,9 @@ $this->load->view('admin_panel/templates/close_html');
 		init: function() {
 			$("#m_table_1").DataTable({
 				responsive: !0,
+				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
 				rowId: "id",
+				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
 				ajax: "<?= site_url(); ?>admin/results/research/get",

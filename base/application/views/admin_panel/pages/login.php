@@ -26,9 +26,19 @@ $this->load->view('admin_panel/templates/head');
 							<h3 class="m-login__title">Login To Admin Panel</h3>
 						</div>
 						<fieldset class="m-login__form m-form" form='login_form' name='login_fields'>
-							<?php if ($this->ion_auth->errors()) : ?>
+							<?php if ($this->session->flashdata('no_access')) : ?>
 								<div align="center" class="m-alert m-alert--outline alert-danger">
-									<?= $this->ion_auth->errors() ?>
+									You have no access to admin panel.
+								</div>
+							<?php endif; ?>
+							<?php if ($this->session->flashdata('errors')) : ?>
+								<div align="center" class="m-alert m-alert--outline alert-danger">
+									<?= $this->session->flashdata('errors') ?>
+								</div>
+							<?php endif; ?>
+							<?php if (validation_errors()) : ?>
+								<div align="center" class="m-alert m-alert--outline alert-warning">
+									<?= validation_errors(); ?>
 								</div>
 							<?php endif; ?>
 							<?php if ($this->session->flashdata('logout')) : ?>
@@ -37,7 +47,7 @@ $this->load->view('admin_panel/templates/head');
 								</div>
 							<?php endif; ?>
 							<div class="form-group m-form__group">
-								<input class="form-control m-input" type="text" placeholder="Admin ID" id="id" name="id" value="<?= set_value('login_id'); ?>" autocomplete="off">
+								<input class="form-control m-input" type="text" placeholder="Staff ID" id="id" name="id" value="<?= set_value('id'); ?>" autocomplete="off">
 							</div>
 							<div class="form-group m-form__group">
 								<input class="form-control m-input m-login__form-input--last" id="password" name="password" type="password" placeholder="Password" name="password">

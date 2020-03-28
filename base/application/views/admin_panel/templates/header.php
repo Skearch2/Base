@@ -1,5 +1,3 @@
-<?php $headeruser = $this->ion_auth->user()->row(); ?>
-
 <!-- BEGIN: Header -->
 <header id="m_header" class="m-grid__item    m-header " m-minimize-offset="200" m-minimize-mobile-offset="200">
 	<div class="m-container m-container--fluid m-container--full-height">
@@ -412,8 +410,8 @@
 													<img src="<?= site_url(ASSETS); ?>/admin_panel/app/media/img/users/user-default.jpg" class="m--img-rounded m--marginless" alt="" />
 												</div>
 												<div class="m-card-user__details">
-													<span class="m-card-user__name m--font-weight-500"><?php echo $headeruser->firstname . " " . $headeruser->lastname; ?></span>
-													<a href="" class="m-card-user__email m--font-weight-300 m-link"><?php echo $headeruser->email; ?></a>
+													<span class="m-card-user__name m--font-weight-500"><?= $this->session->userdata('firstname') . " " . $this->session->userdata('lastname'); ?></span>
+													<a href="" class="m-card-user__email m--font-weight-300 m-link"><?= $this->session->userdata('group');; ?></a>
 												</div>
 											</div>
 										</div>

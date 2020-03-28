@@ -126,7 +126,9 @@ $route['myskearch/profile/(:num)'] = 'my_skearch/profile/index/$1';
 
 /**********************************************  Admin Panel Routes  *************************************************/
 
-/* Authentication */
+/* 
+    Authentication 
+*/
 $route['admin']                      = 'admin_panel/dashboard';
 $route['admin/dashboard']            = 'admin_panel/dashboard';
 $route['admin/auth/login']           = 'admin_panel/auth/login';
@@ -199,11 +201,40 @@ $route['admin/categories/change_priority/(:any)/(:any)'] = 'admin_panel/categori
 $route['admin/categories/get_links_priority/(:any)'] = 'admin_panel/categories/get_links_priority/$1';
 $route['admin/categories/search_adlink/(:any)'] = 'admin_panel/categories/search_adlink/$1';
 
+// Umbrellas
+$route['admin/results/umbrella/create']                                = 'admin_panel/results/umbrellas/create';
+$route['admin/results/umbrella/delete/id/(:num)']                      = 'admin_panel/results/umbrellas/delete/$1';
+$route['admin/results/umbrella/get/id/(:num)']                         = 'admin_panel/results/umbrellas/get/$1';
+$route['admin/results/umbrella/toggle/id/(:num)']                      = 'admin_panel/results/umbrellas/toggle/$1';
+$route['admin/results/umbrella/update/id/(:num)']                      = 'admin_panel/results/umbrellas/update/$1';
+$route['admin/results/umbrellas/get/status/(all|active|inactive)']     = 'admin_panel/results/umbrellas/get_by_status/$1';
+$route['admin/results/umbrellas/status/(all|active|inactive)']         = 'admin_panel/results/umbrellas/index/$1';
+
+// Fields
+$route['admin/results/field/create']                                = 'admin_panel/results/fields/create';
+$route['admin/results/field/delete/id/(:num)']                      = 'admin_panel/results/fields/delete/$1';
+$route['admin/results/field/get/id/(:num)']                         = 'admin_panel/results/fields/get/$1';
+$route['admin/results/field/toggle/id/(:num)']                      = 'admin_panel/results/fields/toggle/$1';
+$route['admin/results/fields/umbrella/id/(:num)']                   = 'admin_panel/results/fields/index/$1';
+$route['admin/results/field/update/id/(:num)']                      = 'admin_panel/results/fields/update/$1';
+$route['admin/results/fields/get/umbrella/id/(:num)']               = 'admin_panel/results/fields/get_by_umbrella/$1';
+$route['admin/results/fields/get/status/(all|active|inactive)']     = 'admin_panel/results/fields/get_by_status/$1';
+$route['admin/results/fields/status/(all|active|inactive)']         = 'admin_panel/results/fields/index/$1';
+
 // Links
-$route['admin/results/links/get']                                              = 'admin_panel/results/links/get';
-$route['admin/results/links/get/id/(:num)']                                    = 'admin_panel/results/links/get/$1';
-$route['admin/results/links/duplicate/id/(:num)/field/(:num)/priority/(:num)'] = 'admin_panel/results/links/duplicate/$1/$2/$3';
-$route['admin/results/links/move/id/(:num)/field/(:num)/priority/(:num)']      = 'admin_panel/results/links/move/$1/$2/$3';
+$route['admin/results/link/create']                                            = 'admin_panel/results/links/create';
+$route['admin/results/link/delete/id/(:num)']                                  = 'admin_panel/results/links/delete/$1';
+$route['admin/results/link/get/id/(:num)']                                     = 'admin_panel/results/links/get/$1';
+$route['admin/results/link/redirect/id/(:num)']                                = 'admin_panel/results/links/redirect/$1';
+$route['admin/results/link/toggle/id/(:num)']                                  = 'admin_panel/results/links/toggle/$1';
+$route['admin/results/link/duplicate/id/(:num)/field/(:num)/priority/(:num)']  = 'admin_panel/results/links/duplicate/$1/$2/$3';
+$route['admin/results/link/move/id/(:num)/field/(:num)/priority/(:num)']       = 'admin_panel/results/links/move/$1/$2/$3';
+$route['admin/results/links/get/field/id/(:num)']                              = 'admin_panel/results/links/get_by_field/$1';
+$route['admin/results/links/get/keywords/(:any)']                              = 'admin_panel/results/links/get_by_keywords/$1';
+$route['admin/results/links/get/status/(all|active|inactive)']                 = 'admin_panel/results/links/get_by_status/$1';
+$route['admin/results/links/status/(all|active|inactive)']                     = 'admin_panel/results/links/index/$1';
+$route['admin/results/links/field/id/(:num)']                                  = 'admin_panel/results/links/index/$1';
+$route['admin/results/links/keywords/(:any)']                                  = 'admin_panel/results/links/index/$1';
 
 // Research
 $route['admin/results/research/add'] = 'admin_panel/results/research/create';
