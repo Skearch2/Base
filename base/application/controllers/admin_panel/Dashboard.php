@@ -2,13 +2,13 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * File:    ~/application/controller/Admin_new.php
+ * File:    ~/application/controller/admin_panel/Dashboard.php
  *
  * This is an admin panel controller.
  * 
  * @package		Skearch
  * @author		Iftikhar Ejaz <ejaziftikhar@gmail.com>
- * @copyright	Copyright (c) 2018
+ * @copyright	Copyright (c) 2020
  * @version		2.0
  */
 class Dashboard extends MY_Controller
@@ -18,9 +18,15 @@ class Dashboard extends MY_Controller
 	{
 		parent::__construct();
 
-		if (!$this->ion_auth->is_admin()) {
-			// redirect them to the login page
-			redirect('admin/auth/login', 'refresh');
+		if (!$this->ion_auth->logged_in()) {
+			// redirect to the admin login page
+			redirect('admin/auth/login');
+		}
+
+		if (!$this->ion_auth->in_group($this->config->item('staff', 'ion_auth'))) {
+			$this->session->set_flashdata('no_access', 1);
+			// redirect to the admin login page
+			redirect('admin/auth/login');
 		}
 
 		$this->load->model('admin_panel/Category_model_admin', 'category_model_admin');

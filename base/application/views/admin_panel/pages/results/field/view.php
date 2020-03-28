@@ -42,10 +42,10 @@ $this->load->view('admin_panel/templates/subheader');
             <div class="m-portlet__head-tools">
                 <ul class="m-portlet__nav">
                     <li class="m-portlet__nav-item">
-                        <a href="<?= site_url("admin/categories/create_subcategory"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+                        <a href="<?= site_url("admin/results/field/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
                             <span>
-                                <i class="la la-user-plus"></i>
-                                <span>Add Item</span>
+                                <i class="la la-plus-circle"></i>
+                                <span>Add Field</span>
                             </span>
                         </a>
                     </li>
@@ -114,15 +114,34 @@ $this->load->view('admin_panel/templates/subheader');
         </div>
         <div class="m-portlet__body">
 
+            <?php if ($this->session->flashdata('update_success') === 1) : ?>
+                <div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="alert-icon">
+                        The field has been updated.
+                    </div>
+                </div>
+            <?php elseif ($this->session->flashdata('update_success') === 0) : ?>
+                <div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="alert-icon">
+                        Unable to update the field.
+                    </div>
+                </div>
+            <?php endif ?>
+
             <!--begin: Datatable -->
             <table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Title</th>
                         <th>Short Description</th>
                         <th>Parent Umbrella</th>
-                        <th>Adlinks</th>
+                        <th>Links</th>
                         <th>Featured</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -172,7 +191,7 @@ $this->load->view('admin_panel/templates/close_html');
         }).then(function(e) {
             if (!e.value) return;
             $.ajax({
-                url: '<?= site_url('admin/categories/delete_subcategory/'); ?>' + id,
+                url: '<?= site_url('admin/results/field/delete/id/'); ?>' + id,
                 type: 'DELETE',
                 success: function(data, status) {
                     swal("Success!", "The field has been deleted.", "success")
@@ -189,7 +208,7 @@ $this->load->view('admin_panel/templates/close_html');
     // Toggle field active status
     function toggle(id, row) {
         $.ajax({
-            url: '<?= site_url('admin/categories/toggle_subcategory/'); ?>' + id,
+            url: '<?= site_url('admin/results/field/toggle/id/'); ?>' + id,
             type: 'GET',
             success: function(data, status) {
                 if (data == 0) {
@@ -208,31 +227,21 @@ $this->load->view('admin_panel/templates/close_html');
     }
 
     var DatatablesDataSourceAjaxServer = {
-
-        init: function() {
+        init: function(url) {
             $("#m_table_1").DataTable({
                 responsive: !0,
                 dom: '<"top"lfp>rt<"bottom"ip><"clear">',
                 rowId: "id",
-                order: [
-                    [1, 'asc']
-                ],
                 searchDelay: 500,
-                lengthMenu: [
-                    [50, 100, -1],
-                    [50, 100, "ALL"]
-                ],
                 processing: !0,
                 serverSide: !1,
-                ajax: "<?= site_url(); ?>/admin/categories/get_subcategory_list/<?= $categoryid; ?>/<?= $status; ?>",
+                ajax: url,
                 columns: [{
-                    data: "id"
-                }, {
                     data: "title"
                 }, {
                     data: "description_short"
                 }, {
-                    data: "parent_title"
+                    data: "umbrella"
                 }, {
                     data: "Adlinks"
                 }, {
@@ -250,20 +259,18 @@ $this->load->view('admin_panel/templates/close_html');
                         render: function(a, t, e, n) {
                             var title = e['title'].replace(/ /g, '%20');
                             var row = (n.row).toString().slice(-1);
-                            return '<a href="<?= site_url() . "admin/categories/update_subcategory/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+                            return '<a href="<?= site_url() . "admin/results/field/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
                                 '<a onclick=deleteField("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
                         }
                     },
                     {
-                        targets: 4,
-                        title: "Adlinks",
+                        targets: 3,
                         render: function(a, t, e, n) {
-                            return e['totalResults'] + " " +
-                                '<a href="<?= site_url() . "admin/categories/result_list/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
+                            return '<a href="<?= site_url() . "admin/results/links/field/id/" ?>' + e['id'] + '" title="View">' + e['totalResults'] + '</a>'
 
                         }
                     }, {
-                        targets: 5,
+                        targets: 4,
                         render: function(a, t, e, n) {
                             var s = {
                                 0: {
@@ -275,12 +282,11 @@ $this->load->view('admin_panel/templates/close_html');
                                     state: "accent"
                                 }
                             };
-                            //return void 0===s[a]?a:'<span class="m-badge m-badge--'+s[a].state+' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-'+s[a].state+'">'+s[a].title+"</span>"
                             return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
                         }
                     },
                     {
-                        targets: 6,
+                        targets: 5,
                         render: function(a, t, e, n) {
                             var s = {
                                 1: {
@@ -302,15 +308,16 @@ $this->load->view('admin_panel/templates/close_html');
 
     ;
     jQuery(document).ready(function() {
-        DatatablesDataSourceAjaxServer.init()
+        var url
 
-    });
+        <?php if (isset($umbrella_id)) : ?>
+            url = "<?= site_url(); ?>admin/results/fields/get/umbrella/id/<?= $umbrella_id; ?>"
+        <?php elseif (isset($status)) : ?>
+            url = "<?= site_url(); ?>admin/results/fields/get/status/<?= $status; ?>"
+        <?php endif ?>
 
-    $('#m_table_1 tbody').on('click', 'tablerow1', function() {
-        $('#m_table_1').DataTable()
-            .row($(this).parents('tr'))
-            .remove()
-            .draw();
+        DatatablesDataSourceAjaxServer.init(url)
+
     });
 </script>
 

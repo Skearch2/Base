@@ -29,7 +29,6 @@ $this->load->view('admin_panel/templates/subheader');
 
 ?>
 
-
 <div class="m-content">
 	<div class="m-portlet m-portlet--mobile">
 		<div class="m-portlet__head">
@@ -40,17 +39,13 @@ $this->load->view('admin_panel/templates/subheader');
 					</h3>
 				</div>
 			</div>
-
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
-					<li class="m-portlet__nav-item">
-						<input type="text" onkeyup="search_adlink(this.value)" class="form-control" placeholder="Search..." name="query">
-					</li>
 					<li class="m-portlet__nav-item">
 						<a href="<?= site_url("admin/categories/create_result"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
 								<i class="la la-cart-plus"></i>
-								<span>Add Link</span>
+								<span>Add Result</span>
 							</span>
 						</a>
 					</li>
@@ -119,64 +114,18 @@ $this->load->view('admin_panel/templates/subheader');
 		</div>
 
 		<!--begin::Modal-->
-		<div class="modal fade" id="modal_option" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal fade" id="m_modal_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="option-dialog"></h5>
+						<h5 class="modal-title" id="exampleModalLongTitle">Result Details</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<div class="modal-body">
-						<form>
-							<input type="hidden" id="link_id" name="link_id" value="">
-							<div class="form-group m-form__group row">
-								<label for="example-text-input" class="col-2 col-form-label">Field</label>
-								<div class="col-7">
-									<select class="form-control" name="field_id" onchange="updatePriority(this.value)" required>
-										<option id="field" selected value="">Select</option>
-										<?php foreach ($fields as $field) : ?>
-											<option value="<?= $field->id ?> <?= set_select("field", $field->id) ?>"><?= $field->title ?></option>
-										<?php endforeach ?>
-									</select>
-								</div>
-							</div>
-							<div class="form-group m-form__group row">
-								<label for="example-text-input" class="col-2 col-form-label">Priority</label>
-								<div class="col-7">
-									<select class="form-control" id="priority" name="priority" disabled>
-										<option selected value="">Not Set</option>
-										<?php for ($i = 1; $i <= 250; $i++) : ?>
-											<?php if (in_array($i, $priorities)) : ?>
-												<option style="background-color: #99ff99" value="<?= $i ?>" disabled><?= $i ?></option>
-											<?php else : ?>
-												<option value="<?= $i ?> <?= set_select("priority", $i) ?>"><?= $i ?></option>
-											<?php endif; ?>
-										<?php endfor; ?>
-									</select>
-								</div>
-							</div>
-							<div class="m-form__group form-group row">
-								<label class="col-3 col-form-label">Action</label>
-								<div class="col-9">
-									<div class="m-radio-inline">
-										<label class="m-radio">
-											<input type="radio" name="option-select" value="1" checked> Duplicate
-											<span></span>
-										</label>
-										<label class="m-radio">
-											<input type="radio" name="option-select" value="2"> Move
-											<span></span>
-										</label>
-									</div>
-								</div>
-							</div>
-						</form>
-					</div>
+					<div class="modal-body"></div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						<button type="button" id="btn-option-action" class="btn btn-primary" onclick="moveOrDuplicate()">Submit</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 					</div>
 				</div>
 			</div>
@@ -196,13 +145,12 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Category</th>
 						<th>Display Url</th>
 						<th>Status</th>
-						<th width="150">Actions</th>
+						<th width="18%">Actions</th>
 					</tr>
 				</thead>
 			</table>
 		</div>
 	</div>
-
 
 	<!-- END EXAMPLE TABLE PORTLET-->
 </div>
@@ -230,63 +178,6 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-	// move of duplicate option dialog
-	function optionDialog(id) {
-		$.ajax({
-			url: '<?= site_url(); ?>admin/results/links/get/id/' + id,
-			type: 'GET',
-			contentType: 'json',
-			success: function(data, status) {
-				$("#option-dialog").html(data.title);
-				$("#link_id").val(data.id);
-				$("#field").val(data.umbrella_id);
-				$("#field").html(data.umbrella);
-				$("#btn-option-action").attr("class", "btn m-btn btn-success");
-				$("#btn-option-action").show();
-				updatePriority(data.umbrella_id);
-			},
-			error: function(xhr, status, error) {
-				alert("Unable to retrieve link information");
-			}
-		});
-	}
-
-	// Move or duplicate a link to a field
-	function moveOrDuplicate() {
-		var id = $("[name=link_id]").val();
-		var field_id = $("[name=field_id]").val().trim();
-		var priority = $("[name=priority]").val();
-		var option = $("[name=option-select]:checked").val();
-		var url;
-		if (option == 1) {
-			url = '<?= site_url(); ?>admin/results/links/duplicate/id/' + id + '/field/' + field_id + '/priority/' + priority;
-		} else if (option == 2) {
-			url = '<?= site_url(); ?>admin/results/links/move/id/' + id + '/field/' + field_id + '/priority/' + priority;
-		}
-		$.ajax({
-			url: url,
-			type: 'GET',
-			beforeSend: function(xhr, options) {
-				$("#btn-option-action").attr("class", "btn m-btn btn-success m-loader m-loader--light m-loader--right");
-				setTimeout(function() {
-					$.ajax($.extend(options, {
-						beforeSend: $.noop
-					}));
-				}, 2000);
-				return false;
-			},
-			success: function(data, status) {
-				$("#btn-option-action").hide();
-				if (option == 2) {
-					$("#" + id).fadeOut("slow");
-				}
-			},
-			error: function(xhr, status, error) {
-				alert("Unable to take action to the link");
-			}
-		});
-	}
-
 	// Deletes link
 	function deleteLink(id, link) {
 		var link = link.replace(/%20/g, ' ');
@@ -331,7 +222,7 @@ $this->load->view('admin_panel/templates/close_html');
 				}
 			},
 			error: function(xhr, status, error) {
-				toastr.error("", "Unable to change the status.");
+				toastr.error("", "Unable to update status.");
 			}
 		});
 	}
@@ -347,64 +238,43 @@ $this->load->view('admin_panel/templates/close_html');
 				} else if (data == 1) {
 					document.getElementById("redirect" + id).style.color = "#34bfa3";
 				}
-				toastr.success("", "Status updated.");
+				toastr.success("", "Redirection updated.");
 			},
 			error: function(xhr, status, error) {
-				toastr.error("", "Unable to take action.");
+				toastr.error("", "Unable to update redirection.");
 			}
 		});
 	}
 
-	function updatePriority(id) {
-		toastr.info("", "Updating Priority...");
-
-		var selectElement = document.getElementById("priority");
-		selectElement.disabled = true;
-		while (selectElement.length > 0) {
-			selectElement.remove(0);
-		}
-
-		if (id == "") return;
+	// change field priority
+	function change_priority(id, priority) {
+		$('#m_table_1').fadeOut("slow");
 		$.ajax({
-			url: '<?= site_url(); ?>admin/categories/get_links_priority/' + id,
+			url: '<?= site_url(); ?>/admin/categories/change_priority/' + id + '/' + priority,
 			type: 'GET',
-			success: function(data, status) {
-				var obj = JSON.parse(data);
-				var option = document.createElement("option");
-				option.text = "Not Set";
-				option.value = 0;
-				selectElement.add(option);
-
-				for (i = 1; i <= 255; i++) {
-					var option = document.createElement("option");
-					var array = searchArray(i, obj);
-					if (array) {
-						option.text = i + " - " + array.title;
-						option.value = i;
-						option.style.backgroundColor = "#99ff99";
-						option.disabled = true;
-					} else {
-						option.text = i;
-						option.value = i;
-					}
-					selectElement.add(option);
-					selectElement.disabled = false;
-				}
+			success: function(status) {
+				get_links_priority();
+				$('#m_table_1').DataTable().ajax.reload(null, false);
+				toastr.success("", "Priority updated.");
 			},
-			error: function(xhr, status, error) {
-				alert("Error Updating Priority");
+			error: function(err) {
+				toastr.error("", "Unable to update priority.");
 			}
 		});
 	}
 
-	function search_adlink(title) {
-
-		var baseUrl = <?= json_encode(BASE_URL); ?>;
-
-		// $('#m_table_1').fadeOut("slow");
-		if (title === "") $('#m_table_1').DataTable().clear().draw();
-		else $('#m_table_1').DataTable().ajax.url(baseUrl + "admin/categories/search_adlink/" + title).load();
-		//$('#m_table_1').fadeIn("slow");
+	function get_links_priority() {
+		$.ajax({
+			url: '<?= site_url(); ?>/admin/categories/get_links_priority/' + <?= $subcategoryid; ?>,
+			type: 'GET',
+			success: function(result) {
+				obj = JSON.parse(result);
+				$('#m_table_1').fadeIn("fast");
+			},
+			error: function(err) {
+				toastr.error("", "Unable to get priorities for the link.");
+			}
+		});
 	}
 
 	function searchArray(key, array) {
@@ -419,22 +289,14 @@ $this->load->view('admin_panel/templates/close_html');
 	var DatatablesDataSourceAjaxServer = {
 		init: function() {
 			$("#m_table_1").DataTable({
-				responsive: !0,
-				bFilter: false,
+				responsive: 1,
+				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
 				rowId: "id",
-				order: [
-					[0, 'asc']
-				],
-				searchDelay: 500,
-				lengthMenu: [
-					[50, 100, -1],
-					[50, 100, "ALL"]
-				],
-				processing: !0,
+				processing: 1,
 				serverSide: !1,
-				ajax: "",
+				ajax: "<?= site_url(); ?>/admin/categories/get_result_list/<?= $subcategoryid; ?>/<?= $status; ?>",
 				columns: [{
-					data: "priority"
+					data: "Priority"
 				}, {
 					data: "title"
 				}, {
@@ -458,11 +320,34 @@ $this->load->view('admin_panel/templates/close_html');
 						else redirectVal = "#34bfa3";
 						var title = e['title'].replace(/ /g, '%20');
 						var row = (n.row).toString().slice(-1);
+
 						//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
 						return '<a href="<?= site_url() . "admin/categories/update_result/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-							'<a onclick=optionDialog(' + e['id'] + ') data-toggle="modal" data-target="#modal_option" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Move/Duplicate"><i class="la la-copy"></i></a>' +
-							'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-globe"></i></a>' +
+							'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
 							'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+					}
+				}, {
+					targets: 0,
+					render: function(a, t, e, n) {
+						var $select = $("<select onchange= change_priority(" + e['id'] + ",this.value)></select>", {
+							"id": "priority" + e['id'],
+						});
+						for (var i = 0; i <= 250; i++) {
+							var $option = $("<option></option>", {
+								"text": i,
+								"value": i
+							});
+							if (searchArray(i, obj)) {
+								$option.attr('disabled', 'disabled');
+								$option.attr('style', 'background-color:#99ff99');
+							}
+							if (i == e['priority']) {
+								$option.attr("selected", "selected")
+							}
+							$select.append($option);
+						}
+
+						return e['priority'] + '&emsp;' + $select.prop("outerHTML")
 					}
 				}, {
 					targets: 5,
@@ -485,6 +370,7 @@ $this->load->view('admin_panel/templates/close_html');
 	}
 
 	jQuery(document).ready(function() {
+		get_links_priority();
 		DatatablesDataSourceAjaxServer.init();
 	});
 </script>
@@ -492,5 +378,5 @@ $this->load->view('admin_panel/templates/close_html');
 <!-- Sidemenu class -->
 <script>
 	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-results-links").addClass("m-menu__item  m-menu__item--active");
+	$("#submenu-results-fields").addClass("m-menu__item  m-menu__item--active");
 </script>

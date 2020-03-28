@@ -48,7 +48,7 @@ $lang['deactivate_current_user_unsuccessful'] = 'You cannot De-Activate your sel
 
 // Login / Logout
 $lang['login_successful'] = 'Logged In Successfully';
-$lang['login_unsuccessful'] = 'Incorrect Skearch ID or Password';
+$lang['login_unsuccessful'] = 'Incorrect Credentials';
 $lang['login_unsuccessful_not_active'] = 'Account is inactive';
 $lang['login_timeout'] = 'Temporarily Locked Out.  Try again later.';
 $lang['logout_successful'] = 'Logged Out Successfully';

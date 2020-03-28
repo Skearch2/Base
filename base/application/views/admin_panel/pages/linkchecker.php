@@ -142,8 +142,12 @@ $this->load->view('admin_panel/templates/close_html');
                 url: '<?= site_url('admin/linkchecker/remove/id/'); ?>' + id,
                 type: 'UPDATE',
                 success: function(data, status) {
-                    swal("Success!", "The link has been removed.", "success")
-                    $("#" + id).remove();
+                    if (data == -1) {
+                        swal("Not Allowed!", "You have no permission.", "warning")
+                    } else {
+                        swal("Success!", "The link has been removed.", "success")
+                        $("#" + id).remove();
+                    }
                 },
                 error: function(xhr, status, error) {
                     swal("Error!", "Unable to remove the link.", "error")
@@ -170,8 +174,12 @@ $this->load->view('admin_panel/templates/close_html');
                 url: '<?= site_url('admin/categories/delete_result_listing/'); ?>' + id,
                 type: 'DELETE',
                 success: function(data, status) {
-                    swal("Success!", "The link has been deleted.", "success")
-                    $("#" + id).remove();
+                    if (data == -1) {
+                        swal("Not Allowed!", "You have no permission.", "warning")
+                    } else {
+                        swal("Success!", "The link has been deleted.", "success")
+                        $("#" + id).remove();
+                    }
                 },
                 error: function(xhr, status, error) {
                     swal("Error!", "Unable to delete the link.", "error")
@@ -189,9 +197,13 @@ $this->load->view('admin_panel/templates/close_html');
                 if (status == 0) {
                     document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
                     document.getElementById("tablerow" + row).innerHTML = "Off";
-                } else {
+                } else if (status == 1) {
                     document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
                     document.getElementById("tablerow" + row).innerHTML = "Active";
+                }
+                // if the user has no access to toggle link status
+                else if (data == -1) {
+                    toastr.warning("", "You have no permission.");
                 }
             },
             error: function(xhr, status, error) {

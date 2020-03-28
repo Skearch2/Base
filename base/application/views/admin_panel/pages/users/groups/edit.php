@@ -62,72 +62,47 @@ $this->load->view('admin_panel/templates/subheader');
 										<textarea class="form-control m-input" name="description" rows="3"><?= set_value('description', $description) ?></textarea>
 									</div>
 								</div>
+								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
 										<h3 class="m-form__section">2. Permissions</h3>
 									</div>
 								</div>
-								<div class="m-form__group form-group row">
-									<label class="col-2 col-form-label">Checkboxes</label>
-									<div class="col-9">
-										<div class="m-checkbox-list">
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 1
-												<span></span>
-											</label>
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 2
-												<span></span>
-											</label>
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 3
-												<span></span>
-											</label>
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 4
-												<span></span>
-											</label>
-										</div>
-									</div>
+								<div class="form-group m-form__group row">
+									<ul class="list-group col-9" style="margin:auto">
+										<?php foreach ($group_permissions as $acl) : ?>
+											<li class="list-group-item"><?php if ($this->ion_auth_acl->has_permission($acl['key'], $group_permissions)) : ?><i style="color:green" class="la la-check"></i><?php else : ?><i style="color:red" class="la la-close"></i><?php endif; ?>&emsp;<?= $acl['name']; ?></li>
+										<?php endforeach; ?>
+									</ul>
 								</div>
-								<div class="m-form__group form-group row">
-									<label class="col-2 col-form-label">Checkboxes</label>
-									<div class="col-9">
-										<div class="m-checkbox-list">
-											<label class="m-checkbox m-checkbox--success">
-												<input type="checkbox"> Success state
-												<span></span>
-											</label>
-											<label class="m-checkbox m-checkbox--brand">
-												<input type="checkbox"> Brand state
-												<span></span>
-											</label>
-											<label class="m-checkbox m-checkbox--primary">
-												<input type="checkbox"> Primary state
-												<span></span>
-											</label>
-										</div>
-										<span class="m-form__help">Some help text goes here</span>
-									</div>
-								</div>
-								<div class="m-form__group form-group row">
-									<label class="col-2 col-form-label">Inline Checkboxes</label>
-									<div class="col-9">
-										<div class="m-checkbox-inline">
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 1
-												<span></span>
-											</label>
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 2
-												<span></span>
-											</label>
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 3
-												<span></span>
-											</label>
-										</div>
-										<span class="m-form__help">Some help text goes here</span>
+								<div class="form-group m-form__group row">
+									<div class="col-9" style="margin:auto">
+										<table class="table table-striped m-table">
+											<thead>
+												<tr>
+													<th>Permission</th>
+													<th>Allow</th>
+													<th>Deny</th>
+													<th>Ignore</th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php if ($permissions) : ?>
+													<?php foreach ($permissions as $k => $v) : ?>
+														<tr>
+															<td><?= $v['name']; ?></td>
+															<td><?= form_radio("perm_{$v['id']}", '1', set_radio("perm_{$v['id']}", '1', (array_key_exists($v['key'], $group_permissions) && $group_permissions[$v['key']]['value'] === TRUE) ? TRUE : FALSE)); ?></td>
+															<td><?= form_radio("perm_{$v['id']}", '0', set_radio("perm_{$v['id']}", '0', (array_key_exists($v['key'], $group_permissions) && $group_permissions[$v['key']]['value'] != TRUE) ? TRUE : FALSE)); ?></td>
+															<td><?= form_radio("perm_{$v['id']}", 'X', set_radio("perm_{$v['id']}", 'X', (!array_key_exists($v['key'], $group_permissions)) ? TRUE : FALSE)); ?></td>
+														</tr>
+													<?php endforeach; ?>
+												<?php else : ?>
+													<tr>
+														<td colspan="4">There are currently no permissions to manage, please add some permissions</td>
+													</tr>
+												<?php endif; ?>
+											</tbody>
+										</table>
 									</div>
 								</div>
 							</div>

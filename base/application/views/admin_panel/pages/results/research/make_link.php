@@ -105,8 +105,8 @@ $this->load->view('admin_panel/templates/subheader');
 									<div class="col-7">
 										<select class="form-control" name="field_id" onchange="updatePriority(this.value)" required>
 											<option selected value="<?= $field['id'] ?>"><?= $field['title'] ?></option>
-											<?php foreach ($fields as $field) { ?>
-												<option value="<?= $field->id ?> <?= set_select("field", $field->id) ?>"><?= $field->title ?></option>
+											<?php foreach ($fields as $f) { ?>
+												<option value="<?= $f->id ?> <?= set_select("field", $f->id) ?>" <?= ($field['id'] == $f->id) ? "selected" : "" ?>><?= $f->title ?></option>
 											<?php } ?>
 										</select>
 									</div>
@@ -193,26 +193,8 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-	jQuery(document).ready(function() {
-		Dashboard.init(); // init metronic core componets
-		toastr.options = {
-			"closeButton": true,
-			"debug": false,
-			"positionClass": "toast-bottom-right",
-			"onclick": null,
-			"showDuration": "500",
-			"hideDuration": "500",
-			"timeOut": "1500",
-			"extendedTimeOut": "1000",
-			"showEasing": "swing",
-			"hideEasing": "linear",
-			"showMethod": "fadeIn",
-			"hideMethod": "fadeOut"
-		};
-	});
-
-	$("#smenu_data").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	//$( "#priorities" ).prop( "disabled", true );
+	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-results-research").addClass("m-menu__item  m-menu__item--active");
 
 	function updatePriority(id) {
 		toastr.info("", "Updating Priority...");

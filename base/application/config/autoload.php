@@ -69,7 +69,7 @@ $autoload['packages'] = array();
  *		database
  */
 
-$autoload['libraries'] = array('globals', 'form_validation', 'session', 'ion_auth', 'database', 'email', 'curl', 'parser');
+$autoload['libraries'] = array('globals', 'form_validation', 'session', 'ion_auth', 'ion_auth_acl', 'database', 'email', 'curl', 'parser');
 
 
 /*

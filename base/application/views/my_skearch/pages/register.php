@@ -30,9 +30,9 @@ $this->load->view('my_skearch/templates/head');
 						<fieldset class="m-login__form m-form">
 							<div class="m-login__form-action">
 								<div class="m-login__desc">Select the type of user registeration and fill the fields:</div>
-								<button id="m_signup_user" type="button" onclick="show_form_user()" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn <?= $is_regular ? 'active' : '' ?>">User</button>
+								<button id="m_signup_user" type="button" onclick="showFormUser()" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn <?= $is_regular ? 'active' : '' ?>">User</button>
 								&nbsp;
-								<button id="m_signup_brand" type="button" onclick="show_form_brand()" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn <?= !$is_regular ? 'active' : '' ?>">Brand</button>
+								<button id="m_signup_brand" type="button" onclick="showFormBrand()" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn <?= !$is_regular ? 'active' : '' ?>">Brand</button>
 							</div>
 						</fieldset>
 						<?= form_open('', 'onsubmit="unMaskFields()"'); ?>
@@ -47,25 +47,27 @@ $this->load->view('my_skearch/templates/head');
 									<input class="form-control m-input" type="text" placeholder="Last Name" name="lastname" value="<?= set_value('lastname'); ?>">
 								</div>
 								<div class="form-group m-form__group row">
+									Gender
 									<select class="form-control m-input" id="dropdown" name="gender" style="padding:0.9em;">
-										<option value="<?= set_value('gender'); ?>" selected disabled hidden><?php echo ((set_value('gender') !== "") ? ucfirst(set_value('gender')) : 'Gender'); ?></option>
-										<option value="male">Male</option>
-										<option value="female">Female</option>
+										<option value="" <?= set_select('gender', '', TRUE) ?>>Select</option>
+										<option value="male" <?= set_select('gender', 'male') ?>>Male</option>
+										<option value="female" <?= set_select('gender', 'female') ?>>Female</option>
 									</select>
 								</div>
 								<div class="form-group m-form__group row">
+									Age Group
 									<select class="form-control m-input" id="dropdown" name="age_group" style="padding:0.9em;">
-										<option value="<?= set_value('age_group'); ?>" selected disabled hidden><?php echo ((set_value('age_group') !== "") ? set_value('age_group') : 'Age Group'); ?></option>
-										<option value="1-17">1-17</option>
-										<option value="18-22">18-22</option>
-										<option value="23-30">23-30</option>
-										<option value="31-50">31-50</option>
-										<option value="51+">51+</option>
+										<option value="" <?= set_select('age_group', '', TRUE) ?>>Select</option>
+										<option value="1-17" <?= set_select('age_group', '1-17') ?>>1-17</option>
+										<option value="18-22" <?= set_select('age_group', '18-22') ?>>18-22</option>
+										<option value="23-30" <?= set_select('age_group', '23-30') ?>>23-30</option>
+										<option value="31-50" <?= set_select('age_group', '31-50') ?>>31-50</option>
+										<option value="51+" <?= set_select('age_group', '51+') ?>>51+</option>
 									</select>
 								</div>
 								<div>Login Details:</div>
 								<div class="form-group m-form__group">
-									<input class="form-control m-input" type="text" placeholder="Username" name="username" value="<?= set_value('username'); ?>">
+									<input class="form-control m-input" type="text" placeholder="Skearch ID" name="skearch_id" value="<?= set_value('skearch_id'); ?>">
 								</div>
 								<div class="form-group m-form__group">
 									<input class="form-control m-input" type="password" placeholder="Password" name="password">
@@ -79,7 +81,7 @@ $this->load->view('my_skearch/templates/head');
 								<div class="row form-group m-form__group m-login__form-sub">
 									<div class="col m--align-left">
 										<label class="m-checkbox m-checkbox--focus">
-											<input type="checkbox" name="agree" <?php echo ($this->input->post('agree')) ? "checked" : ""; ?>>I Agree to the <a href="https://www.skearch.io/tos" target="_blank" class="m-link m-link--focus"><b>terms of service</b></a> and <a href="https://www.skearch.io/privacy" target="_blank" class="m-link m-link--focus"><b>privacy policy</b></a>.
+											<input type="checkbox" name="agree" <?= ($this->input->post('agree')) ? "checked" : ""; ?>>I Agree to the <a href="https://www.skearch.io/tos" target="_blank" class="m-link m-link--focus"><b>terms of service</b></a> and <a href="https://www.skearch.io/privacy" target="_blank" class="m-link m-link--focus"><b>privacy policy</b></a>.
 											<span></span>
 										</label>
 										<span class="m-form__help"></span>
@@ -115,8 +117,9 @@ $this->load->view('my_skearch/templates/head');
 	</div>
 	</div>
 
+	<!--begin::Page Scripts -->
 	<script>
-		function show_form_user() {
+		function showFormUser() {
 			var formUser = document.getElementById("m-login__form m-form__user");
 			var formBrand = document.getElementById("m-login__form m-form__brand");
 
@@ -128,7 +131,7 @@ $this->load->view('my_skearch/templates/head');
 			$("#m_signup_brand").removeClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn active').addClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn');
 		}
 
-		function show_form_brand() {
+		function showFormBrand() {
 			var formUser = document.getElementById("m-login__form m-form__user");
 			var formBrand = document.getElementById("m-login__form m-form__brand");
 
@@ -144,10 +147,10 @@ $this->load->view('my_skearch/templates/head');
 			$('#phone').unmask();
 		}
 	</script>
+	<!--end::Page Scripts -->
 
-	<?php
+</body>
 
-	// Close body and html (contains some javascripts links)
-	$this->load->view('admin_panel/templates/close_html');
+<!-- end::Body -->
 
-	?>
+</html>

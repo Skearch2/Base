@@ -97,14 +97,20 @@ $this->load->view('admin_panel/templates/close_html');
 			type: "warning",
 			confirmButtonClass: "btn btn-danger",
 			confirmButtonText: "Yes, delete it!",
+			showCancelButton: true,
+			timer: 5000
 		}).then(function(e) {
 			if (!e.value) return;
 			$.ajax({
 				url: '<?= site_url('admin/brands/brandleads/delete/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
-					swal("Success!", "The entry has been deleted.", "success")
-					$("#" + id).remove();
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else {
+						swal("Success!", "The entry has been deleted.", "success")
+						$("#" + id).remove();
+					}
 				},
 				error: function(xhr, status, error) {
 					swal("Error!", "Unable to delete the entry.", "error")
@@ -117,6 +123,8 @@ $this->load->view('admin_panel/templates/close_html');
 		init: function() {
 			$("#m_table_1").DataTable({
 				responsive: !0,
+				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
+				rowId: "id",
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,

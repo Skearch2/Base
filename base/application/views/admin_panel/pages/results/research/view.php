@@ -224,7 +224,9 @@ $this->load->view('admin_panel/templates/close_html');
 		init: function() {
 			$("#m_table_1").DataTable({
 				responsive: !0,
+				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
 				rowId: "id",
+				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
 				ajax: "<?= site_url(); ?>admin/results/research/get",
@@ -246,7 +248,7 @@ $this->load->view('admin_panel/templates/close_html');
 					title: "Actions",
 					orderable: !1,
 					render: function(a, t, e, n) {
-						return '<a href="<?= site_url() . "admin/results/research/make_link/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Make Link"><i class="la la-anchor"></i></a>' +
+						return '<a href="<?= site_url() . "admin/results/research/make_link/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Make Link"><i class="la la-link"></i></a>' +
 							'<a onclick=deleteLink(' + e['id'] + ') class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}, {

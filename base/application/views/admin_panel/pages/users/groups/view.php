@@ -112,22 +112,42 @@ $this->load->view('admin_panel/templates/subheader');
 			</div>
 		</div>
 		<div class="m-portlet__body">
-			<?php if ($this->session->flashdata('success') === 1) : ?>
+			<?php if ($this->session->flashdata('create_success') === 1) : ?>
 				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						The group has been created or updated.
+						The group has been created.
 					</div>
 				</div>
-			<?php elseif ($this->session->flashdata('success') === 0) : ?>
+			<?php elseif ($this->session->flashdata('create_success') === 0) : ?>
 				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						Unable to create or update the group.
+						Unable to create the group.
+					</div>
+				</div>
+			<?php endif ?>
+
+			<?php if ($this->session->flashdata('update_success') === 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The group information and pemissions has been updated.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('update_success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to update group information or permissions.
 					</div>
 				</div>
 			<?php endif ?>
@@ -136,7 +156,6 @@ $this->load->view('admin_panel/templates/subheader');
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
-						<th>Group ID</th>
 						<th>Group Name</th>
 						<th>Group Description</th>
 						<th>Actions</th>
@@ -191,8 +210,12 @@ $this->load->view('admin_panel/templates/close_html');
 				url: '<?= site_url('admin/users/group/delete/id/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
-					swal("Success!", "The group has been deleted.", "success")
-					$("#" + id).remove();
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else {
+						swal("Success!", "The group has been deleted.", "success")
+						$("#" + id).remove();
+					}
 				},
 				error: function(xhr, status, error) {
 					swal("Error!", "Unable to delete the group.", "error")
@@ -205,14 +228,13 @@ $this->load->view('admin_panel/templates/close_html');
 		init: function() {
 			$("#m_table_1").DataTable({
 				responsive: !0,
+				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
+				rowId: "id",
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
-				rowId: "id",
 				ajax: "<?= site_url('admin/users/groups/get'); ?>",
 				columns: [{
-					data: "id"
-				}, {
 					data: "name"
 				}, {
 					data: "description"

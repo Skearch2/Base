@@ -48,7 +48,7 @@ $this->load->view('admin_panel/templates/subheader');
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">1. Group Information</h3>
+										<h3 class="m-form__section">Group Information</h3>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -61,74 +61,6 @@ $this->load->view('admin_panel/templates/subheader');
 									<label for="description" class="col-2 col-form-label">Description</label>
 									<div class="col-7">
 										<textarea class="form-control m-input" name="description" rows="3"><?= set_value('description'); ?></textarea>
-									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">2. Permissions</h3>
-									</div>
-								</div>
-								<div class="m-form__group form-group row">
-									<label class="col-2 col-form-label">Checkboxes</label>
-									<div class="col-9">
-										<div class="m-checkbox-list">
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 1
-												<span></span>
-											</label>
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 2
-												<span></span>
-											</label>
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 3
-												<span></span>
-											</label>
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 4
-												<span></span>
-											</label>
-										</div>
-									</div>
-								</div>
-								<div class="m-form__group form-group row">
-									<label class="col-2 col-form-label">Checkboxes</label>
-									<div class="col-9">
-										<div class="m-checkbox-list">
-											<label class="m-checkbox m-checkbox--success">
-												<input type="checkbox"> Success state
-												<span></span>
-											</label>
-											<label class="m-checkbox m-checkbox--brand">
-												<input type="checkbox"> Brand state
-												<span></span>
-											</label>
-											<label class="m-checkbox m-checkbox--primary">
-												<input type="checkbox"> Primary state
-												<span></span>
-											</label>
-										</div>
-										<span class="m-form__help">Some help text goes here</span>
-									</div>
-								</div>
-								<div class="m-form__group form-group row">
-									<label class="col-2 col-form-label">Inline Checkboxes</label>
-									<div class="col-9">
-										<div class="m-checkbox-inline">
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 1
-												<span></span>
-											</label>
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 2
-												<span></span>
-											</label>
-											<label class="m-checkbox">
-												<input type="checkbox"> Option 3
-												<span></span>
-											</label>
-										</div>
-										<span class="m-form__help">Some help text goes here</span>
 									</div>
 								</div>
 							</div>
@@ -181,5 +113,5 @@ $this->load->view('admin_panel/templates/close_html');
 <!-- Sidemenu class -->
 <script>
 	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-users-registered").addClass("m-menu__item  m-menu__item--active");
+	$("#submenu-users-groups").addClass("m-menu__item  m-menu__item--active");
 </script>

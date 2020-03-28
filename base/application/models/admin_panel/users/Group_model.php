@@ -64,13 +64,8 @@ class Group_model extends CI_Model
      * @param int $id ID of the group
      * @return boolean
      */
-    public function update($id)
+    public function update($id, $name, $additional_data)
     {
-        $name = $this->input->post('name');
-        $additional_data = array(
-            'description' => $this->input->post('description')
-        );
-
         $query = $this->ion_auth->update_group($id, $name, $additional_data);
 
         return $query;

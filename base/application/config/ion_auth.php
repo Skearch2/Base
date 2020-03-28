@@ -139,7 +139,10 @@ $config['identity'] = 'username'; /* You can use any unique column in your table
 The values in this column, alongside password, will be used for login purposes
 IMPORTANT: If you are changing it from the default (email),
 update the UNIQUE constraint in your DB */
+$config['min_username_length'] = 5; // Minimum Required Length of Username (not enforced by lib - see note above)
+$config['max_username_length'] = 12; // Maximum Required Length of Username (not enforced by lib - see note above)
 $config['min_password_length'] = 8; // Minimum Required Length of Password (not enforced by lib - see note above)
+$config['max_password_length'] = 15; // Maximum Required Length of Password (not enforced by lib - see note above)
 $config['email_activation'] = true; // Email Activation for registration
 $config['manual_activation'] = false; // Manual Activation for registration
 $config['remember_users'] = true; // Allow users to be remembered and enable auto-login
@@ -222,3 +225,11 @@ $config['message_start_delimiter'] = '<p>'; // Message start delimiter
 $config['message_end_delimiter'] = '</p>'; // Message end delimiter
 $config['error_start_delimiter'] = '<p>'; // Error message start delimiter
 $config['error_end_delimiter'] = '</p>'; // Error message end delimiter
+
+/*
+| -------------------------------------------------------------------------
+| Groups to have access to Admin panel
+| -------------------------------------------------------------------------
+ */
+// Admin = 1, Editor = 2
+$config['staff'] = array(1, 2);
