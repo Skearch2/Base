@@ -35,17 +35,17 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-caption">
 				<div class="m-portlet__head-title">
 					<h3 class="m-portlet__head-text">
-						<?= $title; ?>
+						<?= $sub_title; ?>
 					</h3>
 				</div>
 			</div>
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
 					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/categories/create_result"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+						<a href="<?= site_url("admin/results/link/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
 								<i class="la la-cart-plus"></i>
-								<span>Add Result</span>
+								<span>Add Link</span>
 							</span>
 						</a>
 					</li>
@@ -192,7 +192,7 @@ $this->load->view('admin_panel/templates/close_html');
 		}).then(function(e) {
 			if (!e.value) return;
 			$.ajax({
-				url: '<?= site_url('admin/categories/delete_result_listing/'); ?>' + id,
+				url: '<?= site_url('admin/results/link/delete/id/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
 					swal("Success!", "The link has been deleted.", "success")
@@ -208,7 +208,7 @@ $this->load->view('admin_panel/templates/close_html');
 	//Toggles link active status
 	function toggle(id, row) {
 		$.ajax({
-			url: '<?= site_url('admin/categories/toggle_result/'); ?>' + id,
+			url: '<?= site_url('admin/results/link/toggle/id/'); ?>' + id,
 			type: 'GET',
 			success: function(data, status) {
 				if (data == 0) {
@@ -230,7 +230,7 @@ $this->load->view('admin_panel/templates/close_html');
 	//Toggles link redirection
 	function toggleRedirect(id) {
 		$.ajax({
-			url: '<?= site_url(); ?>admin/categories/toggle_redirect/' + id,
+			url: '<?= site_url('admin/results/link/redirect/id/'); ?>' + id,
 			type: 'GET',
 			success: function(data, status) {
 				if (data == 0) {
@@ -265,7 +265,7 @@ $this->load->view('admin_panel/templates/close_html');
 
 	function get_links_priority() {
 		$.ajax({
-			url: '<?= site_url(); ?>/admin/categories/get_links_priority/' + <?php echo $subcategoryid; ?>,
+			url: '<?= site_url(); ?>/admin/categories/get_links_priority/',
 			type: 'GET',
 			success: function(result) {
 				obj = JSON.parse(result);
@@ -287,21 +287,15 @@ $this->load->view('admin_panel/templates/close_html');
 	}
 
 	var DatatablesDataSourceAjaxServer = {
-		init: function() {
+		init: function(url) {
 			$("#m_table_1").DataTable({
 				responsive: !0,
+				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
 				rowId: "id",
-				order: [
-					[0, 'asc']
-				],
 				searchDelay: 500,
-				lengthMenu: [
-					[50, 100, -1],
-					[50, 100, "ALL"]
-				],
 				processing: !0,
 				serverSide: !1,
-				ajax: "<?= site_url(); ?>/admin/categories/get_result_list/<?= $subcategoryid; ?>/<?= $status; ?>",
+				ajax: "<?= site_url(); ?>admin/results/links/get/status/<?= $status; ?>",
 				columns: [{
 					data: "priority"
 				}, {
@@ -309,7 +303,7 @@ $this->load->view('admin_panel/templates/close_html');
 				}, {
 					data: "description_short"
 				}, {
-					data: "stitle"
+					data: "field"
 				}, {
 					data: "display_url"
 				}, {
@@ -318,47 +312,79 @@ $this->load->view('admin_panel/templates/close_html');
 					data: "Actions"
 				}],
 				columnDefs: [{
-						targets: -1,
-						title: "Actions",
-						orderable: !1,
-						render: function(a, t, e, n) {
-							var redirectVal;
-							if (e['redirect'] == 0) redirectVal = "red";
-							else redirectVal = "#34bfa3";
-							var title = e['title'].replace(/ /g, '%20');
-							var row = (n.row).toString().slice(-1);
-							//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
-							return '<a href="<?= site_url() . "admin/categories/update_result/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-								'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
-								'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
-						}
-					},
-					{
-						targets: 5,
-						render: function(a, t, e, n) {
-							var s = {
-								1: {
-									title: "Active",
-									class: " m-badge--success"
-								},
-								0: {
-									title: "Off",
-									class: " m-badge--danger"
-								}
-							};
-							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
-						}
+					targets: -1,
+					title: "Actions",
+					orderable: !1,
+					render: function(a, t, e, n) {
+						var redirectVal;
+						if (e['redirect'] == 0) redirectVal = "red";
+						else redirectVal = "#34bfa3";
+						var title = e['title'].replace(/ /g, '%20');
+						var row = (n.row).toString().slice(-1);
+						//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
+						return '<a href="<?= site_url() . "admin/categories/update_result/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+							'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
+							'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
-				]
+				}, {
+					targets: 0,
+					render: function(a, t, e, n) {
+						var $select = $("<select onchange= change_priority(" + e['id'] + ",this.value)></select>", {
+							"id": "priority" + e['id'],
+						});
+						for (var i = 0; i <= 250; i++) {
+							var $option = $("<option></option>", {
+								"text": i,
+								"value": i
+							});
+							if (searchArray(i, obj)) {
+								$option.attr('disabled', 'disabled');
+								$option.attr('style', 'background-color:#99ff99');
+							}
+							if (i == e['priority']) {
+								$option.attr("selected", "selected")
+							}
+							$select.append($option);
+						}
+
+						return e['priority'] + '&emsp;' + $select.prop("outerHTML")
+					}
+				}, {
+					targets: 5,
+					render: function(a, t, e, n) {
+						var s = {
+							1: {
+								title: "Active",
+								class: " m-badge--success"
+							},
+							0: {
+								title: "Off",
+								class: " m-badge--danger"
+							}
+						};
+						return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
+					}
+				}]
 			})
 		}
 	}
 
 	jQuery(document).ready(function() {
-		DatatablesDataSourceAjaxServer.init();
+		var url
+
+		<?php if (isset($field_id)) : ?>
+			url = "<?= site_url(); ?>admin/results/links/get/field/id/<?= $field_id; ?>"
+			get_links_priority();
+		<?php elseif (isset($status)) : ?>
+			url = "<?= site_url(); ?>admin/results/links/get/status/<?= $status; ?>"
+		<?php endif ?>
+
+		DatatablesDataSourceAjaxServer.init(url);
 	});
 </script>
 
+<!-- Sidemenu class -->
 <script>
-	$("#smenu_data").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-results-fields").addClass("m-menu__item  m-menu__item--active");
 </script>

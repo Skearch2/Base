@@ -289,18 +289,10 @@ $this->load->view('admin_panel/templates/close_html');
 	var DatatablesDataSourceAjaxServer = {
 		init: function() {
 			$("#m_table_1").DataTable({
-				responsive: !0,
+				responsive: 1,
 				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
 				rowId: "id",
-				order: [
-					[0, 'asc']
-				],
-				searchDelay: 500,
-				lengthMenu: [
-					[50, 100, -1],
-					[50, 100, "ALL"]
-				],
-				processing: !0,
+				processing: 1,
 				serverSide: !1,
 				ajax: "<?= site_url(); ?>/admin/categories/get_result_list/<?= $subcategoryid; ?>/<?= $status; ?>",
 				columns: [{

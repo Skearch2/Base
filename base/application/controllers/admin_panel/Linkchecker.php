@@ -2,11 +2,11 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * File:    ~/application/controller/linkchecker.php
+ * File:    ~/application/controller/admin_panel/linkchecker.php
  *
  * @package		Skearch
  * @author		Zaawar Ejaz <zaawar@yahoo.com>
- * @copyright	Copyright (c) 2019
+ * @copyright	Copyright (c) 2020
  * @version		2.0
  */
 class Linkchecker extends MY_Controller
@@ -15,10 +15,17 @@ class Linkchecker extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		if (!$this->ion_auth->is_admin()) {
-			// redirect non-admin to the login page
-			redirect('admin/auth/login', 'refresh');
+
+		if (!$this->ion_auth->logged_in()) {
+			// redirect to the admin login page
+			redirect('admin/auth/login');
 		}
+
+		if (!$this->ion_auth->in_group($this->config->item('staff', 'ion_auth'))) {
+			// redirect to the admin login page
+			redirect('admin/auth/login');
+		}
+
 		$this->load->model('admin_panel/Linkcheck_model_admin', 'linkcheck_model');
 	}
 
@@ -29,18 +36,20 @@ class Linkchecker extends MY_Controller
 	 */
 	public function get()
 	{
-		$urls = $this->linkcheck_model->get();
-		$total_urls = sizeof($urls);
-		$result = array(
-			'iTotalRecords' => $total_urls,
-			'iTotalDisplayRecords' => $total_urls,
-			'sEcho' => 0,
-			'sColumns' => "",
-			'aaData' => $urls
-		);
-		$this->output
-			->set_content_type('application/json')
-			->set_output(json_encode($result));
+		if ($this->ion_auth_acl->has_permission('linkchecker_get') or $this->ion_auth->is_admin()) {
+			$urls = $this->linkcheck_model->get();
+			$total_urls = sizeof($urls);
+			$result = array(
+				'iTotalRecords' => $total_urls,
+				'iTotalDisplayRecords' => $total_urls,
+				'sEcho' => 0,
+				'sColumns' => "",
+				'aaData' => $urls
+			);
+			$this->output
+				->set_content_type('application/json')
+				->set_output(json_encode($result));
+		}
 	}
 
 	/**
@@ -50,15 +59,21 @@ class Linkchecker extends MY_Controller
 	 */
 	public function index()
 	{
-		if (!file_exists(APPPATH . '/views/admin_panel/pages/linkchecker.php')) {
-			show_404();
+		if (!$this->ion_auth_acl->has_permission('linkchecker_get') && !$this->ion_auth->is_admin()) {
+			// set page title
+			$data['title'] = ucwords('access denied');
+			$this->load->view('admin_panel/errors/error_403', $data);
+		} else {
+			if (!file_exists(APPPATH . '/views/admin_panel/pages/linkchecker.php')) {
+				show_404();
+			}
+
+			$data['title'] = ucfirst("Link Checker");
+			$data['status'] = "active"; // Show
+
+			// Load page content
+			$this->load->view('admin_panel/pages/linkchecker', $data);
 		}
-
-		$data['title'] = ucfirst("Link Checker");
-		$data['status'] = "active"; // Show
-
-		// Load page content
-		$this->load->view('admin_panel/pages/linkchecker', $data);
 	}
 
 	/**
@@ -69,12 +84,16 @@ class Linkchecker extends MY_Controller
 	 */
 	public function remove($id)
 	{
-		$action = $this->linkcheck_model->remove($id);
-
-		if ($action) {
-			return true;
+		if (!$this->ion_auth_acl->has_permission('linkchecker_remove') && !$this->ion_auth->is_admin()) {
+			echo json_encode(-1);
 		} else {
-			return false;
+			$action = $this->linkcheck_model->remove($id);
+
+			if ($action) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 
@@ -113,13 +132,17 @@ class Linkchecker extends MY_Controller
 	 */
 	public function update_urls_status()
 	{
-		$urls = $this->linkcheck_model->get_urls();
-		$totalUrls =  count($urls);
-		foreach ($urls as $url) {
-			$_SESSION["remainingUrls"] = $totalUrls--;
-			$status_code = $this->run_curl_check($url->www);
-			$this->linkcheck_model->update_http_status($url->id, $status_code);
-			if ($totalUrls <= 4670) break;
+		if (!$this->ion_auth_acl->has_permission('linkchecker_update') && !$this->ion_auth->is_admin()) {
+			echo json_encode(-1);
+		} else {
+			$urls = $this->linkcheck_model->get_urls();
+			$totalUrls =  count($urls);
+			foreach ($urls as $url) {
+				$_SESSION["remainingUrls"] = $totalUrls--;
+				$status_code = $this->run_curl_check($url->www);
+				$this->linkcheck_model->update_http_status($url->id, $status_code);
+				if ($totalUrls <= 4670) break;
+			}
 		}
 	}
 }

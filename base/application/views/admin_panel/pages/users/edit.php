@@ -96,9 +96,8 @@ $this->load->view('admin_panel/templates/subheader');
 									<label for="gender" class="col-2 col-form-label">Gender<font color="red"><sup>*</sup></font></label>
 									<div class="col-3">
 										<select class="form-control m-input" id="exampleSelect1" name="gender">
-											<option value="<?= $gender ?>" <?= set_select('gender', $gender, TRUE) ?>><?= $gender ?></option>
-											<option value="male" <?= set_select('gender', 'male') ?>>Male</option>
-											<option value="female" <?= set_select('gender', 'female') ?>>Female</option>
+											<option value="male" <?= set_select('gender', 'male') ?> <?= (strcmp($gender, "male") == 0) ? "selected" : "" ?>>Male</option>
+											<option value="female" <?= set_select('gender', 'female') ?> <?= (strcmp($gender, "female") == 0) ? "selected" : "" ?>>Female</option>
 										</select>
 									</div>
 								</div>
@@ -106,12 +105,11 @@ $this->load->view('admin_panel/templates/subheader');
 									<label for="age_group" class="col-2 col-form-label">Age Group<font color="red"><sup>*</sup></font></label>
 									<div class="col-3">
 										<select class="form-control m-input" id="exampleSelect1" name="age_group">
-											<option value="<?= $age_group ?>" <?= set_select('age_group', $age_group, TRUE) ?>><?= $age_group ?></option>
-											<option value="1-17" <?= set_select('age_group', '1-17') ?>>1-17</option>
-											<option value="18-22" <?= set_select('age_group', '18-22') ?>>18-22</option>
-											<option value="23-30" <?= set_select('age_group', '23-30') ?>>23-30</option>
-											<option value="31-50" <?= set_select('age_group', '31-50') ?>>31-50</option>
-											<option value="51+" <?= set_select('age_group', '51+') ?>>51+</option>
+											<option value="1-17" <?= set_select('age_group', '1-17') ?> <?= (strcmp($age_group, "1-17") == 0) ? "selected" : "" ?>>1-17</option>
+											<option value="18-22" <?= set_select('age_group', '18-22') ?> <?= (strcmp($age_group, "18-22") == 0) ? "selected" : "" ?>>18-22</option>
+											<option value="23-30" <?= set_select('age_group', '23-30') ?> <?= (strcmp($age_group, "23-30") == 0) ? "selected" : "" ?>>23-30</option>
+											<option value="31-50" <?= set_select('age_group', '31-50') ?> <?= (strcmp($age_group, "31-50") == 0) ? "selected" : "" ?>>31-50</option>
+											<option value="51+" <?= set_select('age_group', '51+') ?> <?= (strcmp($age_group, "50+") == 0) ? "selected" : "" ?>>51+</option>
 										</select>
 									</div>
 								</div>
@@ -166,9 +164,8 @@ $this->load->view('admin_panel/templates/subheader');
 										<label for="state" class="col-2 col-form-label">State</label>
 										<div class="col-2">
 											<select class="form-control m-input" id="exampleSelect1" name="state">
-												<option value="<?= $state ?>" <?= set_select("state", $state, TRUE) ?>><?= $state ?></option>
-												<?php foreach ($states as $state) : ?>
-													<option value="<?= $state->statecode; ?>" <?= set_select("state", $state->statecode) ?>><?= $state->statecode; ?></option>
+												<?php foreach ($states as $s) : ?>
+													<option value="<?= $s->statecode; ?>" <?= set_select("state", $s->statecode) ?> <?= (strcmp($state, $s->statecode) == 0) ? "selected" : "" ?>><?= $s->statecode; ?></option>
 												<?php endforeach; ?>
 											</select>
 										</div>
@@ -177,9 +174,8 @@ $this->load->view('admin_panel/templates/subheader');
 										<label for="country" class="col-2 col-form-label">Country</label>
 										<div class="col-3">
 											<select class="form-control m-input" id="exampleSelect1" name="country">
-												<option value="<?= $country ?>" <?= set_select("country", $country, TRUE) ?>><?= $country ?></option>
-												<?php foreach ($countries as $country) : ?>
-													<option value="<?= $country->country_name ?>" <?= set_select("country", $country->country_name) ?>><?= $country->country_name; ?></option>
+												<?php foreach ($countries as $c) : ?>
+													<option value="<?= $c->country_name ?>" <?= set_select("country", $c->country_name) ?> <?= (strcmp($country, $c->country_name) == 0) ? "selected" : "" ?>><?= $c->country_name; ?></option>
 												<?php endforeach; ?>
 											</select>
 										</div>
@@ -201,9 +197,8 @@ $this->load->view('admin_panel/templates/subheader');
 									<label for="group" class="col-2 col-form-label">Group<font color="red"><sup>*</sup></font></label>
 									<div class="col-3">
 										<select class="form-control m-input" id="exampleSelect1" name="group">
-											<option value="<?= $group->id ?>" <?= set_select("group", $group->id, TRUE) ?>><?= $group->name ?></option>
 											<?php foreach ($groups as $grp) : ?>
-												<option value="<?= $grp->id ?>" <?= set_select("group", $grp->id) ?>><?= $grp->name; ?></option>
+												<option value="<?= $grp->id ?>" <?= set_select("group", $grp->id) ?> <?= ($group->id == $grp->id) ? "selected" : "" ?>><?= $grp->name; ?></option>
 											<?php endforeach; ?>
 										</select>
 									</div>

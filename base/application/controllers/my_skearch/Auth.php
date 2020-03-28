@@ -239,7 +239,7 @@ class Auth extends MY_Controller
 
                 redirect();
             } else {
-                $this->session->set_flashdata('alert', "Incorrect Skearch ID or password, please try again.");
+                //$this->session->set_flashdata('alert', "Incorrect Skearch ID or password, please try again.");
                 redirect('myskearch/auth/login');
             }
         }

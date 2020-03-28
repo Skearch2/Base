@@ -36,7 +36,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-caption">
 				<div class="m-portlet__head-title">
 					<h3 class="m-portlet__head-text">
-						<?= $subTitle; ?>
+						<?= $sub_title; ?>
 					</h3>
 				</div>
 			</div>
@@ -44,7 +44,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
 					<li class="m-portlet__nav-item">
-						<input type="text" onkeyup="search_adlink(this.value)" class="form-control" placeholder="Search..." name="query">
+						<input type="text" onkeyup="search(this.value)" class="form-control" placeholder="Search..." name="query">
 					</li>
 					<li class="m-portlet__nav-item">
 						<a href="<?= site_url("admin/categories/create_result"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
@@ -233,7 +233,7 @@ $this->load->view('admin_panel/templates/close_html');
 	// move of duplicate option dialog
 	function optionDialog(id) {
 		$.ajax({
-			url: '<?= site_url(); ?>admin/results/links/get/id/' + id,
+			url: '<?= site_url(); ?>admin/results/link/get/id/' + id,
 			type: 'GET',
 			contentType: 'json',
 			success: function(data, status) {
@@ -259,9 +259,9 @@ $this->load->view('admin_panel/templates/close_html');
 		var option = $("[name=option-select]:checked").val();
 		var url;
 		if (option == 1) {
-			url = '<?= site_url(); ?>admin/results/links/duplicate/id/' + id + '/field/' + field_id + '/priority/' + priority;
+			url = '<?= site_url(); ?>admin/results/link/duplicate/id/' + id + '/field/' + field_id + '/priority/' + priority;
 		} else if (option == 2) {
-			url = '<?= site_url(); ?>admin/results/links/move/id/' + id + '/field/' + field_id + '/priority/' + priority;
+			url = '<?= site_url(); ?>admin/results/link/move/id/' + id + '/field/' + field_id + '/priority/' + priority;
 		}
 		$.ajax({
 			url: url,
@@ -397,14 +397,14 @@ $this->load->view('admin_panel/templates/close_html');
 		});
 	}
 
-	function search_adlink(title) {
+	function search(keywords) {
 
-		var baseUrl = <?= json_encode(BASE_URL); ?>;
+		var baseUrl = "<?= site_url() ?>"
 
-		// $('#m_table_1').fadeOut("slow");
-		if (title === "") $('#m_table_1').DataTable().clear().draw();
-		else $('#m_table_1').DataTable().ajax.url(baseUrl + "admin/categories/search_adlink/" + title).load();
-		//$('#m_table_1').fadeIn("slow");
+		if (keywords === "") $('#m_table_1').DataTable().clear().draw();
+		else $('#m_table_1').DataTable().ajax.url("<?= site_url() ?>admin/results/links/get/keywords/" + keywords).load();
+
+
 	}
 
 	function searchArray(key, array) {
@@ -422,17 +422,9 @@ $this->load->view('admin_panel/templates/close_html');
 				responsive: !0,
 				bFilter: false,
 				rowId: "id",
-				order: [
-					[0, 'asc']
-				],
 				searchDelay: 500,
-				lengthMenu: [
-					[50, 100, -1],
-					[50, 100, "ALL"]
-				],
 				processing: !0,
 				serverSide: !1,
-				ajax: "",
 				columns: [{
 					data: "priority"
 				}, {

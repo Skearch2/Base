@@ -210,8 +210,12 @@ $this->load->view('admin_panel/templates/close_html');
 				url: '<?= site_url('admin/users/group/delete/id/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
-					swal("Success!", "The group has been deleted.", "success")
-					$("#" + id).remove();
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else {
+						swal("Success!", "The group has been deleted.", "success")
+						$("#" + id).remove();
+					}
 				},
 				error: function(xhr, status, error) {
 					swal("Error!", "Unable to delete the group.", "error")
@@ -224,10 +228,11 @@ $this->load->view('admin_panel/templates/close_html');
 		init: function() {
 			$("#m_table_1").DataTable({
 				responsive: !0,
+				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
+				rowId: "id",
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
-				rowId: "id",
 				ajax: "<?= site_url('admin/users/groups/get'); ?>",
 				columns: [{
 					data: "name"

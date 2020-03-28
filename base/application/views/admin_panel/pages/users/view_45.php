@@ -290,8 +290,12 @@ $this->load->view('admin_panel/templates/close_html');
 				url: '<?= site_url('admin/user/delete/id/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
-					swal("Success!", "The user has been deleted.", "success")
-					$("#" + id).remove();
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else {
+						swal("Success!", "The user has been deleted.", "success")
+						$("#" + id).remove();
+					}
 				},
 				error: function(xhr, status, error) {
 					swal("Error!", "Unable to delete the user.", "error")
@@ -317,7 +321,11 @@ $this->load->view('admin_panel/templates/close_html');
 				url: '<?= site_url('admin/user/reset/id/'); ?>' + id,
 				type: 'GET',
 				success: function(data, status) {
-					swal("Success!", "A password reset link has been sent to the user.", "success")
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else {
+						swal("Success!", "A password reset link has been sent to the user.", "success")
+					}
 				},
 				error: function(xhr, status, error) {
 					swal("Error!", "Unable to reset user password.", "error")
@@ -340,7 +348,13 @@ $this->load->view('admin_panel/templates/close_html');
 					document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
 					document.getElementById("tablerow" + row).innerHTML = "Active";
 					toastr.success("", "Status updated.");
-				} else if (data == -1) {
+				}
+				// if the user has no access to toggle user status
+				else if (data == -1) {
+					toastr.warning("", "You have no permission.");
+				}
+				// if the user status being toggled is in admin group
+				else if (data == -2) {
 					toastr.warning("", "Admin status cannot be changed.");
 				}
 			},
@@ -354,10 +368,11 @@ $this->load->view('admin_panel/templates/close_html');
 		init: function() {
 			$("#m_table_1").DataTable({
 				responsive: !0,
+				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
+				rowId: "id",
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
-				rowId: "id",
 				ajax: "<?= site_url("admin/users/get/group/id/$group"); ?>",
 				columns: [{
 					data: "username"

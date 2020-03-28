@@ -216,28 +216,28 @@ class Category_model_admin extends CI_Model
     return $query->result();
   }
 
-  public function create_category(
-    $title,
-    $enabled,
-    $umbrella_name,
-    $home_display,
-    $description_short,
-    $description,
-    $keywords,
-    $featured
-  ) {
-    $data = array(
-      'title' => $title,
-      'enabled' => $enabled,
-      'umbrella_name' => $umbrella_name,
-      'home_display' => $home_display,
-      'description_short' => $description_short,
-      'description' => $description,
-      'keywords' => $keywords,
-      'featured' => $featured
-    );
-    $this->db->insert('skearch_categories', $data);
-  }
+  // public function create_category(
+  //   $title,
+  //   $enabled,
+  //   $umbrella_name,
+  //   $home_display,
+  //   $description_short,
+  //   $description,
+  //   $keywords,
+  //   $featured
+  // ) {
+  //   $data = array(
+  //     'title' => $title,
+  //     'enabled' => $enabled,
+  //     'umbrella_name' => $umbrella_name,
+  //     'home_display' => $home_display,
+  //     'description_short' => $description_short,
+  //     'description' => $description,
+  //     'keywords' => $keywords,
+  //     'featured' => $featured
+  //   );
+  //   $this->db->insert('skearch_categories', $data);
+  // }
 
   public function create_subcategory(
     $title,

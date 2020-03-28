@@ -18,8 +18,13 @@ class Groups extends MY_Controller
     {
         parent::__construct();
 
-        if (!$this->ion_auth->is_admin()) {
-            // redirect them to the login page
+        if (!$this->ion_auth->logged_in()) {
+            // redirect to the admin login page
+            redirect('admin/auth/login');
+        }
+
+        if (!$this->ion_auth->in_group($this->config->item('staff', 'ion_auth'))) {
+            // redirect to the admin login page
             redirect('admin/auth/login');
         }
 
@@ -33,24 +38,30 @@ class Groups extends MY_Controller
      */
     public function create()
     {
-
-        $this->form_validation->set_rules('name', 'Name', 'required|trim|min_length[5]|is_unique[skearch_groups.name]');
-        $this->form_validation->set_rules('description', 'Description', 'trim|min_length[8]');
-
-        if ($this->form_validation->run() === false) {
-
-            $data['title'] = ucwords('create user group');
-            $this->load->view('admin_panel/pages/users/groups/create', $data);
+        if (!$this->ion_auth_acl->has_permission('groups_get') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $create = $this->Group->create_user_group();
+            $this->form_validation->set_rules('name', 'Name', 'required|trim|min_length[5]|is_unique[skearch_groups.name]');
+            $this->form_validation->set_rules('description', 'Description', 'trim|min_length[8]');
 
-            if ($create) {
-                $this->session->set_flashdata('create_success', 1);
+            if ($this->form_validation->run() === false) {
+
+                $data['title'] = ucwords('create user group');
+                $this->load->view('admin_panel/pages/users/groups/create', $data);
             } else {
-                $this->session->set_flashdata('create_success', 0);
+
+                $create = $this->Group->create_user_group();
+
+                if ($create) {
+                    $this->session->set_flashdata('create_success', 1);
+                } else {
+                    $this->session->set_flashdata('create_success', 0);
+                }
+                redirect('admin/users/groups');
             }
-            redirect('admin/users/groups');
         }
     }
 
@@ -62,9 +73,13 @@ class Groups extends MY_Controller
      */
     public function delete($id)
     {
-        $delete = $this->Group->delete($id);
+        if (!$this->ion_auth_acl->has_permission('users_delete') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $delete = $this->Group->delete($id);
 
-        return $delete;
+            return $delete;
+        }
     }
 
     /**
@@ -74,19 +89,21 @@ class Groups extends MY_Controller
      */
     public function get()
     {
-        $total_groups = $this->db->count_all_results('skearch_users_groups');
-        $groups = $this->Group->get();
-        $result = array(
-            'iTotalRecords' => $total_groups,
-            'iTotalDisplayRecords' => $total_groups,
-            'sEcho' => 0,
-            'sColumns' => "",
-            'aaData' => $groups,
-        );
+        if ($this->ion_auth_acl->has_permission('groups_get') or $this->ion_auth->is_admin()) {
+            $total_groups = $this->db->count_all_results('skearch_users_groups');
+            $groups = $this->Group->get();
+            $result = array(
+                'iTotalRecords' => $total_groups,
+                'iTotalDisplayRecords' => $total_groups,
+                'sEcho' => 0,
+                'sColumns' => "",
+                'aaData' => $groups,
+            );
 
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($result));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($result));
+        }
     }
 
     /**
@@ -96,9 +113,15 @@ class Groups extends MY_Controller
      */
     public function index()
     {
-        $data['title'] = ucwords("users groups");
+        if (!$this->ion_auth_acl->has_permission('groups_get') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+            $data['title'] = ucwords("users groups");
 
-        $this->load->view('admin_panel/pages/users/groups/view', $data);
+            $this->load->view('admin_panel/pages/users/groups/view', $data);
+        }
     }
 
     /**
@@ -109,60 +132,67 @@ class Groups extends MY_Controller
      */
     public function update($id)
     {
-        $this->form_validation->set_rules('name', 'Name', 'required|trim|min_length[5]');
-        $this->form_validation->set_rules('description', 'Description', 'trim|min_length[8]');
-
-        if ($this->form_validation->run() === false) {
-
-            $group = $this->Group->get($id);
-
-            $data = array(
-                'name' => $group->name,
-                'description' => $group->description,
-            );
-
-            $data['permissions'] = $this->ion_auth_acl->permissions('full', 'perm_key');
-            $data['group_permissions'] = $this->ion_auth_acl->get_group_permissions($id);
-
-            $data['title'] = ucwords('edit group');
-            $this->load->view('admin_panel/pages/users/groups/edit', $data);
+        if (!$this->ion_auth_acl->has_permission('groups_update') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $name = $this->input->post('name');
-            $additional_data = array(
-                'description' => $this->input->post('description')
-            );
+            $this->form_validation->set_rules('name', 'Name', 'required|trim|min_length[5]');
+            $this->form_validation->set_rules('description', 'Description', 'trim|min_length[8]');
 
-            $update = TRUE;
+            if ($this->form_validation->run() === false) {
 
-            // update group info
-            if ($this->Group->update($id, $name, $additional_data) === FALSE) {
-                $update = FALSE;
-            }
+                $group = $this->Group->get($id);
 
-            // update group permissions
-            foreach ($this->input->post() as $k => $v) {
-                if (substr($k, 0, 5) == 'perm_') {
-                    $permission_id  =   str_replace("perm_", "", $k);
+                $data = array(
+                    'name' => $group->name,
+                    'description' => $group->description,
+                );
 
-                    if ($v == "X") {
-                        if ($this->ion_auth_acl->remove_permission_from_group($id, $permission_id) === FALSE) {
-                            $update = FALSE;
-                        }
-                    } else {
-                        if ($this->ion_auth_acl->add_permission_to_group($id, $permission_id, $v) === FALSE) {
-                            $update = FALSE;
+                $data['permissions'] = $this->ion_auth_acl->permissions('full', 'perm_key');
+                $data['group_permissions'] = $this->ion_auth_acl->get_group_permissions($id);
+
+                $data['title'] = ucwords('edit group');
+                $this->load->view('admin_panel/pages/users/groups/edit', $data);
+            } else {
+
+                $name = $this->input->post('name');
+                $additional_data = array(
+                    'description' => $this->input->post('description')
+                );
+
+                $update = TRUE;
+
+                // update group info
+                if ($this->Group->update($id, $name, $additional_data) === FALSE) {
+                    $update = FALSE;
+                }
+
+                // update group permissions
+                foreach ($this->input->post() as $k => $v) {
+                    if (substr($k, 0, 5) == 'perm_') {
+                        $permission_id  =   str_replace("perm_", "", $k);
+
+                        if ($v == "X") {
+                            if ($this->ion_auth_acl->remove_permission_from_group($id, $permission_id) === FALSE) {
+                                $update = FALSE;
+                            }
+                        } else {
+                            if ($this->ion_auth_acl->add_permission_to_group($id, $permission_id, $v) === FALSE) {
+                                $update = FALSE;
+                            }
                         }
                     }
                 }
-            }
 
-            if ($update) {
-                $this->session->set_flashdata('update_success', 1);
-            } else {
-                $this->session->set_flashdata('update_success', 0);
+                if ($update) {
+                    $this->session->set_flashdata('update_success', 1);
+                } else {
+                    $this->session->set_flashdata('update_success', 0);
+                }
+                redirect('admin/users/groups');
             }
-            redirect('admin/users/groups');
         }
     }
 }

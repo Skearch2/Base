@@ -42,10 +42,10 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
 					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/categories/create_category"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+						<a href="<?= site_url("admin/results/umbrella/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
-								<i class="la la-cart-plus"></i>
-								<span>Add Item</span>
+								<i class="la la-plus-circle"></i>
+								<span>Add Umbrella</span>
 							</span>
 						</a>
 					</li>
@@ -114,6 +114,26 @@ $this->load->view('admin_panel/templates/subheader');
 		</div>
 		<div class="m-portlet__body">
 
+			<?php if ($this->session->flashdata('update_success') === 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The umbrella has been updated.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('update_success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to update the umbrella.
+					</div>
+				</div>
+			<?php endif ?>
+
 			<!--begin: Datatable -->
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
@@ -178,7 +198,7 @@ $this->load->view('admin_panel/templates/close_html');
 		}).then(function(e) {
 			if (!e.value) return;
 			$.ajax({
-				url: '<?= site_url('admin/categories/delete_category/'); ?>' + id,
+				url: '<?= site_url('admin/results/umbrella/delete/id/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
 					swal("Success!", "The umbrella has been deleted.", "success")
@@ -194,7 +214,7 @@ $this->load->view('admin_panel/templates/close_html');
 	// Toggle umbrella active status
 	function toggle(id, row) {
 		$.ajax({
-			url: '<?= site_url('admin/categories/toggle_category/'); ?>' + id,
+			url: '<?= site_url('admin/results/umbrella/toggle/id/'); ?>' + id,
 			type: 'GET',
 			success: function(data, status) {
 				if (data == 0) {
@@ -218,17 +238,10 @@ $this->load->view('admin_panel/templates/close_html');
 				responsive: !0,
 				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
 				rowId: "id",
-				order: [
-					[1, 'asc']
-				],
 				searchDelay: 500,
-				lengthMenu: [
-					[50, 100, -1],
-					[50, 100, "ALL"]
-				],
 				processing: !0,
 				serverSide: !1,
-				ajax: "<?= site_url(); ?>/admin/categories/get_category_list/<?= $status; ?>",
+				ajax: "<?= site_url(); ?>admin/results/umbrellas/get/status/<?= $status; ?>",
 				columns: [{
 					data: "title"
 				}, {
@@ -249,15 +262,14 @@ $this->load->view('admin_panel/templates/close_html');
 					render: function(a, t, e, n) {
 						var title = e['title'].replace(/ /g, '%20');
 						var row = (n.row).toString().slice(-1);
-						return '<a href="<?= site_url() . "admin/categories/update_category/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+						return '<a href="<?= site_url() . "admin/results/umbrella/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 							'<a onclick=deleteUmbrella("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}, {
 					targets: 2,
 					title: "Fields",
 					render: function(a, t, e, n) {
-						return e['totalFields'] + " " +
-							'<a href="<?= site_url() . "admin/categories/subcategory_list/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
+						return '<a href="<?= site_url() . "admin/results/fields/umbrella/id/" ?>' + e['id'] + '" title="View">' + e['totalFields'] + '</a>'
 					}
 				}, {
 					targets: 3,

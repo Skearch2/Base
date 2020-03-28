@@ -111,7 +111,6 @@ $this->load->view('frontend/templates/header');
     <div class="container">
         <div class="row">
             <div class="main-box no-border">
-                <h1><?= ucwords($field_name) ?></h1>
                 <div class="box inline-box">
                     <h3>Related Fields</h3>
                 </div>
@@ -119,9 +118,9 @@ $this->load->view('frontend/templates/header');
                     <div class="row category_list_home accessorize-list">
                         <div class="col-sm-12">
                             <div class="row">
-                            <div class="col-sm-3 f-box">
-                                <a href="<?= BASE_URL ?>browse/<?= $umbrella_name ?>" title="<?= $umbrella_name ?>"><?= $umbrella_name ?></a>
-                            </div>
+                                <div class="col-sm-3 f-box">
+                                    <a href="<?= BASE_URL ?>browse/<?= $umbrella_name ?>" title="<?= $umbrella_name ?>"><?= $umbrella_name ?></a>
+                                </div>
                                 <? if (!empty($suggest_fields)) : ?>
                                     <?php foreach ($suggest_fields as $field) : ?>
                                         <?php if (!strcasecmp($field->suggest_field_title, $field_name)) continue ?>
@@ -134,6 +133,7 @@ $this->load->view('frontend/templates/header');
                         </div>
                     </div>
                 </div>
+                <h1><?= ucwords($field_name) ?></h1>
             </div>
         </div>
     </div>
