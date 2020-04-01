@@ -35,7 +35,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-caption">
 				<div class="m-portlet__head-title">
 					<h3 class="m-portlet__head-text">
-						<?= $sub_title; ?>
+						Field: <?= $heading; ?>
 					</h3>
 				</div>
 			</div>
@@ -142,7 +142,6 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Priority</th>
 						<th>Title</th>
 						<th>Description</th>
-						<th>Category</th>
 						<th>Display Url</th>
 						<th>Status</th>
 						<th width="150">Actions</th>
@@ -178,6 +177,23 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
+	// change field priority
+	function changePriority(id, priority) {
+		$('#m_table_1').fadeOut("slow");
+		$.ajax({
+			url: '<?= site_url(); ?>/admin/categories/change_priority/' + id + '/' + priority,
+			type: 'GET',
+			success: function(status) {
+				getPriorities();
+				$('#m_table_1').DataTable().ajax.reload(null, false);
+				toastr.success("", "Priority updated.");
+			},
+			error: function(err) {
+				toastr.error("", "Unable to update priority.");
+			}
+		});
+	}
+
 	// Deletes link
 	function deleteLink(id, link) {
 		var link = link.replace(/%20/g, ' ');
@@ -203,6 +219,30 @@ $this->load->view('admin_panel/templates/close_html');
 				}
 			});
 		});
+	}
+
+	function getPriorities() {
+		$.ajax({
+			url: '<?= site_url(); ?>/admin/results/links/priorities/field/id/' + <?= $field_id; ?>,
+			type: 'GET',
+			success: function(result) {
+				obj = JSON.parse(result);
+				$('#m_table_1').fadeIn("fast");
+			},
+			error: function(err) {
+				toastr.error("", "Unable to get priorities for the link.");
+			}
+		});
+	}
+
+	// helper method to search into priorities
+	function _searchArray(key, array) {
+		for (var i = 0; i < array.length; i++) {
+			if (array[i].priority == key) {
+				return array[i];
+			}
+		}
+		return false;
 	}
 
 	//Toggles link active status
@@ -246,48 +286,8 @@ $this->load->view('admin_panel/templates/close_html');
 		});
 	}
 
-	// change field priority
-	function change_priority(id, priority) {
-		$('#m_table_1').fadeOut("slow");
-		$.ajax({
-			url: '<?= site_url(); ?>/admin/categories/change_priority/' + id + '/' + priority,
-			type: 'GET',
-			success: function(status) {
-				get_links_priority();
-				$('#m_table_1').DataTable().ajax.reload(null, false);
-				toastr.success("", "Priority updated.");
-			},
-			error: function(err) {
-				toastr.error("", "Unable to update priority.");
-			}
-		});
-	}
-
-	function get_links_priority() {
-		$.ajax({
-			url: '<?= site_url(); ?>/admin/categories/get_links_priority/',
-			type: 'GET',
-			success: function(result) {
-				obj = JSON.parse(result);
-				$('#m_table_1').fadeIn("fast");
-			},
-			error: function(err) {
-				toastr.error("", "Unable to get priorities for the link.");
-			}
-		});
-	}
-
-	function searchArray(key, array) {
-		for (var i = 0; i < array.length; i++) {
-			if (array[i].priority == key) {
-				return array[i];
-			}
-		}
-		return false;
-	}
-
 	var DatatablesDataSourceAjaxServer = {
-		init: function(url) {
+		init: function() {
 			$("#m_table_1").DataTable({
 				responsive: !0,
 				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
@@ -295,15 +295,13 @@ $this->load->view('admin_panel/templates/close_html');
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
-				ajax: "<?= site_url(); ?>admin/results/links/get/status/<?= $status; ?>",
+				ajax: "<?= site_url(); ?>admin/results/links/get/field/id/<?= $field_id; ?>",
 				columns: [{
 					data: "priority"
 				}, {
 					data: "title"
 				}, {
 					data: "description_short"
-				}, {
-					data: "field"
 				}, {
 					data: "display_url"
 				}, {
@@ -312,74 +310,70 @@ $this->load->view('admin_panel/templates/close_html');
 					data: "Actions"
 				}],
 				columnDefs: [{
-					targets: -1,
-					title: "Actions",
-					orderable: !1,
-					render: function(a, t, e, n) {
-						var redirectVal;
-						if (e['redirect'] == 0) redirectVal = "red";
-						else redirectVal = "#34bfa3";
-						var title = e['title'].replace(/ /g, '%20');
-						var row = (n.row).toString().slice(-1);
-						//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
-						return '<a href="<?= site_url() . "admin/categories/update_result/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-							'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
-							'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
-					}
-				}, {
-					targets: 0,
-					render: function(a, t, e, n) {
-						var $select = $("<select onchange= change_priority(" + e['id'] + ",this.value)></select>", {
-							"id": "priority" + e['id'],
-						});
-						for (var i = 0; i <= 250; i++) {
-							var $option = $("<option></option>", {
-								"text": i,
-								"value": i
+						targets: -1,
+						title: "Actions",
+						orderable: !1,
+						render: function(a, t, e, n) {
+							var $select = $("<select onchange= changePriority(" + e['id'] + ",this.value)></select>", {
+								"id": "priority" + e['id'],
 							});
-							if (searchArray(i, obj)) {
-								$option.attr('disabled', 'disabled');
-								$option.attr('style', 'background-color:#99ff99');
+							for (var i = 0; i <= 250; i++) {
+								var $option = $("<option></option>", {
+									"text": i,
+									"value": i
+								});
+								if (_searchArray(i, obj)) {
+									$option.attr('disabled', 'disabled');
+									$option.attr('style', 'background-color:#99ff99');
+								}
+								if (i == e['priority']) {
+									$option.attr("selected", "selected")
+								}
+								$select.append($option);
 							}
-							if (i == e['priority']) {
-								$option.attr("selected", "selected")
-							}
-							$select.append($option);
-						}
 
-						return e['priority'] + '&emsp;' + $select.prop("outerHTML")
+							var redirectVal;
+							if (e['redirect'] == 0) redirectVal = "red";
+							else redirectVal = "#34bfa3";
+							var title = e['title'].replace(/ /g, '%20');
+							var row = (n.row).toString().slice(-1);
+							//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
+							return '<a href="<?= site_url() . "admin/results/link/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+								'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
+								'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>' +
+								$select.prop("outerHTML")
+						}
+					},
+					{
+						targets: 0,
+						render: function(a, t, e, n) {
+							return '<a href="#" title="Change Priority">' + e['priority'] + '</a>'
+						}
+					},
+					{
+						targets: 4,
+						render: function(a, t, e, n) {
+							var s = {
+								1: {
+									title: "Active",
+									class: " m-badge--success"
+								},
+								0: {
+									title: "Off",
+									class: " m-badge--danger"
+								}
+							};
+							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
+						}
 					}
-				}, {
-					targets: 5,
-					render: function(a, t, e, n) {
-						var s = {
-							1: {
-								title: "Active",
-								class: " m-badge--success"
-							},
-							0: {
-								title: "Off",
-								class: " m-badge--danger"
-							}
-						};
-						return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
-					}
-				}]
+				]
 			})
 		}
 	}
 
 	jQuery(document).ready(function() {
-		var url
-
-		<?php if (isset($field_id)) : ?>
-			url = "<?= site_url(); ?>admin/results/links/get/field/id/<?= $field_id; ?>"
-			get_links_priority();
-		<?php elseif (isset($status)) : ?>
-			url = "<?= site_url(); ?>admin/results/links/get/status/<?= $status; ?>"
-		<?php endif ?>
-
-		DatatablesDataSourceAjaxServer.init(url);
+		getPriorities();
+		DatatablesDataSourceAjaxServer.init();
 	});
 </script>
 

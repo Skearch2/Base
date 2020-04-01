@@ -12,7 +12,7 @@ $this->load->view('admin_panel/templates/head');
 
 	<!-- begin:: Page -->
 	<div class="m-grid m-grid--hor m-grid--root m-page">
-		<div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor m-login m-login--signin m-login--2 m-login-2--skin-2" id="m_login" style="background-image: url(<?php site_url(ASSETS); ?>/admin_panel/app/media/img/bg/bg-3.jpg);">
+		<div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor m-login m-login--signin m-login--2 m-login-2--skin-3" id="m_login" style="background-image: url(<?= site_url(ASSETS); ?>/admin_panel/app/media/img/bg/bg-2.jpg);">
 			<div class="m-grid__item m-grid__item--fluid	m-login__wrapper">
 				<div class="m-login__container">
 					<div class="m-login__logo">
@@ -27,23 +27,27 @@ $this->load->view('admin_panel/templates/head');
 						</div>
 						<fieldset class="m-login__form m-form" form='login_form' name='login_fields'>
 							<?php if ($this->session->flashdata('no_access')) : ?>
-								<div align="center" class="m-alert m-alert--outline alert-danger">
+								<div class="alert alert-danger alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
 									You have no access to admin panel.
 								</div>
 							<?php endif; ?>
 							<?php if ($this->session->flashdata('errors')) : ?>
-								<div align="center" class="m-alert m-alert--outline alert-danger">
+								<div class="alert alert-danger alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
 									<?= $this->session->flashdata('errors') ?>
 								</div>
 							<?php endif; ?>
 							<?php if (validation_errors()) : ?>
-								<div align="center" class="m-alert m-alert--outline alert-warning">
+								<div class="alert alert-warning alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
 									<?= validation_errors(); ?>
 								</div>
 							<?php endif; ?>
-							<?php if ($this->session->flashdata('logout')) : ?>
-								<div align="center" class="m-alert m-alert--outline alert-success">
-									You have successfully logged out.
+							<?php if ($this->session->flashdata('messages')) : ?>
+								<div class="alert alert-success alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+									<?= $this->session->flashdata('messages') ?>
 								</div>
 							<?php endif; ?>
 							<div class="form-group m-form__group">
@@ -90,12 +94,12 @@ $this->load->view('admin_panel/templates/head');
 	</div>
 
 	<!--begin::Global Theme Bundle -->
-	<script src="<?php site_url(ASSETS); ?>/admin_panel/vendors/base/vendors.bundle.js" type="text/javascript"></script>
-	<script src="<?php site_url(ASSETS); ?>/admin_panel/demo/demo12/base/scripts.bundle.js" type="text/javascript"></script>
+	<script src="<?= site_url(ASSETS); ?>/admin_panel/vendors/base/vendors.bundle.js" type="text/javascript"></script>
+	<script src="<?= site_url(ASSETS); ?>/admin_panel/demo/demo12/base/scripts.bundle.js" type="text/javascript"></script>
 	<!--end::Global Theme Bundle -->
 
 	<!--begin::Page Scripts -->
-	<script src="<?php site_url(ASSETS); ?>/admin_panel/snippets/custom/pages/user/login.js" type="text/javascript"></script>
+	<script src="<?= site_url(ASSETS); ?>/admin_panel/snippets/custom/pages/user/login.js" type="text/javascript"></script>
 	<!--end::Page Scripts -->
 
 </body>

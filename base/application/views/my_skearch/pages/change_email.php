@@ -11,12 +11,12 @@ $this->load->view('my_skearch/templates/head');
 
 	<!-- begin:: Page -->
 	<div class="m-grid m-grid--hor m-grid--root m-page">
-		<div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor m-login m-login--signin m-login--2 m-login-2--skin-2" id="m_login" style="background:linear-gradient(0deg,rgba(226, 248, 197, 0.500),rgba(226, 248, 197, 0.500)),url(<?= site_url(ASSETS); ?>/my_skearch/app/media/img//bg/bg-3.jpg); background-size:cover;">
+		<div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor m-login m-login--signin m-login--2 m-login-2--skin-2" id="m_login">
 			<div class="m-grid__item m-grid__item--fluid m-login__wrapper">
 				<?= form_open('myskearch/auth/change_email/', 'id="login_form"'); ?>
 				<div class="m-login__container">
 					<div class="m-login__logo">
-						<a href="#">
+						<a href="<?= base_url(); ?>">
 							<img style="width: 80%; height: 80%" src="<?= site_url(ASSETS); ?>/admin_panel/app/media/img/logos/logo.png">
 						</a>
 					</div>
@@ -26,7 +26,7 @@ $this->load->view('my_skearch/templates/head');
 						</div>
 						<fieldset class="m-login__form m-form" form='login_form' name='login_fields'>
 							<?php $this->load->view('my_skearch/templates/notifications'); ?>
-							<input type="hidden" id="skearch_id" name="myskearch_id" value=<?= $skearch_id; ?>>
+							<input type="hidden" id="skearch_id" name="skearch_id" value=<?= $skearch_id; ?>>
 							<?php echo form_hidden($csrf); ?>
 							<div class="form-group m-form__group">
 								<input class="form-control m-input m-login__form-input--last" id="new_email" name="new_email" type="email" placeholder="New Email Address" value=<?= set_value('new_email'); ?>>
@@ -35,7 +35,7 @@ $this->load->view('my_skearch/templates/head');
 								<input class="form-control m-input m-login__form-input--last" id="new_email2" name="new_email2" type="email" placeholder="Confirm Email Address" value=<?= set_value('new_email2'); ?>>
 							</div>
 							<div class="form-group m-form__group">
-								<input class="form-control m-input m-login__form-input--last" id="password" name="current_password" type="password" placeholder="My Skearch Password">
+								<input class="form-control m-input m-login__form-input--last" id="password" name="current_password" type="password" placeholder="Current Password">
 							</div>
 							<div class="m-login__form-action">
 								<button id="login_submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air m-login__btn m-login__btn--primary">Update</button>

@@ -35,7 +35,7 @@ $this->load->view('admin_panel/templates/subheader');
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        <?= $subTitle; ?>
+                        <?= $heading ?>
                     </h3>
                 </div>
             </div>
@@ -140,7 +140,7 @@ $this->load->view('admin_panel/templates/subheader');
                     <tr>
                         <th>Title</th>
                         <th>Short Description</th>
-                        <th>Parent Umbrella</th>
+                        <th>Umbrella</th>
                         <th>Links</th>
                         <th>Featured</th>
                         <th>Status</th>

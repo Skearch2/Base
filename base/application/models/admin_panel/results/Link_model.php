@@ -70,13 +70,13 @@ class Link_model extends CI_Model
     public function get($id)
     {
         $this->db->select('skearch_listings.id, skearch_listings.title, skearch_listings.description_short,
-        skearch_listings.enabled, skearch_listings.www, skearch_listings.display_url, skearch_listings.priority, skearch_listings.redirect, skearch_subcategories.id AS umbrella_id, skearch_subcategories.title AS umbrella');
+        skearch_listings.enabled, skearch_listings.www, skearch_listings.display_url, skearch_listings.priority, skearch_listings.redirect, skearch_subcategories.id AS field_id, skearch_subcategories.title AS field');
         $this->db->from('skearch_listings');
         $this->db->join('skearch_subcategories', 'skearch_subcategories.id = skearch_listings.sub_id');
         $this->db->where('skearch_listings.id', $id);
         $query = $this->db->get();
         if ($query) {
-            return $query->result();
+            return $query->row();
         } else {
             return FALSE;
         }
@@ -94,13 +94,14 @@ class Link_model extends CI_Model
         $this->db->select('skearch_listings.id, skearch_listings.title, skearch_listings.description_short,
         skearch_listings.enabled, skearch_listings.www, skearch_listings.display_url, skearch_listings.priority, skearch_listings.redirect, skearch_subcategories.id AS field_id, skearch_subcategories.title AS field');
         $this->db->from('skearch_listings');
-        $this->db->join('skearch_subcategories', 'skearch_subcategories.id = skearch_listings.sub_id');
+        $this->db->join('skearch_subcategories', 'skearch_subcategories.id = skearch_listings.sub_id', 'left');
         $this->db->where('skearch_listings.sub_id', $field_id);
         if ($status == 'inactive') {
             $this->db->where('skearch_listings.enabled', 0);
         } elseif ($status == 'active') {
             $this->db->where('skearch_listings.enabled', 1);
         }
+        $this->db->order_by('title', 'ASC');
         $query = $this->db->get();
         if ($query) {
             return $query->result();
@@ -121,12 +122,13 @@ class Link_model extends CI_Model
         $this->db->select('skearch_listings.id, skearch_listings.title, skearch_listings.description_short,
         skearch_listings.enabled, skearch_listings.www, skearch_listings.display_url, skearch_listings.priority, skearch_listings.redirect, skearch_subcategories.id AS field_id, skearch_subcategories.title AS field');
         $this->db->from('skearch_listings');
-        $this->db->join('skearch_subcategories', 'skearch_subcategories.id = skearch_listings.sub_id');
+        $this->db->join('skearch_subcategories', 'skearch_subcategories.id = skearch_listings.sub_id', 'left');
         if ($status == 'inactive') {
             $this->db->where('skearch_listings.enabled', 0);
         } elseif ($status == 'active') {
             $this->db->where('skearch_listings.enabled', 1);
         }
+        $this->db->order_by('title', 'ASC');
         $query = $this->db->get();
         if ($query) {
             return $query->result();
@@ -152,6 +154,7 @@ class Link_model extends CI_Model
         $this->db->from('skearch_listings');
         $this->db->join('skearch_subcategories', 'skearch_subcategories.id = skearch_listings.sub_id');
         $this->db->like('skearch_listings.title', $keywords, 'after');
+        $this->db->order_by('title', 'ASC');
 
         $query = $this->db->get();
 
@@ -160,6 +163,16 @@ class Link_model extends CI_Model
         } else {
             return FALSE;
         }
+    }
+
+    public function get_links_priority($id)
+    {
+        $query = $this->db->select('title, priority');
+        $query = $this->db->from('skearch_listings');
+        $query = $this->db->where('sub_id', $id);
+        $query = $this->db->order_by('priority', 'AESC');
+        $query = $this->db->get();
+        return $query->result();
     }
 
     /**

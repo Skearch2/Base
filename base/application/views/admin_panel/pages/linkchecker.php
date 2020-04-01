@@ -316,3 +316,7 @@ $this->load->view('admin_panel/templates/close_html');
 
     );
 </script>
+
+<script>
+    $("#menu-linkchecker").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+</script>

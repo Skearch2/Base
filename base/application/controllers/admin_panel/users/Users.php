@@ -82,7 +82,7 @@ class Users extends MY_Controller
                     $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
                 }
             }
-            $this->form_validation->set_rules('group', 'Group', 'required');
+            //$this->form_validation->set_rules('group', 'Group', 'required');
 
 
             if ($this->form_validation->run() == false) {
@@ -129,14 +129,14 @@ class Users extends MY_Controller
                 }
                 $additional_data['active'] = $this->input->post('active');
 
-                $create = $this->User->create($username, $password, $email, $additional_data, $group);
+                $create = $this->User->create($username, $password, $email, $additional_data, array($group));
 
                 if ($create) {
                     $this->session->set_flashdata('create_success', 1);
                 } else {
                     $this->session->set_flashdata('create_success', 0);
                 }
-                redirect('admin/users/group/id/5');
+                redirect("admin/users/group/id/{$group}");
             }
         }
     }
@@ -215,7 +215,7 @@ class Users extends MY_Controller
      */
     public function get_by_lastname($lastname)
     {
-        if ($this->ion_auth_acl->has_permission('users_get')) {
+        if ($this->ion_auth_acl->has_permission('users_get') or $this->ion_auth->is_admin()) {
             $result = $this->User->get_by_lastname($lastname);
             $this->output
                 ->set_content_type('application/json')
@@ -328,22 +328,15 @@ class Users extends MY_Controller
         if (!$this->ion_auth_acl->has_permission('users_reset') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
-            if (!$this->ion_auth_acl->has_permission('users_reset_password')) {
-                // set page title
-                $data['title'] = ucwords('access denied');
-                $this->load->view('admin_panel/errors/error_403', $data);
+            $user = $this->ion_auth->where('id', $id)->users()->row();
+
+            // run the forgotten password method to email an activation code to the user
+            $forgotten = $this->ion_auth->forgotten_password($user->username);
+
+            if ($forgotten) {
+                echo json_encode(1);
             } else {
-
-                $user = $this->ion_auth->where('id', $id)->users()->row();
-
-                // run the forgotten password method to email an activation code to the user
-                $forgotten = $this->ion_auth->forgotten_password($user->username);
-
-                if ($forgotten) {
-                    return true;
-                } else {
-                    return false;
-                }
+                echo json_encode(0);
             }
         }
     }

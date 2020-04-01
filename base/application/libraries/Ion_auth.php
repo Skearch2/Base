@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Name:    Ion Auth
  * Author:  Ben Edmunds
@@ -147,8 +148,8 @@ class Ion_auth
 
             if ($code) {
                 $data = [
-                    'firstname' => $user->first_name,
-                    'lastname' => $user->last_name,
+                    'firstname' => $user->firstname,
+                    'lastname' => $user->lastname,
                     'link' => site_url() . "myskearch/auth/reset_password/$code",
                 ];
 
@@ -266,8 +267,8 @@ class Ion_auth
             $user = $this->ion_auth_model->user($id)->row();
 
             $data = [
-                'firstname' => $user->first_name,
-                'lastname' => $user->last_name,
+                'firstname' => $user->firstname,
+                'lastname' => $user->lastname,
                 'link' => site_url() . "myskearch/auth/activate/$user->id/$activation_code",
             ];
             if (!$this->config->item('use_ci_email', 'ion_auth')) {
@@ -292,7 +293,6 @@ class Ion_auth
                     $this->set_message('activation_email_successful');
                     return $id;
                 }
-
             }
 
             $this->ion_auth_model->trigger_events(['post_account_creation', 'post_account_creation_unsuccessful', 'activation_email_unsuccessful']);
@@ -407,5 +407,4 @@ class Ion_auth
                 "Please update to PHP 7 or use random_compat (https://github.com/paragonie/random_compat).");
         }
     }
-
 }

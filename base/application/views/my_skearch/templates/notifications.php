@@ -1,20 +1,16 @@
-<?php if (validation_errors() or $this->ion_auth->errors() or $this->session->flashdata('error')) : ?>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-        <?= validation_errors(); ?>
-        <?= $this->ion_auth->errors(); ?>
+<?php if ($this->session->flashdata('error')) : ?>
+    <div align="center" class="m-alert m-alert--outline alert-danger">
         <?= $this->session->flashdata('error') ?>
     </div>
 <?php endif; ?>
-<?php if ($this->session->flashdata('alert')) : ?>
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-        <?= $this->session->flashdata('alert'); ?>
+<?php if (validation_errors() or $this->session->flashdata('alert')) : ?>
+    <div align="center" class="m-alert m-alert--outline alert-warning">
+        <?= validation_errors() ?>
+        <?= $this->session->flashdata('alert') ?>
     </div>
 <?php endif; ?>
 <?php if ($this->session->flashdata('success')) : ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-        <?= $this->session->flashdata('success'); ?>
+    <div align="center" class="m-alert m-alert--outline alert-success">
+        <?= $this->session->flashdata('success') ?>
     </div>
 <?php endif; ?>

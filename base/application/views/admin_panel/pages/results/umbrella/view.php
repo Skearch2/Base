@@ -35,7 +35,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-caption">
 				<div class="m-portlet__head-title">
 					<h3 class="m-portlet__head-text">
-						<?= $title; ?>
+						Status: <?= $heading ?>
 					</h3>
 				</div>
 			</div>

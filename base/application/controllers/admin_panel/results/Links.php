@@ -40,7 +40,6 @@ class Links extends MY_Controller
 
         $this->load->model('admin_panel/results/field_model', 'fields');
         $this->load->model('admin_panel/results/link_model', 'links');
-        $this->load->model('admin_panel/category_model_admin', 'linkss');
     }
 
     /**
@@ -50,48 +49,41 @@ class Links extends MY_Controller
      */
     public function create()
     {
-
         $this->form_validation->set_rules('title', 'Title', 'required');
         $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]');
-        $this->form_validation->set_rules('sub_id', 'Field', 'required|numeric');
+        $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
         $this->form_validation->set_rules('priority', 'Priority', 'required|numeric');
         $this->form_validation->set_rules('display_url', 'Home Display');
-        $this->form_validation->set_rules('www', 'WWW', 'required|valid_url');
+        $this->form_validation->set_rules('www', 'URL', 'required|valid_url');
         $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
         $this->form_validation->set_rules('redirect', 'Redirect', 'required|numeric');
 
-        if ($this->form_validation->run() == true) {
-            $data = $this->input->post(NULL, TRUE);
-            $this->categoryModel->create_result_listing($data['title'], $data['enabled'], $data['description_short'], $data['display_url'], $data['www'], $data['sub_id'], $data['priority'], $data['redirect']);
+        if ($this->form_validation->run() === true) {
 
-            // Clear all the input field
-            $this->form_validation->clear_field_data();
+            $link_data = array(
+                'title'             => $this->input->post('title'),
+                'description_short' => $this->input->post('description_short'),
+                'sub_id'            => $this->input->post('field_id'),
+                'priority'          => $this->input->post('priority'),
+                'display_url'       => $this->input->post('display_url'),
+                'www'               => $this->input->post('www'),
+                'redirect'          => $this->input->post('redirect'),
+                'enabled'           => $this->input->post('enabled')
+            );
 
-            // Display success flash message
-            $this->session->set_tempdata('success-msg', '
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <div class="alert-icon">
-                        <p class="flaticon-like"> Success:</p>
-                            AdLink has been successfully added to the database.
-                    </div>
-                </div>
-            ', 1);
+            $create = $this->links->create($link_data);
+
+            if ($create) {
+                $this->session->set_flashdata('create_success', 1);
+                redirect('/admin/results/link/create');
+            } else {
+                $this->session->set_flashdata('create_success', 0);
+            }
         }
 
-        $data['title'] = ucfirst("Add New Result");
-        $data['subcategory_list'] = $this->categoryModel->get_subcategories();
+        $data['fields'] = $this->fields->get_by_status();
 
-        $prioritiesObject = $this->categoryModel->get_links_priority($data['subcategory_list'][0]->id);
-        $priorities = array();
-        foreach ($prioritiesObject as $item) {
-            array_push($priorities, $item->priority);
-        }
-
-        $data['priorities'] = $priorities;
-
+        $data['title'] = ucwords("add link");
         $this->load->view('admin_panel/pages/results/link/create', $data);
     }
 
@@ -103,7 +95,7 @@ class Links extends MY_Controller
      */
     public function delete($id)
     {
-        $this->categoryModel->delete_result_listing($id);
+        $this->links->delete($id);
     }
 
     /**
@@ -118,14 +110,18 @@ class Links extends MY_Controller
     {
         $link = $this->links->get($id);
 
-        $title              = $link->title;
-        $description_short  = $link->description_short;
-        $display_url        = $link->display_url;
-        $www                = $link->www;
-        $redirect           = $link->redirect;
-        $enabled            = $link->enabled;
+        $link_data = array(
+            'title'             => $link->title,
+            'description_short' => $link->description_short,
+            'sub_id'            => $field_id,
+            'priority'          => $priority,
+            'display_url'       => $link->display_url,
+            'www'               => $link->www,
+            'redirect'          => $link->redirect,
+            'enabled'           => $link->enabled
+        );
 
-        $this->links->create($priority, $title, $description_short, $display_url, $www, $field_id, $redirect, $enabled);
+        $this->links->create($link_data);
     }
 
     public function get($id = NULL)
@@ -214,49 +210,30 @@ class Links extends MY_Controller
             ->set_output(json_encode($result));
     }
 
-    public function index($value = NULL)
+    /**
+     * Show links page
+     *
+     * @param int|string $value
+     * @return void
+     */
+    public function index($value)
     {
-        //$data['fields'] = $this->fields->get_by_status();
-        $field_id = $value;
-        $data['field_id'] = $field_id;
+        $data['fields'] = $this->fields->get_by_status();
 
-        $prioritiesObject = $this->linkss->get_links_priority($value);
-        $priorities = array();
-        foreach ($prioritiesObject as $item) {
-            array_push($priorities, $item->priority);
-        }
-
-        $data['priorities'] = $priorities;
-
-        $data['title'] = ucfirst("Ad Links List");
+        $data['title'] = ucfirst("Links");
 
         if ($value != NULL && is_numeric($value)) {
-            $field_title = $this->fields->get($field_id)->title;
-            $data['sub_title'] = ucfirst("Links under \"" . $field_title . "\"");
+            $data['field_id'] = $value;
+            $field_title = $this->fields->get($value)->title;
+            $data['heading'] = ucfirst($field_title);
             $this->load->view('admin_panel/pages/results/link/view_by_field', $data);
         } else if ($value != NULL && strcmp($value, "search") === 0) {
-            $status = $value;
-            $data['status'] = $status;
-            $data['sub_title'] = ucfirst($status);
             $this->load->view('admin_panel/pages/results/link/search', $data);
         } else {
-            $status = $value;
-            $data['status'] = $status;
-            $data['sub_title'] = ucfirst($status);
+            $data['status'] = $value;
+            $data['heading'] = ucfirst($value);
             $this->load->view('admin_panel/pages/results/link/view', $data);
         }
-
-
-        // if ($field != "all") {
-        //     $field_title = $this->categoryModel->get_single_subcategory($field)[0]->title;
-        //     $data['subTitle'] = ucfirst("Ad Links under \"" . $field_title . "\"");
-        //     $this->load->view('admin_panel/pages/results/link/result_list_sub', $data);
-        // } elseif ($field == "all" && ($status == 'active' || $status == 'inactive')) {
-        //     $this->load->view('admin_panel/pages/results/link/result_list', $data);
-        // } else {
-        //     $data['subTitle'] = ucfirst("Ad Links List");
-        //     $this->load->view('admin_panel/pages/results/link/search_ad_links', $data);
-        // }
     }
 
     /**
@@ -269,61 +246,88 @@ class Links extends MY_Controller
      */
     public function move($id, $field_id, $priority)
     {
-        $title              = NULL;
-        $description_short  = NULL;
-        $display_url        = NULL;
-        $www                = NULL;
-        $redirect           = NULL;
-        $enabled            = NULL;
+        $link = $this->links->get($id);
 
-        $this->links->update($id, $priority, $title, $description_short, $display_url, $www, $field_id, $redirect, $enabled);
+        $link_data = array(
+            'title'             => $link->title,
+            'description_short' => $link->description_short,
+            'sub_id'            => $field_id,
+            'priority'          => $priority,
+            'display_url'       => $link->display_url,
+            'www'               => $link->www,
+            'redirect'          => $link->redirect,
+            'enabled'           => $link->enabled
+        );
+
+        $this->links->update($id, $link_data);
     }
 
 
     /**
-     * Get link priorities
+     * Get priorities of the links for the given field id
      *
      * @param int $id ID of the field
      * @return void
      */
-    public function priorities($id)
+    public function priorities($field_id)
     {
-        $prioritiesObj = $this->categoryModel->get_links_priority($id);
-        // $priorities = array();
-        // 	foreach ($prioritiesObj as $item) {
-        // 		array_push($priorities, $item->priority);
-        // 	}
+        $priorities = $this->links->get_by_field($field_id);
 
-        echo json_encode($prioritiesObj);
+        // $this->output
+        //     ->set_content_type('application/json')
+        //     ->set_output(json_encode($priorities));
+
+        echo json_encode($priorities);
     }
 
-    public function toggle($id)
-    {
-
-        $status = $this->categoryModel->get_single_result($id)[0]->enabled;
-
-        if ($status == 0) $status = 1;
-        else $status = 0;
-        $this->categoryModel->toggle_result($id, $status);
-
-        echo json_encode($status);
-    }
-
+    /**
+     * Toggle redirection for the link
+     *
+     * @param int $id ID of the link
+     * @return void
+     */
     public function redirect($id)
     {
+        $status = $this->links->get($id)->redirect;
 
-        $status = $this->categoryModel->get_single_result($id)[0]->redirect;
+        if ($status == 0) {
+            $status = 1;
+        } else {
+            $status = 0;
+        }
 
-        if ($status == 0) $status = 1;
-        else $status = 0;
-        $this->categoryModel->toggle_redirect($id, $status);
+        $link_data = array(
+            'redirect' => $status,
+        );
+
+        $this->links->update($id, $link_data);
 
         echo json_encode($status);
     }
 
-    public function change_priority($id, $priority)
+    /**
+     * Toggle link  status
+     *
+     * @param int $id ID of the link
+     * @return void
+     */
+    public function toggle($id)
     {
-        $status = $this->categoryModel->change_priority($id, $priority);
+        $status = $this->links->get($id)->enabled;
+
+        if ($status == 0) {
+            $status = 1;
+        } else {
+            $status = 0;
+        }
+
+        $link_data = array(
+            'enabled' => $status,
+        );
+
+        $this->links->update($id, $link_data);
+
+        echo json_encode($status);
     }
 
     /**
@@ -334,44 +338,69 @@ class Links extends MY_Controller
      */
     public function update($id)
     {
-        $this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces');
+        $this->form_validation->set_rules('title', 'Title', 'required');
         $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]');
-        $this->form_validation->set_rules('sub_id', 'Field', 'required|numeric');
+        $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
         $this->form_validation->set_rules('priority', 'Priority', 'required|numeric');
-        $this->form_validation->set_rules('display_url', 'Home Display', 'alpha_numeric_spaces');
-        $this->form_validation->set_rules('www', 'WWW', 'required|valid_url');
+        $this->form_validation->set_rules('display_url', 'Home Display');
+        $this->form_validation->set_rules('www', 'URL', 'required|valid_url');
         $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
         $this->form_validation->set_rules('redirect', 'Redirect', 'required|numeric');
 
-        if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $data = $this->input->post(NULL, TRUE);
+        if ($this->form_validation->run() === false) {
 
-            $this->categoryModel->update_result_listing($id, $data['title'], $data['enabled'], $data['description_short'], $data['display_url'], $data['www'], $data['sub_id'], $data['priority'], $data['redirect']);
+            $data['link'] = $this->links->get($id);
 
-            $this->session->set_tempdata('success-msg', '
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <div class="alert-icon">
-                        <p class="flaticon-like"> Success:</p>
-                            AdLink has been successfully added to the database.
-                    </div>
-                </div>
-            ', 1);
+            // get all fields
+            $data['fields'] = $this->fields->get_by_status();
+
+            // $prioritiesObject = $this->categoryModel->get_links_priority($this->categoryModel->get_result_parent($id));
+            // $priorities = array();
+            // foreach ($prioritiesObject as $item) {
+            //     array_push($priorities, $item->priority);
+            // }
+
+            // $data['priorities'] = $priorities;
+
+            $data['title'] = ucfirst("edit link");
+            $this->load->view('admin_panel/pages/results/link/edit', $data);
+        } else {
+
+            $link_data = array(
+                'title'             => $this->input->post('title'),
+                'description_short' => $this->input->post('description_short'),
+                'sub_id'            => $this->input->post('field_id'),
+                'priority'          => $this->input->post('priority'),
+                'display_url'       => $this->input->post('display_url'),
+                'www'               => $this->input->post('www'),
+                'redirect'          => $this->input->post('redirect'),
+                'enabled'           => $this->input->post('enabled')
+            );
+
+            $update = $this->links->update($id, $link_data);
+
+            if ($update) {
+                $this->session->set_flashdata('update_success', 1);
+                redirect('/admin/results/links/search');
+            } else {
+                $this->session->set_flashdata('update_success', 0);
+            }
         }
+    }
 
-        $data['title'] = ucfirst("Edit Result");
-        $data['result'] = $this->categoryModel->get_single_result($id);
-        $data['subcategory_list'] = $this->categoryModel->get_subcategories();
+    /**
+     * Update priority of the link
+     *
+     * @param int $id ID of the link
+     * @param int $priority Priority for the link
+     * @return void
+     */
+    public function update_priority($id, $priority)
+    {
+        $link_data = array(
+            'priority' => $priority,
+        );
 
-        $prioritiesObject = $this->categoryModel->get_links_priority($this->categoryModel->get_result_parent($id));
-        $priorities = array();
-        foreach ($prioritiesObject as $item) {
-            array_push($priorities, $item->priority);
-        }
-
-        $data['priorities'] = $priorities;
-        $this->load->view('admin_panel/pages/results/link/edit', $data);
+        $this->links->update($id, $link_data);
     }
 }

@@ -29,7 +29,6 @@
 
 		<!--begin::Page Vendors Styles -->
 		<link href="<?= site_url(ASSETS); ?>/admin_panel/vendors/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
-		<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css">
 		<!--end::Page Vendors Styles -->
 		<!--Custom style for datatable -->

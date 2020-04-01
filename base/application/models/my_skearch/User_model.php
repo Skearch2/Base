@@ -27,13 +27,12 @@ class User_model extends CI_Model
     {
 
         if ($is_regular) {
-            $username = $this->input->post('username');
+            $username = $this->input->post('skearch_id');
             $password = $this->input->post('password');
             $email = $this->input->post('email');
             $additional_data = array(
-                'firstname' => $this->input->post('firstname'),
-                'lastname' => $this->input->post('lastname'),
-                'gender' => $this->input->post('gender'),
+                'firstname' => $this->input->post('name'),
+                'gender'    => $this->input->post('gender'),
                 'age_group' => $this->input->post('age_group')
             );
             // $additional_data['organization'] = $this->input->post('organization');
@@ -47,38 +46,28 @@ class User_model extends CI_Model
             // $additional_data['zipcode'] = $this->input->post('zipcode');
 
             // $group = array('5'); // regular member group
-            $user_id = $this->ion_auth->register($username, $password, $email, $additional_data);
-            if ($user_id) {
-                $this->_create_settings($user_id);
+            $query = $this->ion_auth->register($username, $password, $email, $additional_data);
+            if ($query) {
+                return TRUE;
+            } else {
+                return FALSE;
             }
         } else {
             $data = array(
-                'name' => $this->input->post('name'),
+                'name'      => $this->input->post('name'),
                 'brandname' => $this->input->post('brandname'),
-                'email' => $this->input->post('email'),
-                'phone' => $this->input->post('phone')
+                'email'     => $this->input->post('email'),
+                'phone'     => $this->input->post('phone')
             );
 
-            return $this->db->insert('skearch_brand_leads', $data);
+            $query = $this->db->insert('skearch_brand_leads', $data);
+            if ($query) {
+                return $query;
+            } else {
+                return FALSE;
+            }
         }
     }
-
-    /**
-     * Create customized user settings with default values
-     *
-     * @param int $id ID of the user
-     * @return void
-     */
-    private function _create_settings($id)
-    {
-        $data = array(
-            'user_id' => $id,
-            'search_engine' => 'duckduckgo',
-            'theme' => 'light'
-        );
-        $this->db->insert('skearch_users_settings', $data);
-    }
-
 
     /**
      * Get user customized settings
@@ -125,7 +114,13 @@ class User_model extends CI_Model
             'age_group' => $this->input->post('age_group')
         );
 
-        $this->ion_auth->update($id, $data);
+        $query = $this->ion_auth->update($id, $data);
+
+        if ($query) {
+            return $query;
+        } else {
+            return FALSE;
+        }
     }
 
     /**
