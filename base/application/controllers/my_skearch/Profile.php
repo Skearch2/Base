@@ -30,6 +30,7 @@ class Profile extends MY_Controller
             redirect('myskearch/auth/login', 'refresh');
         }
 
+        $this->load->model('admin_panel/users/User_model', 'User');
         $this->load->model('Util_model', 'Util');
     }
 
@@ -40,21 +41,25 @@ class Profile extends MY_Controller
      */
     public function index()
     {
+        $group = $this->session->userdata('groupid');
 
-        if (!file_exists(APPPATH . '/views/my_skearch/pages/profile.php')) {
-            show_404();
+        $this->form_validation->set_rules('username', 'Username', 'required|callback_username_check|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']|trim');
+        // only show to admin, editor, and brand member groups
+        if (in_array($group, array(1, 2, 3))) {
+            $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
+            $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
         }
-
-        $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
-        $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
-        $this->form_validation->set_rules('username', 'Username', 'required|alpha_numeric|min_length[5]|max_length[12]|trim');
-
-        // check if user is signed in as brand member
-        $is_brandmember = $this->ion_auth->in_group(1, 3);
-
-        if ($is_brandmember == 1) {
+        // only show to regular and premium user groups
+        else if (in_array($group, array(4, 5))) {
+            $this->form_validation->set_rules('name', 'Name', 'required|alpha|trim');
+        }
+        // only show to admin, editor, and brand member groups
+        if (in_array($group, array(1, 2, 3))) {
             $this->form_validation->set_rules('organization', 'Organization', 'required|trim');
-            $this->form_validation->set_rules('brand', 'Brand', 'required|trim');
+            // only show to brand member group
+            if (in_array($group, array(3))) {
+                $this->form_validation->set_rules('brand', 'Brand', 'required|trim');
+            }
             $this->form_validation->set_rules('address1', 'Address Line 1', 'required|trim');
             $this->form_validation->set_rules('address2', 'Address Line 2', 'trim');
             $this->form_validation->set_rules('phone', 'Phone', 'required|numeric|exact_length[10]');
@@ -68,22 +73,34 @@ class Profile extends MY_Controller
 
             $data['states'] = $this->Util->get_state_list();
             $data['countries'] = $this->Util->get_country_list();
-            $data['is_brandmember'] = $is_brandmember;
+
+            $data['group'] = $group;
+            $data['is_brandmember'] = $this->ion_auth->in_group(3);
 
             $data['title'] = ucwords("my skearch | profile");
 
             $this->load->view('my_skearch/pages/profile', $data);
         } else {
 
-            $data = array(
-                'username' => $this->input->post('username'),
-                'firstname' => $this->input->post('firstname'),
-                'lastname' => $this->input->post('lastname')
-            );
+            $data['username'] = $this->input->post('username');
 
-            if ($is_brandmember) {
+            // only show to admin, editor, and brand member groups
+            if (in_array($group, array(1, 2, 3))) {
+                $data['firstname'] = $this->input->post('firstname');
+                $data['lastname'] = $this->input->post('lastname');
+            }
+            // only show to regular and premium user groups
+            elseif (in_array($group, array(4, 5))) {
+                $data['firstname'] = $this->input->post('name');
+            }
+
+            // only show to admin, editor, and brand member groups
+            if (in_array($group, array(1, 2, 3))) {
                 $data['organization'] = $this->input->post('organization');
-                $data['brand'] = $this->input->post('brand');
+                // only show to brand member group
+                if (in_array($group, array(3))) {
+                    $data['brand'] = $this->input->post('brand');
+                }
                 $data['phone'] = $this->input->post('phone');
                 $data['address1'] = $this->input->post('address1');
                 $data['address2'] = $this->input->post('address2');
@@ -105,5 +122,25 @@ class Profile extends MY_Controller
                 redirect('myskearch/profile');
             }
         }
+    }
+
+    /**
+     * Callback for username validation
+     *
+     * @param String $username Username of the user
+     * @return void
+     */
+    public function username_check($username)
+    {
+        $id =  $this->session->userdata('id');
+
+        if ($this->ion_auth->username_check($username)) {
+            if ($this->User->get($id)->username !== $username) {
+                $this->form_validation->set_message('username_check', 'The username already exists.');
+                return FALSE;
+            }
+        }
+
+        return TRUE;
     }
 }

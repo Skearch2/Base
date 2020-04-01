@@ -26,7 +26,6 @@ $this->load->view('admin_panel/templates/start_innerbody');
 
 // Load subheader in inner body
 $this->load->view('admin_panel/templates/subheader');
-
 ?>
 
 <div class="m-content">
@@ -36,17 +35,37 @@ $this->load->view('admin_panel/templates/subheader');
         <div class="tab-content">
           <div class="tab-pane active" id="m_user_profile_tab_1">
             <form class="m-form m-form--fit m-form--label-align-right" method="POST">
-              <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
+              <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
               <div class="m-portlet__body">
                 <div class="form-group m-form__group m--margin-top-10 m--show">
-                  <?php echo $this->session->tempdata('success-msg'); ?>
+                  <?php if ($this->session->flashdata('create_success') === 1) : ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      <div class="alert-icon">
+                        <p class="flaticon-like"> Success:</p>
+                        The link has been added.
+                      </div>
+                    </div>
+                  <?php elseif ($this->session->flashdata('create_success') === 0) : ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      <div class="alert-icon">
+                        <p class="flaticon-warning-sign "> Error:</p>
+                        Unable to add link.
+                      </div>
+                    </div>
+                  <?php endif; ?>
                   <?php if (validation_errors()) : ?>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
                       <div class="alert-icon">
-                        <p class="flaticon-danger"> Error:</p>
+                        <p class="flaticon-warning"> Error:</p>
                         <?= validation_errors(); ?>
                       </div>
                     </div>
@@ -54,69 +73,61 @@ $this->load->view('admin_panel/templates/subheader');
                 </div>
                 <div class="form-group m-form__group row">
                   <div class="col-10 ml-auto">
-                    <h3 class="m-form__section">Ad Link Information</h3>
+                    <h3 class="m-form__section">Link Information</h3>
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
                   <label for="example-text-input" class="col-2 col-form-label">Title</label>
                   <div class="col-7">
-                    <input class="form-control m-input" type="text" name="title" value="<?php if (form_error('title') == '') echo set_value('title'); ?>" required>
+                    <input class="form-control m-input" type="text" name="title" value="<?= set_value('title'); ?>">
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
                   <label for="example-text-input" class="col-2 col-form-label">Short Description</label>
                   <div class="col-7">
-                    <input class="form-control m-input" type="text" name="description_short" value="<?php if (form_error('description_short') == '') echo set_value('description_short'); ?>" required>
+                    <input class="form-control m-input" type="text" name="description_short" value="<?= set_value('description_short'); ?>">
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
                   <label for="example-text-input" class="col-2 col-form-label">Display URL</label>
                   <div class="col-7">
-                    <input class="form-control m-input" type="text" name="display_url" value="<?php if (form_error('display_url') == '') echo set_value('display_url'); ?>">
+                    <input class="form-control m-input" type="text" name="display_url" value="<?= set_value('display_url'); ?>">
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
                   <label for="example-text-input" class="col-2 col-form-label">URL</label>
                   <div class="col-7">
-                    <input class="form-control m-input" type="text" name="www" value="<?php if (form_error('www') == '') echo set_value('www'); ?>" required>
+                    <input class="form-control m-input" type="text" name="www" value="<?= set_value('www'); ?>">
 
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
                   <label for="example-text-input" class="col-2 col-form-label">Field</label>
                   <div class="col-7">
-                    <select class="form-control" name="sub_id" onchange="updatePriority(this.value)" required>
-                      <option value="">Choose Field</option>
-                      <?php foreach ($subcategory_list as $item) { ?>
-                        <option value="<?= $item->id ?>"><?= $item->title ?> </option>
-                      <?php } ?>
+                    <select class="form-control" name="field_id" onchange="getPriorities(this.value)">
+                      <option value="" <?= set_select('field_id', '', TRUE) ?>>Select</option>
+                      <?php foreach ($fields as $field) : ?>
+                        <option value="<?= $field->id ?>" <?= set_select("field_id", $field->id) ?>><?= $field->title ?></option>
+                      <?php endforeach ?>
                     </select>
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
                   <label for="example-text-input" class="col-2 col-form-label">Priority</label>
                   <div class="col-7">
-                    <select class="form-control" id="priorities" name="priority" required>
-                      <option selected value="0">Not Set</option>
-                      <?php for ($i = 1; $i <= 250; $i++) { ?>
-                        <?php if ($i == $result[0]->priority) { ?>
-                          <option selected value="<?= $i ?>"><?= $i ?></option>
-                        <?php } else if (in_array($i, $priorities)) { ?>
-                          <option style="background-color: #99ff99" value="<?= $i ?>" disabled><?= $i ?></option>
-                        <?php } else { ?>
-                          <option value="<?= $i ?>"><?= $i ?></option>
-                      <?php }
-                      } ?>
+                    <select class="form-control" id="priority" name="priority" disabled>
                     </select>
                   </div>
+                  <div id="priority-refresh" class="m-demo-icon__preview"><i class="flaticon-refresh" title="Refresh" onclick="getPriorities($('[name=field_id]').val())"></i></div>
+                  <div id="priority-loader" class="m-loader m-loader--brand" style="width: 30px; display: none;"></div>
                 </div>
                 <div class="form-group m-form__group row">
                   <label for="example-text-input" class="col-2 col-form-label">Enabled</label>
                   <div class="col-7">
-                    <input type="hidden" name="enabled" value="0">
+                    <input type="hidden" name="enabled" value="0" <?= set_value('enabled') == 0 ? 'checked' : "" ?>>
                     <span class="m-switch m-switch--icon-check">
                       <label>
-                        <input type="checkbox" name="enabled" value="1" checked>
+                        <input type="checkbox" name="enabled" value="1" <?= set_value('enabled', 1) == 1 ? 'checked' : "" ?>>
                         <span></span>
                       </label>
                     </span>
@@ -125,10 +136,10 @@ $this->load->view('admin_panel/templates/subheader');
                 <div class="form-group m-form__group row">
                   <label for="example-text-input" class="col-2 col-form-label">Brand Link</label>
                   <div class="col-7">
-                    <input type="hidden" name="redirect" value="0">
+                    <input type="hidden" name="redirect" value="0" <?= set_value('redirect') == 0 ? 'checked' : "" ?>>
                     <span class="m-switch m-switch--icon-check">
                       <label>
-                        <input type="checkbox" name="redirect" value="1" checked>
+                        <input type="checkbox" name="redirect" value="1" <?= set_value('redirect', 1) == 1 ? 'checked' : "" ?>>
                         <span></span>
                       </label>
                     </span>
@@ -178,6 +189,73 @@ $this->load->view('admin_panel/templates/scrolltop');
 // Close body and html (contains some javascripts links)
 $this->load->view('admin_panel/templates/close_html');
 ?>
+
+<script>
+  // get priorites of the links for the given field
+  function getPriorities(fieldId) {
+
+    var selectElement = document.getElementById("priority");
+    selectElement.disabled = true;
+    while (selectElement.length > 0) {
+      selectElement.remove(0);
+    }
+
+    if (fieldId == "") return;
+    $.ajax({
+      url: '<?= site_url('admin/results/links/priorities/field/id/'); ?>' + fieldId,
+      type: 'GET',
+      beforeSend: function(xhr, options) {
+        $("#priority-refresh").css("display", "none");
+        $("#priority-loader").css("display", "inline-block");
+        setTimeout(function() {
+          $.ajax($.extend(options, {
+            beforeSend: $.noop
+          }));
+        }, 500);
+        return false;
+      },
+      success: function(data, status) {
+        var obj = JSON.parse(data);
+        var option = document.createElement("option");
+        option.text = "Not Set";
+        option.value = 0;
+        selectElement.add(option);
+
+        for (i = 1; i <= 255; i++) {
+          var option = document.createElement("option");
+          var array = searchArray(i, obj);
+          if (array) {
+            option.text = i + " - " + array.title;
+            option.value = i;
+            option.style.backgroundColor = "#99ff99";
+            option.disabled = true;
+          } else {
+            option.text = i;
+            option.value = i;
+          }
+          selectElement.add(option);
+          selectElement.disabled = false;
+        }
+      },
+      complete: function() {
+        $("#priority-loader").css("display", "none");
+        $("#priority-refresh").removeAttr('style');
+      },
+      error: function(xhr, status, error) {
+        toastr.error("Error getting priorities.");
+      }
+    });
+  }
+
+  function searchArray(key, array) {
+    for (var i = 0; i < array.length; i++) {
+      if (array[i].priority == key) {
+        return array[i];
+      }
+    }
+    return false;
+  }
+</script>
 
 <!-- Sidemenu class -->
 <script>

@@ -325,6 +325,8 @@ $this->load->view('admin_panel/templates/close_html');
 				success: function(data, status) {
 					if (data == -1) {
 						swal("Not Allowed!", "You have no permission.", "warning")
+					} else if (data == 0) {
+						swal("Error!", "Unable to reset user password.", "error")
 					} else {
 						swal("Success!", "A password reset link has been sent to the user.", "success")
 					}

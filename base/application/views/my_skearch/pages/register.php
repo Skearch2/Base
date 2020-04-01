@@ -12,7 +12,7 @@ $this->load->view('my_skearch/templates/head');
 
 	<!-- begin:: Page -->
 	<div class="m-grid m-grid--hor m-grid--root m-page">
-		<div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor m-login m-login--signin m-login--2 m-login-2--skin-2" id="m_login" style="background:linear-gradient(0deg,rgba(255, 255, 255, 0.5),rgba(255, 255, 255, 0.5)),url(/assets/my_skearch/app/media/img//bg/bg-3.jpg),url(/assets/my_skearch/app/media/img//bg/bg-3.jpg),url(<?= site_url(ASSETS); ?>/my_skearch/app/media/img/bg/bg-3.jpg); background-size:cover; background-attachment: fixed">
+		<div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor m-login m-login--signin m-login--2 m-login-2--skin-2" id="m_login">
 			<div class="m-grid__item m-grid__item--fluid m-login__wrapper">
 				<div class="m-login__container">
 					<div class="m-login__logo">
@@ -30,21 +30,18 @@ $this->load->view('my_skearch/templates/head');
 						<fieldset class="m-login__form m-form">
 							<div class="m-login__form-action">
 								<div class="m-login__desc">Select the type of user registeration and fill the fields:</div>
-								<button id="m_signup_user" type="button" onclick="showFormUser()" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn <?= $is_regular ? 'active' : '' ?>">User</button>
+								<button id="btn_signup_user" type="button" onclick="showFormUser()" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn <?= $is_regular ? 'active' : '' ?>">User</button>
 								&nbsp;
-								<button id="m_signup_brand" type="button" onclick="showFormBrand()" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn <?= !$is_regular ? 'active' : '' ?>">Brand</button>
+								<button id="btn_signup_brand" type="button" onclick="showFormBrand()" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn <?= !$is_regular ? 'active' : '' ?>">Brand</button>
 							</div>
 						</fieldset>
-						<?= form_open('', 'onsubmit="unMaskFields()"'); ?>
+						<?= form_open('', 'id="form_signup"'); ?>
 						<fieldset class="m-login__form m-form">
 							<input id="is_regular_signup" name="is_regular_signup" type="hidden" value="<?= $is_regular; ?>">
 							<div id="m-login__form m-form__user" style=<?= $is_regular ? 'display:block' : 'display:none' ?>>
 								<div>Personal Details:</div>
 								<div class="form-group m-form__group">
-									<input class="form-control m-input" type="text" placeholder="First Name" name="firstname" value="<?= set_value('firstname'); ?>">
-								</div>
-								<div class="form-group m-form__group">
-									<input class="form-control m-input" type="text" placeholder="Last Name" name="lastname" value="<?= set_value('lastname'); ?>">
+									<input class="form-control m-input" type="text" placeholder="Name" name="name" value="<?= set_value('name'); ?>">
 								</div>
 								<div class="form-group m-form__group row">
 									Gender
@@ -90,13 +87,13 @@ $this->load->view('my_skearch/templates/head');
 							</div>
 							<div id="m-login__form m-form__brand" style=<?= !$is_regular ? 'display:block' : 'display:none' ?>>
 								<div class="form-group m-form__group">
-									<input class="form-control m-input" type="text" placeholder="Name" name="name" value="<?= set_value('name'); ?>">
+									<input class="form-control m-input" type="text" placeholder="Name" name="name_b" value="<?= set_value('name_b'); ?>">
 								</div>
 								<div class="form-group m-form__group row">
-									<input class="form-control m-input" type="text" placeholder="Brand Name" name="brandname" value="<?= set_value('brand'); ?>">
+									<input class="form-control m-input" type="text" placeholder="Brand Name" name="brandname" value="<?= set_value('brandname'); ?>">
 								</div>
 								<div class="form-group m-form__group">
-									<input class="form-control m-input" type="email" placeholder="Email" name="email" value="<?= set_value('email'); ?>">
+									<input class="form-control m-input" type="email" placeholder="Email" name="email_b" value="<?= set_value('email_b'); ?>">
 								</div>
 								<div class="form-group m-form__group">
 									<input class="form-control m-input" id="phone" type="text" placeholder="Phone" name="phone" value="<?= set_value('phone'); ?>">
@@ -118,7 +115,16 @@ $this->load->view('my_skearch/templates/head');
 	</div>
 
 	<!--begin::Page Scripts -->
+
+	<script src="<?= site_url(ASSETS); ?>/my_skearch/vendors/base/vendors.bundle.js" type="text/javascript"></script>
+	<script src="<?= site_url(ASSETS); ?>/frontend/js/jquery.mask.js" type="text/javascript"></script>
 	<script>
+		// Mask phone field to US number format
+		$(document).ready(function() {
+			$('#phone').mask('(000) 000-0000');
+		});
+
+		// Show sign up form for regular user
 		function showFormUser() {
 			var formUser = document.getElementById("m-login__form m-form__user");
 			var formBrand = document.getElementById("m-login__form m-form__brand");
@@ -126,11 +132,14 @@ $this->load->view('my_skearch/templates/head');
 			formUser.style.display = "block";
 			formBrand.style.display = "none";
 
+			$('#form_signup').trigger("reset");
+
 			$("#is_regular_signup").val(1);
-			$('#m_signup_user').removeClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn').addClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn active');
-			$("#m_signup_brand").removeClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn active').addClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn');
+			$('#btn_signup_user').removeClass().addClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn active');
+			$("#btn_signup_brand").removeClass().addClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn');
 		}
 
+		// Show sign up form for brand user
 		function showFormBrand() {
 			var formUser = document.getElementById("m-login__form m-form__user");
 			var formBrand = document.getElementById("m-login__form m-form__brand");
@@ -139,8 +148,8 @@ $this->load->view('my_skearch/templates/head');
 			formBrand.style.display = "block";
 
 			$("#is_regular_signup").val(0);
-			$('#m_signup_user').removeClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn active').addClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn');
-			$("#m_signup_brand").removeClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn').addClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn active');
+			$('#btn_signup_user').removeClass().addClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn');
+			$("#btn_signup_brand").removeClass().addClass('btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn active');
 		}
 
 		function unMaskFields() {
@@ -148,6 +157,8 @@ $this->load->view('my_skearch/templates/head');
 		}
 	</script>
 	<!--end::Page Scripts -->
+
+
 
 </body>
 

@@ -35,7 +35,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-caption">
 				<div class="m-portlet__head-title">
 					<h3 class="m-portlet__head-text">
-						<?= $subTitle; ?>
+						Status: <?= $heading ?>
 					</h3>
 				</div>
 			</div>
@@ -45,7 +45,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<a href="<?= site_url("admin/categories/create_result"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
 								<i class="la la-cart-plus"></i>
-								<span>Add Result</span>
+								<span>Add Link</span>
 							</span>
 						</a>
 					</li>
@@ -142,7 +142,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Priority</th>
 						<th>Title</th>
 						<th>Description</th>
-						<th>Category</th>
+						<th>Field</th>
 						<th>Display Url</th>
 						<th>Status</th>
 						<th width="18%">Actions</th>
@@ -192,7 +192,7 @@ $this->load->view('admin_panel/templates/close_html');
 		}).then(function(e) {
 			if (!e.value) return;
 			$.ajax({
-				url: '<?= site_url('admin/categories/delete_result_listing/'); ?>' + id,
+				url: '<?= site_url('admin/results/link/delete/id/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
 					swal("Success!", "The link has been deleted.", "success")
@@ -208,7 +208,7 @@ $this->load->view('admin_panel/templates/close_html');
 	//Toggles link active status
 	function toggle(id, row) {
 		$.ajax({
-			url: '<?= site_url('admin/categories/toggle_result/'); ?>' + id,
+			url: '<?= site_url('admin/results/link/toggle/id/'); ?>' + id,
 			type: 'GET',
 			success: function(data, status) {
 				if (data == 0) {
@@ -222,7 +222,7 @@ $this->load->view('admin_panel/templates/close_html');
 				}
 			},
 			error: function(xhr, status, error) {
-				toastr.error("", "Unable to update status.");
+				toastr.error("", "Unable to update the status.");
 			}
 		});
 	}
@@ -230,7 +230,7 @@ $this->load->view('admin_panel/templates/close_html');
 	//Toggles link redirection
 	function toggleRedirect(id) {
 		$.ajax({
-			url: '<?= site_url(); ?>admin/categories/toggle_redirect/' + id,
+			url: '<?= site_url('admin/results/link/redirect/id/'); ?>' + id,
 			type: 'GET',
 			success: function(data, status) {
 				if (data == 0) {
@@ -246,46 +246,6 @@ $this->load->view('admin_panel/templates/close_html');
 		});
 	}
 
-	// change field priority
-	function change_priority(id, priority) {
-		$('#m_table_1').fadeOut("slow");
-		$.ajax({
-			url: '<?= site_url(); ?>/admin/categories/change_priority/' + id + '/' + priority,
-			type: 'GET',
-			success: function(status) {
-				get_links_priority();
-				$('#m_table_1').DataTable().ajax.reload(null, false);
-				toastr.success("", "Priority updated.");
-			},
-			error: function(err) {
-				toastr.error("", "Unable to update priority.");
-			}
-		});
-	}
-
-	function get_links_priority() {
-		$.ajax({
-			url: '<?= site_url(); ?>/admin/categories/get_links_priority/' + <?= $subcategoryid; ?>,
-			type: 'GET',
-			success: function(result) {
-				obj = JSON.parse(result);
-				$('#m_table_1').fadeIn("fast");
-			},
-			error: function(err) {
-				toastr.error("", "Unable to get priorities for the link.");
-			}
-		});
-	}
-
-	function searchArray(key, array) {
-		for (var i = 0; i < array.length; i++) {
-			if (array[i].priority == key) {
-				return array[i];
-			}
-		}
-		return false;
-	}
-
 	var DatatablesDataSourceAjaxServer = {
 		init: function() {
 			$("#m_table_1").DataTable({
@@ -294,15 +254,15 @@ $this->load->view('admin_panel/templates/close_html');
 				rowId: "id",
 				processing: 1,
 				serverSide: !1,
-				ajax: "<?= site_url(); ?>/admin/categories/get_result_list/<?= $subcategoryid; ?>/<?= $status; ?>",
+				ajax: "<?= site_url(); ?>admin/results/links/get/status/<?= $status ?>",
 				columns: [{
-					data: "Priority"
+					data: "priority"
 				}, {
 					data: "title"
 				}, {
 					data: "description_short"
 				}, {
-					data: "stitle"
+					data: "field"
 				}, {
 					data: "display_url"
 				}, {
@@ -322,32 +282,9 @@ $this->load->view('admin_panel/templates/close_html');
 						var row = (n.row).toString().slice(-1);
 
 						//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
-						return '<a href="<?= site_url() . "admin/categories/update_result/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+						return '<a href="<?= site_url() . "admin/results/link/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 							'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
 							'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
-					}
-				}, {
-					targets: 0,
-					render: function(a, t, e, n) {
-						var $select = $("<select onchange= change_priority(" + e['id'] + ",this.value)></select>", {
-							"id": "priority" + e['id'],
-						});
-						for (var i = 0; i <= 250; i++) {
-							var $option = $("<option></option>", {
-								"text": i,
-								"value": i
-							});
-							if (searchArray(i, obj)) {
-								$option.attr('disabled', 'disabled');
-								$option.attr('style', 'background-color:#99ff99');
-							}
-							if (i == e['priority']) {
-								$option.attr("selected", "selected")
-							}
-							$select.append($option);
-						}
-
-						return e['priority'] + '&emsp;' + $select.prop("outerHTML")
 					}
 				}, {
 					targets: 5,
@@ -370,7 +307,6 @@ $this->load->view('admin_panel/templates/close_html');
 	}
 
 	jQuery(document).ready(function() {
-		get_links_priority();
 		DatatablesDataSourceAjaxServer.init();
 	});
 </script>
