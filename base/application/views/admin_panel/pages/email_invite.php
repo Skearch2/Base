@@ -1,6 +1,5 @@
 <?php
 
-//echo "<pre>"; print_r($users_groups); die();
 // Set DocType and declare HTML protocol
 $this->load->view('admin_panel/templates/start_html');
 

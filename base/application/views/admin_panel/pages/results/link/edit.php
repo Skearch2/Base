@@ -84,8 +84,10 @@ $this->load->view('admin_panel/templates/subheader');
                   <label for="example-text-input" class="col-2 col-form-label">Field</label>
                   <div class="col-7">
                     <select class="form-control" name="field_id" onchange="getPriorities(this.value)">
+                      <option value="<?= $link->field_id ?>" <?= set_select("field_id", $link->field_id, TRUE) ?>><?= $link->field ?></option>
                       <?php foreach ($fields as $f) : ?>
-                        <option value="<?= $f->id ?>" <?= set_select("field_id", $f->id) ?> <?= ($link->field_id == $f->id) ? "selected" : "" ?>><?= $f->title ?></option>
+                        <?php if ($link->field_id == $f->id) continue; ?>
+                        <option value="<?= $f->id ?>" <?= set_select("field_id", $f->id) ?>><?= $f->title ?></option>
                       <?php endforeach ?>
                     </select>
                   </div>

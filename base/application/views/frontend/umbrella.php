@@ -42,19 +42,22 @@ $this->load->view('frontend/templates/header');
         </div>
         <div class="middle-inner browse-inner border-box">
           <div class="row category_list_home accessorize-list">
-            <?php $count = 0 ?>
-            <?php foreach ($fields as $index => $field) : ?>
-              <?php $count++ ?>
-              <?php if ($index == 10) break ?>
-              <div class="col-sm-3 f-box">
-                <a href="<?= BASE_URL ?>browse/<?= $umbrella_name ?>/<?= $field->title ?>" title="<?= $field->title ?>"><?= $field->title ?></a>
-              </div>
-            <?php endforeach; ?>
+            <?php foreach ($results as $results) : ?>
+              <?php if ($results->is_result_umbrella != 1) : ?>
+                <div class="col-sm-3 f-box">
+                  <a href="<?= base_url('browse/') . strtolower($results->umbrella) ?>/<?= strtolower($results->title) ?>" class="btn btn-link" role="button"><?= $results->title ?></a>
+                </div>
+              <?php else : ?>
+                <div class="col-sm-3 f-box">
+                  <a href="<?= base_url('browse/') . strtolower($results->title) ?>" class="btn btn-link" role="button"><?= $results->title ?></a>
+                </div>
+              <?php endif ?>
+            <?php endforeach ?>
           </div>
-
         </div>
       </div>
     </div>
+  </div>
   </div>
 </section>
 

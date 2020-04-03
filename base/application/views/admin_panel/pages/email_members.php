@@ -29,9 +29,6 @@ $this->load->view('admin_panel/templates/start_innerbody');
 $this->load->view('admin_panel/templates/subheader');
 
 ?>
-<!-- CSS file -->
-<link rel="stylesheet" href="<?= site_url(ASSETS); ?>/plugins/easyautocomplete/easy-autocomplete.min.css">
-
 <div class="m-content">
     <div class="row">
         <div class="col-xl-9 col-lg-8">
