@@ -55,19 +55,6 @@ $route['default_controller'] = 'landing/index';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = false;
 
-$route['acl'] = 'acl/dashboard';
-$route['acl/admin'] = 'acl/admin';
-$route['acl/admin/permissions'] = 'acl/admin/permissions';
-$route['acl/admin/add-permission'] = 'acl/admin/add_permission';
-$route['acl/admin/update-permission/(:num)'] = 'acl/admin/update_permission';
-$route['acl/admin/delete-permission/(:num)'] = 'acl/admin/delete_permission';
-$route['acl/admin/groups'] = 'acl/admin/groups';
-$route['acl/admin/group-permissions/(:num)'] = 'acl/admin/group_permissions';
-$route['acl/admin/users'] = 'acl/admin/users';
-$route['acl/admin/user-permissions/(:num)'] = 'acl/admin/user_permissions';
-$route['acl/admin/manage-user/(:num)'] = 'acl/admin/manage_user';
-
-
 /**********************************************  Skearch Frontend Routes  **********************************************/
 
 /* Pages */
@@ -238,6 +225,13 @@ $route['admin/results/links/priorities/field/id/(:num)']                       =
 $route['admin/results/links/search']                                           = 'admin_panel/results/links/index/search';
 $route['admin/results/links/status/(all|active|inactive)']                     = 'admin_panel/results/links/index/$1';
 
+// Frontend
+$route['admin/results/frontend/homepage']                = 'admin_panel/results/frontend/homepage';
+$route['admin/results/frontend/fields']                  = 'admin_panel/results/frontend/field_suggestions';
+$route['admin/results/frontend/umbrellas']               = 'admin_panel/results/frontend/umbrella_suggestions';
+$route['admin/results/frontend/fields/get/id/(:num)']    = 'admin_panel/results/frontend/get_field_suggestions/$1';
+$route['admin/results/frontend/umbrellas/get/id/(:num)'] = 'admin_panel/results/frontend/get_umbrella_suggestions/$1';
+
 // Research
 $route['admin/results/research/add'] = 'admin_panel/results/research/create';
 $route['admin/results/research/delete/(:num)'] = 'admin_panel/results/research/delete/$1';
@@ -257,13 +251,6 @@ $route['admin/linkchecker/update_urls_status'] = 'admin_panel/linkchecker/update
 $route['admin/brands/brandleads'] = 'admin_panel/brandleads';
 $route['admin/brands/brandleads/get'] = 'admin_panel/brandleads/get';
 $route['admin/brands/brandleads/delete/(:num)'] = 'admin_panel/brandleads/delete/$1';
-
-/* Frontend */
-$route['admin/frontend/homepage'] = 'admin_panel/frontend/homepage';
-$route['admin/frontend/field_suggestions'] = 'admin_panel/frontend/field_suggestions';
-$route['admin/frontend/umbrella_suggestions'] = 'admin_panel/frontend/umbrella_suggestions';
-$route['admin/frontend/get_field_suggestions/(:any)'] = 'admin_panel/frontend/get_field_suggestions/$1';
-$route['admin/frontend/get_umbrella_suggestions/(:any)'] = 'admin_panel/frontend/get_umbrella_suggestions/$1';
 
 /* Email */
 $route['admin/email/members'] = 'admin_panel/email/members';

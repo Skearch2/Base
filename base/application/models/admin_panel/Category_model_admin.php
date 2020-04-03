@@ -434,24 +434,6 @@ class Category_model_admin extends CI_Model
 
   public function change_priority($id, $priority)
   {
-    // $this->db->select('priority');
-    // $this->db->from('skearch_listings');
-    // $this->db->where('priority', $priorityN);
-    // $query = $this->db->get();
-
-    // if($query->num_rows() > 0) {
-    //     $data = array(
-    //         'priority' => $priorityO,
-    //     );
-    //     $this->db->where('priority', $priorityN);
-    //     $this->db->update('skearch_listings', $data);
-    // }
-
-    // $data = array(
-    //   'priority' => $priorityN,
-    // );
-    // $this->db->where('id', $id);
-    // $this->db->update('skearch_listings', $data);
     $data = array(
       'priority' => $priority,
     );
@@ -460,105 +442,245 @@ class Category_model_admin extends CI_Model
   }
 
 
+
+
   /**
-   * Returns featured item from categories and subcategories
-   * @param int $limit
-   * @return object
+   * Returns all featured umbrella and fields
+   * 
+   * @return object|false
    */
   public function get_featured_fields()
   {
+    $this->db->select("id, title, 1 as is_umbrella");
+    $this->db->from('skearch_categories');
+    $this->db->where('enabled', 1);
+    $this->db->where('featured', 1);
+    $query1 = $this->db->get_compiled_select();
 
-    // Need more better sql query to exclude duplicates
-    // $query = $this->db->query("SELECT id, title, null AS parent_title FROM skearch_categories WHERE enabled = 1 AND featured = 1
-    // UNION (SELECT id, title, (SELECT title FROM skearch_categories WHERE skearch_categories.id = skearch_subcategory_to_category.cat_id) FROM skearch_subcategories
-    // INNER JOIN skearch_subcategory_to_category ON skearch_subcategories.id = skearch_subcategory_to_category.sub_id
-    // WHERE enabled = 1 AND featured = 1) ORDER BY title");
-    // return $query->result();
+    $this->db->select("id, title, 0 as is_umbrella");
+    $this->db->from('skearch_subcategories');
+    $this->db->where('enabled', 1);
+    $this->db->where('featured', 1);
+    $query2 = $this->db->get_compiled_select();
 
-    $query = $this->db->query("SELECT id, title, null AS parent_title FROM skearch_categories WHERE enabled = 1 AND featured = 1
-        UNION (SELECT id, title, (SELECT title FROM skearch_categories WHERE skearch_categories.id = skearch_subcategories.parent_id) FROM skearch_subcategories
-        WHERE enabled = 1 AND featured = 1) ORDER BY title");
-    return $query->result();
-  }
+    $query = $this->db->query($query1 . " UNION " . $query2 . " ORDER BY title");
 
-
-  public function get_homepage_fields()
-  {
-
-    $query = $this->db->select('field_id, title, is_cat');
-    $query = $this->db->from('skearch_homepage_fields');
-    $query = $this->db->get();
-    return $query->result();
-  }
-
-  public function update_homepage_fields($data)
-  {
-    $this->db->empty_table('skearch_homepage_fields');
-    if (!empty($data)) {
-      $this->db->query('ALTER TABLE skearch_homepage_fields AUTO_INCREMENT = 1');
-      $this->db->insert_batch('skearch_homepage_fields', $data);
+    if ($query) {
+      return $query->result();
+    } else {
+      return FALSE;
     }
   }
 
   /**
-   * Updates fields suggestions
+   * Returns all active umbrellas and fields
+   * 
+   * @return object|false
+   */
+  public function get_results()
+  {
+    $this->db->select("id, title, 1 as is_umbrella");
+    $this->db->from('skearch_categories');
+    $this->db->where('enabled', 1);
+    $query1 = $this->db->get_compiled_select();
+
+    $this->db->select("id, title, 0 as is_umbrella");
+    $this->db->from('skearch_subcategories');
+    $this->db->where('enabled', 1);
+    $query2 = $this->db->get_compiled_select();
+
+    $query = $this->db->query($query1 . " UNION " . $query2 . " ORDER BY title");
+
+    if ($query) {
+      return $query->result();
+    } else {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Returns results for homepage
    *
-   * @param [type] $field_id
-   * @param [type] $suggest_array
+   * @return object|false
+   */
+  public function get_homepage_fields()
+  {
+    $this->db->select('title');
+    $this->db->from('skearch_categories');
+    $this->db->where('skearch_categories.id = skearch_homepage_fields.result_id');
+    $sub_query1 = $this->db->get_compiled_select();
+
+    $this->db->select("id, result_id, is_result_umbrella, ($sub_query1) as title");
+    $this->db->from('skearch_homepage_fields');
+    $this->db->where('is_result_umbrella', 1);
+    $query1 = $this->db->get_compiled_select();
+
+    $this->db->select('title');
+    $this->db->from('skearch_subcategories');
+    $this->db->where('skearch_subcategories.id = skearch_homepage_fields.result_id');
+    $sub_query2 = $this->db->get_compiled_select();
+
+    $this->db->select("id, result_id, is_result_umbrella, ($sub_query2) as title");
+    $this->db->from('skearch_homepage_fields');
+    $this->db->where('is_result_umbrella', 0);
+    $query2 = $this->db->get_compiled_select();
+
+    $query = $this->db->query($query1 . " UNION " . $query2 . " ORDER BY id");
+
+    if ($query) {
+      return $query->result();
+    } else {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Update results for homepage
+   *
+   * @param array $results Results for homepage
    * @return void
    */
-  public function update_field_suggestions($field_id, $suggest_array)
+  public function update_homepage_fields($results)
+  {
+    $this->db->empty_table('skearch_homepage_fields');
+    if (!empty($data)) {
+      $this->db->query('ALTER TABLE skearch_homepage_fields AUTO_INCREMENT = 1');
+      $query = $this->db->insert_batch('skearch_homepage_fields', $results);
+    } else {
+      return FALSE;
+    }
+
+    if ($query) {
+      return TRUE;
+    } else {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Updates suggestions for a field
+   *
+   * @param int $field_id ID of the field
+   * @param array $suggestions Array of results for field
+   * @return void
+   */
+  public function update_field_suggestions($field_id, $suggestions)
   {
     $this->db->where('field_id', $field_id);
     $this->db->delete('skearch_fields_suggestions');
-    if (!empty($suggest_array))
-      $this->db->insert_batch('skearch_fields_suggestions', $suggest_array);
+    if (!empty($suggestions)) {
+      $query = $this->db->insert_batch('skearch_fields_suggestions', $suggestions);
+    } else {
+      return FALSE;
+    }
+
+
+    if ($query) {
+      return TRUE;
+    } else {
+      return FALSE;
+    }
   }
 
   /**
-   * Updates fields suggestions
+   * Updates suggestions for an umbrella
    *
-   * @param [type] $field_id
-   * @param [type] $suggest_array
+   * @param int $umbrella_id ID of the umbrella
+   * @param array $suggestions Array of results for umbrella
    * @return void
    */
-  public function update_umbrella_suggestions($umbrella_id, $suggest_array)
+  public function update_umbrella_suggestions($umbrella_id, $suggestions)
   {
     $this->db->where('umbrella_id', $umbrella_id);
     $this->db->delete('skearch_umbrella_suggestions');
-    if (!empty($suggest_array))
-      $this->db->insert_batch('skearch_umbrella_suggestions', $suggest_array);
+    if (!empty($suggestions)) {
+      $query = $this->db->insert_batch('skearch_umbrella_suggestions', $suggestions);
+    } else {
+      return FALSE;
+    }
+
+    if ($query) {
+      return TRUE;
+    } else {
+      return FALSE;
+    }
   }
 
   /**
-   * Updates fields suggestions
+   * Returns suggestions for a field
    *
-   * @param [type] $field_id
-   * @param [type] $suggest_array
-   * @return void
+   * @param int $field_id ID of the field
+   * @return object|false
    */
   public function get_field_suggestions($field_id)
   {
-    $this->db->select('*');
+    $this->db->select('title');
+    $this->db->from('skearch_categories');
+    $this->db->where('skearch_categories.id = skearch_fields_suggestions.result_id');
+    $sub_query1 = $this->db->get_compiled_select();
+
+    $this->db->select("id, result_id, is_result_umbrella, ($sub_query1) as title");
     $this->db->from('skearch_fields_suggestions');
     $this->db->where('field_id', $field_id);
-    $query = $this->db->get();
-    return $query->result();
+    $this->db->where('is_result_umbrella', 1);
+    $query1 = $this->db->get_compiled_select();
+
+    $this->db->select('title');
+    $this->db->from('skearch_subcategories');
+    $this->db->where('skearch_subcategories.id = skearch_fields_suggestions.result_id');
+    $sub_query2 = $this->db->get_compiled_select();
+
+    $this->db->select("id, result_id, is_result_umbrella, ($sub_query2) as title");
+    $this->db->from('skearch_fields_suggestions');
+    $this->db->where('field_id', $field_id);
+    $this->db->where('is_result_umbrella', 0);
+    $query2 = $this->db->get_compiled_select();
+
+    $query = $this->db->query($query1 . " UNION " . $query2 . " ORDER BY id");
+
+    if ($query) {
+      return $query->result();
+    } else {
+      return FALSE;
+    }
   }
 
   /**
-   * Updates umbrella suggestions
+   * Rpdates suggestions for a umbrella
    *
-   * @param [type] $field_id
-   * @param [type] $suggest_array
-   * @return void
+   * @param int $field_id
+   * @return object|false
    */
   public function get_umbrella_suggestions($umbrella_id)
   {
-    $this->db->select('*');
+    $this->db->select('title');
+    $this->db->from('skearch_categories');
+    $this->db->where('skearch_categories.id = skearch_umbrella_suggestions.result_id');
+    $sub_query1 = $this->db->get_compiled_select();
+
+    $this->db->select("id, result_id, is_result_umbrella, ($sub_query1) as title");
     $this->db->from('skearch_umbrella_suggestions');
     $this->db->where('umbrella_id', $umbrella_id);
-    $query = $this->db->get();
-    return $query->result();
+    $this->db->where('is_result_umbrella', 1);
+    $query1 = $this->db->get_compiled_select();
+
+    $this->db->select('title');
+    $this->db->from('skearch_subcategories');
+    $this->db->where('skearch_subcategories.id = skearch_umbrella_suggestions.result_id');
+    $sub_query2 = $this->db->get_compiled_select();
+
+    $this->db->select("id, result_id, is_result_umbrella, ($sub_query2) as title");
+    $this->db->from('skearch_umbrella_suggestions');
+    $this->db->where('umbrella_id', $umbrella_id);
+    $this->db->where('is_result_umbrella', 0);
+    $query2 = $this->db->get_compiled_select();
+
+    $query = $this->db->query($query1 . " UNION " . $query2 . " ORDER BY id");
+
+    if ($query) {
+      return $query->result();
+    } else {
+      return FALSE;
+    }
   }
 }

@@ -121,14 +121,17 @@ $this->load->view('frontend/templates/header');
                                 <div class="col-sm-3 f-box">
                                     <a href="<?= BASE_URL ?>browse/<?= $umbrella_name ?>" title="<?= $umbrella_name ?>"><?= $umbrella_name ?></a>
                                 </div>
-                                <? if (!empty($suggest_fields)) : ?>
-                                    <?php foreach ($suggest_fields as $field) : ?>
-                                        <?php if (!strcasecmp($field->suggest_field_title, $field_name)) continue ?>
+                                <?php foreach ($results as $results) : ?>
+                                    <?php if ($results->is_result_umbrella != 1) : ?>
                                         <div class="col-sm-3 f-box">
-                                            <a href="<?= BASE_URL ?>browse/<?= $umbrella_name ?>/<?= $field->suggest_field_title ?>" title="<?= $field->suggest_field_title ?>"><?= $field->suggest_field_title ?></a>
+                                            <a href="<?= base_url('browse/') . strtolower($results->umbrella) ?>/<?= strtolower($results->title) ?>" class="btn btn-link" role="button"><?= $results->title ?></a>
                                         </div>
-                                    <?php endforeach ?>
-                                <? endif ?>
+                                    <?php else : ?>
+                                        <div class="col-sm-3 f-box">
+                                            <a href="<?= base_url('browse/') . strtolower($results->title) ?>" class="btn btn-link" role="button"><?= $results->title ?></a>
+                                        </div>
+                                    <?php endif ?>
+                                <?php endforeach ?>
                             </div>
                         </div>
                     </div>

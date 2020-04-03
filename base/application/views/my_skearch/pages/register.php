@@ -35,7 +35,7 @@ $this->load->view('my_skearch/templates/head');
 								<button id="btn_signup_brand" type="button" onclick="showFormBrand()" class="btn btn-outline-focus m-btn m-btn--pill m-btn--custom  m-login__btn <?= !$is_regular ? 'active' : '' ?>">Brand</button>
 							</div>
 						</fieldset>
-						<?= form_open('', 'id="form_signup"'); ?>
+						<?= form_open('', 'id="form_signup" onsubmit="unMaskFields()"'); ?>
 						<fieldset class="m-login__form m-form">
 							<input id="is_regular_signup" name="is_regular_signup" type="hidden" value="<?= $is_regular; ?>">
 							<div id="m-login__form m-form__user" style=<?= $is_regular ? 'display:block' : 'display:none' ?>>

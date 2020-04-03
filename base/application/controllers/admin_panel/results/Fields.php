@@ -246,7 +246,7 @@ class Fields extends MY_Controller
             // get all umbrellas
             $data['umbrellas'] = $this->umbrellas->get_by_status();
 
-            $data['title'] = ucfirst("edit umbrella");
+            $data['title'] = ucfirst("edit field");
             $this->load->view('admin_panel/pages/results/field/edit', $data);
         } else {
             $field_data = array(

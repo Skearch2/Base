@@ -21,6 +21,9 @@ if (!defined('BASEPATH')) {
 class Pages extends MY_Controller
 {
 
+  /**
+   * Undocumented function
+   */
   public function __construct()
   {
     parent::__construct();
@@ -35,15 +38,14 @@ class Pages extends MY_Controller
     }
   }
 
+  /**
+   * Undocumented function
+   *
+   * @return void
+   */
   public function index()
   {
-
-    if (!file_exists(APPPATH . '/views/frontend/home.php')) {
-      show_404();
-    }
-
-    // get fields for homepage
-    $data['fields'] = $this->Category_model->get_homepage_fields();
+    $data['results'] = $this->Category_model->get_homepage_results();
 
     $data['user'] = $this->ion_auth->user()->row();
     $data['admin'] = $this->ion_auth->is_admin();
@@ -55,14 +57,13 @@ class Pages extends MY_Controller
   }
 
   /**
+   * Undocumented function
    *
+   * @param string $order
+   * @return void
    */
   public function browse_all($order = 'asc')
   {
-
-    if (!file_exists(APPPATH . '/views/frontend/browse.php')) {
-      show_404();
-    }
 
     // get all umbrellas
     $umbrellas = $this->Category_model->get_categories(NULL, $order);
@@ -94,14 +95,13 @@ class Pages extends MY_Controller
 
 
   /**
+   * Undocumented function
    *
+   * @param [type] $umbrella_name
+   * @return void
    */
   public function browse_umbrella($umbrella_name)
   {
-
-    if (!file_exists(APPPATH . '/views/frontend/umbrella.php')) {
-      show_404();
-    }
 
     // redirect if umbrella is not found
     if (!$this->Category_model->get_category_id($umbrella_name)) {
@@ -186,9 +186,8 @@ class Pages extends MY_Controller
         }
       }
 
-      // get fields for given umbrella
+      $data['results'] = $this->Category_model->get_umbrella_suggestions($umbrella_id);
       $data['fields'] = $this->Category_model->get_subcategories($umbrella_id);
-
       $data['umbrella_name'] = urldecode($umbrella_name);
 
       // set page title
@@ -197,6 +196,13 @@ class Pages extends MY_Controller
     }
   }
 
+  /**
+   * Undocumented function
+   *
+   * @param [type] $umbrella_name
+   * @param [type] $field_name
+   * @return void
+   */
   public function browse_field($umbrella_name, $field_name)
   {
 
@@ -213,7 +219,8 @@ class Pages extends MY_Controller
       if (!$this->Category_model->get_subcategory_id($field_name)) {
         redirect(site_url() . '/browse/' . $umbrella_name, 'refresh');
       } else {
-        $data['field_id'] = $this->Category_model->get_subcategory_id($field_name)->id;
+        $field_id = $this->Category_model->get_subcategory_id($field_name)->id;
+        $data['field_id'] = $field_id;
         $data['suggest_fields'] = $this->Category_model->get_field_suggestions($data['field_id']);
 
         // get media for media box a
@@ -292,6 +299,7 @@ class Pages extends MY_Controller
           }
         }
 
+        $data['results'] = $this->Category_model->get_field_suggestions($field_id);
         $data['umbrella_name'] = urldecode($umbrella_name);
         $data['field_name'] = urldecode($field_name);
 
@@ -325,6 +333,12 @@ class Pages extends MY_Controller
     }
   }
 
+  /**
+   * Undocumented function
+   *
+   * @param [type] $keyword
+   * @return void
+   */
   public function get_data($keyword)
   {
 
@@ -340,6 +354,13 @@ class Pages extends MY_Controller
   }
 
 
+  /**
+   * Undocumented function
+   *
+   * @param [type] $field_id
+   * @param [type] $order
+   * @return void
+   */
   public function get_field_results($field_id, $order)
   {
 
@@ -350,6 +371,14 @@ class Pages extends MY_Controller
       ->set_output(json_encode($query_result));
   }
 
+  /**
+   * Undocumented function
+   *
+   * @param [type] $album_type
+   * @param [type] $album_type_id
+   * @param [type] $media_box
+   * @return void
+   */
   private function get_album($album_type, $album_type_id, $media_box)
   {
 
@@ -370,6 +399,12 @@ class Pages extends MY_Controller
     return $albumid;
   }
 
+  /**
+   * Undocumented function
+   *
+   * @param [type] $album_id
+   * @return void
+   */
   private function get_media_contents($album_id)
   {
 

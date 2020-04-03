@@ -13,7 +13,7 @@
 								<li id="menu-frontend" class="m-menu__item " aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-layers"></i><span class="m-menu__link-text">Front-end</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 									<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 										<ul class="m-menu__subnav">
-											<li id="submenu-frontend-homepage_items" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/frontend/homepage"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Homepage Items</span></a></li>
+											<li id="submenu-frontend-homepage_items" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/frontend/homepage"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Homepage Items</span></a></li>
 										</ul>
 									</div>
 								</li>
@@ -33,8 +33,8 @@
 										<ul class="m-menu__subnav">
 											<li id="submenu-results-umbrellas" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/umbrellas/status/all"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Umbrellas</span></a></li>
 											<li id="submenu-results-fields" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/fields/status/all"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Fields</span></a></li>
-											<li id="submenu-results-related_umbrellas" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/frontend/umbrella_suggestions"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Related Umbrellas</span></a></li>
-											<li id="submenu-results-related_fields" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/frontend/field_suggestions"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Related Fields</span></a></li>
+											<li id="submenu-results-related_umbrellas" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/frontend/umbrellas"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Related Umbrellas</span></a></li>
+											<li id="submenu-results-related_fields" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/frontend/fields"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Related Fields</span></a></li>
 											<li id="submenu-results-links" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/links/search"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Add Links</span></a></li>
 											<li id="submenu-results-research" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/research/list"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Research</span></a></li>
 										</ul>
