@@ -36,6 +36,8 @@ class Email extends MY_Controller
         }
 
         $this->load->model('admin_panel/users/User_model', 'User_model');
+
+        $this->email->initialize($this->config->item('email_config', 'ion_auth'));
     }
 
     /**
@@ -51,45 +53,30 @@ class Email extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            if ($this->form_validation->run() == FALSE) {
+            $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+            $this->form_validation->set_rules('subject', 'Subject', 'required');
+            $this->form_validation->set_rules('content', 'Body', 'required|min_length[5]|max_length[1000]');
 
-                $data['user_groups'] = $this->ion_auth->groups()->result();
-                //$users = $this->User_model->get_user_list();
+            if ($this->form_validation->run() == FALSE) {
 
                 $data['title'] = ucwords("Email Member");
 
                 $this->load->view('admin_panel/pages/email_members', $data);
             } else {
 
+                $recipent = $this->input->post('email');
                 $subject = $this->input->post('subject');
                 $content = $this->input->post('content');
 
-                $config['email_config'] = array(
-                    'protocol' => 'smtp',
-                    'smtp_host' => 'ssl://node1566.myfcloud.com',
-                    'smtp_user' => 'no-reply@skearch.com',
-                    'smtp_pass' => '4URUpw6mXe',
-                    'smtp_port' => '465',
-                    'validation' => true,
-                    'multipart' => "mixed",
-                    'mailtype' => 'html',
-                    'charset' => 'utf-8',
-                    'newline' => "\r\n",
-                    'crlf' => "\r\n",
-                );
-
-                $this->email->initialize($config);
-
                 $this->email->from('no-reply@skearch.com', 'Skearch');
-                $this->email->to('no-reply@skearch.com');
-                $this->email->bcc($recipents);
+                $this->email->to($recipent);
                 $this->email->subject($subject);
                 $this->email->message($content);
 
                 if ($this->email->send()) {
-                    $this->session->set_flashdata('email_sent_success', 'The Email has been sent!');
+                    $this->session->set_flashdata('email_sent_success', 'The Email has been sent.');
                 } else {
-                    $this->session->set_flashdata('email_sent_fail', 'Unable to send email!');
+                    $this->session->set_flashdata('email_sent_failed', 'Unable to send email.');
                 }
                 $this->email->clear();
                 redirect('admin/email/members');
@@ -110,32 +97,18 @@ class Email extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $this->form_validation->set_rules('recipents', 'Recipents', 'required|callback_email_check');
+            $this->form_validation->set_rules('recipents[]', 'Email', 'required|valid_email');
+            $this->form_validation->set_rules('subject', 'Subject', 'required');
+            $this->form_validation->set_rules('content', 'Body', 'required|min_length[5]|max_length[1000]');
 
             if ($this->form_validation->run() === FALSE) {
 
                 $data['title'] = ucwords("Email Invite");
                 $this->load->view('admin_panel/pages/email_invite', $data);
             } else {
-                $recipents = explode(";", $this->input->post('recipents'));
+                $recipents = implode(', ', $this->input->post('recipents'));
                 $subject = $this->input->post('subject');
                 $content = $this->input->post('content');
-
-                $config['email_config'] = array(
-                    'protocol' => 'smtp',
-                    'smtp_host' => 'ssl://node1566.myfcloud.com',
-                    'smtp_user' => 'no-reply@skearch.com',
-                    'smtp_pass' => '4URUpw6mXe',
-                    'smtp_port' => '465',
-                    'validation' => true,
-                    'multipart' => "mixed",
-                    'mailtype' => 'html',
-                    'charset' => 'utf-8',
-                    'newline' => "\r\n",
-                    'crlf' => "\r\n",
-                );
-
-                $this->email->initialize($config);
 
                 $this->email->from('no-reply@skearch.com', 'Skearch');
                 $this->email->to('no-reply@skearch.com');
@@ -144,9 +117,9 @@ class Email extends MY_Controller
                 $this->email->message($content);
 
                 if ($this->email->send()) {
-                    $this->session->set_flashdata('email_sent_success', 'The Email has been sent!');
+                    $this->session->set_flashdata('email_sent_success', 'The Email has been sent.');
                 } else {
-                    $this->session->set_flashdata('email_sent_fail', 'Unable to send email!');
+                    $this->session->set_flashdata('email_sent_failed', 'Unable to send email.');
                 }
                 $this->email->clear();
                 redirect('admin/email/invite');

@@ -145,9 +145,10 @@ class Umbrellas extends MY_Controller
      */
     public function index($status = NULL)
     {
-
-        $data['title'] = ucfirst("Umbrella");
         $data['status'] = $status;
+        $data['heading'] = ucfirst($status);
+
+        $data['title'] = ucfirst("Umbrellas");
 
         // Load page content
         $this->load->view('admin_panel/pages/results/umbrella/view', $data);

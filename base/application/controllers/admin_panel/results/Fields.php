@@ -186,15 +186,15 @@ class Fields extends MY_Controller
         if ($value != NULL && is_numeric($value)) {
             $umbrella_id = $value;
             $umbrella_title = $this->umbrellas->get($umbrella_id)->title;
-            $data['subTitle'] = ucfirst("Fields under \"" . $umbrella_title . "\"");
+            $data['heading'] = ucwords("umbrella: " . $umbrella_title);
             $data['umbrella_id'] = $umbrella_id;
         } else {
             $status = $value;
-            $data['subTitle'] = ucfirst($status);
+            $data['heading'] = ucwords("status: " . $status);
             $data['status'] = $status;
         }
 
-        $data['title'] = ucfirst("Field list");
+        $data['title'] = ucfirst("Fields");
         $this->load->view('admin_panel/pages/results/field/view', $data);
     }
 
@@ -246,7 +246,7 @@ class Fields extends MY_Controller
             // get all umbrellas
             $data['umbrellas'] = $this->umbrellas->get_by_status();
 
-            $data['title'] = ucfirst("edit umbrella");
+            $data['title'] = ucfirst("edit field");
             $this->load->view('admin_panel/pages/results/field/edit', $data);
         } else {
             $field_data = array(

@@ -48,6 +48,9 @@ class Auth extends MY_Controller
         }
         if ($activation) {
 
+            // create default user settings
+            $this->_create_settings($id);
+
             // User
             $user = $this->ion_auth->user($id)->row();
 
@@ -55,8 +58,8 @@ class Auth extends MY_Controller
             $template = $this->Template_model->get_template('welcome');
 
             $data = array(
-                'firstname' => $user->first_name,
-                'lastname' => $user->last_name
+                'firstname' => $user->firstname,
+                'lastname' => $user->lastname
             );
 
             $message = $this->parser->parse_string($template->body, $data);
@@ -83,13 +86,13 @@ class Auth extends MY_Controller
      */
     public function change_email()
     {
-        $this->form_validation->set_rules('new_email', 'New Email Address', 'required|valid_email|trim');
-        $this->form_validation->set_rules('new_email2', 'Confirm Email Address', 'required|trim|matches[new_email]');
-        $this->form_validation->set_rules('current_password', 'Password', 'required');
-
         if (!$this->ion_auth->logged_in()) {
             redirect('myskearch/auth/login');
         }
+
+        $this->form_validation->set_rules('new_email', 'New Email Address', 'required|valid_email|trim');
+        $this->form_validation->set_rules('new_email2', 'Confirm Email Address', 'required|trim|matches[new_email]');
+        $this->form_validation->set_rules('current_password', 'Password', 'required');
 
         $user = $this->ion_auth->user()->row();
 
@@ -113,6 +116,19 @@ class Auth extends MY_Controller
 
                     if ($this->ion_auth->verify_password($password, $user->password)) {
 
+                        $data = array(
+                            'email' => $email,
+                        );
+                        $update = $this->ion_auth->update($user->id, $data);
+
+                        if ($update) {
+                            $this->session->set_flashdata('success', 'Email change successful');
+                            redirect('myskearch/profile');
+                        } else {
+                            $this->session->set_flashdata('error', 'Unable to change email');
+                            redirect('myskearch/profile');
+                        }
+
                         $this->session->set_flashdata('success', 'Email change successful');
                         redirect('myskearch/profile');
                     } else {
@@ -132,19 +148,19 @@ class Auth extends MY_Controller
      */
     public function change_password()
     {
-        $this->form_validation->set_rules('old_password', 'Old Password', 'required');
-        $this->form_validation->set_rules('new_password', 'New Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
-        $this->form_validation->set_rules('new_password2', 'Confirm New Password', 'required|trim|matches[new_password]');
-
         if (!$this->ion_auth->logged_in()) {
             redirect('myskearch/auth/login');
         }
+
+        $this->form_validation->set_rules('old_password', 'Old Password', 'required');
+        $this->form_validation->set_rules('new_password', 'New Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
+        $this->form_validation->set_rules('new_password2', 'Confirm New Password', 'required|trim|matches[new_password]');
 
         $user = $this->ion_auth->user()->row();
 
         if ($this->form_validation->run() === false) {
 
-            $data['myskearch_id'] = $user->id;
+            $data['skearch_id'] = $user->id;
             $data['csrf'] = $this->_get_csrf_nonce();
 
             $data['title'] = ucwords("my skearch | change password");
@@ -239,7 +255,7 @@ class Auth extends MY_Controller
 
                 redirect();
             } else {
-                //$this->session->set_flashdata('alert', "Incorrect Skearch ID or password, please try again.");
+                $this->session->set_flashdata('error', $this->ion_auth->errors());
                 redirect('myskearch/auth/login');
             }
         }
@@ -250,6 +266,10 @@ class Auth extends MY_Controller
      */
     public function logout()
     {
+        if (!$this->ion_auth->logged_in()) {
+            redirect('myskearch/auth/login');
+        }
+
         $this->ion_auth->logout();
         $this->session->set_flashdata('success', 'You have successfully logged out.');
         redirect('myskearch/auth/login');
@@ -322,8 +342,7 @@ class Auth extends MY_Controller
         $is_regular = (null !== $this->input->post("is_regular_signup")) ?  $this->input->post("is_regular_signup") : 1;
 
         if (!empty($is_regular) && $is_regular == 1) {
-            $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
-            $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
+            $this->form_validation->set_rules('name', 'Name', 'required|alpha|trim');
             $this->form_validation->set_rules('gender', 'Gender', 'required');
             $this->form_validation->set_rules('age_group', 'Age group', 'required');
             $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']|trim');
@@ -337,12 +356,11 @@ class Auth extends MY_Controller
                 array('required' => 'You must agree with the terms and conditions.')
             );
         } else {
-            $this->form_validation->set_rules('name', 'Name', 'required|trim');
+            $this->form_validation->set_rules('name_b', 'Name', 'required|alpha|trim');
             $this->form_validation->set_rules('brandname', 'Brand Name', 'is_unique[skearch_brand_leads.brandname]|required|trim');
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email|trim');
+            $this->form_validation->set_rules('email_b', 'Email', 'required|valid_email|trim');
             $this->form_validation->set_rules('phone', 'Phone', 'required|numeric|exact_length[10]');
         }
-
 
         if ($this->form_validation->run() === false) {
 
@@ -366,6 +384,22 @@ class Auth extends MY_Controller
                 redirect('myskearch/auth/signup');
             }
         }
+    }
+
+    /**
+     * Create customized user settings with default values
+     *
+     * @param int $id ID of the user
+     * @return void
+     */
+    private function _create_settings($id)
+    {
+        $data = array(
+            'user_id' => $id,
+            'search_engine' => 'duckduckgo',
+            'theme' => 'light'
+        );
+        $this->db->insert('skearch_users_settings', $data);
     }
 
     /**

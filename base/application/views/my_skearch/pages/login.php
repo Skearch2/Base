@@ -12,8 +12,8 @@ $this->load->view('my_skearch/templates/head');
 
 	<!-- begin:: Page -->
 	<div class="m-grid m-grid--hor m-grid--root m-page">
-		<div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor m-login m-login--signin m-login--2 m-login-2--skin-2" id="m_login" style="background:linear-gradient(0deg,rgba(226, 248, 197, 0.500),rgba(226, 248, 197, 0.500)),url(<?= site_url(ASSETS); ?>/my_skearch/app/media/img//bg/bg-3.jpg); background-size:cover;">
-			<div class="m-grid__item m-grid__item--fluid m-login__wrapper">
+		<div class="m-grid__item m-grid__item--fluid m-grid m-grid--hor m-login m-login--signin m-login--2 m-login-2--skin-2" id="m_login">
+			<div class=" m-grid__item m-grid__item--fluid m-login__wrapper">
 				<?= form_open('', 'id="login_form"') ?>
 				<div class="m-login__container">
 					<div class="m-login__logo">
@@ -23,10 +23,12 @@ $this->load->view('my_skearch/templates/head');
 					</div>
 					<div class="m-login__signin">
 						<div class="m-login__head">
-							<h3 class="m-login__title">Login To Skearch</h3>
+							<h3 class="m-login__title">Login to Skearch</h3>
+						</div>
+						<div class="m-login__head">
+							<?php $this->load->view('my_skearch/templates/notifications') ?>
 						</div>
 						<fieldset class="m-login__form m-form" form='login_form' name='login_fields'>
-							<?php $this->load->view('my_skearch/templates/notifications') ?>
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="text" placeholder="Skearch ID" id="skearch_id" name="skearch_id" value="<?= set_value('skearch_id') ?>" autocomplete="off">
 							</div>

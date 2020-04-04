@@ -6,65 +6,6 @@ $this->load->view('admin_panel/templates/start_html');
 // Load default head (metadata & linking).
 $this->load->view('admin_panel/templates/head');
 
-?>
-
-<head>
-  <script src="<?php site_url(); ?>/assets/admin_panel/vendors/base/vendors.bundle.js" type="text/javascript"></script>
-  <script src="<?php site_url(); ?>/assets/admin_panel/demo/demo12/base/scripts.bundle.js" type="text/javascript"></script>
-
-  <script src="<?php site_url(); ?>/assets/admin_panel/vendors/custom/datatables/datatables.bundle.js" type="text/javascript"></script>
-
-  <script src="<?php site_url(); ?>/assets/admin_panel/app/js/dashboard.js" type="text/javascript"></script>
-
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
-
-  <style>
-    #sortable1SK,
-    #sortable2SK {
-      border: 1px solid #eee;
-      width: 160px;
-      min-height: 20px;
-      list-style-type: none;
-      margin: 0;
-      padding: 5px 0 0 0;
-      float: left;
-      margin-right: 10px;
-      max-height: 600px;
-      overflow: auto
-    }
-
-    #sortable1SK li,
-    #sortable2SK li {
-      margin: 0 5px 5px 5px;
-      padding: 5px;
-      font-size: 1em;
-      width: 130px;
-    }
-  </style>
-
-  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script>
-    $(function() {
-      $(document).tooltip({
-        track: true
-      });
-
-      $("#sortable1SK, #sortable2SK").sortable({
-        connectWith: ".connectedSortable"
-      }).disableSelection();
-    });
-
-    function addemptytab(val) {
-      $("#sortable2SK").append("<li class='btn btn-secondary' title='Click to remove' onclick='$(this).remove();' style= 'background-color:red'> Empty Tab <input type='hidden' name='item[" + val + "][field_id] value='0'><input type='hidden' name='item[" + val + "][title]' value='empty'><input type='hidden' name='item[" + val + "][is_cat]' value='0'></li>");
-      num++;
-    }
-  </script>
-</head>
-
-<?php
-
 // Start body element
 $this->load->view('admin_panel/templates/start_body');
 
@@ -88,6 +29,32 @@ $this->load->view('admin_panel/templates/subheader');
 
 ?>
 
+<link rel="stylesheet" href="/resources/demos/style.css">
+
+<style>
+  #featuredList,
+  #homepageList {
+    border: 1px solid #eee;
+    width: 160px;
+    min-height: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0 0 0;
+    float: left;
+    margin-right: 10px;
+    max-height: 600px;
+    overflow: auto
+  }
+
+  #featuredList li,
+  #homepageList li {
+    margin: 0 5px 5px 5px;
+    padding: 5px;
+    font-size: 1em;
+    width: 130px;
+  }
+</style>
+
 <div class="m-content">
   <div class="row">
     <div class="col-xl-9 col-lg-8">
@@ -97,62 +64,77 @@ $this->load->view('admin_panel/templates/subheader');
             <div class="m-form m-form--fit m-form--label-align-right">
               <div class="m-portlet__body">
                 <div class="form-group m-form__group m--margin-top-10 m--show">
-                  <?php echo $this->session->tempdata('success-msg'); ?>
+                  <?php if ($this->session->flashdata('success') === 1) : ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      <div class="alert-icon">
+                        <p class="flaticon-like"> Success:</p>
+                        Homepage results has been updated.
+                      </div>
+                    </div>
+                  <?php elseif ($this->session->flashdata('success') === 0) : ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      <div class="alert-icon">
+                        <p class="flaticon-like"> Success:</p>
+                        Unable to update homepage results.
+                      </div>
+                    </div>
+                  <?php endif ?>
                 </div>
                 <div class="form-group m-form__group row">
                   <div class="col-10 ml-auto">
-                    <h3 class="m-form__section">Set Fields</h3>
+                    <h3 class="m-form__section">Choose Hompage Results</h3>
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
-                  <label for="example-text-input" class="col-2 col-form-label">Drag item from the first list to the second list
-                    <br><br>
-                    <font size="1">Umbrella: White Backgroud
-                      <br>Fields: Grey Backgroud
-                    </font>
-                  </label>
-                  <div class="col-7">
-
-                    <ul id="sortable1SK" class="connectedSortable">
-                      <?php $num = 0;
-                      foreach ($featured_fields as $item) { ?>
-                        <?php $flag = true;
-                        foreach ($homepage_fields as $hitem) {
-                          if ($item->id == $hitem->field_id && $item->title == $hitem->title) $flag = false;
-                        } ?>
-                        <?php if ($flag) { ?>
-                          <li <?php if (isset($item->parent_title)) echo 'style="background-color: #eaecee"' ?> class="btn btn-secondary m-btn m-btn--air m-btn--custom"><?php echo $item->title; ?>
-                            <input type="hidden" name=item[<?= $num ?>][field_id] value='<?= $item->id ?>'>
-                            <input type="hidden" name=item[<?= $num ?>][title] value='<?= $item->title ?>'>
-                            <input type="hidden" name=item[<?= $num ?>][is_cat] value='<?php if (isset($item->parent_title)) echo 0;
-                                                                                        else echo 1; ?>'>
-                          </li>
-                      <?php $num++;
-                        }
-                      } ?>
-
-                    </ul>
+                  <label for="example-text-input" class="col-2 col-form-label">Drag item from the first list to the second list</label>
+                  <div class="col-5">
+                    <div>
+                      <h5>Featured Results</h5>
+                      <ul id="featuredList">
+                        <?php $index = 0; ?>
+                        <?php foreach ($featured_results as $f_result) : ?>
+                          <?php $flag = true; // check to see if the featured result is already in the homepage result                           
+                          ?>
+                          <?php foreach ($homepage_results as $h_result) : ?>
+                            <?php if ($f_result->id == $h_result->result_id && $f_result->is_umbrella == $h_result->is_result_umbrella) $flag = false; ?>
+                          <?php endforeach ?>
+                          <?php if ($flag) : ?>
+                            <li ondblclick="moveToHomepageList($(this))" class="<?= ($f_result->is_umbrella) ? 'btn btn-outline-brand m-btn m-btn--air m-btn--custom' : 'btn btn-secondary m-btn m-btn--air m-btn--custom' ?>"><?= $f_result->title ?>
+                              <input type="hidden" name=item[<?= $index ?>][result_id] value="<?= $f_result->id ?>">
+                              <input type="hidden" name=item[<?= $index ?>][is_result_umbrella] value="<?= $f_result->is_umbrella ?>">
+                            </li>
+                            <?php $index++; ?>
+                          <?php endif ?>
+                        <?php endforeach ?>
+                      </ul>
+                    </div>
 
                     <form class="m-form m-form--fit m-form--label-align-right" role="form" method="POST">
-                      <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-
-                      <ul id="sortable2SK" class="connectedSortable">
-                        <?php foreach ($homepage_fields as $item) { ?>
-                          <?php if ($item->title == 'empty') { ?> <li class='btn btn-secondary' style='background-color:red' onclick='$(this).remove();' title='Click to remove'> Empty Tab
-                            <?php } else { ?>
-                            <li <?php if (!$item->is_cat) echo 'style="background-color: #eaecee"' ?> class="btn btn-secondary m-btn m-btn--air m-btn--custom"><?php echo $item->title;
-                                                                                                                                                              } ?>
-                            <input type="hidden" name=item[<?= $num ?>][field_id] value='<?= $item->field_id ?>'>
-                            <input type="hidden" name=item[<?= $num ?>][title] value='<?= $item->title ?>'>
-                            <input type="hidden" name=item[<?= $num ?>][is_cat] value='<?= $item->is_cat ?>'>
-                            </li>
-                          <?php $num++;
-                        } ?>
-                      </ul>
-
-                      <div align="right"><input onclick="addemptytab(num);" class="btn btn-accent m-btn m-btn--air" type="button" value="Add Empty Tab"></div>
-
+                      <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                      <div>
+                        <h5>Homepage Results</h5>
+                        <ul id="homepageList">
+                          <?php foreach ($homepage_results as $h_result) : ?>
+                            <?php if ($h_result->result_id == 0) : ?>
+                              <li class='btn btn-metal m-btn m-btn--air m-btn--custom' ondblclick='$(this).remove();' title='Double click to remove'>
+                              <?php else : ?>
+                              <li ondblclick="moveToFeaturedList($(this))" class="<?= ($h_result->is_result_umbrella) ? 'btn btn-outline-brand m-btn m-btn--air m-btn--custom' : 'btn btn-secondary m-btn m-btn--air m-btn--custom' ?>"><?= $h_result->title ?>
+                              <?php endif ?>
+                              <input type="hidden" name=item[<?= $index ?>][result_id] value='<?= $h_result->result_id ?>'>
+                              <input type="hidden" name=item[<?= $index ?>][is_result_umbrella] value='<?= $h_result->is_result_umbrella ?>'>
+                              </li>
+                              <?php $index++; ?>
+                            <?php endforeach ?>
+                        </ul>
+                      </div>
                   </div>
+                  <div align="right"><input onclick="addBlank(index);" class="btn btn-brand m-btn m-btn--air" type="button" value="Add Blank Tab"></div>
                 </div>
               </div>
               <div class="m-portlet__foot m-portlet__foot--fit">
@@ -162,17 +144,12 @@ $this->load->view('admin_panel/templates/subheader');
                     </div>
                     <div class="col-7">
                       <button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>&nbsp;&nbsp;
-                      <button type="reset" onClick="window.location.reload()" class="btn btn-secondary m-btn m-btn--air m-btn--custom">Reset</button>
                     </div>
                   </div>
                 </div>
               </div>
               </form>
             </div>
-          </div>
-          <div class="tab-pane " id="m_user_profile_tab_2">
-          </div>
-          <div class="tab-pane " id="m_user_profile_tab_3">
           </div>
         </div>
       </div>
@@ -201,6 +178,73 @@ $this->load->view('admin_panel/templates/scrolltop');
 $this->load->view('admin_panel/templates/close_html');
 
 ?>
+
+<script>
+  // maximum items allowed in homepage list
+  var limit = 15;
+
+  // make homepage list sortable
+  $(function() {
+    $("#homepageList").sortable({
+      containment: "parent"
+    }).disableSelection();
+  });
+
+  // move item to homepage list
+  function moveToHomepageList(val) {
+    if ($("#homepageList li").length < limit) {
+      $(val).attr("ondblclick", "moveToFeaturedList($(this))");
+      $("#homepageList").append(val);
+    } else {
+      toastr.warning("Cannot add more than " + limit + " items.")
+    }
+  }
+
+  // move item to featured list
+  function moveToFeaturedList(val) {
+    $(val).attr("ondblclick", "moveToHomepageList($(this))");
+    $("#featuredList").append(val);
+    sortUnorderedList("featuredList");
+  }
+
+  // index to track of results in the list
+  var index = <?= $index ?>
+
+  // add blank tab to the homepage result list
+  function addBlank(val) {
+    if ($("#homepageList li").length < limit) {
+      $("#homepageList").append(
+        "<li class='btn btn-metal m-btn m-btn--air m-btn--custom' ondblclick='$(this).remove();'>\
+       <input type='hidden' name='item[" + val + "][result_id]' value='0'> \
+       <input type='hidden' name='item[" + val + "][is_result_umbrella]' value='0'></li>"
+      );
+      index++;
+    } else {
+      toastr.warning("Cannot add more than " + limit + " items.")
+    }
+  }
+
+  // helper method to sort unordered list
+  function sortUnorderedList(ul) {
+    if (typeof ul == "string")
+      ul = document.getElementById(ul);
+
+    // Get the list items and setup an array for sorting
+    var lis = ul.getElementsByTagName("LI");
+    var vals = [];
+
+    // Populate the array
+    for (var i = 0, l = lis.length; i < l; i++)
+      vals.push(lis[i].innerHTML);
+
+    // Sort it
+    vals.sort();
+
+    // Change the list on the page
+    for (var i = 0, l = lis.length; i < l; i++)
+      lis[i].innerHTML = vals[i];
+  }
+</script>
 
 <!-- Sidemenu class -->
 <script>

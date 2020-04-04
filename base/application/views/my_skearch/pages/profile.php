@@ -160,15 +160,15 @@ $this->load->view('my_skearch/templates/start_pagebody');
 															<span class="m-nav__section-text">Quick Actions</span>
 														</li>
 														<li class="m-nav__item">
-															<a href="auth/change_password" class="m-nav__link">
+															<a href="" class="m-nav__link">
 																<i class="m-nav__link-icon flaticon-share"></i>
-																<span class="m-nav__link-text">Change Password</span>
+																<span class="m-nav__link-text">Upload Avatar</span>
 															</a>
 														</li>
 														<li class="m-nav__item">
-															<a href="auth/change_email" class="m-nav__link">
+															<a href="" class="m-nav__link">
 																<i class="m-nav__link-icon flaticon-chat-1"></i>
-																<span class="m-nav__link-text">Change Email Address</span>
+																<span class="m-nav__link-text">Upload Images</span>
 															</a>
 														</li>
 														<li class="m-nav__item">
@@ -206,9 +206,21 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="first_name" class="col-2 col-form-label">Username</label>
+									<label for="username" class="col-2 col-form-label">Username</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="username" value="<?= set_value('username', $this->session->userdata('username')) ?>">
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<label for="password" class="col-2 col-form-label">Password</label>
+									<div class="col-7">
+										<a href="<?= base_url('myskearch/auth/change_password') ?>" class="m-link m--font-boldest">Change Password</a>
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<label for="email" class="col-2 col-form-label">Email</label>
+									<div class="col-7">
+										<a href="<?= base_url('myskearch/auth/change_email') ?>" class="m-link m--font-boldest">Change Email</a>
 									</div>
 								</div>
 								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
@@ -217,18 +229,27 @@ $this->load->view('my_skearch/templates/start_pagebody');
 										<h3 class="m-form__section">2. Personal Details</h3>
 									</div>
 								</div>
-								<div class="form-group m-form__group row">
-									<label for="first_name" class="col-2 col-form-label">First Name</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="firstname" value="<?= set_value('firstname', $this->session->userdata('firstname')) ?>">
+								<?php if (in_array($group, array(1, 2, 3))) : ?>
+									<div class="form-group m-form__group row">
+										<label for="firstname" class="col-2 col-form-label">First Name</label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="firstname" value="<?= set_value('firstname', $this->session->userdata('firstname')) ?>">
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="last_name" class="col-2 col-form-label">Last Name</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="lastname" value="<?= set_value('lastname', $this->session->userdata('lastname')) ?>">
+									<div class="form-group m-form__group row">
+										<label for="lastname" class="col-2 col-form-label">Last Name</label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="lastname" value="<?= set_value('lastname', $this->session->userdata('lastname')) ?>">
+										</div>
 									</div>
-								</div>
+								<?php elseif (in_array($group, array(4, 5))) : ?>
+									<div class="form-group m-form__group row">
+										<label for="name" class="col-2 col-form-label">Name</label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="name" value="<?= set_value('name', $this->session->userdata('firstname')) ?>">
+										</div>
+									</div>
+								<?php endif ?>
 								<div class="form-group m-form__group row">
 									<label for="gender" class="col-2 col-form-label">Gender</label>
 									<div class="col-3">
@@ -245,11 +266,11 @@ $this->load->view('my_skearch/templates/start_pagebody');
 										</select>
 									</div>
 								</div>
-								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
-								<div style=<?= $is_brandmember ? 'display:block' : 'display:none' ?>>
+								<?php if (in_array($group, array(1, 2, 3))) : ?>
+									<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 									<div class="form-group m-form__group row">
 										<div class="col-10 ml-auto">
-											<h3 class="m-form__section">3. Company</h3>
+											<h3 class="m-form__section">3. Organizational Details</h3>
 										</div>
 									</div>
 									<div class="form-group m-form__group row">
@@ -258,12 +279,14 @@ $this->load->view('my_skearch/templates/start_pagebody');
 											<input class="form-control m-input" type="text" name="organization" value="<?= set_value('organization', $this->session->userdata('organization')) ?>">
 										</div>
 									</div>
-									<div class="form-group m-form__group row">
-										<label for="organization" class="col-2 col-form-label">Brand</label>
-										<div class="col-7">
-											<input class="form-control m-input" type="text" name="brand" value="<?= set_value('brand', $this->session->userdata('brand')) ?>">
+									<?php if (in_array($group, array(3))) : ?>
+										<div class="form-group m-form__group row">
+											<label for="brand" class="col-2 col-form-label">Brand</label>
+											<div class="col-7">
+												<input class="form-control m-input" type="text" name="brand" value="<?= set_value('brand', $this->session->userdata('brand')) ?>">
+											</div>
 										</div>
-									</div>
+									<?php endif ?>
 									<div class="form-group m-form__group row">
 										<label for="phone" class="col-2 col-form-label">Phone No.</label>
 										<div class="col-7">
@@ -313,12 +336,12 @@ $this->load->view('my_skearch/templates/start_pagebody');
 										</div>
 									</div>
 									<div class="form-group m-form__group row">
-										<label for="zipc" class="col-2 col-form-label">Zipcode</label>
+										<label for="zipcode" class="col-2 col-form-label">Zipcode</label>
 										<div class="col-7">
 											<input class="form-control m-input" type="text" name="zipcode" value="<?= set_value('zipcode', $this->session->userdata('zipcode')) ?>">
 										</div>
 									</div>
-								</div>
+								<?php endif ?>
 								<div>
 									<div class="m-portlet__foot m-portlet__foot--fit">
 										<div class="m-form__actions">
@@ -361,35 +384,6 @@ $this->load->view('my_skearch/templates/scrolltop');
 
 // Load global JS files
 $this->load->view('my_skearch/templates/js_global');
-
-?>
-
-<!-- Page Scripts -->
-<script>
-	function update_settings($id) {
-		// var csrf_name = '<?= $this->security->get_csrf_token_name() ?>';
-		// var csrf_hash = '<?= $this->security->get_csrf_hash() ?>';
-
-		$.ajax({
-			url: '<?= site_url(); ?>myskearch/profile/settings/update',
-			type: 'GET',
-			// dataType: 'json',
-			data: {
-				// csrf_name: csrf_hash,
-				search_engine: $('#search_engine').val()
-			},
-			success: function(data, status) {
-				toastr.success("", "Settings updated.");
-			},
-			error: function(xhr, status, error) {
-				toastr.error("", "Unable to update settings.");
-			}
-		});
-	}
-</script>
-<!--end::Page Scripts -->
-
-<?php
 
 // Close body and html
 $this->load->view('my_skearch/templates/close_html');

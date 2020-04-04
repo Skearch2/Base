@@ -6,65 +6,6 @@ $this->load->view('admin_panel/templates/start_html');
 // Load default head (metadata & linking).
 $this->load->view('admin_panel/templates/head');
 
-?>
-
-<head>
-  <script src="<?php site_url(); ?>/assets/admin_panel/vendors/base/vendors.bundle.js" type="text/javascript"></script>
-  <script src="<?php site_url(); ?>/assets/admin_panel/demo/demo12/base/scripts.bundle.js" type="text/javascript"></script>
-
-  <script src="<?php site_url(); ?>/assets/admin_panel/vendors/custom/datatables/datatables.bundle.js" type="text/javascript"></script>
-
-  <script src="<?php site_url(); ?>/assets/admin_panel/app/js/dashboard.js" type="text/javascript"></script>
-
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
-
-  <style>
-    #sortable1SK,
-    #sortable2SK {
-      border: 1px solid #eee;
-      width: 160px;
-      min-height: 20px;
-      list-style-type: none;
-      margin: 0;
-      padding: 5px 0 0 0;
-      float: left;
-      margin-right: 10px;
-      max-height: 600px;
-      overflow: auto;
-    }
-
-    #sortable1SK li,
-    #sortable2SK li {
-      margin: 0 5px 5px 5px;
-      padding: 5px;
-      font-size: 1em;
-      width: 130px;
-    }
-  </style>
-
-  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script>
-    $(function() {
-      $(document).tooltip({
-        track: true
-      });
-
-      $("#sortable1SK, #sortable2SK").sortable({
-        connectWith: ".connectedSortable"
-      }).disableSelection();
-    });
-
-    function addemptytab(val) {
-      $("#sortable2SK").append("<li class='btn btn-secondary' title='Click to remove' onclick='$(this).remove();' style= 'background-color:red'> Empty Tab <input type='hidden' name='item[" + val + "][field_id] value='0'><input type='hidden' name='item[" + val + "][title]' value='empty'><input type='hidden' name='item[" + val + "][is_cat]' value='0'></li>");
-      num++;
-    }
-  </script>
-</head>
-
-<?php
-
 // Start body element
 $this->load->view('admin_panel/templates/start_body');
 
@@ -88,6 +29,32 @@ $this->load->view('admin_panel/templates/subheader');
 
 ?>
 
+<link rel="stylesheet" href="/resources/demos/style.css">
+
+<style>
+  #resultsList,
+  #suggestionList {
+    border: 1px solid #eee;
+    width: 160px;
+    min-height: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0 0 0;
+    float: left;
+    margin-right: 10px;
+    max-height: 600px;
+    overflow: auto;
+  }
+
+  #resultsList li,
+  #suggestionList li {
+    margin: 0 5px 5px 5px;
+    padding: 5px;
+    font-size: 1em;
+    width: 130px;
+  }
+</style>
+
 <div class="m-content">
   <div class="row">
     <div class="col-xl-9 col-lg-8">
@@ -97,34 +64,60 @@ $this->load->view('admin_panel/templates/subheader');
             <div class="m-form m-form--fit m-form--label-align-right">
               <div class="m-portlet__body">
                 <div class="form-group m-form__group m--margin-top-10 m--show">
-                  <?php echo $this->session->tempdata('success-msg'); ?>
+                  <?php if ($this->session->flashdata('success') === 1) : ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      <div class="alert-icon">
+                        <p class="flaticon-like"> Success:</p>
+                        Suggestions has been updated.
+                      </div>
+                    </div>
+                  <?php elseif ($this->session->flashdata('success') === 0) : ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      <div class="alert-icon">
+                        <p class="flaticon-like"> Success:</p>
+                        Unable to update suggestions.
+                      </div>
+                    </div>
+                  <?php endif ?>
                 </div>
                 <div class="form-group m-form__group row">
                   <div class="col-10 ml-auto">
-                    <h3 class="m-form__section">Set Umbrella Suggestions</h3>
+                    <h3 class="m-form__section">Umbrella Related Results</h3>
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
-                  <label for="example-text-input" class="col-2 col-form-label">Select Umbrella</label>
+                  <label for="example-text-input" class="col-2 col-form-label">Umbrella</label>
                   <div class="col-7">
-                    <select class="form-control" onchange="getUmbSuggestions(this.value), $('#suggestionPanel').show(500)" required>
-                      <option disabled selected value-"">Select Umbrella...</option>
-                      <?php foreach ($umbrella as $item) { ?>
-                        <option value="<?= $item->id ?>"><?= $item->title ?></option>
-                      <?php } ?>
+                    <select class="form-control" onchange="getSuggestions(this.value)" required>
+                      <option disabled selected>Select</option>
+                      <?php foreach ($umbrellas as $umbrella) : ?>
+                        <option value="<?= $umbrella->id ?>"><?= $umbrella->title ?></option>
+                      <?php endforeach ?>
                     </select>
                   </div>
                 </div>
                 <div id='suggestionPanel' class="form-group m-form__group row" style="display:none">
                   <label class="col-2 col-form-label">Drag item from the first list to the second list</label>
                   <div class="col-7">
-                    <ul id="sortable1SK" class="connectedSortable">
-                    </ul>
+                    <div>
+                      <h5>Results</h5>
+                      <ul id="resultsList" class="connectedSortable">
+                      </ul>
+                    </div>
                     <form class="m-form m-form--fit m-form--label-align-right" role="form" method="POST">
                       <input type="hidden" class="umbrellaId" name="umbrellaId" value="">
-                      <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
-                      <ul id="sortable2SK" class="connectedSortable">
-                      </ul>
+                      <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+                      <div>
+                        <h5>Suggested Results</h5>
+                        <ul id="suggestionList" class="connectedSortable">
+                        </ul>
+                      </div>
                   </div>
                 </div>
               </div>
@@ -134,18 +127,13 @@ $this->load->view('admin_panel/templates/subheader');
                     <div class="col-2">
                     </div>
                     <div class="col-7">
-                      <button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>&nbsp;&nbsp;
-                      <button type="reset" onClick="window.location.reload()" class="btn btn-secondary m-btn m-btn--air m-btn--custom">Reset</button>
+                      <button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>
                     </div>
                   </div>
                 </div>
               </div>
               </form>
             </div>
-          </div>
-          <div class="tab-pane " id="m_user_profile_tab_2">
-          </div>
-          <div class="tab-pane " id="m_user_profile_tab_3">
           </div>
         </div>
       </div>
@@ -171,57 +159,116 @@ $this->load->view('admin_panel/templates/quick_sidebar');
 $this->load->view('admin_panel/templates/scrolltop');
 
 // Close body and html (contains some javascripts links)
-//$this->load->view('admin_panel/templates/close_html');
+$this->load->view('admin_panel/templates/close_html');
 
 ?>
 
 <script>
-  function getUmbSuggestions(umbId) {
+  // maximum items allowed for suggested list
+  var limit = 8;
+
+  // initialize drag and drop
+  $(function() {
+    $("#resultsList, #suggestionList").sortable({
+      containment: "parent"
+    }).disableSelection();
+  });
+
+  // move item to homepage list
+  function moveToSuggestionList(val) {
+    if ($("#suggestionList li").length < limit) {
+      $(val).attr("ondblclick", "moveToResultsList($(this))");
+      $("#suggestionList").append(val);
+    } else {
+      toastr.warning("Cannot add more than " + limit + " items.")
+    }
+  }
+
+  // move item to featured list
+  function moveToResultsList(val) {
+    $(val).attr("ondblclick", "moveToSuggestionList($(this))");
+    $("#resultsList").append(val);
+    sortUnorderedList("resultsList");
+  }
+
+  // get suggestions list
+  function getSuggestions(umbrellaId) {
 
     $('.umbrellaId').each(function() {
-      $(this).val(umbId);
+      $(this).val(umbrellaId);
     });
 
-    $(sortable1SK).empty();
-    $(sortable2SK).empty();
+    // clear both lists
+    $(resultsList).empty();
+    $(suggestionList).empty();
+
     $.ajax({
-      //changes
-      url: '<?= site_url(); ?>admin/frontend/get_umbrella_suggestions/' + umbId,
+      url: '<?= site_url(); ?>admin/results/frontend/umbrellas/get/id/' + umbrellaId,
       type: 'GET',
+      beforeSend: function() {
+        $('#suggestionPanel').fadeOut(100)
+      },
       success: function(result) {
         var obj = JSON.parse(result);
-        obj['umbrella'].forEach(u => {
+        var index = 0
+        obj['results'].forEach(r => {
           var flag = true;
           obj['suggestions'].forEach(s => {
-            if (u.id == s.suggest_umbrella_id) flag = false;
+            if (r.id == s.result_id && r.is_umbrella == s.is_result_umbrella) flag = false;
           });
-          if (flag && u.id != umbId) {
-            $(sortable1SK).append(
-              '<li ondblclick="moveItem($(this))" class="btn btn-secondary m-btn m-btn--air m-btn--custom">' + u.title +
-              '<input type="hidden" name="item[' + u.id + '][umbrella_id]" value="' + umbId + '">' +
-              '<input type="hidden" name="item[' + u.id + '][suggest_umbrella_id]" value="' + u.id + '">' +
-              '<input type="hidden" name="item[' + u.id + '][suggest_umbrella_title]" value="' + u.title + '"></li>'
+          if (flag && r.id != umbrellaId) {
+            var btn_class = (r.is_umbrella == 1) ? "btn btn-outline-brand m-btn m-btn--air m-btn--custom" : "btn btn-secondary m-btn m-btn--air m-btn--custom"
+            var is_result_umbrella = (r.is_umbrella) ? 1 : 0
+
+            $(resultsList).append(
+              '<li ondblclick="moveToSuggestionList($(this))" class="' + btn_class + '">' + r.title +
+              '<input type="hidden" name="item[' + index + '][umbrella_id]" value="' + umbrellaId + '">' +
+              '<input type="hidden" name="item[' + index + '][result_id]" value="' + r.id + '">' +
+              '<input type="hidden" name="item[' + index + '][is_result_umbrella]" value="' + r.is_umbrella + '"></li>'
             );
           }
+          index++
         });
 
         obj['suggestions'].forEach(s => {
-          $(sortable2SK).append(
-            '<li ondblclick="moveItem($(this))" class="btn btn-secondary m-btn m-btn--air m-btn--custom">' + s.suggest_umbrella_title +
-            '<input type="hidden" name="item[' + s.suggest_umbrella_id + '][umbrella_id]" value="' + umbId + '">' +
-            '<input type="hidden" name="item[' + s.suggest_umbrella_id + '][suggest_umbrella_id]" value="' + s.suggest_umbrella_id + '">' +
-            '<input type="hidden" name="item[' + s.suggest_umbrella_id + '][suggest_umbrella _title]" value="' + s.suggest_umbrella_title + '"></li>'
+          var btn_class = (s.is_result_umbrella == 1) ? "btn btn-outline-brand m-btn m-btn--air m-btn--custom" : "btn btn-secondary m-btn m-btn--air m-btn--custom"
+          $(suggestionList).append(
+            '<li ondblclick="moveToResultsList($(this))" class="' + btn_class + '">' + s.title +
+            '<input type="hidden" name="item[' + index + '][umbrella_id]" value="' + umbrellaId + '">' +
+            '<input type="hidden" name="item[' + index + '][result_id]" value="' + s.result_id + '">' +
+            '<input type="hidden" name="item[' + index + '][is_result_umbrella]" value="' + s.is_result_umbrella + '"></li>'
           );
+          index++
         });
       },
+      complete: function() {
+        $('#suggestionPanel').fadeIn(500)
+      },
       error: function(err) {
-        alert("Error getting Fields");
+        toastr.error("Unable to process request.")
       }
     });
   }
 
-  function moveItem(val) {
-    $("#sortable2SK").append(val);
+  // helper method to sort unordered list
+  function sortUnorderedList(ul) {
+    if (typeof ul == "string")
+      ul = document.getElementById(ul);
+
+    // Get the list items and setup an array for sorting
+    var lis = ul.getElementsByTagName("LI");
+    var vals = [];
+
+    // Populate the array
+    for (var i = 0, l = lis.length; i < l; i++)
+      vals.push(lis[i].innerHTML);
+
+    // Sort it
+    vals.sort();
+
+    // Change the list on the page
+    for (var i = 0, l = lis.length; i < l; i++)
+      lis[i].innerHTML = vals[i];
   }
 </script>
 

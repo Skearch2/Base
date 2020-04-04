@@ -34,20 +34,21 @@ $this->load->view('admin_panel/templates/subheader');
 	<div class="m-portlet m-portlet--mobile">
 		<div class="m-portlet__head">
 			<div class="m-portlet__head-caption">
-				<div class="m-portlet__head-title">
-					<h3 class="m-portlet__head-text">
-						<?= $sub_title; ?>
-					</h3>
+				<!-- Search keywords -->
+				<div class="m-form m-form--fit m-form--label-align-right">
+					<div class="form-group m-form__group row">
+						<div class="input-group m-input-group m-input-group--air">
+							<div class="input-group-prepend"><span class="input-group-text"><i class="flaticon-search"></i></span></div>
+							<input type="text" onkeyup="searchLinks(this.value)" class="form-control m-input" placeholder="Search..." name="query">
+						</div>
+					</div>
 				</div>
 			</div>
 
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
 					<li class="m-portlet__nav-item">
-						<input type="text" onkeyup="search(this.value)" class="form-control" placeholder="Search..." name="query">
-					</li>
-					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/categories/create_result"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+						<a href="<?= site_url("admin/results/link/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
 								<i class="la la-cart-plus"></i>
 								<span>Add Link</span>
@@ -118,23 +119,23 @@ $this->load->view('admin_panel/templates/subheader');
 			</div>
 		</div>
 
-		<!--begin::Modal-->
+		<!-- begin::Move or duplicate modal dialog -->
 		<div class="modal fade" id="modal_option" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
+			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="option-dialog"></h5>
+						<h5 class="modal-title">Move or Duplicate Link</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body">
-						<form>
+						<form class="m-form m-form--fit m-form--label-align-right">
 							<input type="hidden" id="link_id" name="link_id" value="">
 							<div class="form-group m-form__group row">
-								<label for="example-text-input" class="col-2 col-form-label">Field</label>
+								<label for="field" class="col-2 col-form-label">Field</label>
 								<div class="col-7">
-									<select class="form-control" name="field_id" onchange="updatePriority(this.value)" required>
+									<select class="form-control" name="field_id" onchange="getPriorities(this.value)" required>
 										<option id="field" selected value="">Select</option>
 										<?php foreach ($fields as $field) : ?>
 											<option value="<?= $field->id ?> <?= set_select("field", $field->id) ?>"><?= $field->title ?></option>
@@ -143,23 +144,16 @@ $this->load->view('admin_panel/templates/subheader');
 								</div>
 							</div>
 							<div class="form-group m-form__group row">
-								<label for="example-text-input" class="col-2 col-form-label">Priority</label>
+								<label for="priority" class="col-2 col-form-label">Priority</label>
 								<div class="col-7">
 									<select class="form-control" id="priority" name="priority" disabled>
-										<option selected value="">Not Set</option>
-										<?php for ($i = 1; $i <= 250; $i++) : ?>
-											<?php if (in_array($i, $priorities)) : ?>
-												<option style="background-color: #99ff99" value="<?= $i ?>" disabled><?= $i ?></option>
-											<?php else : ?>
-												<option value="<?= $i ?> <?= set_select("priority", $i) ?>"><?= $i ?></option>
-											<?php endif; ?>
-										<?php endfor; ?>
 									</select>
 								</div>
+								<div id="priority-loader" class="m-loader m-loader--brand" style="width: 30px; display: none;"></div>
 							</div>
 							<div class="m-form__group form-group row">
-								<label class="col-3 col-form-label">Action</label>
-								<div class="col-9">
+								<label for="action" class="col-2 col-form-label">Action</label>
+								<div class="col-7">
 									<div class="m-radio-inline">
 										<label class="m-radio">
 											<input type="radio" name="option-select" value="1" checked> Duplicate
@@ -176,15 +170,35 @@ $this->load->view('admin_panel/templates/subheader');
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						<button type="button" id="btn-option-action" class="btn btn-primary" onclick="moveOrDuplicate()">Submit</button>
+						<button type="button" id="btn-modal-submit" class="btn btn-primary" onclick="moveOrDuplicate()">Submit</button>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<!--end::Modal-->
+		<!--end::Move or duplicate modal dialog-->
 
 		<div class="m-portlet__body">
+
+			<?php if ($this->session->flashdata('update_success') === 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The field has been updated.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('update_success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to update the field.
+					</div>
+				</div>
+			<?php endif ?>
 
 			<!--begin: Datatable -->
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
@@ -193,7 +207,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Priority</th>
 						<th>Title</th>
 						<th>Description</th>
-						<th>Category</th>
+						<th>Field</th>
 						<th>Display Url</th>
 						<th>Status</th>
 						<th width="150">Actions</th>
@@ -230,23 +244,83 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-	// move of duplicate option dialog
-	function optionDialog(id) {
+	// Deletes link
+	function deleteLink(id, link) {
+		var link = link.replace(/%20/g, ' ');
+		swal({
+			title: "Are you sure?",
+			text: "Are you sure you want delete the link: \"" + link + "\"?",
+			type: "warning",
+			confirmButtonClass: "btn btn-danger",
+			confirmButtonText: "Yes, delete it!",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
+			$.ajax({
+				url: '<?= site_url('admin/results/link/delete/id/'); ?>' + id,
+				type: 'DELETE',
+				success: function(data, status) {
+					swal("Success!", "The link has been deleted.", "success")
+					$("#" + id).remove();
+				},
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to delete the link.", "error")
+				}
+			});
+		});
+	}
+
+	// get priorites of the links for the given field
+	function getPriorities(fieldId) {
+
+		var selectElement = document.getElementById("priority");
+		selectElement.disabled = true;
+		while (selectElement.length > 0) {
+			selectElement.remove(0);
+		}
+
+		if (fieldId == "") return;
 		$.ajax({
-			url: '<?= site_url(); ?>admin/results/link/get/id/' + id,
+			url: '<?= site_url('admin/results/links/priorities/field/id/'); ?>' + fieldId,
 			type: 'GET',
-			contentType: 'json',
+			beforeSend: function(xhr, options) {
+				$("#priority-loader").css("display", "inline-block");
+				setTimeout(function() {
+					$.ajax($.extend(options, {
+						beforeSend: $.noop
+					}));
+				}, 500);
+				return false;
+			},
 			success: function(data, status) {
-				$("#option-dialog").html(data.title);
-				$("#link_id").val(data.id);
-				$("#field").val(data.umbrella_id);
-				$("#field").html(data.umbrella);
-				$("#btn-option-action").attr("class", "btn m-btn btn-success");
-				$("#btn-option-action").show();
-				updatePriority(data.umbrella_id);
+				var obj = JSON.parse(data);
+				var option = document.createElement("option");
+				option.text = "Not Set";
+				option.value = "";
+				selectElement.add(option);
+
+				for (i = 1; i <= 255; i++) {
+					var option = document.createElement("option");
+					var array = searchArray(i, obj);
+					if (array) {
+						option.text = i + " - " + array.title;
+						option.value = i;
+						option.style.backgroundColor = "#99ff99";
+						option.disabled = true;
+					} else {
+						option.text = i;
+						option.value = i;
+					}
+					selectElement.add(option);
+					selectElement.disabled = false;
+				}
+			},
+			complete: function() {
+				$("#priority-loader").css("display", "none");
 			},
 			error: function(xhr, status, error) {
-				alert("Unable to retrieve link information");
+				toastr.error("Error getting priorities.");
 			}
 		});
 	}
@@ -267,7 +341,7 @@ $this->load->view('admin_panel/templates/close_html');
 			url: url,
 			type: 'GET',
 			beforeSend: function(xhr, options) {
-				$("#btn-option-action").attr("class", "btn m-btn btn-success m-loader m-loader--light m-loader--right");
+				$("#btn-modal-submit").attr("class", "btn m-btn btn-success m-loader m-loader--light m-loader--right");
 				setTimeout(function() {
 					$.ajax($.extend(options, {
 						beforeSend: $.noop
@@ -276,48 +350,62 @@ $this->load->view('admin_panel/templates/close_html');
 				return false;
 			},
 			success: function(data, status) {
-				$("#btn-option-action").hide();
-				if (option == 2) {
+				$("#modal_option").modal('hide');
+				// hide the link from the table
+				if (option == 1) {
+					toastr.success("The link has been duplicated.");
+				} else if (option == 2) {
+					toastr.success("The link has been moved.");
 					$("#" + id).fadeOut("slow");
 				}
 			},
 			error: function(xhr, status, error) {
-				alert("Unable to take action to the link");
+				$("#modal_option").modal('hide');
+				toastr.error("Unable to process request.");
 			}
 		});
 	}
 
-	// Deletes link
-	function deleteLink(id, link) {
-		var link = link.replace(/%20/g, ' ');
-		swal({
-			title: "Are you sure?",
-			text: "Are you sure you want delete the link: \"" + link + "\"?",
-			type: "warning",
-			confirmButtonClass: "btn btn-danger",
-			confirmButtonText: "Yes, delete it!",
-			showCancelButton: true,
-			timer: 5000
-		}).then(function(e) {
-			if (!e.value) return;
-			$.ajax({
-				url: '<?= site_url('admin/categories/delete_result_listing/'); ?>' + id,
-				type: 'DELETE',
-				success: function(data, status) {
-					swal("Success!", "The link has been deleted.", "success")
-					$("#" + id).remove();
-				},
-				error: function(xhr, status, error) {
-					swal("Error!", "Unable to delete the link.", "error")
-				}
-			});
+	// move of duplicate dialog
+	function moveOrDuplicateDialog(id) {
+		$.ajax({
+			url: '<?= site_url(); ?>admin/results/link/get/id/' + id, // get link information
+			type: 'GET',
+			contentType: 'json',
+			success: function(data, status) {
+				$("#link_id").val(data.id);
+				$("#field").val(data.field_id);
+				$("#field").html(data.field);
+				$("#btn-modal-submit").attr("class", "btn m-btn btn-success");
+				$("#btn-modal-submit").show();
+				getPriorities(data.field_id);
+			},
+			error: function(xhr, status, error) {
+				toastr.error("Unable to retrieve link information.");
+			}
 		});
+	}
+
+	// search for links and fetch into datatable
+	function searchLinks(keywords) {
+		if (keywords === "") $('#m_table_1').DataTable().clear().draw();
+		else $('#m_table_1').DataTable().ajax.url("<?= site_url() ?>admin/results/links/get/keywords/" + keywords).load();
+	}
+
+	// helper method to search into priorities
+	function searchArray(key, array) {
+		for (var i = 0; i < array.length; i++) {
+			if (array[i].priority == key) {
+				return array[i];
+			}
+		}
+		return false;
 	}
 
 	//Toggles link active status
 	function toggle(id, row) {
 		$.ajax({
-			url: '<?= site_url('admin/categories/toggle_result/'); ?>' + id,
+			url: '<?= site_url('admin/results/link/toggle/id/'); ?>' + id,
 			type: 'GET',
 			success: function(data, status) {
 				if (data == 0) {
@@ -339,7 +427,7 @@ $this->load->view('admin_panel/templates/close_html');
 	//Toggles link redirection
 	function toggleRedirect(id) {
 		$.ajax({
-			url: '<?= site_url(); ?>admin/categories/toggle_redirect/' + id,
+			url: '<?= site_url('admin/results/link/redirect/id/'); ?>' + id,
 			type: 'GET',
 			success: function(data, status) {
 				if (data == 0) {
@@ -355,72 +443,12 @@ $this->load->view('admin_panel/templates/close_html');
 		});
 	}
 
-	function updatePriority(id) {
-		toastr.info("", "Updating Priority...");
-
-		var selectElement = document.getElementById("priority");
-		selectElement.disabled = true;
-		while (selectElement.length > 0) {
-			selectElement.remove(0);
-		}
-
-		if (id == "") return;
-		$.ajax({
-			url: '<?= site_url(); ?>admin/categories/get_links_priority/' + id,
-			type: 'GET',
-			success: function(data, status) {
-				var obj = JSON.parse(data);
-				var option = document.createElement("option");
-				option.text = "Not Set";
-				option.value = 0;
-				selectElement.add(option);
-
-				for (i = 1; i <= 255; i++) {
-					var option = document.createElement("option");
-					var array = searchArray(i, obj);
-					if (array) {
-						option.text = i + " - " + array.title;
-						option.value = i;
-						option.style.backgroundColor = "#99ff99";
-						option.disabled = true;
-					} else {
-						option.text = i;
-						option.value = i;
-					}
-					selectElement.add(option);
-					selectElement.disabled = false;
-				}
-			},
-			error: function(xhr, status, error) {
-				alert("Error Updating Priority");
-			}
-		});
-	}
-
-	function search(keywords) {
-
-		var baseUrl = "<?= site_url() ?>"
-
-		if (keywords === "") $('#m_table_1').DataTable().clear().draw();
-		else $('#m_table_1').DataTable().ajax.url("<?= site_url() ?>admin/results/links/get/keywords/" + keywords).load();
-
-
-	}
-
-	function searchArray(key, array) {
-		for (var i = 0; i < array.length; i++) {
-			if (array[i].priority == key) {
-				return array[i];
-			}
-		}
-		return false;
-	}
-
 	var DatatablesDataSourceAjaxServer = {
 		init: function() {
 			$("#m_table_1").DataTable({
 				responsive: !0,
 				bFilter: false,
+				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
 				rowId: "id",
 				searchDelay: 500,
 				processing: !0,
@@ -451,8 +479,8 @@ $this->load->view('admin_panel/templates/close_html');
 						var title = e['title'].replace(/ /g, '%20');
 						var row = (n.row).toString().slice(-1);
 						//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
-						return '<a href="<?= site_url() . "admin/categories/update_result/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-							'<a onclick=optionDialog(' + e['id'] + ') data-toggle="modal" data-target="#modal_option" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Move/Duplicate"><i class="la la-copy"></i></a>' +
+						return '<a href="<?= site_url() . "admin/results/link/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+							'<a onclick=moveOrDuplicateDialog(' + e['id'] + ') data-toggle="modal" data-target="#modal_option" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Move/Duplicate"><i class="la la-copy"></i></a>' +
 							'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
 							'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}

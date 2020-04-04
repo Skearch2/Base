@@ -12,14 +12,31 @@
 			$(document).ready(function() {
 				$('#phone').mask('(000) 000-0000');
 			});
-		</script>>
+
+			toastr.options = {
+				"closeButton": false,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": false,
+				"positionClass": "toast-top-right",
+				"preventDuplicates": true,
+				"onclick": null,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "5000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			};
+		</script>
+		<script src="<?= site_url(ASSETS); ?>/admin_panel/vendors/custom/jquery-ui/jquery-ui.bundle.js" type="text/javascript"></script>
 		<script src="<?= site_url(ASSETS); ?>/frontend/js/jquery.mask.js" type="text/javascript"></script>
-		<script src="<?= site_url(ASSETS); ?>/admin_panel/app/js/dashboard.js" type="text/javascript"></script>
-		<script src="<?= site_url(ASSETS); ?>/admin_panel/demo/demo12/custom/crud/wizard/wizard.js" type="text/javascript"></script>
-		<script src="<?= site_url(ASSETS); ?>/admin_panel/demo/demo12/custom/crud/forms/widgets/bootstrap-select.js" type="text/javascript"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js" type="text/javascript"></script>
+		<script src="<?= site_url(ASSETS); ?>/admin_panel/app/js/dashbsoard.js" type="text/javascript"></script>
 		<script src="<?= site_url(ASSETS); ?>/plugins/easyautocomplete/jquery.easy-autocomplete.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
+
+
 		<!--end::Page Scripts -->
 
 		</body>

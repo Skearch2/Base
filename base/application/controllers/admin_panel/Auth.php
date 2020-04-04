@@ -83,7 +83,7 @@ class Auth extends MY_Controller
 	public function logout()
 	{
 		$this->ion_auth->logout();
-		$this->session->set_flashdata('logout', true);
+		$this->session->set_flashdata('messages', $this->ion_auth->messages());
 		redirect('admin/auth/login');
 	}
 }

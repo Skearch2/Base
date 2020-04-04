@@ -116,7 +116,7 @@ class Field_model extends CI_Model
         $this->db->select('skearch_subcategories.id, skearch_subcategories.title, skearch_subcategories.enabled,
         skearch_subcategories.description_short, skearch_subcategories.featured, skearch_categories.title as umbrella');
         $this->db->from('skearch_subcategories');
-        $this->db->join('skearch_categories', 'skearch_subcategories.parent_id = skearch_categories.id');
+        $this->db->join('skearch_categories', 'skearch_subcategories.parent_id = skearch_categories.id', 'left');
         if ($status == 'inactive') {
             $this->db->where('skearch_subcategories.enabled', 0);
         } elseif ($status == 'active') {
@@ -144,7 +144,7 @@ class Field_model extends CI_Model
         $this->db->select('skearch_subcategories.id, skearch_subcategories.title, skearch_subcategories.enabled,
         skearch_subcategories.description_short, skearch_subcategories.featured, skearch_categories.title as umbrella');
         $this->db->from('skearch_subcategories');
-        $this->db->join('skearch_categories', 'skearch_subcategories.parent_id = skearch_categories.id');
+        $this->db->join('skearch_categories', 'skearch_subcategories.parent_id = skearch_categories.id', 'left');
         $this->db->where('skearch_subcategories.parent_id', $umbrella_id);
         if ($status == 'inactive') {
             $this->db->where('skearch_subcategories.enabled', 0);
