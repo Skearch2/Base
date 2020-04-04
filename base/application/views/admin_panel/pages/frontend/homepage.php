@@ -96,7 +96,7 @@ $this->load->view('admin_panel/templates/subheader');
                   <div class="col-5">
                     <div>
                       <h5>Featured Results</h5>
-                      <ul id="featuredList" class="connectedSortable">
+                      <ul id="featuredList">
                         <?php $index = 0; ?>
                         <?php foreach ($featured_results as $f_result) : ?>
                           <?php $flag = true; // check to see if the featured result is already in the homepage result                           
@@ -105,7 +105,7 @@ $this->load->view('admin_panel/templates/subheader');
                             <?php if ($f_result->id == $h_result->result_id && $f_result->is_umbrella == $h_result->is_result_umbrella) $flag = false; ?>
                           <?php endforeach ?>
                           <?php if ($flag) : ?>
-                            <li class="<?= ($f_result->is_umbrella) ? 'btn btn-outline-brand m-btn m-btn--air m-btn--custom' : 'btn btn-secondary m-btn m-btn--air m-btn--custom' ?>"><?= $f_result->title ?>
+                            <li ondblclick="moveToHomepageList($(this))" class="<?= ($f_result->is_umbrella) ? 'btn btn-outline-brand m-btn m-btn--air m-btn--custom' : 'btn btn-secondary m-btn m-btn--air m-btn--custom' ?>"><?= $f_result->title ?>
                               <input type="hidden" name=item[<?= $index ?>][result_id] value="<?= $f_result->id ?>">
                               <input type="hidden" name=item[<?= $index ?>][is_result_umbrella] value="<?= $f_result->is_umbrella ?>">
                             </li>
@@ -119,12 +119,12 @@ $this->load->view('admin_panel/templates/subheader');
                       <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                       <div>
                         <h5>Homepage Results</h5>
-                        <ul id="homepageList" class="connectedSortable">
+                        <ul id="homepageList">
                           <?php foreach ($homepage_results as $h_result) : ?>
                             <?php if ($h_result->result_id == 0) : ?>
                               <li class='btn btn-metal m-btn m-btn--air m-btn--custom' ondblclick='$(this).remove();' title='Double click to remove'>
                               <?php else : ?>
-                              <li class="<?= ($h_result->is_result_umbrella) ? 'btn btn-outline-brand m-btn m-btn--air m-btn--custom' : 'btn btn-secondary m-btn m-btn--air m-btn--custom' ?>"><?= $h_result->title ?>
+                              <li ondblclick="moveToFeaturedList($(this))" class="<?= ($h_result->is_result_umbrella) ? 'btn btn-outline-brand m-btn m-btn--air m-btn--custom' : 'btn btn-secondary m-btn m-btn--air m-btn--custom' ?>"><?= $h_result->title ?>
                               <?php endif ?>
                               <input type="hidden" name=item[<?= $index ?>][result_id] value='<?= $h_result->result_id ?>'>
                               <input type="hidden" name=item[<?= $index ?>][is_result_umbrella] value='<?= $h_result->is_result_umbrella ?>'>
@@ -183,21 +183,29 @@ $this->load->view('admin_panel/templates/close_html');
   // maximum items allowed in homepage list
   var limit = 15;
 
-  // initialize drag and drop
+  // make homepage list sortable
   $(function() {
-    $("#featuredList, #homepageList").sortable({
-      connectWith: ".connectedSortable",
-      dropOnEmpty: true,
-      cursor: "move",
+    $("#homepageList").sortable({
+      containment: "parent"
     }).disableSelection();
-
-    $("#homepageList").on("sortreceive", function(event, ui) {
-      if ($("#homepageList li").length > limit) {
-        $(ui.sender).sortable('cancel');
-        toastr.warning("Cannot add more than " + limit + " items.")
-      }
-    });
   });
+
+  // move item to homepage list
+  function moveToHomepageList(val) {
+    if ($("#homepageList li").length < limit) {
+      $(val).attr("ondblclick", "moveToFeaturedList($(this))");
+      $("#homepageList").append(val);
+    } else {
+      toastr.warning("Cannot add more than " + limit + " items.")
+    }
+  }
+
+  // move item to featured list
+  function moveToFeaturedList(val) {
+    $(val).attr("ondblclick", "moveToHomepageList($(this))");
+    $("#featuredList").append(val);
+    sortUnorderedList("featuredList");
+  }
 
   // index to track of results in the list
   var index = <?= $index ?>
@@ -206,7 +214,7 @@ $this->load->view('admin_panel/templates/close_html');
   function addBlank(val) {
     if ($("#homepageList li").length < limit) {
       $("#homepageList").append(
-        "<li class='btn btn-metal m-btn m-btn--air m-btn--custom' title='Double click to remove' ondblclick='$(this).remove();'>\
+        "<li class='btn btn-metal m-btn m-btn--air m-btn--custom' ondblclick='$(this).remove();'>\
        <input type='hidden' name='item[" + val + "][result_id]' value='0'> \
        <input type='hidden' name='item[" + val + "][is_result_umbrella]' value='0'></li>"
       );
@@ -214,6 +222,27 @@ $this->load->view('admin_panel/templates/close_html');
     } else {
       toastr.warning("Cannot add more than " + limit + " items.")
     }
+  }
+
+  // helper method to sort unordered list
+  function sortUnorderedList(ul) {
+    if (typeof ul == "string")
+      ul = document.getElementById(ul);
+
+    // Get the list items and setup an array for sorting
+    var lis = ul.getElementsByTagName("LI");
+    var vals = [];
+
+    // Populate the array
+    for (var i = 0, l = lis.length; i < l; i++)
+      vals.push(lis[i].innerHTML);
+
+    // Sort it
+    vals.sort();
+
+    // Change the list on the page
+    for (var i = 0, l = lis.length; i < l; i++)
+      lis[i].innerHTML = vals[i];
   }
 </script>
 
