@@ -192,11 +192,10 @@ class Frontend_model extends CI_Model
   public function update_field_suggestions($field_id, $suggestions)
   {
     $this->db->where('field_id', $field_id);
-    $this->db->delete('skearch_fields_suggestions');
+    $query = $this->db->delete('skearch_fields_suggestions');
+
     if (!empty($suggestions)) {
       $query = $this->db->insert_batch('skearch_fields_suggestions', $suggestions);
-    } else {
-      return FALSE;
     }
 
 
@@ -215,12 +214,11 @@ class Frontend_model extends CI_Model
    */
   public function update_homepage_fields($results)
   {
-    $this->db->empty_table('skearch_homepage_fields');
+    $query = $this->db->empty_table('skearch_homepage_fields');
+
     if (!empty($results)) {
       $this->db->query('ALTER TABLE skearch_homepage_fields AUTO_INCREMENT = 1');
       $query = $this->db->insert_batch('skearch_homepage_fields', $results);
-    } else {
-      return FALSE;
     }
 
     if ($query) {
@@ -240,11 +238,10 @@ class Frontend_model extends CI_Model
   public function update_umbrella_suggestions($umbrella_id, $suggestions)
   {
     $this->db->where('umbrella_id', $umbrella_id);
-    $this->db->delete('skearch_umbrella_suggestions');
+    $query = $this->db->delete('skearch_umbrella_suggestions');
+
     if (!empty($suggestions)) {
       $query = $this->db->insert_batch('skearch_umbrella_suggestions', $suggestions);
-    } else {
-      return FALSE;
     }
 
     if ($query) {

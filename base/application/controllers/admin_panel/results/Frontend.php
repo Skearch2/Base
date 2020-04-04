@@ -48,7 +48,12 @@ class Frontend extends MY_Controller
             $data = $this->input->post(NULL, TRUE);
 
             if (empty($data)) {
-                $this->Frontend->update_homepage_fields($data);
+                $update = $this->Frontend->update_homepage_fields($data);
+                if ($update) {
+                    $this->session->set_flashdata('success', 1);
+                } else {
+                    $this->session->set_flashdata('success', 0);
+                }
             } else {
                 // limit total items to 15
                 if (sizeof($data['item']) <= 15) {
@@ -84,19 +89,20 @@ class Frontend extends MY_Controller
             $data = $this->input->post(NULL, TRUE);
 
             if (empty($data['item'])) {
-                $this->Frontend->update_umbrella_suggestions($data['umbrellaId'], null);
+                $update = $this->Frontend->update_umbrella_suggestions($data['umbrellaId'], null);
             } else {
                 // limit total items to 8
                 if (sizeof($data['item']) <= 8) {
                     $update = $this->Frontend->update_umbrella_suggestions($data['umbrellaId'], $data['item']);
-                    if ($update) {
-                        $this->session->set_flashdata('success', 1);
-                    } else {
-                        $this->session->set_flashdata('success', 0);
-                    }
                 } else {
-                    $this->session->set_flashdata('success', 0);
+                    $update = FALSE;
                 }
+            }
+
+            if ($update) {
+                $this->session->set_flashdata('success', 1);
+            } else {
+                $this->session->set_flashdata('success', 0);
             }
         }
 
@@ -120,19 +126,20 @@ class Frontend extends MY_Controller
             $data = $this->input->post(NULL, TRUE);
 
             if (empty($data['item'])) {
-                $this->Frontend->update_field_suggestions($data['fieldId'], null);
+                $update = $this->Frontend->update_field_suggestions($data['fieldId'], null);
             } else {
                 // limit total items to 8
                 if (sizeof($data['item']) <= 7) {
                     $update =  $this->Frontend->update_field_suggestions($data['fieldId'], $data['item']);
-                    if ($update) {
-                        $this->session->set_flashdata('success', 1);
-                    } else {
-                        $this->session->set_flashdata('success', 0);
-                    }
                 } else {
-                    $this->session->set_flashdata('success', 0);
+                    $update = FALSE;
                 }
+            }
+
+            if ($update) {
+                $this->session->set_flashdata('success', 1);
+            } else {
+                $this->session->set_flashdata('success', 0);
             }
         }
 

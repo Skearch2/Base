@@ -170,18 +170,26 @@ $this->load->view('admin_panel/templates/close_html');
   // initialize drag and drop
   $(function() {
     $("#resultsList, #suggestionList").sortable({
-      connectWith: ".connectedSortable",
-      dropOnEmpty: true,
-      cursor: "move",
+      containment: "parent"
     }).disableSelection();
-
-    $("#suggestionList").on("sortreceive", function(event, ui) {
-      if ($("#suggestionList li").length > limit) {
-        $(ui.sender).sortable('cancel');
-        toastr.warning("Cannot add more than " + limit + " items.")
-      }
-    });
   });
+
+  // move item to homepage list
+  function moveToSuggestionList(val) {
+    if ($("#suggestionList li").length < limit) {
+      $(val).attr("ondblclick", "moveToResultsList($(this))");
+      $("#suggestionList").append(val);
+    } else {
+      toastr.warning("Cannot add more than " + limit + " items.")
+    }
+  }
+
+  // move item to featured list
+  function moveToResultsList(val) {
+    $(val).attr("ondblclick", "moveToSuggestionList($(this))");
+    $("#resultsList").append(val);
+    sortUnorderedList("resultsList");
+  }
 
   // get suggestions list
   function getSuggestions(umbrellaId) {
@@ -213,7 +221,7 @@ $this->load->view('admin_panel/templates/close_html');
             var is_result_umbrella = (r.is_umbrella) ? 1 : 0
 
             $(resultsList).append(
-              '<li class="' + btn_class + '">' + r.title +
+              '<li ondblclick="moveToSuggestionList($(this))" class="' + btn_class + '">' + r.title +
               '<input type="hidden" name="item[' + index + '][umbrella_id]" value="' + umbrellaId + '">' +
               '<input type="hidden" name="item[' + index + '][result_id]" value="' + r.id + '">' +
               '<input type="hidden" name="item[' + index + '][is_result_umbrella]" value="' + r.is_umbrella + '"></li>'
@@ -225,7 +233,7 @@ $this->load->view('admin_panel/templates/close_html');
         obj['suggestions'].forEach(s => {
           var btn_class = (s.is_result_umbrella == 1) ? "btn btn-outline-brand m-btn m-btn--air m-btn--custom" : "btn btn-secondary m-btn m-btn--air m-btn--custom"
           $(suggestionList).append(
-            '<li class="' + btn_class + '">' + s.title +
+            '<li ondblclick="moveToResultsList($(this))" class="' + btn_class + '">' + s.title +
             '<input type="hidden" name="item[' + index + '][umbrella_id]" value="' + umbrellaId + '">' +
             '<input type="hidden" name="item[' + index + '][result_id]" value="' + s.result_id + '">' +
             '<input type="hidden" name="item[' + index + '][is_result_umbrella]" value="' + s.is_result_umbrella + '"></li>'
@@ -240,6 +248,27 @@ $this->load->view('admin_panel/templates/close_html');
         toastr.error("Unable to process request.")
       }
     });
+  }
+
+  // helper method to sort unordered list
+  function sortUnorderedList(ul) {
+    if (typeof ul == "string")
+      ul = document.getElementById(ul);
+
+    // Get the list items and setup an array for sorting
+    var lis = ul.getElementsByTagName("LI");
+    var vals = [];
+
+    // Populate the array
+    for (var i = 0, l = lis.length; i < l; i++)
+      vals.push(lis[i].innerHTML);
+
+    // Sort it
+    vals.sort();
+
+    // Change the list on the page
+    for (var i = 0, l = lis.length; i < l; i++)
+      lis[i].innerHTML = vals[i];
   }
 </script>
 
