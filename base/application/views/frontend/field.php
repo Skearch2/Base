@@ -119,7 +119,7 @@ $this->load->view('frontend/templates/header');
                         <div class="col-sm-12">
                             <div class="row">
                                 <div class="col-sm-3 f-box">
-                                    <a href="<?= BASE_URL ?>browse/<?= $umbrella_name ?>" title="<?= $umbrella_name ?>"><?= $umbrella_name ?></a>
+                                    <a href="<?= base_url() ?>browse/<?= $umbrella_name ?>" title="<?= $umbrella_name ?>"><?= $umbrella_name ?></a>
                                 </div>
                                 <?php foreach ($results as $results) : ?>
                                     <?php if ($results->is_result_umbrella != 1) : ?>

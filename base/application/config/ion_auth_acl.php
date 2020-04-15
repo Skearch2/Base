@@ -41,7 +41,7 @@ $config['join']['permissions']  = 'perm_id';
  | -------------------------------------------------------------------------
  | Default admin permission key = access_admin
  */
-$config['admin_permission']                 = "access_admin";
+// $config['admin_permission']                 = "access_admin";
 
 /* End of file ion_auth_acl.php */
 /* Location: ./application/config/ion_auth_acl.php */

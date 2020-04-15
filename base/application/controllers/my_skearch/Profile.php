@@ -51,7 +51,7 @@ class Profile extends MY_Controller
         }
         // only show to regular and premium user groups
         else if (in_array($group, array(4, 5))) {
-            $this->form_validation->set_rules('name', 'Name', 'required|alpha|trim');
+            $this->form_validation->set_rules('name', 'Name', 'alpha|trim');
         }
         // only show to admin, editor, and brand member groups
         if (in_array($group, array(1, 2, 3))) {

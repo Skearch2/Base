@@ -70,7 +70,7 @@ $this->load->view('admin_panel/templates/subheader');
             <table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Link ID</th>
                         <th width="20%">Title</th>
                         <th width="5%">HTTP Status</th>
                         <th>Status Defination</th>
@@ -118,8 +118,13 @@ $this->load->view('admin_panel/templates/close_html');
         $.ajax({
             url: '<?= site_url(); ?>admin/linkchecker/update_urls_status/',
             type: 'GET',
-            success: function(result) {
-
+            success: function(data, status) {
+                if (data == -1) {
+                    toastr.warning("", "You have no permission.")
+                }
+            },
+            error: function(xhr, status, error) {
+                toastr.error("", "Unable to run linkchecker.")
             }
         });
     }
@@ -131,7 +136,7 @@ $this->load->view('admin_panel/templates/close_html');
         swal({
             title: "Are you sure?",
             text: "Are you sure you want remove the link: \"" + link + "\"?",
-            type: "warning",
+            type: "info",
             confirmButtonClass: "btn btn-danger",
             confirmButtonText: "Yes, remove it!",
             showCancelButton: true,
@@ -171,12 +176,12 @@ $this->load->view('admin_panel/templates/close_html');
         }).then(function(e) {
             if (!e.value) return;
             $.ajax({
-                url: '<?= site_url('admin/categories/delete_result_listing/'); ?>' + id,
+                url: '<?= site_url('admin/results/link/delete/id/'); ?>' + id,
                 type: 'DELETE',
                 success: function(data, status) {
                     if (data == -1) {
                         swal("Not Allowed!", "You have no permission.", "warning")
-                    } else {
+                    } else if (data == 1) {
                         swal("Success!", "The link has been deleted.", "success")
                         $("#" + id).remove();
                     }
@@ -191,23 +196,23 @@ $this->load->view('admin_panel/templates/close_html');
     /* Disable/Enable link*/
     function toggle(id, row) {
         $.ajax({
-            url: '<?= site_url(); ?>admin/categories/toggle_result/' + id,
+            url: '<?= site_url('admin/results/link/toggle/id/'); ?>' + id,
             type: 'GET',
-            success: function(status) {
-                if (status == 0) {
+            success: function(data, status) {
+                if (data == 0) {
                     document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
                     document.getElementById("tablerow" + row).innerHTML = "Off";
-                } else if (status == 1) {
+                    toastr.success("", "Status updated.");
+                } else if (data == 1) {
                     document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
                     document.getElementById("tablerow" + row).innerHTML = "Active";
-                }
-                // if the user has no access to toggle link status
-                else if (data == -1) {
+                    toastr.success("", "Status updated.");
+                } else if (data == -1) {
                     toastr.warning("", "You have no permission.");
                 }
             },
             error: function(xhr, status, error) {
-                alert("Error toggle link status");
+                toastr.error("", "Unable to update the status.");
             }
         });
     }
@@ -251,7 +256,7 @@ $this->load->view('admin_panel/templates/close_html');
                         render: function(a, t, e, n) {
                             var title = e['title'].replace(/ /g, '%20');
                             var row = (n.row).toString().slice(-1);
-                            return '<a href="<?= site_url() . "admin/categories/update_result/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit link"><i class="la la-edit"></i></a>' +
+                            return '<a href="<?= site_url() . "admin/results/link/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit link"><i class="la la-edit"></i></a>' +
                                 '<a onclick=removeFromList("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Remove from list"><i style="color:RED" class="la la-remove"></i></a>' +
                                 '<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete link"><i style="color:RED" class="la la-trash"></i></a>'
                         }
@@ -280,7 +285,6 @@ $this->load->view('admin_panel/templates/close_html');
                                 return "Server error";
                             else
                                 return "Unable to get status";
-
                         }
                     },
                     {

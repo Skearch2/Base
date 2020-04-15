@@ -261,8 +261,12 @@ $this->load->view('admin_panel/templates/close_html');
 				url: '<?= site_url('admin/results/link/delete/id/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
-					swal("Success!", "The link has been deleted.", "success")
-					$("#" + id).remove();
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else if (data == 1) {
+						swal("Success!", "The link has been deleted.", "success")
+						$("#" + id).remove();
+					}
 				},
 				error: function(xhr, status, error) {
 					swal("Error!", "Unable to delete the link.", "error")
@@ -351,12 +355,16 @@ $this->load->view('admin_panel/templates/close_html');
 			},
 			success: function(data, status) {
 				$("#modal_option").modal('hide');
-				// hide the link from the table
-				if (option == 1) {
-					toastr.success("The link has been duplicated.");
-				} else if (option == 2) {
-					toastr.success("The link has been moved.");
-					$("#" + id).fadeOut("slow");
+				if (data == -1) {
+					toastr.warning("", "You have no permission.");
+				} else if ((data == 1)) {
+					// hide the link from the list
+					if (option == 1) {
+						toastr.success("The link has been duplicated.");
+					} else if (option == 2) {
+						toastr.success("The link has been moved.");
+						$("#" + id).fadeOut("slow");
+					}
 				}
 			},
 			error: function(xhr, status, error) {
@@ -416,6 +424,8 @@ $this->load->view('admin_panel/templates/close_html');
 					document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
 					document.getElementById("tablerow" + row).innerHTML = "Active";
 					toastr.success("", "Status updated.");
+				} else if (data == -1) {
+					toastr.warning("", "You have no permission.");
 				}
 			},
 			error: function(xhr, status, error) {
@@ -432,10 +442,13 @@ $this->load->view('admin_panel/templates/close_html');
 			success: function(data, status) {
 				if (data == 0) {
 					document.getElementById("redirect" + id).style.color = "red";
+					toastr.success("", "Redirection updated.");
 				} else if (data == 1) {
 					document.getElementById("redirect" + id).style.color = "#34bfa3";
+					toastr.success("", "Redirection updated.");
+				} else if (data == -1) {
+					toastr.warning("", "You have no permission.");
 				}
-				toastr.success("", "Redirection updated.");
 			},
 			error: function(xhr, status, error) {
 				toastr.error("", "Unable to update redirection.");

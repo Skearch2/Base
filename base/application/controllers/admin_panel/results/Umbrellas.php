@@ -11,7 +11,7 @@ if (!defined('BASEPATH')) {
 /**
  *
  * A controller for umbrellas
- * 
+ *
  * @package      Skearch
  * @author       Iftikhar Ejaz <ejaziftikhar@gmail.com>
  * @copyright    Copyright (c) 2020
@@ -49,41 +49,47 @@ class Umbrellas extends MY_Controller
      */
     public function create()
     {
-        $this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces|trim');
-        $this->form_validation->set_rules('description', 'Description', 'max_length[500]|trim');
-        $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
-        $this->form_validation->set_rules('umbrella_name', 'Umbrella Name', 'alpha_numeric_spaces|trim');
-        $this->form_validation->set_rules('home_display', 'Home Display', 'alpha_numeric_spaces|trim');
-        $this->form_validation->set_rules('keywords', 'Keywords', 'required|trim');
-        $this->form_validation->set_rules('featured', 'Featured', 'required|numeric');
-        $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
+        if (!$this->ion_auth_acl->has_permission('umbrellas_create') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
 
+            $this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces|trim');
+            $this->form_validation->set_rules('description', 'Description', 'max_length[500]|trim');
+            $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
+            $this->form_validation->set_rules('umbrella_name', 'Umbrella Name', 'alpha_numeric_spaces|trim');
+            $this->form_validation->set_rules('home_display', 'Home Display', 'alpha_numeric_spaces|trim');
+            $this->form_validation->set_rules('keywords', 'Keywords', 'required|trim');
+            $this->form_validation->set_rules('featured', 'Featured', 'required|numeric');
+            $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
 
-        if ($this->form_validation->run() === true) {
+            if ($this->form_validation->run() === true) {
 
-            $umbrella_data = array(
-                'title'             => $this->input->post('title'),
-                'description'       => $this->input->post('description'),
-                'description_short' => $this->input->post('description_short'),
-                'umbrella_name'     => $this->input->post('umbrella_name'),
-                'home_display'      => $this->input->post('home_display'),
-                'keywords'          => $this->input->post('keywords'),
-                'featured'          => $this->input->post('featured'),
-                'enabled'           => $this->input->post('enabled')
-            );
+                $umbrella_data = array(
+                    'title' => $this->input->post('title'),
+                    'description' => $this->input->post('description'),
+                    'description_short' => $this->input->post('description_short'),
+                    'umbrella_name' => $this->input->post('umbrella_name'),
+                    'home_display' => $this->input->post('home_display'),
+                    'keywords' => $this->input->post('keywords'),
+                    'featured' => $this->input->post('featured'),
+                    'enabled' => $this->input->post('enabled'),
+                );
 
-            $create = $this->umbrellas->create($umbrella_data);
+                $create = $this->umbrellas->create($umbrella_data);
 
-            if ($create) {
-                $this->session->set_flashdata('create_success', 1);
-                redirect('/admin/results/umbrella/create');
-            } else {
-                $this->session->set_flashdata('create_success', 0);
+                if ($create) {
+                    $this->session->set_flashdata('create_success', 1);
+                    redirect('/admin/results/umbrella/create');
+                } else {
+                    $this->session->set_flashdata('create_success', 0);
+                }
             }
-        }
 
-        $data['title'] = ucfirst("add umbrella");
-        $this->load->view('admin_panel/pages/results/umbrella/create', $data);
+            $data['title'] = ucfirst("add umbrella");
+            $this->load->view('admin_panel/pages/results/umbrella/create', $data);
+        }
     }
 
     /**
@@ -94,34 +100,45 @@ class Umbrellas extends MY_Controller
      */
     public function delete($id)
     {
-        $this->umbrellas->delete($id);
+        if (!$this->ion_auth_acl->has_permission('umbrellas_delete') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $delete = $this->umbrellas->delete($id);
+
+            if ($delete) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        }
     }
 
     /**
      * Gets umbrellas by status
      *
-     * @param String $status Status of the umbrella
+     * @param string $status Status for the umbrellas
      * @return void
      */
-    public function get_by_status($status = NULL)
+    public function get_by_status($status = null)
     {
-
-        $umbrellas = $this->umbrellas->get_by_status($status);
-        $total_umbrellas = sizeof($umbrellas);
-        $result = array(
-            'iTotalRecords' => $total_umbrellas,
-            'iTotalDisplayRecords' => $total_umbrellas,
-            'sEcho' => 0,
-            'sColumns' => "",
-            'aaData' => $umbrellas
-        );
-        for ($i = 0; $i < sizeof($result['aaData']); $i++) {
-            $fields = $this->fields->get_by_umbrella($result['aaData'][$i]->id);
-            $result['aaData'][$i]->totalFields = sizeof($fields);
+        if ($this->ion_auth_acl->has_permission('umbrellas_get') or $this->ion_auth->is_admin()) {
+            $umbrellas = $this->umbrellas->get_by_status($status);
+            $total_umbrellas = sizeof($umbrellas);
+            $result = array(
+                'iTotalRecords' => $total_umbrellas,
+                'iTotalDisplayRecords' => $total_umbrellas,
+                'sEcho' => 0,
+                'sColumns' => "",
+                'aaData' => $umbrellas,
+            );
+            for ($i = 0; $i < sizeof($result['aaData']); $i++) {
+                $fields = $this->fields->get_by_umbrella($result['aaData'][$i]->id);
+                $result['aaData'][$i]->totalFields = sizeof($fields);
+            }
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($result));
         }
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($result));
     }
 
     /**
@@ -132,26 +149,37 @@ class Umbrellas extends MY_Controller
      */
     public function get($id)
     {
-        $umbrella = $this->umbrellas->get($id);
+        if ($this->ion_auth_acl->has_permission('umbrellas_get') or $this->ion_auth->is_admin()) {
+            $umbrella = $this->umbrellas->get($id);
 
-        return $umbrella;
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($umbrella));
+        }
     }
 
     /**
      * Show umbrellas page
      *
-     * @param String $status Status of umbrellas
+     * @param string $status Status of umbrellas
      * @return void
      */
-    public function index($status = NULL)
+    public function index($status = null)
     {
-        $data['status'] = $status;
-        $data['heading'] = ucfirst($status);
+        if (!$this->ion_auth_acl->has_permission('umbrellas_get') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
 
-        $data['title'] = ucfirst("Umbrellas");
+            $data['status'] = $status;
+            $data['heading'] = ucfirst($status);
 
-        // Load page content
-        $this->load->view('admin_panel/pages/results/umbrella/view', $data);
+            $data['title'] = ucfirst("Umbrellas");
+
+            // Load page content
+            $this->load->view('admin_panel/pages/results/umbrella/view', $data);
+        }
     }
 
     /**
@@ -162,21 +190,25 @@ class Umbrellas extends MY_Controller
      */
     public function toggle($id)
     {
-        $status = $this->umbrellas->get($id)->enabled;
-
-        if ($status == 0) {
-            $status = 1;
+        if (!$this->ion_auth_acl->has_permission('umbrellas_update') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
         } else {
-            $status = 0;
+            $status = $this->umbrellas->get($id)->enabled;
+
+            if ($status == 0) {
+                $status = 1;
+            } else {
+                $status = 0;
+            }
+
+            $umbrella_data = array(
+                'enabled' => $status,
+            );
+
+            $this->umbrellas->update($id, $umbrella_data);
+
+            echo json_encode($status);
         }
-
-        $umbrella_data = array(
-            'enabled' => $status,
-        );
-
-        $this->umbrellas->update($id, $umbrella_data);
-
-        echo json_encode($status);
     }
 
     /**
@@ -187,41 +219,46 @@ class Umbrellas extends MY_Controller
      */
     public function update($id)
     {
-        $this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces|trim');
-        $this->form_validation->set_rules('description', 'Description', 'max_length[500]|trim');
-        $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
-        $this->form_validation->set_rules('umbrella_name', 'Umbrella Name', 'alpha_numeric_spaces|trim');
-        $this->form_validation->set_rules('home_display', 'Home Display', 'alpha_numeric_spaces|trim');
-        $this->form_validation->set_rules('keywords', 'Keywords', 'required|trim');
-        $this->form_validation->set_rules('featured', 'Featured', 'required|numeric');
-        $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
-
-
-        if ($this->form_validation->run() === false) {
-
-            $data['umbrella'] = $this->umbrellas->get($id);
-
-            $data['title'] = ucfirst("edit umbrella");
-            $this->load->view('admin_panel/pages/results/umbrella/edit', $data);
+        if (!$this->ion_auth_acl->has_permission('umbrellas_update') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
         } else {
-            $umbrella_data = array(
-                'title'             => $this->input->post('title'),
-                'description'       => $this->input->post('description'),
-                'description_short' => $this->input->post('description_short'),
-                'umbrella_name'     => $this->input->post('umbrella_name'),
-                'home_display'      => $this->input->post('home_display'),
-                'keywords'          => $this->input->post('keywords'),
-                'featured'          => $this->input->post('featured'),
-                'enabled'           => $this->input->post('enabled')
-            );
+            $this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces|trim');
+            $this->form_validation->set_rules('description', 'Description', 'max_length[500]|trim');
+            $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
+            $this->form_validation->set_rules('umbrella_name', 'Umbrella Name', 'alpha_numeric_spaces|trim');
+            $this->form_validation->set_rules('home_display', 'Home Display', 'alpha_numeric_spaces|trim');
+            $this->form_validation->set_rules('keywords', 'Keywords', 'required|trim');
+            $this->form_validation->set_rules('featured', 'Featured', 'required|numeric');
+            $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
 
-            $create = $this->umbrellas->update($id, $umbrella_data);
+            if ($this->form_validation->run() === false) {
 
-            if ($create) {
-                $this->session->set_flashdata('update_success', 1);
-                redirect('/admin/results/umbrellas/status/all');
+                $data['umbrella'] = $this->umbrellas->get($id);
+
+                $data['title'] = ucfirst("edit umbrella");
+                $this->load->view('admin_panel/pages/results/umbrella/edit', $data);
             } else {
-                $this->session->set_flashdata('update_success', 0);
+                $umbrella_data = array(
+                    'title' => $this->input->post('title'),
+                    'description' => $this->input->post('description'),
+                    'description_short' => $this->input->post('description_short'),
+                    'umbrella_name' => $this->input->post('umbrella_name'),
+                    'home_display' => $this->input->post('home_display'),
+                    'keywords' => $this->input->post('keywords'),
+                    'featured' => $this->input->post('featured'),
+                    'enabled' => $this->input->post('enabled'),
+                );
+
+                $create = $this->umbrellas->update($id, $umbrella_data);
+
+                if ($create) {
+                    $this->session->set_flashdata('update_success', 1);
+                    redirect('/admin/results/umbrellas/status/all');
+                } else {
+                    $this->session->set_flashdata('update_success', 0);
+                }
             }
         }
     }

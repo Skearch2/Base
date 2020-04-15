@@ -95,7 +95,13 @@ class Brandleads extends MY_Controller
         if (!$this->ion_auth_acl->has_permission('brandleads_delete') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
-            $this->Brandleads->delete($id);
+            $delete = $this->Brandleads->delete($id);
+
+            if ($delete) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
         }
     }
 }

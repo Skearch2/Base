@@ -92,7 +92,7 @@ $this->load->view('admin_panel/templates/subheader');
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
-                  <label for="example-text-input" class="col-2 col-form-label">Drag item from the first list to the second list</label>
+                  <label for="example-text-input" class="col-2 col-form-label"></label>
                   <div class="col-5">
                     <div>
                       <h5>Featured Results</h5>

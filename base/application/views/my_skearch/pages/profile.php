@@ -34,7 +34,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 							</div>
 						</div>
 						<div class="m-card-profile__details">
-							<span class="m-card-profile__name"><?= $this->session->userdata('firstname') . " " . $this->session->userdata('lastname') ?></span>
+							<span class="m-card-profile__name"><?= $this->session->userdata('username') ?></span>
 							<a href="" class="m-card-profile__email m-link"><?= $this->session->userdata('email'); ?></a>
 						</div>
 					</div>

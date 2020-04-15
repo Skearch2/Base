@@ -46,7 +46,7 @@ class Templates extends MY_Controller
      */
     public function get($template_name)
     {
-        if (!$this->ion_auth_acl->has_permission('email_template') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('templates') && !$this->ion_auth->is_admin()) {
             // set page title
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);

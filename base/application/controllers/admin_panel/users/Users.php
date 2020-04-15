@@ -33,6 +33,7 @@ class Users extends MY_Controller
 
         $this->load->model('admin_panel/users/User_model', 'User');
         $this->load->model('admin_panel/users/Group_model', 'Group');
+        $this->load->model('admin_panel/users/Payment_model', 'User_payment');
         $this->load->model('Util_model', 'Util_model');
     }
 
@@ -82,8 +83,10 @@ class Users extends MY_Controller
                     $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
                 }
             }
-            //$this->form_validation->set_rules('group', 'Group', 'required');
-
+            // only show to staff groups
+            if (in_array($group, array(1, 2))) {
+                $this->form_validation->set_rules('group', 'Group', 'required');
+            }
 
             if ($this->form_validation->run() == false) {
 
@@ -93,7 +96,8 @@ class Users extends MY_Controller
                 $data['countries'] = $this->Util_model->get_country_list();
 
                 // set page title
-                $data['title'] = ucwords('create user');
+                $group_name =  $this->Group->get($group)->name;
+                $data['title'] = ucwords("create {$group_name}");
 
                 $this->load->view('admin_panel/pages/users/create', $data);
             } else {
@@ -128,6 +132,7 @@ class Users extends MY_Controller
                     $additional_data['zipcode'] = $this->input->post('zipcode');
                 }
                 $additional_data['active'] = $this->input->post('active');
+                $group = $this->input->post('group');
 
                 $create = $this->User->create($username, $password, $email, $additional_data, array($group));
 
@@ -154,14 +159,18 @@ class Users extends MY_Controller
         } else {
             $delete = $this->User->delete($id);
 
-            return $delete;
+            if ($delete) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
         }
     }
 
     /**
      * Callback for email validation
      *
-     * @param String $email Email of the user
+     * @param string $email Email of the user
      * @return void
      */
     public function email_check($email)
@@ -197,6 +206,16 @@ class Users extends MY_Controller
                     'sColumns' => "",
                     'aaData' => $users,
                 );
+
+                // add payment information to all users
+                for ($i = 0; $i < sizeof($result['aaData']); $i++) {
+                    $payment = $this->User_payment->get($result['aaData'][$i]->id);
+                    if (is_null($payment)) {
+                        $result['aaData'][$i]->is_paid = 0;
+                    } else {
+                        $result['aaData'][$i]->is_paid = $payment->is_paid;
+                    }
+                }
             } else {
                 $result = $this->User->get($id);
             }
@@ -210,7 +229,7 @@ class Users extends MY_Controller
     /**
      * Get users by last name
      *
-     * @param String $lastname Last nae of the user
+     * @param string $lastname Last nae of the user
      * @return object
      */
     public function get_by_lastname($lastname)
@@ -266,7 +285,7 @@ class Users extends MY_Controller
      */
     public function permissions($id)
     {
-        if (!$this->ion_auth_acl->has_permission('users_toggle') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('users_update') && !$this->ion_auth->is_admin()) {
             // set page title
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
@@ -325,7 +344,7 @@ class Users extends MY_Controller
      */
     public function reset($id)
     {
-        if (!$this->ion_auth_acl->has_permission('users_reset') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('users_update') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
             $user = $this->ion_auth->where('id', $id)->users()->row();
@@ -349,7 +368,7 @@ class Users extends MY_Controller
      */
     public function toggle($id)
     {
-        if (!$this->ion_auth_acl->has_permission('users_toggle') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('users_update') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
             if ($this->ion_auth->is_admin($id) == NULL || $this->ion_auth->is_admin($id) == 0) {
@@ -375,6 +394,35 @@ class Users extends MY_Controller
     }
 
     /**
+     * Toggle payment status of a user
+     *
+     * @param int $id ID of the user
+     * @return void
+     */
+    public function toggle_payment($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('users_update') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $status = $this->User_payment->get($id)->is_paid;
+
+            if ($status == 0) {
+                $status = 1;
+            } else {
+                $status = 0;
+            }
+
+            $payment_data = array(
+                'is_paid' => $status,
+            );
+
+            $this->User_payment->update($id, $payment_data);
+
+            echo json_encode($status);
+        }
+    }
+
+    /**
      * Update user data
      *
      * @param int $id ID of the user
@@ -383,7 +431,7 @@ class Users extends MY_Controller
     public function update($id)
     {
 
-        if (!$this->ion_auth_acl->has_permission('users_edit') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('users_update') && !$this->ion_auth->is_admin()) {
             // set page title
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
@@ -465,7 +513,8 @@ class Users extends MY_Controller
                 $data['countries'] = $this->Util_model->get_country_list();
                 $data['groups'] = $this->Group->get();
 
-                $data['title'] = ucwords('edit user');
+                $group_name =  $this->Group->get($group)->name;
+                $data['title'] = ucwords("edit {$group_name}");
 
                 $this->load->view('admin_panel/pages/users/edit', $data);
             } else {
@@ -514,7 +563,7 @@ class Users extends MY_Controller
     /**
      * Callback for username validation
      *
-     * @param String $username Username of the user
+     * @param string $username Username of the user
      * @return void
      */
     public function username_check($username)

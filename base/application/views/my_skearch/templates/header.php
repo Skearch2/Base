@@ -233,7 +233,7 @@
 														<img src="<?= site_url(ASSETS); ?>/my_skearch/app/media/img/users/user-default.jpg" class="m--img-rounded m--marginless" alt="" />
 													</div>
 													<div class="m-card-user__details">
-														<span class="m-card-user__name m--font-weight-500"><?= $this->session->userdata('firstname') . " " . $this->session->userdata('lastname') ?></span>
+														<span class="m-card-user__name m--font-weight-500"><?= $this->session->userdata('username') ?></span>
 														<span class="m-card-user__email m--font-weight-300"><?= $this->session->userdata('group'); ?></span>
 													</div>
 												</div>
