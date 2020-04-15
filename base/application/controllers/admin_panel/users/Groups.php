@@ -73,7 +73,7 @@ class Groups extends MY_Controller
      */
     public function delete($id)
     {
-        if (!$this->ion_auth_acl->has_permission('users_delete') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('groups_delete') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
             $delete = $this->Group->delete($id);

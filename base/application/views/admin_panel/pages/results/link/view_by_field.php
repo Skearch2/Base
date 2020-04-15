@@ -177,16 +177,20 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-	// change field priority
-	function changePriority(id, priority) {
+	// Updates link priority
+	function updatePriority(id, priority) {
 		$('#m_table_1').fadeOut("slow");
 		$.ajax({
-			url: '<?= site_url(); ?>/admin/categories/change_priority/' + id + '/' + priority,
+			url: '<?= site_url('admin/results/link/update/id/'); ?>' + id + '/priority/' + priority,
 			type: 'GET',
-			success: function(status) {
-				getPriorities();
-				$('#m_table_1').DataTable().ajax.reload(null, false);
-				toastr.success("", "Priority updated.");
+			success: function(data, status) {
+				if (data == -1) {
+					toastr.warning("", "You have no permission.");
+				} else if (data == 1) {
+					getPriorities(); // get updated priorities
+					$('#m_table_1').DataTable().ajax.reload(null, false);
+					toastr.success("", "Priority updated.");
+				}
 			},
 			error: function(err) {
 				toastr.error("", "Unable to update priority.");
@@ -211,8 +215,12 @@ $this->load->view('admin_panel/templates/close_html');
 				url: '<?= site_url('admin/results/link/delete/id/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
-					swal("Success!", "The link has been deleted.", "success")
-					$("#" + id).remove();
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else if (data == 1) {
+						swal("Success!", "The link has been deleted.", "success")
+						$("#" + id).remove();
+					}
 				},
 				error: function(xhr, status, error) {
 					swal("Error!", "Unable to delete the link.", "error")
@@ -259,6 +267,8 @@ $this->load->view('admin_panel/templates/close_html');
 					document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
 					document.getElementById("tablerow" + row).innerHTML = "Active";
 					toastr.success("", "Status updated.");
+				} else if (data == -1) {
+					toastr.warning("", "You have no permission.");
 				}
 			},
 			error: function(xhr, status, error) {
@@ -275,10 +285,13 @@ $this->load->view('admin_panel/templates/close_html');
 			success: function(data, status) {
 				if (data == 0) {
 					document.getElementById("redirect" + id).style.color = "red";
+					toastr.success("", "Redirection updated.");
 				} else if (data == 1) {
 					document.getElementById("redirect" + id).style.color = "#34bfa3";
+					toastr.success("", "Redirection updated.");
+				} else if (data == -1) {
+					toastr.warning("", "You have no permission.");
 				}
-				toastr.success("", "Redirection updated.");
 			},
 			error: function(xhr, status, error) {
 				toastr.error("", "Unable to update redirection.");
@@ -314,17 +327,26 @@ $this->load->view('admin_panel/templates/close_html');
 						title: "Actions",
 						orderable: !1,
 						render: function(a, t, e, n) {
-							var $select = $("<select onchange= changePriority(" + e['id'] + ",this.value)></select>", {
+							var $select = $("<select onchange= updatePriority(" + e['id'] + ",this.value)></select>", {
 								"id": "priority" + e['id'],
 							});
 							for (var i = 0; i <= 250; i++) {
-								var $option = $("<option></option>", {
-									"text": i,
-									"value": i
-								});
+								if (i == 0) {
+									var $option = $("<option></option>", {
+										"text": "Not Set",
+										"value": i
+									});
+								} else {
+									var $option = $("<option></option>", {
+										"text": i,
+										"value": i
+									});
+								}
 								if (_searchArray(i, obj)) {
-									$option.attr('disabled', 'disabled');
-									$option.attr('style', 'background-color:#99ff99');
+									if (i != 0) {
+										$option.attr('disabled', 'disabled');
+										$option.attr('style', 'background-color:#99ff99');
+									}
 								}
 								if (i == e['priority']) {
 									$option.attr("selected", "selected")

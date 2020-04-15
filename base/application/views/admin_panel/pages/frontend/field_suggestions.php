@@ -103,7 +103,7 @@ $this->load->view('admin_panel/templates/subheader');
                   </div>
                 </div>
                 <div id='suggestionPanel' class="form-group m-form__group row" style="display:none">
-                  <label class="col-2 col-form-label">Drag item from the first list to the second list</label>
+                  <label class="col-2 col-form-label"></label>
                   <div class="col-7">
                     <div>
                       <h5>Results</h5>

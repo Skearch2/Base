@@ -47,7 +47,7 @@ class Email extends MY_Controller
      */
     public function members()
     {
-        if (!$this->ion_auth_acl->has_permission('email_members') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('email') && !$this->ion_auth->is_admin()) {
             // set page title
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
@@ -91,7 +91,7 @@ class Email extends MY_Controller
      */
     public function invite()
     {
-        if (!$this->ion_auth_acl->has_permission('email_invite') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('email') && !$this->ion_auth->is_admin()) {
             // set page title
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);

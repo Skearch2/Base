@@ -128,16 +128,17 @@ $route['admin/auth/submit']          = 'admin_panel/auth/submit';
 */
 
 // Users
-$route['admin/user/create/group/id/(:num)']     = 'admin_panel/users/users/create/$1';
-$route['admin/user/delete/id/(:num)']           = 'admin_panel/users/users/delete/$1';
-$route['admin/user/reset/id/(:num)']            = 'admin_panel/users/users/reset/$1';
-$route['admin/user/toggle/id/(:num)']           = 'admin_panel/users/users/toggle/$1';
-$route['admin/user/update/id/(:num)']           = 'admin_panel/users/users/update/$1';
-$route['admin/user/get/id/(:num)']              = 'admin_panel/users/users/get/$1';
-$route['admin/user/get/permissions/id/(:num)']  = 'admin_panel/users/users/permissions/$1';
-$route['admin/users/get/group/id/(:num)']       = 'admin_panel/users/users/get/$1/1';
-$route['admin/users/get/lastname/(:any)']       = 'admin_panel/users/users/get_by_lastname/$1';
-$route['admin/users/group/id/(:num)']           = 'admin_panel/users/users/index/$1';
+$route['admin/user/create/group/id/(:num)']         = 'admin_panel/users/users/create/$1';
+$route['admin/user/delete/id/(:num)']               = 'admin_panel/users/users/delete/$1';
+$route['admin/user/reset/id/(:num)']                = 'admin_panel/users/users/reset/$1';
+$route['admin/user/toggle/id/(:num)']               = 'admin_panel/users/users/toggle/$1';
+$route['admin/user/toggle/payment/user/id/(:num)']  = 'admin_panel/users/users/toggle_payment/$1';
+$route['admin/user/update/id/(:num)']               = 'admin_panel/users/users/update/$1';
+$route['admin/user/get/id/(:num)']                  = 'admin_panel/users/users/get/$1';
+$route['admin/user/get/permissions/id/(:num)']      = 'admin_panel/users/users/permissions/$1';
+$route['admin/users/get/group/id/(:num)']           = 'admin_panel/users/users/get/$1/1';
+$route['admin/users/get/lastname/(:any)']           = 'admin_panel/users/users/get_by_lastname/$1';
+$route['admin/users/group/id/(:num)']               = 'admin_panel/users/users/index/$1';
 
 // Groups
 $route['admin/users/group/create']             = 'admin_panel/users/groups/create';
@@ -152,6 +153,7 @@ $route['admin/users/permission/delete/id/(:num)'] = 'admin_panel/users/permissio
 $route['admin/users/permission/update/id/(:num)'] = 'admin_panel/users/permissions/update/$1';
 $route['admin/users/permissions']                 = 'admin_panel/users/permissions';
 $route['admin/users/permissions/get']             = 'admin_panel/users/permissions/get';
+
 
 /* 
     RESULTS
@@ -217,6 +219,7 @@ $route['admin/results/link/move/id/(:num)/field/(:num)/priority/(:num)']       =
 $route['admin/results/link/redirect/id/(:num)']                                = 'admin_panel/results/links/redirect/$1';
 $route['admin/results/link/toggle/id/(:num)']                                  = 'admin_panel/results/links/toggle/$1';
 $route['admin/results/link/update/id/(:num)']                                  = 'admin_panel/results/links/update/$1';
+$route['admin/results/link/update/id/(:num)/priority/(:num)']                  = 'admin_panel/results/links/update_priority/$1/$2';
 $route['admin/results/links/get/field/id/(:num)']                              = 'admin_panel/results/links/get_by_field/$1';
 $route['admin/results/links/get/keywords/(:any)']                              = 'admin_panel/results/links/get_by_keywords/$1';
 $route['admin/results/links/get/status/(all|active|inactive)']                 = 'admin_panel/results/links/get_by_status/$1';

@@ -2,7 +2,7 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * File:    ~/application/controller/admin_panel/linkchecker.php
+ * File:    ~/application/controller/admin_panel/Linkchecker.php
  *
  * @package		Skearch
  * @author		Zaawar Ejaz <zaawar@yahoo.com>
@@ -36,7 +36,7 @@ class Linkchecker extends MY_Controller
 	 */
 	public function get()
 	{
-		if ($this->ion_auth_acl->has_permission('linkchecker_get') or $this->ion_auth->is_admin()) {
+		if ($this->ion_auth_acl->has_permission('linkchecker') or $this->ion_auth->is_admin()) {
 			$urls = $this->linkcheck_model->get();
 			$total_urls = sizeof($urls);
 			$result = array(
@@ -59,7 +59,7 @@ class Linkchecker extends MY_Controller
 	 */
 	public function index()
 	{
-		if (!$this->ion_auth_acl->has_permission('linkchecker_get') && !$this->ion_auth->is_admin()) {
+		if (!$this->ion_auth_acl->has_permission('linkchecker') && !$this->ion_auth->is_admin()) {
 			// set page title
 			$data['title'] = ucwords('access denied');
 			$this->load->view('admin_panel/errors/error_403', $data);
@@ -84,7 +84,7 @@ class Linkchecker extends MY_Controller
 	 */
 	public function remove($id)
 	{
-		if (!$this->ion_auth_acl->has_permission('linkchecker_remove') && !$this->ion_auth->is_admin()) {
+		if (!$this->ion_auth_acl->has_permission('linkchecker') && !$this->ion_auth->is_admin()) {
 			echo json_encode(-1);
 		} else {
 			$action = $this->linkcheck_model->remove($id);
@@ -132,7 +132,7 @@ class Linkchecker extends MY_Controller
 	 */
 	public function update_urls_status()
 	{
-		if (!$this->ion_auth_acl->has_permission('linkchecker_update') && !$this->ion_auth->is_admin()) {
+		if (!$this->ion_auth_acl->has_permission('linkchecker') && !$this->ion_auth->is_admin()) {
 			echo json_encode(-1);
 		} else {
 			$urls = $this->linkcheck_model->get_urls();

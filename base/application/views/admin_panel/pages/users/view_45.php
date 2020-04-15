@@ -201,8 +201,8 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Name</th>
 						<th>Email Address</th>
 						<th>Gender</th>
-						<th>Group</th>
 						<th>Status</th>
+						<th>Payment</th>
 						<th width=150>Actions</th>
 					</tr>
 				</thead>
@@ -366,6 +366,32 @@ $this->load->view('admin_panel/templates/close_html');
 		});
 	}
 
+	//Toggles user payment status
+	function togglePayment(id, row) {
+		$.ajax({
+			url: '<?= site_url('admin/user/toggle/payment/user/id/'); ?>' + id,
+			type: 'GET',
+			success: function(data, status) {
+				if (data == 0) {
+					document.getElementById("payment" + row).className = "m-badge m-badge--metal m-badge--wide";
+					document.getElementById("payment" + row).innerHTML = "Not paid";
+					toastr.success("", "Payment status updated.");
+				} else if (data == 1) {
+					document.getElementById("payment" + row).className = "m-badge m-badge--success m-badge--wide";
+					document.getElementById("payment" + row).innerHTML = "Paid";
+					toastr.success("", "Payment status updated.");
+				}
+				// if the user has no access to toggle user status
+				else if (data == -1) {
+					toastr.warning("", "You have no permission.");
+				}
+			},
+			error: function(xhr, status, error) {
+				toastr.error("", "Unable to change the payment status.");
+			}
+		});
+	}
+
 	var DatatablesDataSourceAjaxServer = {
 		init: function() {
 			$("#m_table_1").DataTable({
@@ -385,9 +411,9 @@ $this->load->view('admin_panel/templates/close_html');
 				}, {
 					data: "gender"
 				}, {
-					data: "group_name"
-				}, {
 					data: "active"
+				}, {
+					data: "is_paid"
 				}, {
 					data: "Actions"
 				}],
@@ -403,12 +429,12 @@ $this->load->view('admin_panel/templates/close_html');
 							'<a onclick=deleteUser("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}, {
-					targets: 5,
+					targets: 4,
 					render: function(a, t, e, n) {
 						var s = {
 							2: {
 								title: "Pending",
-								class: "m-badge--brand"
+								class: "m-badge--warning"
 							},
 							1: {
 								title: "Active",
@@ -416,10 +442,26 @@ $this->load->view('admin_panel/templates/close_html');
 							},
 							0: {
 								title: "Inactive",
-								class: " m-badge--danger"
+								class: "m-badge--danger"
 							}
 						};
-						return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
+						if (e['activation_code'] !== null) return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[2].class + ' m-badge--wide">' + s[2].title + '</span>'
+						else return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
+					}
+				}, {
+					targets: 5,
+					render: function(a, t, e, n) {
+						var s = {
+							1: {
+								title: "Paid",
+								class: "m-badge--success"
+							},
+							0: {
+								title: "Not Paid",
+								class: "m-badge--metal"
+							}
+						};
+						return void 0 === s[a] ? a : '<span id= payment' + n['row'] + ' title="Toggle Payment Status" onclick=togglePayment(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 					}
 				}]
 			})

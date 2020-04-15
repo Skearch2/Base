@@ -300,7 +300,7 @@ class Pages extends MY_Controller
         }
 
         $data['results'] = $this->Category_model->get_field_suggestions($field_id);
-        $data['umbrella_name'] = urldecode($umbrella_name);
+        $data['umbrella_name'] = ucwords(urldecode($umbrella_name));
         $data['field_name'] = urldecode($field_name);
 
         // set page title

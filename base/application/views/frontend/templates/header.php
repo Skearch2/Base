@@ -23,7 +23,7 @@
 			</div>
 			<div class="col-sm-12 login-bar" style="padding: 0;">
 				<?php if ($this->ion_auth->logged_in()) : ?>
-					<span class="member-welcome">Hello <?= ucwords($this->session->userdata('firstname') . " " . $this->session->userdata('lastname')); ?></span>
+					<span class="member-welcome">Hello <?= $this->session->userdata('username') ?></span>
 					<?php if ($this->ion_auth->is_admin()) : ?>
 						<a href="admin" class="btn btn-danger" role="button">Admin Panel</a>
 					<?php endif ?>

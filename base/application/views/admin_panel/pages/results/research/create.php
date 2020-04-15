@@ -78,19 +78,19 @@ $this->load->view('admin_panel/templates/subheader');
                 <div class="form-group m-form__group row">
                   <label for="example-text-input" class="col-2 col-form-label">Short Description</label>
                   <div class="col-7">
-                    <input class="form-control m-input" type="text" name="description_short" value="<?= set_value('description_short') ?>" required>
+                    <input class="form-control m-input" type="text" name="description_short" value="<?= set_value('description_short') ?>">
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
                   <label for="example-text-input" class="col-2 col-form-label">URL</label>
                   <div class="col-7">
-                    <input class="form-control m-input" type="url" name="url" value="<?= set_value('url') ?>" required>
+                    <input class="form-control m-input" type="url" name="url" value="<?= set_value('url') ?>">
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
                   <label for="example-text-input" class="col-2 col-form-label">Field</label>
                   <div class="col-7">
-                    <select class="form-control" name="field_id" required>
+                    <select class="form-control" name="field_id">
                       <option value="">Select</option>
                       <?php foreach ($fields as $field) : ?>
                         <option value="<?= $field->id ?>" <?= set_select("field_id", $field->id) ?>><?= $field->title ?></option>

@@ -201,8 +201,12 @@ $this->load->view('admin_panel/templates/close_html');
 				url: '<?= site_url('admin/results/umbrella/delete/id/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
-					swal("Success!", "The umbrella has been deleted.", "success")
-					$("#" + id).remove();
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else {
+						swal("Success!", "The umbrella has been deleted.", "success")
+						$("#" + id).remove();
+					}
 				},
 				error: function(xhr, status, error) {
 					swal("Error!", "Unable to delete the umbrella.", "error")
@@ -220,11 +224,14 @@ $this->load->view('admin_panel/templates/close_html');
 				if (data == 0) {
 					document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
 					document.getElementById("tablerow" + row).innerHTML = "Off";
+					toastr.success("", "Status updated.");
 				} else if (data == 1) {
 					document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
 					document.getElementById("tablerow" + row).innerHTML = "Active";
+					toastr.success("", "Status updated.");
+				} else if (data == -1) {
+					toastr.warning("", "You have no permission.");
 				}
-				toastr.success("", "Status updated.");
 			},
 			error: function(xhr, status, error) {
 				toastr.error("", "Unable to change the status.");

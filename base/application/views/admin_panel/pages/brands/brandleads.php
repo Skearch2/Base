@@ -107,7 +107,7 @@ $this->load->view('admin_panel/templates/close_html');
 				success: function(data, status) {
 					if (data == -1) {
 						swal("Not Allowed!", "You have no permission.", "warning")
-					} else {
+					} else if (data == 1) {
 						swal("Success!", "The entry has been deleted.", "success")
 						$("#" + id).remove();
 					}

@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-sm-12 login-bar">
                 <?php if ($this->ion_auth->logged_in()) : ?>
-                    <span class="member-welcome">Hello <?= ucwords($user->firstname . " " . $user->lastname); ?></span>
+                    <span class="member-welcome">Hello <?= $user->username ?></span>
                     <?php if ($this->ion_auth->is_admin()) : ?>
                         <a href="admin" class="btn btn-danger" role="button">Admin Panel</a>
                     <?php endif ?>
