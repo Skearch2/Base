@@ -114,7 +114,7 @@ $this->load->view('frontend/templates/header');
                 <div class="box inline-box">
                     <h3>Related Fields</h3>
                 </div>
-                <div class="middle-inner browse-inner border-box">
+                <div class="middle-inner browse-inner border-box field">
                     <div class="row category_list_home accessorize-list">
                         <div class="col-sm-12">
                             <div class="row">

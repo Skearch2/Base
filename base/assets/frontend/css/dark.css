@@ -325,9 +325,15 @@ a.btn-cat {
 .blk {
 	display: block;
 }
+.accessorize-list .f-box:first-child .acz-sublist ul li a {
+    border: 0px none;
+}
+.field .accessorize-list .f-box:first-child a {
+    border: 2px solid #a6c102;
+}
 
 .accessorize-list .f-box:first-child a {
-    border: 2px solid #a6c102;
+    border: 2px solid #fff
 }
 
 .accessorize-list .f-box>a {
@@ -346,6 +352,7 @@ a.btn-cat {
 	border-radius: 6px;
 	text-shadow: none;
 	text-decoration: none;
+        height: 47px;
 }
 
 .f-box {
