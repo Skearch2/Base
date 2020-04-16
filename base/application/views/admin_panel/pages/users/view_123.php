@@ -438,20 +438,16 @@ $this->load->view('admin_panel/templates/close_html');
 	);
 </script>
 
-
 <!-- Sidemenu class -->
 <script>
+	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 	<?php if ($group == 1 || $group == 2) : ?>
-		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 		$("#submenu-users-staff").addClass("m-menu__item  m-menu__item--active");
 	<?php elseif ($group == 3) : ?>
-		$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-		$("#submenu-brands-members").addClass("m-menu__item  m-menu__item--active");
+		$("#submenu-users-brand_members").addClass("m-menu__item  m-menu__item--active");
 	<?php elseif ($group == 4) : ?>
-		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 		$("#submenu-users-premium").addClass("m-menu__item  m-menu__item--active");
-	<?php else : ?>
-		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	<?php elseif ($group == 5) : ?>
 		$("#submenu-users-registered").addClass("m-menu__item  m-menu__item--active");
 	<?php endif ?>
 </script>
