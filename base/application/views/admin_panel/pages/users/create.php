@@ -208,10 +208,24 @@ $this->load->view('admin_panel/templates/subheader');
 										<h3 class="m-form__section">4. Privileges</h3>
 									</div>
 								</div>
+								<?php if (in_array($group, array(1, 2))) : ?>
+									<div class="form-group m-form__group row">
+										<label for="group" class="col-2 col-form-label">Group<font color="red"><sup>*</sup></font></label>
+										<div class="col-3">
+											<select class="form-control m-input" id="exampleSelect1" name="group">
+												<option value="" <?= set_select('group', '', TRUE) ?>>Select</option>
+												<option value="1" <?= set_select('group', 1) ?>>Admin</option>
+												<option value="2" <?= set_select('group', 2) ?>>Editor</option>
+											</select>
+										</div>
+									</div>
+								<?php else : ?>
+									<input type="hidden" name="group" value="<?= $group ?>">
+								<?php endif ?>
 								<div class="form-group m-form__group row">
 									<label for="active" class="col-2 col-form-label">Enabled</label>
 									<div class="col-7">
-										<input type="hidden" name="active" value="0" <?= set_value('active') == 0 ? 'checked' : "" ?>>
+										<input type="hidden" name="active" value="0" <?= set_value('active', 1) == 0 ? 'checked' : "" ?>>
 										<span class="m-switch m-switch--icon-check">
 											<label>
 												<input type="checkbox" name="active" value="1" <?= set_value('active', 1) == 1 ? 'checked' : "" ?>>
@@ -264,17 +278,14 @@ $this->load->view('admin_panel/templates/close_html');
 
 <!-- Sidemenu class -->
 <script>
+	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 	<?php if ($group == 1 || $group == 2) : ?>
-		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 		$("#submenu-users-staff").addClass("m-menu__item  m-menu__item--active");
 	<?php elseif ($group == 3) : ?>
-		$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-		$("#submenu-brands-members").addClass("m-menu__item  m-menu__item--active");
+		$("#submenu-users-brand_members").addClass("m-menu__item  m-menu__item--active");
 	<?php elseif ($group == 4) : ?>
-		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 		$("#submenu-users-premium").addClass("m-menu__item  m-menu__item--active");
 	<?php elseif ($group == 5) : ?>
-		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 		$("#submenu-users-registered").addClass("m-menu__item  m-menu__item--active");
 	<?php endif ?>
 </script>

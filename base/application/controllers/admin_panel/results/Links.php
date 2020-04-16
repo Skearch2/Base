@@ -11,7 +11,7 @@ if (!defined('BASEPATH')) {
 /**
  *
  * A controller for links
- * 
+ *
  * @package      Skearch
  * @author       Iftikhar Ejaz <i.ejaz@skearch.net>
  * @copyright    Copyright (c) 2020
@@ -49,42 +49,49 @@ class Links extends MY_Controller
      */
     public function create()
     {
-        $this->form_validation->set_rules('title', 'Title', 'required');
-        $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]');
-        $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
-        $this->form_validation->set_rules('priority', 'Priority', 'required|numeric');
-        $this->form_validation->set_rules('display_url', 'Home Display');
-        $this->form_validation->set_rules('www', 'URL', 'required|valid_url');
-        $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
-        $this->form_validation->set_rules('redirect', 'Redirect', 'required|numeric');
+        if (!$this->ion_auth_acl->has_permission('links_create') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
 
-        if ($this->form_validation->run() === true) {
+            $this->form_validation->set_rules('title', 'Title', 'required');
+            $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]');
+            $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
+            $this->form_validation->set_rules('priority', 'Priority', 'required|numeric');
+            $this->form_validation->set_rules('display_url', 'Home Display');
+            $this->form_validation->set_rules('www', 'URL', 'required|valid_url');
+            $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
+            $this->form_validation->set_rules('redirect', 'Redirect', 'required|numeric');
 
-            $link_data = array(
-                'title'             => $this->input->post('title'),
-                'description_short' => $this->input->post('description_short'),
-                'sub_id'            => $this->input->post('field_id'),
-                'priority'          => $this->input->post('priority'),
-                'display_url'       => $this->input->post('display_url'),
-                'www'               => $this->input->post('www'),
-                'redirect'          => $this->input->post('redirect'),
-                'enabled'           => $this->input->post('enabled')
-            );
+            if ($this->form_validation->run() === true) {
 
-            $create = $this->links->create($link_data);
+                $link_data = array(
+                    'title' => $this->input->post('title'),
+                    'description_short' => $this->input->post('description_short'),
+                    'sub_id' => $this->input->post('field_id'),
+                    'priority' => $this->input->post('priority'),
+                    'display_url' => $this->input->post('display_url'),
+                    'www' => $this->input->post('www'),
+                    'redirect' => $this->input->post('redirect'),
+                    'enabled' => $this->input->post('enabled'),
+                );
 
-            if ($create) {
-                $this->session->set_flashdata('create_success', 1);
-                redirect('/admin/results/link/create');
-            } else {
-                $this->session->set_flashdata('create_success', 0);
+                $create = $this->links->create($link_data);
+
+                if ($create) {
+                    $this->session->set_flashdata('create_success', 1);
+                    redirect('/admin/results/link/create');
+                } else {
+                    $this->session->set_flashdata('create_success', 0);
+                }
             }
+
+            $data['fields'] = $this->fields->get_by_status();
+
+            $data['title'] = ucwords("add link");
+            $this->load->view('admin_panel/pages/results/link/create', $data);
         }
-
-        $data['fields'] = $this->fields->get_by_status();
-
-        $data['title'] = ucwords("add link");
-        $this->load->view('admin_panel/pages/results/link/create', $data);
     }
 
     /**
@@ -95,12 +102,23 @@ class Links extends MY_Controller
      */
     public function delete($id)
     {
-        $this->links->delete($id);
+        if (!$this->ion_auth_acl->has_permission('umbrellas_delete') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+
+            $delete = $this->links->delete($id);
+
+            if ($delete) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        }
     }
 
     /**
      * Duplicate a link to selected field
-     * 
+     *
      * @param int $id ID of a link to duplicate
      * @param int $field_id ID of a field to duplicate link to
      * @param int $priority Priority of the duplicated link
@@ -108,54 +126,74 @@ class Links extends MY_Controller
      */
     public function duplicate($id, $field_id, $priority)
     {
-        $link = $this->links->get($id);
+        if (!$this->ion_auth_acl->has_permission('links_create') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $link = $this->links->get($id);
 
-        $link_data = array(
-            'title'             => $link->title,
-            'description_short' => $link->description_short,
-            'sub_id'            => $field_id,
-            'priority'          => $priority,
-            'display_url'       => $link->display_url,
-            'www'               => $link->www,
-            'redirect'          => $link->redirect,
-            'enabled'           => $link->enabled
-        );
+            $link_data = array(
+                'title' => $link->title,
+                'description_short' => $link->description_short,
+                'sub_id' => $field_id,
+                'priority' => $priority,
+                'display_url' => $link->display_url,
+                'www' => $link->www,
+                'redirect' => $link->redirect,
+                'enabled' => $link->enabled,
+            );
 
-        $this->links->create($link_data);
-    }
+            $duplicate = $this->links->create($link_data);
 
-    public function get($id = NULL)
-    {
-        $link = $this->links->get($id);
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($link));
+            if ($duplicate) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        }
     }
 
     /**
-     * Get a field or all fields
+     * Gets a link
+     *
+     * @param [type] $id
+     *
+     * @return void
+     */
+    public function get($id = null)
+    {
+        if ($this->ion_auth_acl->has_permission('links_get') or $this->ion_auth->is_admin()) {
+            $link = $this->links->get($id);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($link));
+        }
+    }
+
+    /**
+     * Get links by field
      *
      * @param int $umbrella_id ID of umbrella
      * @param String $status Status of the fields
      * @return void
      */
-    public function get_by_field($field_id, $status = NULL)
+    public function get_by_field($field_id, $status = null)
     {
+        if ($this->ion_auth_acl->has_permission('links_get') or $this->ion_auth->is_admin()) {
+            $links = $this->links->get_by_field($field_id, $status);
+            $total_links = sizeof($links);
 
-        $links = $this->links->get_by_field($field_id, $status);
-        $total_links = sizeof($links);
+            $result = array(
+                'iTotalRecords' => $total_links,
+                'iTotalDisplayRecords' => $total_links,
+                'sEcho' => 0,
+                'sColumns' => "",
+                'aaData' => $links,
+            );
 
-        $result = array(
-            'iTotalRecords' => $total_links,
-            'iTotalDisplayRecords' => $total_links,
-            'sEcho' => 0,
-            'sColumns' => "",
-            'aaData' => $links
-        );
-
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($result));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($result));
+        }
     }
 
     /**
@@ -164,81 +202,88 @@ class Links extends MY_Controller
      * @param string $keywords Keywords for the title of the link
      * @return void
      */
-    public function get_by_keywords($keywords = NULL)
+    public function get_by_keywords($keywords = null)
     {
+        if ($this->ion_auth_acl->has_permission('links_get') or $this->ion_auth->is_admin()) {
+            $links = $this->links->get_by_keywords($keywords);
+            $total_links = sizeof($links);
 
-        $links = $this->links->get_by_keywords($keywords);
-        $total_links = sizeof($links);
+            $result = array(
+                'iTotalRecords' => $total_links,
+                'iTotalDisplayRecords' => $total_links,
+                'sEcho' => 0,
+                'sColumns' => "",
+                'aaData' => $links,
+            );
 
-        $result = array(
-            'iTotalRecords' => $total_links,
-            'iTotalDisplayRecords' => $total_links,
-            'sEcho' => 0,
-            'sColumns' => "",
-            'aaData' => $links
-        );
-
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($result));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($result));
+        }
     }
 
-
     /**
-     * Get a field or all fields
+     * Get links by status
      *
-     * @param int $umbrella_id ID of umbrella
-     * @param String $status Status of the fields
+     * @param active|inactive $status Status for the fields
      * @return void
      */
-    public function get_by_status($status = NULL)
+    public function get_by_status($status = null)
     {
+        if ($this->ion_auth_acl->has_permission('links_get') or $this->ion_auth->is_admin()) {
+            $links = $this->links->get_by_status($status);
+            $total_links = sizeof($links);
 
-        $links = $this->links->get_by_status($status);
-        $total_links = sizeof($links);
+            $result = array(
+                'iTotalRecords' => $total_links,
+                'iTotalDisplayRecords' => $total_links,
+                'sEcho' => 0,
+                'sColumns' => "",
+                'aaData' => $links,
+            );
 
-        $result = array(
-            'iTotalRecords' => $total_links,
-            'iTotalDisplayRecords' => $total_links,
-            'sEcho' => 0,
-            'sColumns' => "",
-            'aaData' => $links
-        );
-
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($result));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($result));
+        }
     }
 
     /**
      * Show links page
      *
-     * @param int|string $value
+     * @param int|active|inactive|search $value Id of the link or status for the links or search
      * @return void
      */
     public function index($value)
     {
-        $data['fields'] = $this->fields->get_by_status();
-
-        $data['title'] = ucfirst("Links");
-
-        if ($value != NULL && is_numeric($value)) {
-            $data['field_id'] = $value;
-            $field_title = $this->fields->get($value)->title;
-            $data['heading'] = ucfirst($field_title);
-            $this->load->view('admin_panel/pages/results/link/view_by_field', $data);
-        } else if ($value != NULL && strcmp($value, "search") === 0) {
-            $this->load->view('admin_panel/pages/results/link/search', $data);
+        if (!$this->ion_auth_acl->has_permission('links_get') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
         } else {
-            $data['status'] = $value;
-            $data['heading'] = ucfirst($value);
-            $this->load->view('admin_panel/pages/results/link/view', $data);
+
+            $data['fields'] = $this->fields->get_by_status();
+
+            $data['title'] = ucfirst("Links");
+
+            if ($value != null && is_numeric($value)) {
+                $data['field_id'] = $value;
+                $field_title = $this->fields->get($value)->title;
+                $data['heading'] = ucfirst($field_title);
+                $this->load->view('admin_panel/pages/results/link/view_by_field', $data);
+            } else if ($value != null && strcmp($value, "search") === 0) {
+                $this->load->view('admin_panel/pages/results/link/search', $data);
+            } else {
+                $data['status'] = $value;
+                $data['heading'] = ucfirst($value);
+                $this->load->view('admin_panel/pages/results/link/view', $data);
+            }
         }
     }
 
     /**
      * Move a link to a selected field
-     * 
+     *
      * @param int $id ID of a link to move
      * @param int $field_id ID of a field to move link to
      * @param int $priority Priority of the moved link
@@ -246,22 +291,31 @@ class Links extends MY_Controller
      */
     public function move($id, $field_id, $priority)
     {
-        $link = $this->links->get($id);
+        if (!$this->ion_auth_acl->has_permission('links_update') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $link = $this->links->get($id);
 
-        $link_data = array(
-            'title'             => $link->title,
-            'description_short' => $link->description_short,
-            'sub_id'            => $field_id,
-            'priority'          => $priority,
-            'display_url'       => $link->display_url,
-            'www'               => $link->www,
-            'redirect'          => $link->redirect,
-            'enabled'           => $link->enabled
-        );
+            $link_data = array(
+                'title' => $link->title,
+                'description_short' => $link->description_short,
+                'sub_id' => $field_id,
+                'priority' => $priority,
+                'display_url' => $link->display_url,
+                'www' => $link->www,
+                'redirect' => $link->redirect,
+                'enabled' => $link->enabled,
+            );
 
-        $this->links->update($id, $link_data);
+            $move = $this->links->update($id, $link_data);
+
+            if ($move) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        }
     }
-
 
     /**
      * Get priorities of the links for the given field id
@@ -288,21 +342,26 @@ class Links extends MY_Controller
      */
     public function redirect($id)
     {
-        $status = $this->links->get($id)->redirect;
-
-        if ($status == 0) {
-            $status = 1;
+        if (!$this->ion_auth_acl->has_permission('links_update') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
         } else {
-            $status = 0;
+
+            $status = $this->links->get($id)->redirect;
+
+            if ($status == 0) {
+                $status = 1;
+            } else {
+                $status = 0;
+            }
+
+            $link_data = array(
+                'redirect' => $status,
+            );
+
+            $this->links->update($id, $link_data);
+
+            echo json_encode($status);
         }
-
-        $link_data = array(
-            'redirect' => $status,
-        );
-
-        $this->links->update($id, $link_data);
-
-        echo json_encode($status);
     }
 
     /**
@@ -313,21 +372,25 @@ class Links extends MY_Controller
      */
     public function toggle($id)
     {
-        $status = $this->links->get($id)->enabled;
-
-        if ($status == 0) {
-            $status = 1;
+        if (!$this->ion_auth_acl->has_permission('links_update') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
         } else {
-            $status = 0;
+            $status = $this->links->get($id)->enabled;
+
+            if ($status == 0) {
+                $status = 1;
+            } else {
+                $status = 0;
+            }
+
+            $link_data = array(
+                'enabled' => $status,
+            );
+
+            $this->links->update($id, $link_data);
+
+            echo json_encode($status);
         }
-
-        $link_data = array(
-            'enabled' => $status,
-        );
-
-        $this->links->update($id, $link_data);
-
-        echo json_encode($status);
     }
 
     /**
@@ -338,52 +401,59 @@ class Links extends MY_Controller
      */
     public function update($id)
     {
-        $this->form_validation->set_rules('title', 'Title', 'required');
-        $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]');
-        $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
-        $this->form_validation->set_rules('priority', 'Priority', 'required|numeric');
-        $this->form_validation->set_rules('display_url', 'Home Display');
-        $this->form_validation->set_rules('www', 'URL', 'required|valid_url');
-        $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
-        $this->form_validation->set_rules('redirect', 'Redirect', 'required|numeric');
-
-        if ($this->form_validation->run() === false) {
-
-            $data['link'] = $this->links->get($id);
-
-            // get all fields
-            $data['fields'] = $this->fields->get_by_status();
-
-            // $prioritiesObject = $this->categoryModel->get_links_priority($this->categoryModel->get_result_parent($id));
-            // $priorities = array();
-            // foreach ($prioritiesObject as $item) {
-            //     array_push($priorities, $item->priority);
-            // }
-
-            // $data['priorities'] = $priorities;
-
-            $data['title'] = ucfirst("edit link");
-            $this->load->view('admin_panel/pages/results/link/edit', $data);
+        if (!$this->ion_auth_acl->has_permission('links_update') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $link_data = array(
-                'title'             => $this->input->post('title'),
-                'description_short' => $this->input->post('description_short'),
-                'sub_id'            => $this->input->post('field_id'),
-                'priority'          => $this->input->post('priority'),
-                'display_url'       => $this->input->post('display_url'),
-                'www'               => $this->input->post('www'),
-                'redirect'          => $this->input->post('redirect'),
-                'enabled'           => $this->input->post('enabled')
-            );
+            $this->form_validation->set_rules('title', 'Title', 'required');
+            $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]');
+            $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
+            $this->form_validation->set_rules('priority', 'Priority', 'required|numeric');
+            $this->form_validation->set_rules('display_url', 'Home Display');
+            $this->form_validation->set_rules('www', 'URL', 'required|valid_url');
+            $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
+            $this->form_validation->set_rules('redirect', 'Redirect', 'required|numeric');
 
-            $update = $this->links->update($id, $link_data);
+            if ($this->form_validation->run() === false) {
 
-            if ($update) {
-                $this->session->set_flashdata('update_success', 1);
-                redirect('/admin/results/links/search');
+                $data['link'] = $this->links->get($id);
+
+                // get all fields
+                $data['fields'] = $this->fields->get_by_status();
+
+                // $prioritiesObject = $this->categoryModel->get_links_priority($this->categoryModel->get_result_parent($id));
+                // $priorities = array();
+                // foreach ($prioritiesObject as $item) {
+                //     array_push($priorities, $item->priority);
+                // }
+
+                // $data['priorities'] = $priorities;
+
+                $data['title'] = ucfirst("edit link");
+                $this->load->view('admin_panel/pages/results/link/edit', $data);
             } else {
-                $this->session->set_flashdata('update_success', 0);
+
+                $link_data = array(
+                    'title' => $this->input->post('title'),
+                    'description_short' => $this->input->post('description_short'),
+                    'sub_id' => $this->input->post('field_id'),
+                    'priority' => $this->input->post('priority'),
+                    'display_url' => $this->input->post('display_url'),
+                    'www' => $this->input->post('www'),
+                    'redirect' => $this->input->post('redirect'),
+                    'enabled' => $this->input->post('enabled'),
+                );
+
+                $update = $this->links->update($id, $link_data);
+
+                if ($update) {
+                    $this->session->set_flashdata('update_success', 1);
+                    redirect('/admin/results/links/search');
+                } else {
+                    $this->session->set_flashdata('update_success', 0);
+                }
             }
         }
     }
@@ -397,10 +467,20 @@ class Links extends MY_Controller
      */
     public function update_priority($id, $priority)
     {
-        $link_data = array(
-            'priority' => $priority,
-        );
+        if (!$this->ion_auth_acl->has_permission('links_update') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $link_data = array(
+                'priority' => $priority,
+            );
 
-        $this->links->update($id, $link_data);
+            $update = $this->links->update($id, $link_data);
+
+            if ($update) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        }
     }
 }

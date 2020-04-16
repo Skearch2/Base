@@ -103,11 +103,11 @@ class Ion_auth_acl_model extends Ion_auth_model
         }
 
         // restrict change of perm key of the admin permission
-        $permission = $this->db->get_where($this->tables['permissions'], array('id' => $permission_id))->row();
-        if ($this->config->item('admin_permission', 'ion_auth_acl') === $permission->perm_key && $perm_key !== $permission->perm_key) {
-            $this->set_error('permission_key_admin_not_alter');
-            return FALSE;
-        }
+        // $permission = $this->db->get_where($this->tables['permissions'], array('id' => $permission_id))->row();
+        // if ($this->config->item('admin_permission', 'ion_auth_acl') === $permission->perm_key && $perm_key !== $permission->perm_key) {
+        //     $this->set_error('permission_key_admin_not_alter');
+        //     return FALSE;
+        // }
 
 
         // IMPORTANT!! Third parameter was string type $description; this following code is to maintain backward compatibility
@@ -140,12 +140,12 @@ class Ion_auth_acl_model extends Ion_auth_model
         if (!$permission_id || empty($permission_id)) {
             return FALSE;
         }
-        $permission = $this->permission($permission_id);
-        if ($permission->perm_key == $this->config->item('admin_permission', 'ion_auth_acl')) {
-            $this->trigger_events(array('post_delete_permission', 'post_delete_permission_notallowed'));
-            $this->set_error('permission_delete_notallowed');
-            return FALSE;
-        }
+        // $permission = $this->permission($permission_id);
+        // if ($permission->perm_key == $this->config->item('admin_permission', 'ion_auth_acl')) {
+        //     $this->trigger_events(array('post_delete_permission', 'post_delete_permission_notallowed'));
+        //     $this->set_error('permission_delete_notallowed');
+        //     return FALSE;
+        // }
 
         $this->trigger_events('pre_delete_permission');
 

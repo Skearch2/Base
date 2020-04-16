@@ -411,7 +411,7 @@ $this->load->view('admin_panel/templates/close_html');
 						var s = {
 							2: {
 								title: "Pending",
-								class: "m-badge--brand"
+								class: "m-badge--warning"
 							},
 							1: {
 								title: "Active",
@@ -422,7 +422,8 @@ $this->load->view('admin_panel/templates/close_html');
 								class: " m-badge--danger"
 							}
 						};
-						return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
+						if (e['activation_code'] !== null) return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[2].class + ' m-badge--wide">' + s[2].title + '</span>'
+						else return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 					}
 				}]
 			})
@@ -437,20 +438,16 @@ $this->load->view('admin_panel/templates/close_html');
 	);
 </script>
 
-
 <!-- Sidemenu class -->
 <script>
+	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 	<?php if ($group == 1 || $group == 2) : ?>
-		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 		$("#submenu-users-staff").addClass("m-menu__item  m-menu__item--active");
 	<?php elseif ($group == 3) : ?>
-		$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-		$("#submenu-brands-members").addClass("m-menu__item  m-menu__item--active");
+		$("#submenu-users-brand_members").addClass("m-menu__item  m-menu__item--active");
 	<?php elseif ($group == 4) : ?>
-		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 		$("#submenu-users-premium").addClass("m-menu__item  m-menu__item--active");
-	<?php else : ?>
-		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	<?php elseif ($group == 5) : ?>
 		$("#submenu-users-registered").addClass("m-menu__item  m-menu__item--active");
 	<?php endif ?>
 </script>

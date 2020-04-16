@@ -210,8 +210,12 @@ $this->load->view('admin_panel/templates/close_html');
 				url: '<?= site_url('admin/results/research/delete/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
-					swal("Success!", "The research link has been deleted.", "success")
-					$("#" + id).remove();
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else if (data == 1) {
+						swal("Success!", "The research link has been deleted.", "success")
+						$("#" + id).remove();
+					}
 				},
 				error: function(xhr, status, error) {
 					swal("Error!", "Unable to delete the research link.", "error")
