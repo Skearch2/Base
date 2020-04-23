@@ -29,26 +29,18 @@ class Dashboard extends MY_Controller
 			redirect('admin/auth/login');
 		}
 
-		$this->load->model('admin_panel/Category_model_admin', 'category_model_admin');
+		$this->load->model('admin_panel/Dashboard_model', 'Dashboard');
 	}
 
+	/**
+	 * Show admin dashboard with featured widgets
+	 *
+	 * @return void
+	 */
 	public function index()
 	{
-
-		if (!file_exists(APPPATH . '/views/admin_panel/pages/dashboard.php')) {
-			show_404();
-		}
-
-		$data = array(
-			'total_umbrellas'         => $this->category_model_admin->count_umbrellas(),
-			'total_active_umbrellas'  => $this->category_model_admin->count_umbrellas(1),
-			'total_fields'            => $this->category_model_admin->count_fields(),
-			'total_active_fields'     => $this->category_model_admin->count_fields(1),
-			'total_results'           => $this->category_model_admin->count_results(),
-			'total_active_results'    => $this->category_model_admin->count_results(1)
-		);
-
 		$data['title'] = ucfirst("dashboard");
+		$data['stats'] = $this->Dashboard->get_results_stats();
 
 		$this->load->view('admin_panel/pages/dashboard', $data);
 	}

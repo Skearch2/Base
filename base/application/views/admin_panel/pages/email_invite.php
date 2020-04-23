@@ -155,5 +155,6 @@ $this->load->view('admin_panel/templates/close_html');
 
 
 <script>
-	$("#menu-invite").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#menu-email").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-email-invite").addClass("m-menu__item  m-menu__item--active");
 </script>
