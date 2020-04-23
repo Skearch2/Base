@@ -27,7 +27,7 @@ ul {
 .btn-danger {
 	background: transparent;
 	color: #212529 !important;
-	text-transform: uppercase;
+	text-transform: none;
 	padding: 7px 5px 6px;
 	margin-left: 7px;
 	border: 0px;
@@ -40,6 +40,7 @@ ul {
 .login-bar {
 	text-align: right;
 	padding: 25px 0px;
+	font-family: 'helveticaneueregular', Arial, Helvetica, sans-serif;
 }
 
 .login-bar .theme-change {
@@ -137,14 +138,15 @@ input:focus {
 .search-box input {
 	background: url(../images/search-top-input.png) no-repeat;
 	width: 452px;
-	height: 60px;
-	line-height: 44px;
+	height: 56px;
+	line-height: 56px;
 	border: none !important;
 	margin: 0 40px 0 0;
 	padding: 6px;
 	text-indent: 20px;
 	float: left;
 }
+
 
 .search-box .search-btn {
 	cursor: pointer;
@@ -346,19 +348,20 @@ footer {
 	top: auto;
 	padding-top: 30px;
 	border-top: 2px solid #e8e8e8;
-	padding-bottom: 24px;
+	padding-bottom: 15px;
 }
 
 footer a {
 	color: #000000;
 	font-size: 16px;
-	text-decoration: none;;
-	margin: 0 8px;
+	text-decoration: none;
+	margin: 0 8px;;
 	font-family: 'helveticaneueregular', Arial, Helvetica, sans-serif;
 }
 
 p.copy-right {
-	margin-top: 25px;
+	margin-top: 5px;
+	margin-bottom: 0px;
 }
 
 .theme-change {
@@ -565,6 +568,7 @@ media
 		background: none;
 		width: 100%;
 		height: 47px;
+		line-height: 47px;
 		border: none !important;
 		float: left;
 		border: 1px solid #a2a2a2 !important;
