@@ -85,6 +85,23 @@ class User_model extends CI_Model
     }
 
     /**
+     * Get all members email
+     *
+     * @return object
+     */
+    public function get_members_email()
+    {
+        $this->db->select('email');
+        $this->db->from('skearch_users');
+        $this->db->join('skearch_users_groups', 'skearch_users_groups.user_id = skearch_users.id', 'left');
+        $this->db->join('skearch_groups', 'skearch_groups.id = skearch_users_groups.group_id', 'left');
+        $this->db->where_in('skearch_groups.tag', array('brand', 'premium', 'regular'));
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    /**
      * Updates user data
      *
      * @param int $id ID of the user

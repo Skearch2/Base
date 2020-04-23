@@ -161,11 +161,11 @@ $this->load->view('admin_panel/templates/subheader');
 		<div class="col-xl-4">
 
 			<!--begin:: Packages-->
-			<div class="m-portlet m--bg-light m-portlet--bordered-full m-portlet--full-height ">
+			<div class="m-portlet m--bg-accent m-portlet--bordered-semi m-portlet--full-height">
 				<div class="m-portlet__head">
 					<div class="m-portlet__head-caption">
 						<div class="m-portlet__head-title">
-							<h3 class="m-portlet__head-text m--font-dark">
+							<h3 class="m-portlet__head-text m--font-light">
 								Results
 							</h3>
 						</div>
@@ -175,59 +175,62 @@ $this->load->view('admin_panel/templates/subheader');
 
 					<!--begin::Widget 29-->
 					<div class="m-widget29">
-						<div class="m-widget_content" style="border: 1px solid #efefef;">
+						<div class="m-widget_content">
 							<h3 class="m-widget_content-title">Umbrellas</h3>
 							<div class="m-widget_content-items">
 								<div class="m-widget_content-item">
 									<span>Active</span>
-									<span><a class="m--font-success" href="<?= site_url('admin/results/umbrellas/status/active') ?>"><?= $total_active_umbrellas ?></a></span>
+									<span><a class="m--font-success" href="<?= site_url('admin/results/umbrellas/status/active') ?>"><?= $stats->total_umbrellas_active ?></a></span>
 								</div>
 								<div class="m-widget_content-item">
 									<span>Inactive</span>
-									<span><a class="m--font-danger" href="<?= site_url('admin/results/umbrellas/status/inactive') ?>"><?= $total_umbrellas - $total_active_umbrellas ?></a></span>
+									<span><a class="m--font-danger" href="<?= site_url('admin/results/umbrellas/status/inactive') ?>"><?= $stats->total_umbrellas - $stats->total_umbrellas_active ?></a></span>
 								</div>
 								<div class="m-widget_content-item">
 									<span>Total</span>
-									<span><a class="m--font-primary" href="<?= site_url('admin/results/umbrellas/status/all') ?>"><?= $total_umbrellas ?></a></span>
+									<span><a class="m--font-primary" href="<?= site_url('admin/results/umbrellas/status/all') ?>"><?= $stats->total_umbrellas ?></a></span>
 								</div>
 							</div>
 						</div>
-						<div class="m-widget_content" style="border: 1px solid #efefef">
+						<div class="m-widget_content">
 							<h3 class="m-widget_content-title">Fields</h3>
 							<div class="m-widget_content-items">
 								<div class="m-widget_content-item">
 									<span>Active</span>
-									<span><a class="m--font-success" href="<?= site_url('admin/results/fields/status/active') ?>"><?= $total_active_fields ?></a></span>
+									<span><a class="m--font-success" href="<?= site_url('admin/results/fields/status/active') ?>"><?= $stats->total_fields_active ?></a></span>
 								</div>
 								<div class="m-widget_content-item">
 									<span>Inactive</span>
-									<span><a class="m--font-danger" href="<?= site_url('admin/results/fields/status/inactive') ?>"><?= $total_fields - $total_active_fields ?></a></span>
+									<span><a class="m--font-danger" href="<?= site_url('admin/results/fields/status/inactive') ?>"><?= $stats->total_fields - $stats->total_fields_active ?></a></span>
 								</div>
 								<div class="m-widget_content-item">
 									<span>Total</span>
-									<span><a class="m--font-primary" href="<?= site_url('admin/results/fields/status/all') ?>"><?= $total_fields ?></a></span>
+									<span><a class="m--font-primary" href="<?= site_url('admin/results/fields/status/all') ?>"><?= $stats->total_fields ?></a></span>
 								</div>
 							</div>
 						</div>
-						<div class="m-widget_content" style="border: 1px solid #efefef">
+						<div class="m-widget_content">
 							<h3 class="m-widget_content-title">Links</h3>
 							<div class="m-widget_content-items">
 								<div class="m-widget_content-item">
+									<span>Live</span>
+									<span><a class="m--font-brand"><?= $stats->total_links_live ?></a></span>
+								</div>
+								<div class="m-widget_content-item">
 									<span>Active</span>
-									<span><a class="m--font-success" href="<?= site_url('admin/results/links/status/active') ?>"><?= $total_active_results ?></a></span>
+									<span><a class="m--font-success" href="<?= site_url('admin/results/links/status/active') ?>"><?= $stats->total_links_active ?></a></span>
 								</div>
 								<div class="m-widget_content-item">
 									<span>Inactive</span>
-									<span><a class="m--font-danger" href="<?= site_url('admin/results/links/status/inactive') ?>"><?= $total_results - $total_active_results ?></a></span>
+									<span><a class="m--font-danger" href="<?= site_url('admin/results/links/status/inactive') ?>"><?= $stats->total_links - $stats->total_links_active ?></a></span>
 								</div>
 								<div class="m-widget_content-item">
 									<span>Total</span>
-									<span><a class="m--font-primary" href="<?= site_url('admin/results/links/status/all') ?>"><?= $total_results ?></a></span>
+									<span><a class="m--font-primary" href="<?= site_url('admin/results/links/status/all') ?>"><?= $stats->total_links ?></a></span>
 								</div>
 							</div>
 						</div>
 					</div>
-
 					<!--end::Widget 29-->
 				</div>
 			</div>

@@ -10,14 +10,14 @@
 									<i class="m-menu__section-icon flaticon-more-v2"></i>
 								</li>
 								<li id="menu-dashboard" class="m-menu__item" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="<?= site_url("admin/dashboard"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-line-graph"></i><span class="m-menu__link-text">Dashboard</span></a></li>
-								<li id="menu-frontend" class="m-menu__item " aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-layers"></i><span class="m-menu__link-text">Front-end</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+								<li id="menu-frontend" class="m-menu__item " aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-buildings"></i><span class="m-menu__link-text">Front-end</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 									<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 										<ul class="m-menu__subnav">
 											<li id="submenu-frontend-homepage_items" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/frontend/homepage"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Homepage Items</span></a></li>
 										</ul>
 									</div>
 								</li>
-								<li id="menu-users" class="m-menu__item " aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-layers"></i><span class="m-menu__link-text">Users</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+								<li id="menu-users" class="m-menu__item " aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-users"></i><span class="m-menu__link-text">Users</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 									<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 										<ul class="m-menu__subnav">
 											<li id="submenu-users-registered" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/group/id/5"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Registered Users</span></a></li>
@@ -29,7 +29,7 @@
 										</ul>
 									</div>
 								</li>
-								<li id="menu-results" class="m-menu__item " aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-layers"></i><span class="m-menu__link-text">Results</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+								<li id="menu-results" class="m-menu__item " aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-interface-11"></i><span class="m-menu__link-text">Results</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 									<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 										<ul class="m-menu__subnav">
 											<li id="submenu-results-umbrellas" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/umbrellas/status/all"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Umbrellas</span></a></li>
@@ -41,7 +41,7 @@
 										</ul>
 									</div>
 								</li>
-								<li id="menu-brands" class="m-menu__item " aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-layers"></i><span class="m-menu__link-text">Brands</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+								<li id="menu-brands" class="m-menu__item " aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-business"></i><span class="m-menu__link-text">Brands</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 									<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 										<ul class="m-menu__subnav">
 											<li id="submenu-brands-leads" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands/brandleads"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Leads</span></a></li>
@@ -53,7 +53,7 @@
 									</div>
 								</li>
 
-								<li id="menu-linkchecker" class="m-menu__item" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="<?= site_url("admin/linkchecker"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-clipboard"></i><span class="m-menu__link-text">Link Checker</span></a></li>
+								<li id="menu-linkchecker" class="m-menu__item" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="<?= site_url("admin/linkchecker"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-list-3"></i><span class="m-menu__link-text">Link Checker</span></a></li>
 
 								<li class="m-menu__section ">
 									<h4 class="m-menu__section-text">Communications</h4>
@@ -61,9 +61,15 @@
 								</li>
 
 								<li class="m-menu__item " aria-haspopup="true" m-menu-link-redirect="1"><a href="<?= site_url("news/admin/posts"); ?>" target="_blank" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-graphic"></i><span class="m-menu__link-text">Blog</span></a></li>
-								<li id="menu-email" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/members"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-graphic"></i><span class="m-menu__link-text">Email</span></a></li>
-								<li id="menu-invite" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/invite"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-network"></i><span class="m-menu__link-text">Invite</span></a></li>
-								<li id="menu-templates" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-clipboard"></i><span class="m-menu__link-text">Templates</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+								<li id="menu-email" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-email"></i><span class="m-menu__link-text">Email</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+									<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
+										<ul class="m-menu__subnav">
+											<li id="submenu-email-members" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/members"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Members</span></a></li>
+											<li id="submenu-email-invite" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/invite"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Invite</span></a></li>
+										</ul>
+									</div>
+								</li>
+								<li id="menu-templates" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-file-2 "></i><span class="m-menu__link-text">Templates</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 									<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 										<ul class="m-menu__subnav">
 											<li id="submenu-templates-welcome" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/templates/welcome"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Welcome Email</span></a></li>
@@ -73,7 +79,7 @@
 									</div>
 								</li>
 								<li class="m-menu__section ">
-									<h4 class="m-menu__section-text">System</h4>
+									<h4 class="m-menu__section-text">Settings</h4>
 									<i class="m-menu__section-icon flaticon-more-v2"></i>
 								</li>
 								<li id="menu-options" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/option"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-settings"></i><span class="m-menu__link-text">Options</span></a></li>

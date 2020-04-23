@@ -1,6 +1,5 @@
 <?php
 
-//echo "<pre>"; print_r($users_groups); die();
 // Set DocType and declare HTML protocol
 $this->load->view('admin_panel/templates/start_html');
 
@@ -58,12 +57,26 @@ $this->load->view('admin_panel/templates/subheader');
                                         </div>
                                     <?php endif; ?>
                                 </div>
-                                <div class="form-group m-form__group row">
+                                <div class="m-form__group form-group row">
+                                    <label for="action" class="col-2 col-form-label">Action</label>
+                                    <div class="col-7">
+                                        <div class="m-radio-inline">
+                                            <label class="m-radio m-radio--solid m-radio--brand">
+                                                <input type="radio" name="email_custom" value="0" onclick="customSearch()" <?= set_value('email_custom', 0) == 0 ? 'checked' : "" ?>> All Users
+                                                <span></span>
+                                            </label>
+                                            <label class="m-radio m-radio--solid m-radio--brand">
+                                                <input type="radio" name="email_custom" value="1" onclick="customSearch(true)" <?= set_value('email_custom') == 1 ? 'checked' : "" ?>> Custom Users
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group m-form__group row" id="custom" style=<?= $email_custom ? 'display:block' : 'display:none' ?>>
                                     <div class="col-lg-9 m-form__group-sub">
                                         <input type="text" class="form-control m-input" id="search" name="email" placeholder="Search email by last name" value="<?= set_value('email') ?>">
                                     </div>
                                 </div>
-                                <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
                                 <div class=" form-group m-form__group row">
                                     <div class="col-lg-9 m-form__group-sub">
                                         <input type="text" name="subject" class="form-control m-input" placeholder="Subject" value="<?= set_value('subject') ?>">
@@ -75,6 +88,7 @@ $this->load->view('admin_panel/templates/subheader');
                                     </div>
                                 </div>
                             </div>
+                            <input id="email-custom" name="email-custom" type="hidden" value="<?= $email_custom; ?>">
                             <div class="m-portlet__foot m-portlet__foot--fit">
                                 <div class="m-form__actions">
                                     <div class="row">
@@ -117,55 +131,65 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-    // settings for email search
-    var options = {
+    // show custom email search
+    function customSearch(value) {
+        var searchBox = document.getElementById("custom");
+        $("#email-custom").val(1);
 
-        url: function(phrase) {
-            return "<?= site_url(); ?>admin/users/get/lastname/" + phrase
-        },
+        if (value) {
+            searchBox.style.display = "block";
+            // settings for email search
+            var options = {
 
-        getValue: "lastname",
+                url: function(phrase) {
+                    return "<?= site_url(); ?>admin/users/get/lastname/" + phrase
+                },
 
-        template: {
-            type: "custom",
-            method: function(value, item) {
-                return item.firstname + " " + value + " - <i>" + item.email + "</i>";
-            }
-        },
+                getValue: "lastname",
 
-        list: {
-            match: {
-                enabled: true
-            },
+                template: {
+                    type: "custom",
+                    method: function(value, item) {
+                        return item.firstname + " " + value + " - <i>" + item.email + "</i>";
+                    }
+                },
 
-            sort: {
-                enabled: true
-            },
+                list: {
+                    match: {
+                        enabled: true
+                    },
 
-            onSelectItemEvent: function() {
-                var value = $("#search").getSelectedItemData().email;
+                    sort: {
+                        enabled: true
+                    },
 
-                $("#search").val(value).trigger("change");
-            },
+                    onSelectItemEvent: function() {
+                        var value = $("#search").getSelectedItemData().email;
 
-            showAnimation: {
-                type: "fade", //normal|slide|fade
-                time: 400,
-                callback: function() {}
-            },
+                        $("#search").val(value).trigger("change");
+                    },
 
-            hideAnimation: {
-                type: "fade", //normal|slide|fade
-                time: 400,
-                callback: function() {}
-            }
-        },
+                    showAnimation: {
+                        type: "slide", //normal|slide|fade
+                        callback: function() {}
+                    },
 
-        theme: "bootstrap"
-    };
+                    hideAnimation: {
+                        type: "normal", //normal|slide|fade
+                        callback: function() {}
+                    }
+                },
 
-    // initialize email search
-    $("#search").easyAutocomplete(options);
+                theme: "bootstrap"
+            };
+
+            // initialize email search
+            $("#search").easyAutocomplete(options);
+        } else {
+            searchBox.style.display = "none";
+            $("#email-custom").val(0);
+        }
+    }
 
     // initialize html editor
     $(document).ready(function() {
@@ -177,4 +201,5 @@ $this->load->view('admin_panel/templates/close_html');
 
 <script>
     $("#menu-email").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+    $("#submenu-email-members").addClass("m-menu__item  m-menu__item--active");
 </script>
