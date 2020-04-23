@@ -35,13 +35,13 @@ class Email extends MY_Controller
             redirect('admin/auth/login');
         }
 
-        $this->load->model('admin_panel/users/User_model', 'User_model');
+        $this->load->model('admin_panel/users/User_model', 'Users');
 
         $this->email->initialize($this->config->item('email_config', 'ion_auth'));
     }
 
     /**
-     * Send email to Skearch users
+     * Send email to Skearch members
      *
      * @return void
      */
@@ -52,24 +52,41 @@ class Email extends MY_Controller
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
+            // check if custom email
+            $email_custom = (null !== $this->input->post("email-custom")) ? $this->input->post("email-custom") : false;
 
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+            if ($email_custom) {
+                $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+            }
             $this->form_validation->set_rules('subject', 'Subject', 'required');
             $this->form_validation->set_rules('content', 'Body', 'required|min_length[5]|max_length[1000]');
 
             if ($this->form_validation->run() == FALSE) {
 
-                $data['title'] = ucwords("Email Member");
+                $data['email_custom'] = $email_custom;
+                $data['title'] = ucwords("Email Members");
 
                 $this->load->view('admin_panel/pages/email_members', $data);
             } else {
 
-                $recipent = $this->input->post('email');
                 $subject = $this->input->post('subject');
                 $content = $this->input->post('content');
 
                 $this->email->from('no-reply@skearch.com', 'Skearch');
-                $this->email->to($recipent);
+
+                if ($email_custom) {
+                    $recipent = $this->input->post('email');
+                    $this->email->to($recipent);
+                } else {
+                    $emails = $this->Users->get_members_email();
+                    foreach ($emails as $email) {
+                        $recipents[] = $email->email;
+                    }
+                    $recipents = implode(', ', $recipents);
+
+                    $this->email->to('no-reply@skearch.com');
+                    $this->email->bcc($recipents);
+                }
                 $this->email->subject($subject);
                 $this->email->message($content);
 
