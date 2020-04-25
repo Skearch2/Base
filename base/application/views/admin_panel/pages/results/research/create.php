@@ -138,3 +138,9 @@ $this->load->view('admin_panel/templates/scrolltop');
 // Close body and html (contains some javascripts links)
 $this->load->view('admin_panel/templates/close_html');
 ?>
+
+<!-- Sidemenu class -->
+<script>
+  $("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+  $("#submenu-results-research").addClass("m-menu__item  m-menu__item--active");
+</script>

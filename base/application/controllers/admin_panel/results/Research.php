@@ -32,8 +32,9 @@ class Research extends MY_Controller
             redirect('admin/auth/login');
         }
 
-        $this->load->model('admin_panel/results/research_model', 'research');
-        $this->load->model('admin_panel/category_model_admin', 'fields');
+        $this->load->model('admin_panel/results/Research_model', 'Research');
+        $this->load->model('admin_panel/results/Field_model', 'Fields');
+        $this->load->model('admin_panel/results/Link_model', 'Links');
     }
 
     /**
@@ -43,7 +44,7 @@ class Research extends MY_Controller
      */
     public function get()
     {
-        $research = $this->research->get();
+        $research = $this->Research->get();
         $total_records = sizeof($research);
         $result = array(
             'iTotalRecords' => $total_records,
@@ -103,7 +104,7 @@ class Research extends MY_Controller
                 $url = $this->input->post('url');
                 $field_id = $this->input->post('field_id');
 
-                $create = $this->research->create($description_short, $url, $field_id);
+                $create = $this->Research->create($description_short, $url, $field_id);
 
                 if ($create) {
                     $this->session->set_flashdata('success', 1);
@@ -115,7 +116,7 @@ class Research extends MY_Controller
             }
 
             $data['title'] = ucfirst("Add Research");
-            $data['fields'] = $this->fields->get_subcategories();
+            $data['fields'] = $this->Fields->get_by_status();
 
             $this->load->view('admin_panel/pages/results/research/create', $data);
         }
@@ -153,19 +154,21 @@ class Research extends MY_Controller
 
             if ($this->form_validation->run() == true) {
 
-                $title = $this->input->post('title');
-                $description_short = $this->input->post('description_short');
-                $url = $this->input->post('url');
-                $display_url = $this->input->post('display_url');
-                $field_id = $this->input->post('field_id');
-                $priority = $this->input->post('priority');
-                $enabled = $this->input->post('enabled');
-                $redirect = $this->input->post('redirect');
-
                 if ($this->input->post('action') == 'submit') {
 
-                    // create ad link
-                    $create = $this->fields->create_result_listing($title, $enabled, $description_short, $display_url, $url, $field_id, $priority, $redirect);
+                    $link_data = array(
+                        'title' => $this->input->post('title'),
+                        'description_short' => $this->input->post('description_short'),
+                        'www' => $this->input->post('url'),
+                        'display_url' => $this->input->post('display_url'),
+                        'sub_id' => $this->input->post('field_id'),
+                        'priority' => $this->input->post('priority'),
+                        'enabled' => $this->input->post('enabled'),
+                        'redirect' => $this->input->post('redirect')
+                    );
+
+                    // create link
+                    $create = $this->Links->create($link_data);
 
                     if ($create) {
                         // delete the research link
@@ -175,8 +178,17 @@ class Research extends MY_Controller
                         $this->session->set_flashdata('submit_failure', 0);
                     }
                 } elseif (($this->input->post('action') == 'save')) {
+
+                    $title = $this->input->post('title');
+                    $description_short = $this->input->post('description_short');
+                    $url = $this->input->post('url');
+                    $display_url = $this->input->post('display_url');
+                    $field_id = $this->input->post('field_id');
+                    $enabled = $this->input->post('enabled');
+                    $redirect = $this->input->post('redirect');
+
                     // save research link information
-                    $update = $this->research->update($id, $title, $description_short, $url, $display_url, $field_id, $enabled, $redirect);
+                    $update = $this->Research->update($id, $title, $description_short, $url, $display_url, $field_id, $enabled, $redirect);
 
                     if ($update) {
                         $this->session->set_flashdata('save_success', 1);
@@ -188,7 +200,7 @@ class Research extends MY_Controller
                 redirect('/admin/results/research/list');
             }
 
-            $research = $this->research->get($id);
+            $research = $this->Research->get($id);
 
             $data['link_title'] = $research->title;
             $data['description_short'] = $research->description_short;
@@ -200,9 +212,9 @@ class Research extends MY_Controller
             $data['redirect'] = $research->redirect;
 
 
-            $data['fields'] = $this->fields->get_subcategories();
+            $data['fields'] = $this->Fields->get_by_status();
 
-            $prioritiesObject = $this->fields->get_links_priority($research->field_id);
+            $prioritiesObject = $this->Links->get_links_priority($research->field_id);
             $priorities = array();
             foreach ($prioritiesObject as $item) {
                 array_push($priorities, $item->priority);
@@ -224,7 +236,7 @@ class Research extends MY_Controller
         if (!$this->ion_auth_acl->has_permission('links_delete') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
-            $delete = $this->research->delete($id);
+            $delete = $this->Research->delete($id);
 
             if ($delete) {
                 echo json_encode(1);

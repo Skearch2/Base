@@ -165,11 +165,18 @@ class Link_model extends CI_Model
         }
     }
 
-    public function get_links_priority($id)
+    /**
+     * Get priorities of the links for the field
+     *
+     * @param int $field_id ID of the field
+     *
+     * @return void
+     */
+    public function get_links_priority($field_id)
     {
         $query = $this->db->select('title, priority');
         $query = $this->db->from('skearch_listings');
-        $query = $this->db->where('sub_id', $id);
+        $query = $this->db->where('sub_id', $field_id);
         $query = $this->db->order_by('priority', 'AESC');
         $query = $this->db->get();
         return $query->result();
