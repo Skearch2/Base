@@ -103,7 +103,7 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Field</label>
 									<div class="col-7">
-										<select class="form-control" name="field_id" onchange="updatePriority(this.value)" required>
+										<select class="form-control" name="field_id" onchange="getPriorities(this.value)" required>
 											<option selected value="<?= $field['id'] ?>"><?= $field['title'] ?></option>
 											<?php foreach ($fields as $f) { ?>
 												<option value="<?= $f->id ?> <?= set_select("field", $f->id) ?>" <?= ($field['id'] == $f->id) ? "selected" : "" ?>><?= $f->title ?></option>
@@ -114,18 +114,12 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Priority</label>
 									<div class="col-7">
-										<select class="form-control" id="priorities" name="priority">
-											<option selected value="">Select</option>
-											<?php for ($i = 1; $i <= 250; $i++) : ?>
-												<?php if (in_array($i, $priorities)) : ?>
-													<option style="background-color: #99ff99" value="<?= $i ?>" disabled><?= $i ?></option>
-												<?php else : ?>
-													<option value="<?= $i ?> <?= set_select("priority", $i) ?>"><?= $i ?></option>
-												<?php endif; ?>
-											<?php endfor; ?>
+										<select class="form-control" id="priority" name="priority" disabled>
 										</select>
 										<span class="m-form__help">Priority wont be saved</span>
 									</div>
+									<div id="priority-refresh" class="m-demo-icon__preview"><i class="flaticon-refresh" title="Refresh" onclick="getPriorities($('[name=field_id]').val())"></i></div>
+									<div id="priority-loader" class="m-loader m-loader--brand" style="width: 30px; display: none;"></div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Enabled</label>
@@ -193,25 +187,31 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-results-research").addClass("m-menu__item  m-menu__item--active");
+	// get priorites of the links for the given field
+	function getPriorities(fieldId) {
 
-	function updatePriority(id) {
-		toastr.info("", "Updating Priority...");
-
-		var selectElement = document.getElementById("priorities");
+		var selectElement = document.getElementById("priority");
 		selectElement.disabled = true;
 		while (selectElement.length > 0) {
 			selectElement.remove(0);
 		}
 
-		if (id == "") return;
+		if (fieldId == "") return;
 		$.ajax({
-			//changes
-			url: '<?= site_url(); ?>/admin/categories/get_links_priority/' + id,
+			url: '<?= site_url('admin/results/links/priorities/field/id/'); ?>' + fieldId,
 			type: 'GET',
-			success: function(result) {
-				var obj = JSON.parse(result);
+			beforeSend: function(xhr, options) {
+				$("#priority-refresh").css("display", "none");
+				$("#priority-loader").css("display", "inline-block");
+				setTimeout(function() {
+					$.ajax($.extend(options, {
+						beforeSend: $.noop
+					}));
+				}, 500);
+				return false;
+			},
+			success: function(data, status) {
+				var obj = JSON.parse(data);
 				var option = document.createElement("option");
 				option.text = "Not Set";
 				option.value = 0;
@@ -233,8 +233,12 @@ $this->load->view('admin_panel/templates/close_html');
 					selectElement.disabled = false;
 				}
 			},
-			error: function(err) {
-				alert("Error Updating Priority");
+			complete: function() {
+				$("#priority-loader").css("display", "none");
+				$("#priority-refresh").removeAttr('style');
+			},
+			error: function(xhr, status, error) {
+				toastr.error("Error getting priorities.");
 			}
 		});
 	}
@@ -247,4 +251,10 @@ $this->load->view('admin_panel/templates/close_html');
 		}
 		return false;
 	}
+</script>
+
+<!-- Sidemenu class -->
+<script>
+	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-results-research").addClass("m-menu__item  m-menu__item--active");
 </script>
