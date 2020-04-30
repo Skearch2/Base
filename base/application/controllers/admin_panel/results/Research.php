@@ -167,12 +167,12 @@ class Research extends MY_Controller
                         'redirect' => $this->input->post('redirect')
                     );
 
-                    // create link
+                    // create the link
                     $create = $this->Links->create($link_data);
 
                     if ($create) {
                         // delete the research link
-                        $this->delete($id);
+                        $this->Research->delete($id);
                         $this->session->set_flashdata('submit_success', 1);
                     } else {
                         $this->session->set_flashdata('submit_failure', 0);

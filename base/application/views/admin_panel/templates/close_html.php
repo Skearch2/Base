@@ -19,7 +19,7 @@
 				"newestOnTop": true,
 				"progressBar": false,
 				"positionClass": "toast-top-right",
-				"preventDuplicates": true,
+				"preventDuplicates": false,
 				"onclick": null,
 				"showDuration": "300",
 				"hideDuration": "1000",
@@ -31,6 +31,7 @@
 				"hideMethod": "fadeOut"
 			};
 		</script>
+
 		<script src="<?= site_url(ASSETS); ?>/admin_panel/vendors/custom/jquery-ui/jquery-ui.bundle.js" type="text/javascript"></script>
 		<script src="<?= site_url(ASSETS); ?>/frontend/js/jquery.mask.js" type="text/javascript"></script>
 		<script src="<?= site_url(ASSETS); ?>/admin_panel/app/js/dashboard.js" type="text/javascript"></script>
