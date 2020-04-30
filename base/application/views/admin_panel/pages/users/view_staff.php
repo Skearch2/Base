@@ -198,11 +198,12 @@ $this->load->view('admin_panel/templates/subheader');
 				<thead>
 					<tr>
 						<th>Username</th>
-						<th>Name</th>
+						<th>Last Name</th>
+						<th>First Name</th>
 						<th>Email Address</th>
 						<th>Gender</th>
+						<th>Level</th>
 						<th>Status</th>
-						<th>Payment</th>
 						<th width=150>Actions</th>
 					</tr>
 				</thead>
@@ -245,7 +246,8 @@ $this->load->view('admin_panel/templates/close_html');
 				$("div.modal-body").html(
 					"<p>Username: " + data.username + " </p>\
 					<p>Email Address: " + data.email + " </p>\
-					<p>Name: " + data.firstname + " </p>\
+					<p>First Name: " + data.firstname + " </p>\
+					<p>Last Name: " + data.lastname + " </p>\
 					<p>Gender: " + data.gender + " </p>\
 					<p>Age group: " + data.age_group + " </p>\
 					<p>Organization: " + data.organization + " </p>\
@@ -330,7 +332,7 @@ $this->load->view('admin_panel/templates/close_html');
 					}
 				},
 				error: function(xhr, status, error) {
-					swal("Error!", "Unable to process the request.", "error")
+					swal("Error!", "Unable to reset user password.", "error")
 				}
 			});
 		});
@@ -350,9 +352,8 @@ $this->load->view('admin_panel/templates/close_html');
 					document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
 					document.getElementById("tablerow" + row).innerHTML = "Active";
 					toastr.success("", "Status updated.");
-				}
-				// if the user has no access to toggle user status
-				else if (data == -1) {
+					// if the user has no access to toggle user status
+				} else if (data == -1) {
 					toastr.warning("", "You have no permission.");
 				}
 				// if the user status being toggled is in admin group
@@ -362,32 +363,6 @@ $this->load->view('admin_panel/templates/close_html');
 			},
 			error: function(xhr, status, error) {
 				toastr.error("", "Unable to change the status.");
-			}
-		});
-	}
-
-	//Toggles user payment status
-	function togglePayment(id, row) {
-		$.ajax({
-			url: '<?= site_url('admin/user/toggle/payment/user/id/'); ?>' + id,
-			type: 'GET',
-			success: function(data, status) {
-				if (data == 0) {
-					document.getElementById("payment" + row).className = "m-badge m-badge--metal m-badge--wide";
-					document.getElementById("payment" + row).innerHTML = "Not paid";
-					toastr.success("", "Payment status updated.");
-				} else if (data == 1) {
-					document.getElementById("payment" + row).className = "m-badge m-badge--success m-badge--wide";
-					document.getElementById("payment" + row).innerHTML = "Paid";
-					toastr.success("", "Payment status updated.");
-				}
-				// if the user has no access to toggle user status
-				else if (data == -1) {
-					toastr.warning("", "You have no permission.");
-				}
-			},
-			error: function(xhr, status, error) {
-				toastr.error("", "Unable to change the payment status.");
 			}
 		});
 	}
@@ -405,15 +380,17 @@ $this->load->view('admin_panel/templates/close_html');
 				columns: [{
 					data: "username"
 				}, {
+					data: "lastname"
+				}, {
 					data: "firstname"
 				}, {
 					data: "email"
 				}, {
 					data: "gender"
 				}, {
-					data: "active"
+					data: "group_name"
 				}, {
-					data: "is_paid"
+					data: "active"
 				}, {
 					data: "Actions"
 				}],
@@ -429,7 +406,7 @@ $this->load->view('admin_panel/templates/close_html');
 							'<a onclick=deleteUser("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}, {
-					targets: 4,
+					targets: 6,
 					render: function(a, t, e, n) {
 						var s = {
 							2: {
@@ -442,26 +419,11 @@ $this->load->view('admin_panel/templates/close_html');
 							},
 							0: {
 								title: "Inactive",
-								class: "m-badge--danger"
+								class: " m-badge--danger"
 							}
 						};
 						if (e['activation_code'] !== null) return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[2].class + ' m-badge--wide">' + s[2].title + '</span>'
 						else return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
-					}
-				}, {
-					targets: 5,
-					render: function(a, t, e, n) {
-						var s = {
-							1: {
-								title: "Paid",
-								class: "m-badge--success"
-							},
-							0: {
-								title: "Not Paid",
-								class: "m-badge--metal"
-							}
-						};
-						return void 0 === s[a] ? a : '<span id= payment' + n['row'] + ' title="Toggle Payment Status" onclick=togglePayment(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 					}
 				}]
 			})
@@ -476,20 +438,8 @@ $this->load->view('admin_panel/templates/close_html');
 	);
 </script>
 
-
 <!-- Sidemenu class -->
 <script>
-	<?php if ($group == 1 || $group == 2) : ?>
-		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-		$("#submenu-users-staff").addClass("m-menu__item  m-menu__item--active");
-	<?php elseif ($group == 3) : ?>
-		$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-		$("#submenu-brands-members").addClass("m-menu__item  m-menu__item--active");
-	<?php elseif ($group == 4) : ?>
-		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-		$("#submenu-users-premium").addClass("m-menu__item  m-menu__item--active");
-	<?php else : ?>
-		$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-		$("#submenu-users-registered").addClass("m-menu__item  m-menu__item--active");
-	<?php endif ?>
+	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-users-staff").addClass("m-menu__item  m-menu__item--active");
 </script>

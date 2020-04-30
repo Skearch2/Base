@@ -202,7 +202,6 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>First Name</th>
 						<th>Email Address</th>
 						<th>Gender</th>
-						<th>Group</th>
 						<th>Status</th>
 						<th width=150>Actions</th>
 					</tr>
@@ -388,8 +387,6 @@ $this->load->view('admin_panel/templates/close_html');
 				}, {
 					data: "gender"
 				}, {
-					data: "group_name"
-				}, {
 					data: "active"
 				}, {
 					data: "Actions"
@@ -406,7 +403,7 @@ $this->load->view('admin_panel/templates/close_html');
 							'<a onclick=deleteUser("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}, {
-					targets: 6,
+					targets: 5,
 					render: function(a, t, e, n) {
 						var s = {
 							2: {
@@ -441,13 +438,5 @@ $this->load->view('admin_panel/templates/close_html');
 <!-- Sidemenu class -->
 <script>
 	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	<?php if ($group == 1 || $group == 2) : ?>
-		$("#submenu-users-staff").addClass("m-menu__item  m-menu__item--active");
-	<?php elseif ($group == 3) : ?>
-		$("#submenu-users-brand_members").addClass("m-menu__item  m-menu__item--active");
-	<?php elseif ($group == 4) : ?>
-		$("#submenu-users-premium").addClass("m-menu__item  m-menu__item--active");
-	<?php elseif ($group == 5) : ?>
-		$("#submenu-users-registered").addClass("m-menu__item  m-menu__item--active");
-	<?php endif ?>
+	$("#submenu-users-brand_users").addClass("m-menu__item  m-menu__item--active");
 </script>

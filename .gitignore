@@ -17,6 +17,7 @@ php.ini
 !*/cache/index.html
 !*/cache/.htaccess
 /vendor/
+/index.php
 
 # Skearch
 skearch_config.php
