@@ -285,10 +285,10 @@ $this->load->view('admin_panel/templates/close_html');
 			success: function(data, status) {
 				if (data == 0) {
 					document.getElementById("redirect" + id).style.color = "red";
-					toastr.success("", "Redirection updated.");
+					toastr.success("", "Brandlink deactivated.");
 				} else if (data == 1) {
 					document.getElementById("redirect" + id).style.color = "#34bfa3";
-					toastr.success("", "Redirection updated.");
+					toastr.success("", "Brandlink activated.");
 				} else if (data == -1) {
 					toastr.warning("", "You have no permission.");
 				}
@@ -361,7 +361,7 @@ $this->load->view('admin_panel/templates/close_html');
 							var row = (n.row).toString().slice(-1);
 							//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
 							return '<a href="<?= site_url() . "admin/results/link/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-								'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Redirect"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
+								'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="BL"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
 								'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>' +
 								$select.prop("outerHTML")
 						}

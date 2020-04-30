@@ -24,7 +24,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 	<div class="m-portlet m-portlet--full-height m-portlet--fit  m-portlet--rounded">
 		<div class="m-portlet__body">
 			<div class="form-group m-form__group row">
-				<label for="search-engine" class="col-2 col-form-label">Search Engine</label>
+				<label for="search-engine" class="col-2 col-form-label">Deafult Search Engine</label>
 				<div class="col-3">
 					<select class="form-control m-input" id="search_engine" name="search_engine" onchange=update_settings(<?= $this->session->userdata('id') ?>);>
 						<option value="duckduckgo" <?= ($search_engine === 'duckduckgo') ? 'selected' : '' ?>>DuckDuckGo</option>
