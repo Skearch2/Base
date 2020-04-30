@@ -173,7 +173,7 @@ class Users extends MY_Controller
      * @param string $email Email of the user
      * @return void
      */
-    public function email_check($email)
+    private function email_check($email)
     {
         $id =  $this->input->post('id');
 
@@ -207,13 +207,15 @@ class Users extends MY_Controller
                     'aaData' => $users,
                 );
 
-                // add payment information to all users
-                for ($i = 0; $i < sizeof($result['aaData']); $i++) {
-                    $payment = $this->User_payment->get($result['aaData'][$i]->id);
-                    if (is_null($payment)) {
-                        $result['aaData'][$i]->is_paid = 0;
-                    } else {
-                        $result['aaData'][$i]->is_paid = $payment->is_paid;
+                // for premium users add payment status
+                if ($id == 4) {
+                    for ($i = 0; $i < sizeof($result['aaData']); $i++) {
+                        $payment = $this->User_payment->get($result['aaData'][$i]->id);
+                        if ($payment === FALSE) {
+                            $result['aaData'][$i]->is_paid = 0;
+                        } else {
+                            $result['aaData'][$i]->is_paid = $payment->is_paid;
+                        }
                     }
                 }
             } else {
@@ -269,10 +271,17 @@ class Users extends MY_Controller
             $data['group'] = $id;
 
             $data['title'] = $group;
-            if (in_array($id, array(1, 2, 3))) {
-                $this->load->view('admin_panel/pages/users/view_123', $data);
-            } elseif (in_array($id, array(4, 5))) {
-                $this->load->view('admin_panel/pages/users/view_45', $data);
+
+            if (in_array($id, array(1, 2))) {
+                $this->load->view('admin_panel/pages/users/view_staff', $data);
+            } elseif ($id == 3) {
+                $this->load->view('admin_panel/pages/users/view_brand', $data);
+            } elseif ($id == 4) {
+                $this->load->view('admin_panel/pages/users/view_premium', $data);
+            } elseif ($id == 5) {
+                $this->load->view('admin_panel/pages/users/view_regular', $data);
+            } else {
+                show_404();
             }
         }
     }
@@ -404,21 +413,31 @@ class Users extends MY_Controller
         if (!$this->ion_auth_acl->has_permission('users_update') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
-            $status = $this->User_payment->get($id)->is_paid;
+            $status = $this->User_payment->get($id);
 
-            if ($status == 0) {
-                $status = 1;
+            if ($status === FALSE) {
+                $this->User_payment->create(array(
+                    'user_id' => $id,
+                    'is_paid' => 1
+                ));
+
+                echo json_encode(1);
             } else {
-                $status = 0;
+
+                if ($status->is_paid == 0) {
+                    $status->is_paid = 1;
+                } else {
+                    $status->is_paid = 0;
+                }
+
+                $payment_data = array(
+                    'is_paid' => $status->is_paid,
+                );
+
+                $this->User_payment->update($id, $payment_data);
+
+                echo json_encode($status->is_paid);
             }
-
-            $payment_data = array(
-                'is_paid' => $status,
-            );
-
-            $this->User_payment->update($id, $payment_data);
-
-            echo json_encode($status);
         }
     }
 
@@ -566,7 +585,7 @@ class Users extends MY_Controller
      * @param string $username Username of the user
      * @return void
      */
-    public function username_check($username)
+    private function username_check($username)
     {
         $id =  $this->input->post('id');
 

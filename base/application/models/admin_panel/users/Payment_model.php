@@ -24,9 +24,9 @@ class Payment_model extends CI_Model
      */
     public function create($payment_data)
     {
-        $query = $this->db->insert('skearch_users_payments', $payment_data);
+        $this->db->insert('skearch_users_payments', $payment_data);
 
-        if ($query) {
+        if ($this->db->affected_rows()) {
             return true;
         } else {
             return false;
@@ -47,7 +47,7 @@ class Payment_model extends CI_Model
         $this->db->where('user_id', $user_id);
         $query = $this->db->get();
 
-        if ($query) {
+        if ($query->num_rows()) {
             return $query->row();
         } else {
             return false;
@@ -66,9 +66,9 @@ class Payment_model extends CI_Model
     public function update($user_id, $payment_data)
     {
         $this->db->where('user_id', $user_id);
-        $query = $this->db->update('skearch_users_payments', $payment_data);
+        $this->db->update('skearch_users_payments', $payment_data);
 
-        if ($query) {
+        if ($this->db->affected_rows()) {
             return true;
         } else {
             return false;
