@@ -94,6 +94,7 @@ $route['myskearch/auth/change_email'] = 'my_skearch/auth/change_email';
 /* Dashboard */
 $route['myskearch'] = 'my_skearch/dashboard';
 $route['myskearch/dashboard'] = 'my_skearch/dashboard';
+$route['myskearch/dashboard/history/clear'] = 'my_skearch/dashboard/delete_history';
 $route['myskearch/dashboard/settings/update'] = 'my_skearch/dashboard/update_settings';
 
 /* Digital assets */

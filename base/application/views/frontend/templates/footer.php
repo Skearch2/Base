@@ -11,7 +11,7 @@
 
 					<p class="copy-right">
 						Copyright © <?php echo date('Y'); ?> Skearch, LLC All rights reserved<br>
-						<?php if (isset($page) && $page === 'default') : ?>
+						<?php if (isset($version)) : ?>
 							<span class='app_title'>Skearch v<?= $version; ?></span>
 						<?php endif; ?>
 					</p>
