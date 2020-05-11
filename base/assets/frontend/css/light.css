@@ -241,7 +241,7 @@ a.btn-cat {
 }
 
 .main-box.no-border>.box.inline-box {
-	float: right;
+	float: none;
 }
 
 .box h3 {
@@ -279,6 +279,12 @@ a.btn-cat {
 
 .main-box .box {
 	display: flex;
+	 justify-content: center;
+    margin: auto;
+    width: 200px;
+    text-align: center;
+    clear: none;
+    background-position: center;
 }
 
 .browse-inner {
@@ -766,8 +772,18 @@ media
 .logo-img {
     width: auto;
     height: 140px;
+	background-size: 54%;
+	background-position: center;
 }
 .button-section {
     padding-bottom: 30px;
 }
+}
+@media screen and (max-width: 375px){
+	.logo-img {
+		background-size: 100%;
+	}
+}
+section.button-section {
+    height: 42vh;
 }

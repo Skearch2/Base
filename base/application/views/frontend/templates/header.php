@@ -31,7 +31,7 @@
 					<a href="<?= site_url() ?>myskearch/auth/logout" class="btn btn-danger" role="button">Logout</a>
 				<?php else : ?>
 				    <a href="<?= site_url() ?>myskearch/auth/login" class="btn btn-danger" role="button">Log in</a>
-					<span>Not a Member?</span>
+					<!--span>Not a Member?</span-->
 					<a href="<?= site_url() ?>myskearch/auth/signup" class="btn btn-danger" role="button">Sign Up</a>
 					
 				<?php endif ?>
