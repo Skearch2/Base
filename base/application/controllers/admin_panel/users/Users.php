@@ -38,26 +38,6 @@ class Users extends MY_Controller
     }
 
     /**
-     * Callback for brand name validation
-     *
-     * @param string $brand_name Brand name assoicated to user
-     * @return void
-     */
-    private function brand_check($brand_name)
-    {
-        $id =  $this->input->post('id');
-
-        if ($this->ion_auth->email_check($brand_name)) {
-            if ($this->User->get($id)->brand !== $brand_name) {
-                $this->form_validation->set_message('brand_check', 'The brand name already exists.');
-                return FALSE;
-            }
-        }
-
-        return TRUE;
-    }
-
-    /**
      * Create user
      *
      * @param int $group ID of the group
@@ -193,7 +173,7 @@ class Users extends MY_Controller
      * @param string $email Email of the user
      * @return void
      */
-    private function email_check($email)
+    public function email_check($email)
     {
         $id =  $this->input->post('id');
 
@@ -498,7 +478,7 @@ class Users extends MY_Controller
                 $this->form_validation->set_rules('organization', 'Organization', 'trim');
                 // only show to brand member group
                 if (in_array($group, array(3))) {
-                    $this->form_validation->set_rules('brand', 'Brand', 'is_unique[skearch_users.brand]|trim|required');
+                    $this->form_validation->set_rules('brand', 'Brand', 'trim|required');
                 }
                 if (strlen($this->input->post('phone'))) {
                     $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
@@ -605,7 +585,7 @@ class Users extends MY_Controller
      * @param string $username Username of the user
      * @return void
      */
-    private function username_check($username)
+    public function username_check($username)
     {
         $id =  $this->input->post('id');
 
