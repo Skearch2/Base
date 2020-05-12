@@ -128,7 +128,7 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 									<?php if (in_array($group->id, array(3))) : ?>
 										<div class="form-group m-form__group row">
-											<label for="brand" class="col-2 col-form-label">Brand</label>
+											<label for="brand" class="col-2 col-form-label">Brand<font color="red"><sup>*</sup></font></label>
 											<div class="col-7">
 												<input class="form-control m-input" type="text" name="brand" value="<?= set_value('brand', $brand); ?>">
 											</div>
@@ -263,7 +263,7 @@ $this->load->view('admin_panel/templates/close_html');
 	<?php if ($group->id == 1 || $group->id == 2) : ?>
 		$("#submenu-users-staff").addClass("m-menu__item  m-menu__item--active");
 	<?php elseif ($group->id == 3) : ?>
-		$("#submenu-users-brand_members").addClass("m-menu__item  m-menu__item--active");
+		$("#submenu-users-brand_users").addClass("m-menu__item  m-menu__item--active");
 	<?php elseif ($group->id == 4) : ?>
 		$("#submenu-users-premium").addClass("m-menu__item  m-menu__item--active");
 	<?php elseif ($group->id == 5) : ?>

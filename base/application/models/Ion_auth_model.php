@@ -409,19 +409,24 @@ class Ion_auth_model extends CI_Model
         // Activate if no code is given
         // Or if a user was found with this code, and that it matches the id
         if ($code === false || ($user && $user->id === $id)) {
-            $data = [
-                'activation_selector' => null,
-                'activation_code' => null,
-                'active' => 1,
-            ];
+            //Make sure it isn't expired
+            $expiration = $this->config->item('activation_expiration', 'ion_auth');
+            if (time() - $user->activation_time <= $expiration) {
+                $data = [
+                    'activation_selector' => null,
+                    'activation_code' => null,
+                    'activation_time' => null,
+                    'active' => 1,
+                ];
 
-            $this->trigger_events('extra_where');
-            $this->db->update($this->tables['users'], $data, ['id' => $id]);
+                $this->trigger_events('extra_where');
+                $this->db->update($this->tables['users'], $data, ['id' => $id]);
 
-            if ($this->db->affected_rows() === 1) {
-                $this->trigger_events(['post_activate', 'post_activate_successful']);
-                $this->set_message('activate_successful');
-                return true;
+                if ($this->db->affected_rows() === 1) {
+                    $this->trigger_events(['post_activate', 'post_activate_successful']);
+                    $this->set_message('activate_successful');
+                    return true;
+                }
             }
         }
 
@@ -456,6 +461,7 @@ class Ion_auth_model extends CI_Model
         $data = [
             'activation_selector' => $token->selector,
             'activation_code' => $token->validator_hashed,
+            'activation_time' => time(),
             'active' => 0,
         ];
 
@@ -813,7 +819,7 @@ class Ion_auth_model extends CI_Model
             'email' => $email,
             'ip_address' => $ip_address,
             'created_on' => time(),
-            //'active' => ($manual_activation === FALSE ? 1 : 0)
+            'active' => ($manual_activation === FALSE ? 1 : 0)
         ];
 
         // filter out any data passed that doesnt have a matching column in the users table
