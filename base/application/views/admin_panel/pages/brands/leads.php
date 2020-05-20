@@ -102,7 +102,7 @@ $this->load->view('admin_panel/templates/close_html');
 		}).then(function(e) {
 			if (!e.value) return;
 			$.ajax({
-				url: '<?= site_url('admin/brands/brandleads/delete/'); ?>' + id,
+				url: '<?= site_url('admin/brands/leads/delete/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
 					if (data == -1) {
@@ -128,7 +128,7 @@ $this->load->view('admin_panel/templates/close_html');
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
-				ajax: "<?= site_url("admin/brands/brandleads/get"); ?>",
+				ajax: "<?= site_url("admin/brands/leads/get"); ?>",
 				columns: [{
 					data: "id"
 				}, {

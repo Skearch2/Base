@@ -151,7 +151,7 @@ $config['user_extend_on_login'] = true; // Extend the users cookies every time t
 $config['track_login_attempts'] = true; // Track the number of failed login attempts for each user or ip.
 $config['track_login_ip_address'] = true; // Track login attempts by IP Address, if FALSE will track based on identity. (Default: TRUE)
 $config['maximum_login_attempts'] = 5; // The maximum number of failed login attempts.
-$config['lockout_time'] = 600; /* The number of seconds to lockout an account due to exceeded attempts
+$config['lockout_time'] = 300; /* The number of seconds to lockout an account due to exceeded attempts
 You should not use a value below 60 (1 minute) */
 $config['activation_expiration'] = 172800; // The number of seconds after which activation link will expire. If set to 0, activation link will not expire.
 $config['forgot_password_expiration'] = 3600; /* The number of seconds after which a forgot password request will expire. If set to 0, forgot password requests will not expire.

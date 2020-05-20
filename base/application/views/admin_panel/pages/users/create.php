@@ -50,7 +50,7 @@ $this->load->view('admin_panel/templates/subheader');
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">1. Login Details</h3>
+										<h3 class="m-form__section">Login Details</h3>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -79,7 +79,7 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">2. Personal Details</h3>
+										<h3 class="m-form__section">Personal Details</h3>
 									</div>
 								</div>
 								<?php if (in_array($group, array(1, 2, 3))) : ?>
@@ -130,23 +130,15 @@ $this->load->view('admin_panel/templates/subheader');
 									<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 									<div class="form-group m-form__group row">
 										<div class="col-10 ml-auto">
-											<h3 class="m-form__section">3. Organizational Details</h3>
+											<h3 class="m-form__section">Contact Details</h3>
 										</div>
 									</div>
-									<div class="form-group m-form__group row">
+									<!-- <div class="form-group m-form__group row">
 										<label for="organization" class="col-2 col-form-label">Organization</label>
 										<div class="col-7">
 											<input class="form-control m-input" type="text" name="organization" value="<?= set_value('organization') ?>">
 										</div>
-									</div>
-									<?php if (in_array($group, array(3))) : ?>
-										<div class="form-group m-form__group row">
-											<label for="brand" class="col-2 col-form-label">Brand<font color="red"><sup>*</sup></font></label>
-											<div class="col-7">
-												<input class="form-control m-input" type="text" name="brand" value="<?= set_value('brand') ?>">
-											</div>
-										</div>
-									<?php endif ?>
+									</div> -->
 									<div class="form-group m-form__group row">
 										<label for="phone" class="col-2 col-form-label">Phone No.</label>
 										<div class="col-7">
@@ -202,10 +194,25 @@ $this->load->view('admin_panel/templates/subheader');
 										</div>
 									</div>
 								<?php endif ?>
+								<?php if (in_array($group, array(3))) : ?>
+									<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+									<div class="form-group m-form__group row">
+										<div class="col-10 ml-auto">
+											<h3 class="m-form__section">Association</h3>
+										</div>
+									</div>
+									<div class="form-group m-form__group row">
+										<label for="group" class="col-2 col-form-label">Brand<font color="red"><sup>*</sup></font></label>
+										<div class="col-7">
+											<input type="text" class="form-control m-input" id="brand-search" name="brand" placeholder="Search" value="<?= set_value('brand') ?>">
+											<input type="hidden" id="brand-id" name="brand_id" value="<?= set_value('brand_id') ?>">
+										</div>
+									</div>
+								<?php endif ?>
 								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">4. Privileges</h3>
+										<h3 class="m-form__section">Privileges</h3>
 									</div>
 								</div>
 								<?php if (in_array($group, array(1, 2))) : ?>
@@ -275,6 +282,58 @@ $this->load->view('admin_panel/templates/scrolltop');
 $this->load->view('admin_panel/templates/close_html');
 
 ?>
+
+<script>
+	// settings for brand search
+	var options = {
+
+		url: function(phrase) {
+			return "<?= site_url(); ?>admin/brands/search/" + phrase
+		},
+
+		getValue: "brand",
+
+		template: {
+			type: "description",
+			fields: {
+				description: "organization"
+			}
+		},
+
+		list: {
+			match: {
+				enabled: true
+			},
+
+			sort: {
+				enabled: true
+			},
+
+			onSelectItemEvent: function() {
+				var brand = $("#brand-search").getSelectedItemData().brand;
+				var id = $("#brand-search").getSelectedItemData().id;
+
+				$("#brand-search").val(brand).trigger("change");
+				$("#brand-id").val(id);
+			},
+
+			showAnimation: {
+				type: "slide", //normal|slide|fade
+				callback: function() {}
+			},
+
+			hideAnimation: {
+				type: "normal", //normal|slide|fade
+				callback: function() {}
+			}
+		},
+
+		theme: "bootstrap"
+	};
+
+	// initialize brand search
+	$("#brand-search").easyAutocomplete(options);
+</script>
 
 <!-- Sidemenu class -->
 <script>

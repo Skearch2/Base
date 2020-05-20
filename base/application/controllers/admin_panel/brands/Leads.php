@@ -1,15 +1,11 @@
 <?php
 
-/**
- * File: ~/application/controller/admin/Users.php
- */
-
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
 /**
- * File: ~/application/controller/admin_panel/Brandleads.php
+ * File: ~/application/controller/admin_panel/brands/Leads.php
  *
  * A controller for brandleads
  * 
@@ -18,7 +14,7 @@ if (!defined('BASEPATH')) {
  * @copyright    Copyright (c) 2020
  * @version      2.0
  */
-class Brandleads extends MY_Controller
+class Leads extends MY_Controller
 {
 
     /**
@@ -38,7 +34,7 @@ class Brandleads extends MY_Controller
             redirect('admin/auth/login');
         }
 
-        $this->load->model('admin_panel/Brandleads_model_admin', 'Brandleads');
+        $this->load->model('admin_panel/brands/leads_model', 'Leads');
     }
 
     public function index()
@@ -49,14 +45,10 @@ class Brandleads extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            if (!file_exists(APPPATH . '/views/admin_panel/pages/brands/brandleads.php')) {
-                show_404();
-            }
-
             $data['title'] = ucfirst("Brand Leads");
 
             // Load page content
-            $this->load->view('admin_panel/pages/brands/brandleads', $data);
+            $this->load->view('admin_panel/pages/brands/leads', $data);
         }
     }
 
@@ -68,7 +60,7 @@ class Brandleads extends MY_Controller
     public function get()
     {
         if ($this->ion_auth_acl->has_permission('brandleads_get') or $this->ion_auth->is_admin()) {
-            $brandleads = $this->Brandleads->get();
+            $brandleads = $this->Leads->get();
             $total_brands = sizeof($brandleads);
             $result = array(
                 'iTotalRecords' => $total_brands,
@@ -95,7 +87,7 @@ class Brandleads extends MY_Controller
         if (!$this->ion_auth_acl->has_permission('brandleads_delete') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
-            $delete = $this->Brandleads->delete($id);
+            $delete = $this->Leads->delete($id);
 
             if ($delete) {
                 echo json_encode(1);
