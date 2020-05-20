@@ -31,6 +31,7 @@ class Users extends MY_Controller
             redirect('admin/auth/login');
         }
 
+        $this->load->model('admin_panel/brands/Brand_model', 'Brand');
         $this->load->model('admin_panel/users/User_model', 'User');
         $this->load->model('admin_panel/users/Group_model', 'Group');
         $this->load->model('admin_panel/users/Payment_model', 'User_payment');
@@ -54,24 +55,26 @@ class Users extends MY_Controller
             $this->form_validation->set_rules('username', 'Username', 'required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']|trim');
             $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[skearch_users.email]|trim');
-            // only show to admin, editor, and brand member groups
+
             if (in_array($group, array(1, 2, 3))) {
+                // only for admin, editor, and brand member groups
                 $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
                 $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
-            }
-            // only show to regular and premium user groups
-            else if (in_array($group, array(4, 5))) {
+            } else if (in_array($group, array(4, 5))) {
+                // only for regular and premium user groups
                 $this->form_validation->set_rules('name', 'Name', 'required|alpha|trim');
             }
+
             $this->form_validation->set_rules('gender', 'Gender', 'required');
             $this->form_validation->set_rules('age_group', 'Age group', 'required');
 
             // only show to admin, editor, and brand member groups
             if (in_array($group, array(1, 2, 3))) {
-                $this->form_validation->set_rules('organization', 'Organization', 'trim');
+                // $this->form_validation->set_rules('organization', 'Organization', 'trim');
                 // only show to brand member group
                 if (in_array($group, array(3))) {
-                    $this->form_validation->set_rules('brand', 'Brand', 'is_unique[skearch_users.brand]|trim|required');
+                    $this->form_validation->set_rules('brand', 'Brand', 'required');
+                    $this->form_validation->set_rules('brand_id', 'Brand ID', 'numeric');
                 }
                 if (strlen($this->input->post('phone'))) {
                     $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
@@ -105,6 +108,7 @@ class Users extends MY_Controller
                 $username = $this->input->post('username');
                 $password = $this->input->post('password');
                 $email = $this->input->post('email');
+
                 // only show to admin, editor, and brand member groups
                 if (in_array($group, array(1, 2, 3))) {
                     $additional_data['firstname'] = $this->input->post('firstname');
@@ -114,15 +118,13 @@ class Users extends MY_Controller
                 elseif (in_array($group, array(4, 5))) {
                     $additional_data['firstname'] = $this->input->post('name');
                 }
+
                 $additional_data['gender'] = $this->input->post('gender');
                 $additional_data['age_group'] = $this->input->post('age_group');
+
                 // only show to admin, editor, and brand member groups
-                if (in_array($group, array(3))) {
-                    $additional_data['organization'] = $this->input->post('organization');
-                    // only show to brand member group
-                    if (in_array($group, array(3))) {
-                        $additional_data['brand'] = $this->input->post('brand');
-                    }
+                if (in_array($group, array(1, 2, 3))) {
+                    // $additional_data['organization'] = $this->input->post('organization');
                     $additional_data['phone'] = $this->input->post('phone');
                     $additional_data['address1'] = $this->input->post('address1');
                     $additional_data['address2'] = $this->input->post('address2');
@@ -132,9 +134,19 @@ class Users extends MY_Controller
                     $additional_data['zipcode'] = $this->input->post('zipcode');
                 }
                 $additional_data['active'] = $this->input->post('active');
+
                 $group = $this->input->post('group');
 
-                $create = $this->User->create($username, $password, $email, $additional_data, array($group));
+                // create user
+                $create = $user_id = $this->User->create($username, $password, $email, $additional_data, array($group));
+                // $errors = $this->ion_auth->errors();
+                // print_r($errors);
+                // die();
+                // link user to brand
+                if ($group == 3) {
+                    $brand_id = $this->input->post('brand_id');
+                    $this->Brand->link_user($user_id, $brand_id);
+                }
 
                 if ($create) {
                     $this->session->set_flashdata('create_success', 1);
@@ -475,7 +487,7 @@ class Users extends MY_Controller
 
             // only show to admin, editor, and brand member groups
             if (in_array($group, array(1, 2, 3))) {
-                $this->form_validation->set_rules('organization', 'Organization', 'trim');
+                // $this->form_validation->set_rules('organization', 'Organization', 'trim');
                 // only show to brand member group
                 if (in_array($group, array(3))) {
                     $this->form_validation->set_rules('brand', 'Brand', 'trim|required');
@@ -512,11 +524,7 @@ class Users extends MY_Controller
                 $data['age_group'] = $user->age_group;
                 // only show to admin, editor, and brand member groups
                 if (in_array($group, array(1, 2, 3))) {
-                    $data['organization'] = $user->organization;
-                    // only show to brand member group
-                    if (in_array($group, array(3))) {
-                        $data['brand'] = $user->brand;
-                    }
+                    // $data['organization'] = $user->organization;
                     $data['phone'] = $user->phone;
                     $data['address1'] = $user->address1;
                     $data['address2'] = $user->address2;
@@ -531,6 +539,8 @@ class Users extends MY_Controller
                 $data['states'] = $this->Util_model->get_state_list();
                 $data['countries'] = $this->Util_model->get_country_list();
                 $data['groups'] = $this->Group->get();
+
+                $data['brand'] = $this->Brand->get_by_user($id);
 
                 $group_name =  $this->Group->get($group)->name;
                 $data['title'] = ucwords("edit {$group_name}");
@@ -552,11 +562,7 @@ class Users extends MY_Controller
                 $user_data['age_group'] = $this->input->post('age_group');
                 // only show to admin, editor, and brand member groups
                 if (in_array($group, array(1, 2, 3))) {
-                    $user_data['organization'] = $this->input->post('organization');
-                    // only show to brand member group
-                    if (in_array($group, array(3))) {
-                        $user_data['brand'] = $this->input->post('brand');
-                    }
+                    // $user_data['organization'] = $this->input->post('organization');
                     $user_data['phone'] = $this->input->post('phone');
                     $user_data['address1'] = $this->input->post('address1');
                     $user_data['address2'] = $this->input->post('address2');
@@ -568,7 +574,15 @@ class Users extends MY_Controller
                 $user_data['group'] = $this->input->post('group');
                 $user_data['active'] = $this->input->post('active');
 
+                // update user
                 $update = $this->User->update($id, $user_data);
+
+                // link user to brand
+                if ($group == 3) {
+                    $brand_id = $this->input->post('brand_id');
+                    $this->Brand->link_user($id, $brand_id);
+                }
+
                 if ($update) {
                     $this->session->set_flashdata('update_success', 1);
                 } else {

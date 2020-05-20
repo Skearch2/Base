@@ -18,7 +18,7 @@ class Welcome extends Common_Controller {
 
     if (!$this -> ion_auth -> is_admin()) {
       $base_url  = $this -> config -> item('base_domain');
-      redirect( $base_url . 'admin' );
+      redirect( $base_url . '/admin' );
     }
 
     $segment = $this -> uri -> segment( 2, 0 );
@@ -104,5 +104,3 @@ class Welcome extends Common_Controller {
   }
 
 }
-
-?>

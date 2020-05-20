@@ -1,0 +1,170 @@
+<?php
+if (!defined('BASEPATH')) {
+    exit('No direct script access allowed');
+}
+
+/**
+ * File:    ~/application/models/brands/brand_model.php
+ *
+ * Brand model
+ * 
+ * @package        Skearch
+ * @author         Iftikhar Ejaz <ejaziftikhar@gmail.com>
+ * @copyright      Copyright (c) 2020
+ * @version        2.0
+ */
+class Brand_model extends CI_Model
+{
+    /**
+     * Creates a brand
+     *
+     * @param Array $brand_data Required information for brands
+     * @return boolean
+     */
+    public function create($brand_data)
+    {
+        $this->db->insert('skearch_brands', $brand_data);
+
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Deletes brand
+     *
+     * @param int $id Brand ID
+     * @return void
+     */
+    public function delete($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('skearch_brands');
+
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets brand
+     *
+     * @return object
+     */
+    public function get($id = null)
+    {
+        $this->db->select("*");
+        $this->db->from('skearch_brands');
+
+        if ($id) {
+            $this->db->where('id', $id);
+            $query = $this->db->get();
+
+            return $query->row();
+        } else {
+            $query = $this->db->get();
+
+            return $query->result();
+        }
+    }
+
+    /**
+     * Gets brand by brand name
+     *
+     * @param string $brand Brand name
+     * @return object
+     */
+    public function get_by_name($brand)
+    {
+        $this->db->select('id, brand, organization');
+        $this->db->from('skearch_brands');
+        $this->db->like('brand', $brand, 'after');
+        $this->db->order_by('brand', 'ASC');
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    /**
+     * Gets brand by user ID
+     *
+     * @param string $id User ID
+     * @return object
+     */
+    public function get_by_user($id)
+    {
+        $this->db->select('skearch_brands.id, brand as name');
+        $this->db->from('skearch_users_brands');
+        $this->db->join('skearch_brands', 'skearch_users_brands.brand_id = skearch_brands.id');
+        $this->db->where('user_id', $id);
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
+
+    /**
+     * Get brand users associated to the brand
+     *
+     * @param string $id Brand ID
+     * @return object
+     */
+    public function get_members($id)
+    {
+        $this->db->select('user_id');
+        $this->db->from('skearch_users_brands');
+        $this->db->where('brand_id', $id);
+        $sub_query = $this->db->get_compiled_select();
+
+        $this->db->select('id');
+        $this->db->from('skearch_users');
+        $this->db->where_in('id', $sub_query, false);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    /**
+     * Link the user to the brand
+     *
+     * @param int $user_id User ID
+     * @param int $brand_id Brand ID
+     * @return void
+     */
+    public function link_user($user_id, $brand_id)
+    {
+        $this->db->replace(
+            'skearch_users_brands',
+            array('user_id' => $user_id, 'brand_id' => $brand_id)
+        );
+
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Updates brand
+     *
+     * @param int $id Brand ID
+     * @param Array $brand_data Required information for brands
+     * @return boolean
+     */
+    public function update($id, $brand_data)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('skearch_brands', $brand_data);
+
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}

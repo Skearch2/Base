@@ -54,9 +54,9 @@ class User_model extends CI_Model
             }
         } else {
             $data = array(
-                'name'      => $this->input->post('name'),
+                'name'      => $this->input->post('name_b'),
                 'brandname' => $this->input->post('brandname'),
-                'email'     => $this->input->post('email'),
+                'email'     => $this->input->post('email_b'),
                 'phone'     => $this->input->post('phone')
             );
 

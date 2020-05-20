@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * -----------------------------------------------------------------------------
@@ -78,6 +78,7 @@ $config['imageserver_data_apps']        = 'appid';
 
 $config['imageserver_data_mediapriorities'] = 'mediapriorities';
 
+$config['imageserver_data_brandid']     = 'brandid';
 $config['imageserver_data_title']       = 'title';
 $config['imageserver_data_description'] = 'description';
 $config['imageserver_data_url']         = 'url';
@@ -124,6 +125,7 @@ $config['imageserver_field_album_mediabox']     = 'albummediabox';
 $config['imageserver_field_album_images']       = 'images';
 
 $config['imageserver_field_image_id']           = 'imageid';
+$config['imageserver_field_image_brandid']      = 'imagebrandid';
 $config['imageserver_field_image_title']        = 'imagetitle';
 $config['imageserver_field_image_description']  = 'imagedescription';
 $config['imageserver_field_image_filename']     = 'imagefilename';
@@ -142,5 +144,3 @@ $config['imageserver_field_app_secret']         = 'secret';
 $config['imageserver_response_code']    = 'code';
 $config['imageserver_response_message'] = 'message';
 $config['imageserver_response_error']   = 'error';
-
-?>

@@ -250,8 +250,6 @@ $this->load->view('admin_panel/templates/close_html');
 					<p>Last Name: " + data.lastname + " </p>\
 					<p>Gender: " + data.gender + " </p>\
 					<p>Age group: " + data.age_group + " </p>\
-					<p>Organization: " + data.organization + " </p>\
-					<p>Brand: " + data.brand + " </p>\
 					<p>Phone: " + data.phone + " </p>\
 					<p>Street Address: " + data.address1 + " </p>\
 					<p>Apt/Unit/Suite: " + data.address2 + " </p>\

@@ -23,7 +23,7 @@ class User_model extends CI_Model
      * @param String $email User email
      * @param Array $additional_data Additional user data
      * @param int $group User group
-     * @return boolean
+     * @return int|false User ID or false
      */
     public function create($username, $password, $email, $additional_data, $group)
     {

@@ -4,7 +4,7 @@ if (!defined('BASEPATH')) {
 }
 
 /**
- * File:    ~/application/models/admin_panel/Brandleads_model_admin.php
+ * File:    ~/application/models/admin_panel/Leads_model.php
  *
  * This model fetch brand leads
  * 
@@ -13,7 +13,7 @@ if (!defined('BASEPATH')) {
  * @copyright    Copyright (c) 2020
  * @version      2.0
  */
-class Brandleads_model_admin extends CI_Model
+class Leads_model extends CI_Model
 {
     /**
      * Get all brandleads
@@ -25,6 +25,7 @@ class Brandleads_model_admin extends CI_Model
         $this->db->select('*');
         $this->db->from('skearch_brand_leads');
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -38,5 +39,11 @@ class Brandleads_model_admin extends CI_Model
     {
         $this->db->where('id', $id);
         $this->db->delete('skearch_brand_leads');
+
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
