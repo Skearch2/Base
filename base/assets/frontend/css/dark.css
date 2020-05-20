@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');
 body {
 	background-color: #122949;
 	font-family: 'Conv_NeoSans_4';
@@ -25,8 +26,10 @@ ul {
 	text-align: center;
 	margin: 0 auto .5rem;
 	padding-top: 25px;
-        clear:both;
+    clear:both;
+	font-family: 'Montserrat', sans-serif;
 }
+
 .um-link a {
 	color: #fff;
 	text-align: center;
@@ -96,12 +99,12 @@ ul {
 .button-section h1 {
 	display: block;
 	color: #fff;
-	font-family: 'Conv_NeoSans_4';
+	font-family: 'Montserrat', sans-serif;
 	font-size: 37px;
 	font-style: normal;
-	font-weight: normal;
+	font-weight: 700;
 	margin: 20px 0 20px 0px;
-	text-shadow: 2px 2px 2px #466260;
+	/*text-shadow: 2px 2px 2px #466260;*/
 	text-decoration: none;
 	text-align: center;
 }
@@ -262,6 +265,7 @@ a.btn-cat {
 
 .main-box.no-border>.box.inline-box {
 	float: none;
+	width: 200px !important;
 }
 
 .box h3 {
@@ -313,7 +317,7 @@ a.btn-cat {
 	display: flex;
     justify-content: center;
     margin: auto;
-    max-width: 200px;
+    max-width: 100%;
     text-align: center;
     clear: none;
     background-position: center;
@@ -699,6 +703,8 @@ media
 		margin-bottom: 40px;
 		text-align: center;
 		color: #fff;
+		font-weight: 700;
+		font-family: 'Montserrat', sans-serif;
 	}
 
 	.f-box {
