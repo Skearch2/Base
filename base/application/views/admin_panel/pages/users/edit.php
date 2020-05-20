@@ -200,16 +200,19 @@ $this->load->view('admin_panel/templates/subheader');
 										<h3 class="m-form__section">Privileges</h3>
 									</div>
 								</div>
-								<div class="form-group m-form__group row">
-									<label for="group" class="col-2 col-form-label">Group<font color="red"><sup>*</sup></font></label>
-									<div class="col-3">
-										<select class="form-control m-input" id="exampleSelect1" name="group">
-											<?php foreach ($groups as $grp) : ?>
-												<option value="<?= $grp->id ?>" <?= set_select("group", $grp->id) ?> <?= ($group->id == $grp->id) ? "selected" : "" ?>><?= $grp->name; ?></option>
-											<?php endforeach; ?>
-										</select>
+								<?php if (in_array($group->id, array(1, 2))) : ?>
+									<div class="form-group m-form__group row">
+										<label for="group" class="col-2 col-form-label">Group<font color="red"><sup>*</sup></font></label>
+										<div class="col-3">
+											<select class="form-control m-input" id="exampleSelect1" name="group">
+												<option value="1" <?= set_select('group', 1) ?> <?= ($group->id == 1) ? "selected" : "" ?>>Admin</option>
+												<option value="2" <?= set_select('group', 2) ?> <?= ($group->id == 2) ? "selected" : "" ?>>Editor</option>
+											</select>
+										</div>
 									</div>
-								</div>
+								<?php else : ?>
+									<input type="hidden" name="group" value="<?= $group->id ?>">
+								<?php endif ?>
 								<div class="form-group m-form__group row">
 									<label for="active" class="col-2 col-form-label">Enabled</label>
 									<div class="col-7">

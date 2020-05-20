@@ -139,9 +139,7 @@ class Users extends MY_Controller
 
                 // create user
                 $create = $user_id = $this->User->create($username, $password, $email, $additional_data, array($group));
-                // $errors = $this->ion_auth->errors();
-                // print_r($errors);
-                // die();
+
                 // link user to brand
                 if ($group == 3) {
                     $brand_id = $this->input->post('brand_id');
@@ -538,7 +536,6 @@ class Users extends MY_Controller
 
                 $data['states'] = $this->Util_model->get_state_list();
                 $data['countries'] = $this->Util_model->get_country_list();
-                $data['groups'] = $this->Group->get();
 
                 $data['brand'] = $this->Brand->get_by_user($id);
 

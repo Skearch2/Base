@@ -177,6 +177,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
+						<th>Brand ID</th>
 						<th>Brand</th>
 						<th>Organization</th>
 						<th>Members</th>
@@ -254,6 +255,8 @@ $this->load->view('admin_panel/templates/close_html');
 				serverSide: !1,
 				ajax: "<?= site_url("admin/brands/get"); ?>",
 				columns: [{
+					data: "id"
+				}, {
 					data: "brand"
 				}, {
 					data: "organization"
@@ -284,6 +287,6 @@ $this->load->view('admin_panel/templates/close_html');
 
 <!-- Sidemenu class -->
 <script>
-	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-users-brand_users").addClass("m-menu__item  m-menu__item--active");
+	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-brands").addClass("m-menu__item  m-menu__item--active");
 </script>
