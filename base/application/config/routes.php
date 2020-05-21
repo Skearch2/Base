@@ -73,11 +73,6 @@ $route['search'] = 'frontend/search';
 /* Theme */
 $route['theme/change'] = 'frontend/pages/change_theme';
 
-/* Media Engine Api  */
-$route['redirect/link/id/(:num)']    = 'frontend/media/media_redirect/$1';
-$route['impression/image/id/(:num)'] = 'frontend/media/update_image_impression/$1';
-
-
 
 /**********************************************  My Skearch Routes  ***************************************************/
 
@@ -104,7 +99,7 @@ $route['myskearch/digital_assets'] = 'my_skearch/digital_assets';
 $route['myskearch/private_social'] = 'my_skearch/private_social';
 
 /* Brand direct */
-$route['myskearch/brand_direct'] = 'my_skearch/brand_direct';
+$route['myskearch/brand'] = 'my_skearch/brand';
 
 /* Profile */
 $route['myskearch/profile'] = 'my_skearch/profile';
@@ -262,8 +257,6 @@ $route['admin/brands/get']                      = 'admin_panel/brands/brands/get
 $route['admin/brands/search/(:any)']            = 'admin_panel/brands/brands/search/$1';
 
 
-
-
 /* Link Checker */
 $route['admin/linkchecker'] = 'admin_panel/linkchecker';
 $route['admin/linkchecker/get'] = 'admin_panel/linkchecker/get';
@@ -281,3 +274,10 @@ $route['admin/email/templates/(:any)'] = 'admin_panel/templates/get/$1';
 $route['admin/option'] = 'admin_panel/option';
 $route['admin/option/update_option'] = 'admin_panel/option/update_option';
 $route['admin/option/brandlinks_status_all'] = 'admin_panel/option/brandlinks_status_all';
+
+
+
+/**********************************************  Media Server API Routes *************************************************/
+$route['media/api/stats/brand/id/(:num)']      = 'frontend/media/get_brand_ads_stats/$1';
+$route['redirect/link/id/(:num)']    = 'frontend/media/media_redirect/$1';
+$route['impression/image/id/(:num)'] = 'frontend/media/update_image_impression/$1';

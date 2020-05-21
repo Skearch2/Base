@@ -70,6 +70,28 @@ class User_model extends CI_Model
     }
 
     /**
+     * Get brand id for the brand member
+     *
+     * @param int $id ID of the user
+     * @return void
+     */
+    public function get_brand_id($id)
+    {
+        $this->db->select('skearch_brands.id');
+        $this->db->from('skearch_users_brands');
+        $this->db->join('skearch_brands', 'skearch_brands.id = skearch_users_brands.brand_id', 'left');
+        $this->db->where('skearch_users_brands.user_id', $id);
+
+        $query = $this->db->get();
+
+        if ($query->num_rows()) {
+            return $query->row();
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
      * Get user customized settings
      *
      * @param int $id ID of the user

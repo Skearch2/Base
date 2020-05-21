@@ -21,7 +21,34 @@ $this->load->view('my_skearch/templates/start_pagebody');
 ?>
 
 <div class="m-content">
-	Brand Direct content goes here
+
+	<!--begin::Stats-->
+	<div class="m-section">
+		<span class="m-section__sub">
+			Ad stats
+		</span>
+		<div class="m-section__content">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Media</th>
+						<th>Total Clicks</th>
+						<th>Total Impressions</th>
+					</tr>
+				</thead>
+				<?php foreach ($stats as $stat) : ?>
+					<tbody>
+						<tr>
+							<td> <img src="https://media.skearch.com/data/<?= $stat->media ?>" alt="No Media" style="display:block; max-width:200px; max-height:100px;"></td>
+							<td><?= $stat->mediaclicks ?></td>
+							<td><?= $stat->mediaimpressions ?></td>
+						</tr>
+					</tbody>
+				<?php endforeach ?>
+			</table>
+		</div>
+	</div>
+	<!--end::Stats-->
 </div>
 
 <?php
