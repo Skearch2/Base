@@ -351,7 +351,7 @@
 								</div>
 							</li>
 							<?php if ($this->session->userdata('groupid') == 3) : ?>
-								<li class="m-menu__item m-menu__item--submenu  m-menu__item--tab m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="javascript:void(0)" target="_blank" class="m-menu__link" title="Sign in to Brand Direct"><span class="m-menu__link-text">Brand Direct</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+								<li class="m-menu__item m-menu__item--submenu  m-menu__item--tab m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="myskearch/brand" class="m-menu__link" title="Brand Ads Stats"><span class="m-menu__link-text">Brand</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 									<!-- <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 										<ul class="m-menu__subnav">
 											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="inner.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-settings-1"></i><span class="m-menu__link-text">Build Tools</span></a></li>

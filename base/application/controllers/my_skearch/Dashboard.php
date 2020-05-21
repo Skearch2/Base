@@ -32,13 +32,11 @@ class Dashboard extends MY_Controller
 	 *
 	 * @return void
 	 */
-	public function update_settings()
+	public function delete_history()
 	{
-		$search_engine = $this->input->get('search_engine');
+		$delete = $this->Fields_History->delete($this->user_id);
 
-		$update = $this->User->update_settings($this->user_id, $search_engine, NULL);
-
-		if ($update) {
+		if ($delete) {
 			echo json_encode(1);
 		} else {
 			echo json_encode(0);
@@ -72,11 +70,13 @@ class Dashboard extends MY_Controller
 	 *
 	 * @return void
 	 */
-	public function delete_history()
+	public function update_settings()
 	{
-		$delete = $this->Fields_History->delete($this->user_id);
+		$search_engine = $this->input->get('search_engine');
 
-		if ($delete) {
+		$update = $this->User->update_settings($this->user_id, $search_engine, NULL);
+
+		if ($update) {
 			echo json_encode(1);
 		} else {
 			echo json_encode(0);
