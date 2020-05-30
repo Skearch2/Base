@@ -23,20 +23,40 @@ class Dashboard extends MY_Controller
 
 		$this->user_id = $this->session->userdata('id');
 
+		$this->load->model('Fields_History_model', 'Fields_History');
 		$this->load->model('my_skearch/User_model', 'User');
+	}
+
+	/**
+	 * Update user customized settings
+	 *
+	 * @return void
+	 */
+	public function delete_history()
+	{
+		$delete = $this->Fields_History->delete($this->user_id);
+
+		if ($delete) {
+			echo json_encode(1);
+		} else {
+			echo json_encode(0);
+		}
 	}
 
 	public function index()
 	{
-
-
-		if (!file_exists(APPPATH . '/views/my_skearch/pages/dashboard.php')) {
-			show_404();
-		}
-
 		// user settings
 		$user_settings = $this->User->get_settings($this->user_id);
 		$data['search_engine'] = $user_settings->search_engine;
+
+		//fields history
+		$fields_history = $this->Fields_History->get($this->user_id);
+		if ($fields_history) {
+			foreach ($fields_history as $field) {
+				$field->timestamp = $this->_time_elapsed($field->timestamp);
+			}
+		}
+		$data['fields_history'] = $fields_history;
 
 		$data['title'] = ucwords("my skearch | dashboard");
 		$data['page'] = 'dashboard';
@@ -54,16 +74,24 @@ class Dashboard extends MY_Controller
 	{
 		$search_engine = $this->input->get('search_engine');
 
-		$settings = $this->User->update_settings($this->user_id, $search_engine, NULL);
+		$update = $this->User->update_settings($this->user_id, $search_engine, NULL);
 
-		if ($settings) {
-			// $csrf_hash = $this->security->get_csrf_hash();
-			// $this->output
-			//     ->set_content_type('json')
-			//     ->set_output(json_encode($csrf_hash));
-			return TRUE;
+		if ($update) {
+			echo json_encode(1);
 		} else {
-			return FALSE;
+			echo json_encode(0);
 		}
+	}
+
+	/**
+	 * Returns elasped time upto 24 hours
+	 *
+	 * @param timestamp $time
+	 * @return void
+	 */
+	function _time_elapsed($time = false)
+	{
+		$interval =  date_create($time)->diff(date_create('now'));
+		return ($interval->days > 0 ? "--" : ($interval->h < 1 && $interval->i < 1 ? "Just now" : ($interval->h >= 1 ? $interval->h . 'h ago ' : $interval->i . 'm ago')));
 	}
 }

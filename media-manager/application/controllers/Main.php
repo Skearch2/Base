@@ -1,13 +1,15 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Main extends Common_Controller {
+class Main extends Common_Controller
+{
 
-  function __construct() {
+  function __construct()
+  {
     parent::__construct();
 
     // If they are not logged in, direct them to the index page of the welcome class
-    if ( !$this -> ion_auth -> logged_in() ) {
-      redirect( $this -> welcome );
+    if (!$this->ion_auth->logged_in()) {
+      redirect($this->welcome);
     }
   }
 
@@ -18,8 +20,9 @@ class Main extends Common_Controller {
    * @goto ../main/home
    *
    */
-  public function index() {
-    $this -> home();
+  public function index()
+  {
+    $this->home();
   }
 
   /**
@@ -31,8 +34,9 @@ class Main extends Common_Controller {
    * @goto ../view/home
    *
    */
-  public function home() {
-    redirect( $this -> view . '/home' );
+  public function home()
+  {
+    redirect($this->view . '/home');
   }
 
   /**
@@ -43,8 +47,9 @@ class Main extends Common_Controller {
    * @goto ../view/addalbum
    *
    */
-  public function addalbum() {
-    redirect( $this -> view . "/createalbum" );
+  public function addalbum()
+  {
+    redirect($this->view . "/createalbum");
   }
 
   /**
@@ -55,9 +60,10 @@ class Main extends Common_Controller {
    * @goto ../view/addimage
    *
    */
-  public function addimage( $pAlbumType, $pAlbumTypeId, $pKeyword, $pAlbumId ) {
+  public function addimage($pAlbumType, $pAlbumTypeId, $pKeyword, $pAlbumId)
+  {
 
-    redirect( $this -> view . "/createimage/$pAlbumType/$pAlbumTypeId/$pKeyword/$pAlbumId" );
+    redirect($this->view . "/createimage/$pAlbumType/$pAlbumTypeId/$pKeyword/$pAlbumId");
   }
 
   /**
@@ -68,8 +74,9 @@ class Main extends Common_Controller {
    * @goto ../view/addimageglobal/
    *
    */
-  public function addimageglobal( $pAlbumId ) {
-    redirect( $this -> view . "/createimageglobal/$pAlbumId" );
+  public function addimageglobal($pAlbumId)
+  {
+    redirect($this->view . "/createimageglobal/$pAlbumId");
   }
 
   /**
@@ -79,13 +86,14 @@ class Main extends Common_Controller {
    * @goto ../view/addimage/{albumid}
    *
    */
-  public function archiveimage( $pAlbumType, $pAlbumTypeId, $pImageId ) {
-    $albumid = $this -> curler -> archiveImage( $pImageId );
+  public function archiveimage($pAlbumType, $pAlbumTypeId, $pImageId)
+  {
+    $albumid = $this->curler->archiveImage($pImageId);
     //$x = $this -> curler -> toggleimagestatus( $pImageId );
 
 
 
-    $this -> viewalbum( $pAlbumType, $pAlbumTypeId );
+    $this->viewalbum($pAlbumType, $pAlbumTypeId);
   }
 
   /**
@@ -95,13 +103,14 @@ class Main extends Common_Controller {
    * @goto ../view/addimage/{albumtype}{keyword}{albumid}
    *
    */
-  public function archiveimageglobal( $pImageId ) {
+  public function archiveimageglobal($pImageId)
+  {
     //$x = $this -> curler -> toggleimagestatus( $pImageId );
-    $albumid = $this -> curler -> archiveImage( $pImageId );
+    $albumid = $this->curler->archiveImage($pImageId);
 
-        //print_r($x); die();
+    //print_r($x); die();
 
-    $this -> viewalbumglobal( $albumid );
+    $this->viewalbumglobal($albumid);
   }
 
   /**
@@ -114,15 +123,16 @@ class Main extends Common_Controller {
    * @goto ../view/home
    *
    */
-  public function createalbum() {
+  public function createalbum()
+  {
     // Grab the POST data
-    $title        = $this -> input -> post( $this -> config( 'data_title' ), true );
-    $description  = $this -> input -> post( $this -> config( 'data_description' ), true );
-    $albumtype    = $this -> input -> post( $this -> config( 'data_albumtype' ), true );
+    $title        = $this->input->post($this->config('data_title'), true);
+    $description  = $this->input->post($this->config('data_description'), true);
+    $albumtype    = $this->input->post($this->config('data_albumtype'), true);
 
-    $albumid = $this -> curler -> newAlbum( $title, $description, $albumtype );
+    $albumid = $this->curler->newAlbum($title, $description, $albumtype);
 
-    $this -> home();
+    $this->home();
   }
 
   /**
@@ -137,24 +147,27 @@ class Main extends Common_Controller {
    * @goto ../view/home
    *
    */
-  public function createimage( $pAlbumId, $pAlbumType, $pAlbumTypeId ) {
+  public function createimage($pAlbumId, $pAlbumType, $pAlbumTypeId)
+  {
     // Grab the POST data
     $albumid = $pAlbumId;
-    $albumtype    = $this -> input -> post( $this -> config( 'data_albumtype' ), true );
-    $albumtypeid  = $this -> input -> post( $this -> config( 'data_albumtypeid' ), true );
-    $title        = $this -> input -> post( $this -> config( 'data_title' ), true );
-    $description  = $this -> input -> post( $this -> config( 'data_description' ), true );
-    $mediaurl     = $this -> input -> post( $this -> config( 'data_mediaurl' ), true );
-    $url          = $this -> input -> post( $this -> config( 'data_url' ), true );
-    $duration     = $this -> input -> post( $this -> config( 'data_duration' ), true );
+    $albumtype    = $this->input->post($this->config('data_albumtype'), true);
+    $albumtypeid  = $this->input->post($this->config('data_albumtypeid'), true);
+
+    $brandid      = $this->input->post($this->config('data_brandid'), true);
+    $title        = $this->input->post($this->config('data_title'), true);
+    $description  = $this->input->post($this->config('data_description'), true);
+    $mediaurl     = $this->input->post($this->config('data_mediaurl'), true);
+    $url          = $this->input->post($this->config('data_url'), true);
+    $duration     = $this->input->post($this->config('data_duration'), true);
 
     // cURL it
-    $imageid = $this -> curler -> newImage( $albumid, $title, $description, $mediaurl, $url, $duration );
+    $imageid = $this->curler->newImage($albumid, $brandid, $title, $description, $mediaurl, $url, $duration);
 
     // upload media
-    $this -> curler -> upload( $imageid );
+    $this->curler->upload($imageid);
 
-    $this -> viewalbum( $albumtype, $albumtypeid );
+    $this->viewalbum($albumtype, $albumtypeid);
   }
 
   /**
@@ -169,22 +182,25 @@ class Main extends Common_Controller {
    * @goto ../view/home
    *
    */
-  public function createimageglobal( $pAlbumId ) {
+  public function createimageglobal($pAlbumId)
+  {
     // Grab the POST data
     $albumid = $pAlbumId;
-    $title        = $this -> input -> post( $this -> config( 'data_title' ), true );
-    $description  = $this -> input -> post( $this -> config( 'data_description' ), true );
-    $mediaurl     = $this -> input -> post( $this -> config( 'data_mediaurl' ), true );
-    $url          = $this -> input -> post( $this -> config( 'data_url' ), true );
-    $duration     = $this -> input -> post( $this -> config( 'data_duration' ), true );
+
+    $brandid      = $this->input->post($this->config('data_brandid'), true);
+    $title        = $this->input->post($this->config('data_title'), true);
+    $description  = $this->input->post($this->config('data_description'), true);
+    $mediaurl     = $this->input->post($this->config('data_mediaurl'), true);
+    $url          = $this->input->post($this->config('data_url'), true);
+    $duration     = $this->input->post($this->config('data_duration'), true);
 
     // cURL it
-    $imageid = $this -> curler -> newImage( $albumid, $title, $description, $mediaurl, $url, $duration );
+    $imageid = $this->curler->newImage($albumid, $brandid, $title, $description, $mediaurl, $url, $duration);
 
     // upload media
-    $this -> curler -> upload( $imageid );
+    $this->curler->upload($imageid);
 
-    $this -> viewalbumglobal ( $pAlbumId );
+    $this->viewalbumglobal($pAlbumId);
   }
 
   /**
@@ -193,11 +209,12 @@ class Main extends Common_Controller {
    *
    * @goto ../view/home
    */
-  public function deletealbum( $pAlbumId ) {
+  public function deletealbum($pAlbumId)
+  {
     if ($pAlbumId != 1) {
-      $this -> curler -> deleteAlbum( $pAlbumId );
+      $this->curler->deleteAlbum($pAlbumId);
     }
-    $this -> home();
+    $this->home();
   }
 
   /**
@@ -207,10 +224,11 @@ class Main extends Common_Controller {
    * @goto ../view/addimage/{albumid}
    *
    */
-  public function deleteimage( $pAlbumType, $pAlbumTypeId, $pImageId ) {
-    $albumid = $this -> curler -> deleteImage( $pImageId );
+  public function deleteimage($pAlbumType, $pAlbumTypeId, $pImageId)
+  {
+    $albumid = $this->curler->deleteImage($pImageId);
 
-    $this -> viewalbum( $pAlbumType, $pAlbumTypeId );
+    $this->viewalbum($pAlbumType, $pAlbumTypeId);
   }
 
   /**
@@ -220,10 +238,11 @@ class Main extends Common_Controller {
    * @goto ../view/addimage/{albumtype}{keyword}{albumid}
    *
    */
-  public function deleteimageglobal( $pImageId ) {
-    $albumid = $this -> curler -> deleteImage( $pImageId );
+  public function deleteimageglobal($pImageId)
+  {
+    $albumid = $this->curler->deleteImage($pImageId);
 
-    $this -> viewalbumglobal( $albumid );
+    $this->viewalbumglobal($albumid);
   }
 
   /**
@@ -237,8 +256,9 @@ class Main extends Common_Controller {
    * @goto ../view/editalbum/{albumid}
    *
    */
-  public function editalbum( $pAlbumId ) {
-    redirect( $this -> view . "/editalbum/$pAlbumId" );
+  public function editalbum($pAlbumId)
+  {
+    redirect($this->view . "/editalbum/$pAlbumId");
   }
 
   /**
@@ -252,8 +272,9 @@ class Main extends Common_Controller {
    * @goto ../view/editimage/{albumtype}{keyword}{imageid}
    *
    */
-  public function editimage( $pAlbumType, $pAlbumTypeId, $pKeyword, $pImageId ) {
-    redirect( $this -> view . "/editimage/$pAlbumType/$pAlbumTypeId/$pKeyword/$pImageId" );
+  public function editimage($pAlbumType, $pAlbumTypeId, $pKeyword, $pImageId)
+  {
+    redirect($this->view . "/editimage/$pAlbumType/$pAlbumTypeId/$pKeyword/$pImageId");
   }
 
   /**
@@ -267,8 +288,9 @@ class Main extends Common_Controller {
    * @goto ../view/editimage/global{imageid}
    *
    */
-  public function editimageglobal( $pImageId ) {
-    redirect( $this -> view . "/editimageglobal/$pImageId" );
+  public function editimageglobal($pImageId)
+  {
+    redirect($this->view . "/editimageglobal/$pImageId");
   }
 
   /**
@@ -276,17 +298,19 @@ class Main extends Common_Controller {
    *  with this user.
    *
    */
-  public function setdefault( $pAlbumId ) {
-    $this -> curler -> setDefault( $pAlbumId );
-    $this -> home();
+  public function setdefault($pAlbumId)
+  {
+    $this->curler->setDefault($pAlbumId);
+    $this->home();
   }
 
   /**
    * A function to request the ImageServer to toggle the image view status
    *
    */
-  public function setimageactivestatus( $pImageId ) {
-    $result = $this -> curler -> setImageActiveStatus( $pImageId );
+  public function setimageactivestatus($pImageId)
+  {
+    $result = $this->curler->setImageActiveStatus($pImageId);
     echo $result->item->status;
   }
 
@@ -302,18 +326,19 @@ class Main extends Common_Controller {
    * @goto ../view/home
    *
    */
-  public function updatealbum( $pAlbumId ) {
+  public function updatealbum($pAlbumId)
+  {
     // Grab the POST data
     $albumid      = $pAlbumId;
-    $title        = $this -> input -> post( $this -> config( 'data_title' ), true );
-    $description  = $this -> input -> post( $this -> config( 'data_description' ), true );
-    $albumtype    = $this -> input -> post( $this -> config( 'data_albumtype' ), true );
-    $albumtypeid  = $this -> input -> post( $this -> config( 'data_albumtypeid' ), true );
+    $title        = $this->input->post($this->config('data_title'), true);
+    $description  = $this->input->post($this->config('data_description'), true);
+    $albumtype    = $this->input->post($this->config('data_albumtype'), true);
+    $albumtypeid  = $this->input->post($this->config('data_albumtypeid'), true);
 
     // cURL it
-    $this -> curler -> updateAlbum( $albumid, $title, $description, $albumtype, $albumtypeid );
+    $this->curler->updateAlbum($albumid, $title, $description, $albumtype, $albumtypeid);
 
-    redirect( $this -> view . "/viewalbumglobal/$pAlbumId" );
+    redirect($this->view . "/viewalbumglobal/$pAlbumId");
   }
 
   /**
@@ -330,29 +355,31 @@ class Main extends Common_Controller {
    * @goto ../view/createimage/{albumid}
    *
    */
-  public function updateimage( $pAlbumId, $pImageId ) {
+  public function updateimage($pAlbumId, $pImageId)
+  {
     // Grab the POST data
     $imageid      = $pImageId;
     $albumid      = $pAlbumId;
-    $albumtype    = $this -> input -> post( $this -> config( 'data_albumtype' ), true );
-    $albumtypeid  = $this -> input -> post( $this -> config( 'data_albumtypeid' ), true );
-    $title        = $this -> input -> post( $this -> config( 'data_title' ), true );
-    $description  = $this -> input -> post( $this -> config( 'data_description' ), true );
-    $url          = $this -> input -> post( $this -> config( 'data_url' ), true );
-    $mediaurl     = $this -> input -> post( $this -> config( 'data_mediaurl' ), true );
-    $duration     = $this -> input -> post( $this -> config( 'data_duration' ), true );
+    $albumtype    = $this->input->post($this->config('data_albumtype'), true);
+    $albumtypeid  = $this->input->post($this->config('data_albumtypeid'), true);
+
+    $brandid      = $this->input->post($this->config('data_brandid'), true);
+    $title        = $this->input->post($this->config('data_title'), true);
+    $description  = $this->input->post($this->config('data_description'), true);
+    $url          = $this->input->post($this->config('data_url'), true);
+    $mediaurl     = $this->input->post($this->config('data_mediaurl'), true);
+    $duration     = $this->input->post($this->config('data_duration'), true);
 
     // cURL it
-    $this -> curler -> updateImage( $imageid, $albumid, $title, $description, $mediaurl, $url, $duration );
+    $this->curler->updateImage($imageid, $albumid, $brandid, $title, $description, $mediaurl, $url, $duration);
 
     // upload media
-    $this -> curler -> upload( $imageid );
+    $this->curler->upload($imageid);
 
     if (isset($albumtype) && isset($albumtypeid)) {
-        $this -> viewalbum( $albumtype, $albumtypeid );
-    }
-    else {
-        $this -> viewalbumglobal( $albumid );
+      $this->viewalbum($albumtype, $albumtypeid);
+    } else {
+      $this->viewalbumglobal($albumid);
     }
   }
 
@@ -390,31 +417,34 @@ class Main extends Common_Controller {
    * @goto ../view/uploadimage/{imageid}
    *
    */
-  public function uploadimage( $pImageId ) {
-    redirect( $this -> view . "/uploadimage/$pImageId" );
+  public function uploadimage($pImageId)
+  {
+    redirect($this->view . "/uploadimage/$pImageId");
   }
 
   /**
    * A function to request the ImageServer to update media duration
    *
    */
-  public function updatemediaduration($pMediaId, $pDuration) {
-   // cURL it
-   $curl = $this -> curler -> updateMediaDuration( $pMediaId, $pDuration );
+  public function updatemediaduration($pMediaId, $pDuration)
+  {
+    // cURL it
+    $curl = $this->curler->updateMediaDuration($pMediaId, $pDuration);
 
-   print_r( $curl);
+    print_r($curl);
   }
 
   /**
    * A function to request the ImageServer to update media priorites
    *
    */
-  public function updatemediapriorities() {
+  public function updatemediapriorities()
+  {
     // Grab the POST data
-   $mediapriorities = $this -> input -> post( $this -> config( 'data_mediapriorities' ), true );
+    $mediapriorities = $this->input->post($this->config('data_mediapriorities'), true);
 
-   // cURL it
-   $this -> curler -> updatemediapriorities( $mediapriorities );
+    // cURL it
+    $this->curler->updatemediapriorities($mediapriorities);
   }
 
   /**
@@ -425,8 +455,9 @@ class Main extends Common_Controller {
    * @goto ../view/viewalbum/{albumtype}/{albumtypeid}
    *
    */
-  public function viewalbum( $pAlbumType, $pAlbumTypeId ) {
-    redirect( $this -> view . "/viewalbum/$pAlbumType/$pAlbumTypeId" );
+  public function viewalbum($pAlbumType, $pAlbumTypeId)
+  {
+    redirect($this->view . "/viewalbum/$pAlbumType/$pAlbumTypeId");
   }
 
   /**
@@ -437,10 +468,8 @@ class Main extends Common_Controller {
    * @goto ../view/viewalbum/{albumid}
    *
    */
-  public function viewalbumglobal( $pAlbumId, $pArchived=0 ) {
-    redirect( $this -> view . "/viewalbumglobal/$pAlbumId/$pArchived" );
+  public function viewalbumglobal($pAlbumId, $pArchived = 0)
+  {
+    redirect($this->view . "/viewalbumglobal/$pAlbumId/$pArchived");
   }
-
 }
-
-?>

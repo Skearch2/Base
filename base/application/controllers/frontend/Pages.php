@@ -28,9 +28,10 @@ class Pages extends MY_Controller
   {
     parent::__construct();
 
-    $this->load->model('my_skearch/User_model', 'User');
     $this->load->model('Category_model', 'Category_model');
+    $this->load->model('Fields_History_model', 'Fields_History');
     $this->load->model('admin_panel/Option_model_admin', 'Option_model');
+    $this->load->model('my_skearch/User_model', 'User');
 
     // set default skearch theme
     if (empty($this->session->userdata('theme'))) {
@@ -206,10 +207,6 @@ class Pages extends MY_Controller
   public function browse_field($umbrella_name, $field_name)
   {
 
-    if (!file_exists(APPPATH . '/views/frontend/field.php')) {
-      show_404();
-    }
-
     // redirect if umbrella is not found
     if (!$this->Category_model->get_category_id($umbrella_name)) {
       redirect(site_url() . '/browse', 'refresh');
@@ -302,6 +299,21 @@ class Pages extends MY_Controller
         $data['results'] = $this->Category_model->get_field_suggestions($field_id);
         $data['umbrella_name'] = ucwords(urldecode($umbrella_name));
         $data['field_name'] = urldecode($field_name);
+
+        // save the field in the field history
+        if ($this->ion_auth->logged_in()) {
+
+          $user_data = array(
+            'user_id' => $this->session->userdata('id'),
+            'field_id' => $field_id
+          );
+
+          if ($this->Fields_History->exists($user_data)) {
+            $this->Fields_History->update($user_data);
+          } else {
+            $this->Fields_History->create($user_data);
+          }
+        }
 
         // set page title
         $data['title'] = ucwords(urldecode($umbrella_name) . " - " . urldecode($field_name));

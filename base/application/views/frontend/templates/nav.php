@@ -11,7 +11,7 @@
                     <a href="myskearch/auth/logout" class="btn btn-danger" role="button">Logout</a>
                 <?php else : ?>
 				    <a href="myskearch/auth/login" class="btn btn-danger" role="button">Log in</a>
-                    <span>Not a Member?</span>
+                    <!--span>Not a Member?</span-->
                     <a href="myskearch/auth/signup" class="btn btn-danger" role="button">Sign Up</a>
                 <?php endif ?>
                 <a class="theme-change" onclick="changeTheme()" title="Change theme">

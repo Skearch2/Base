@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * -----------------------------------------------------------------------------
@@ -70,6 +70,7 @@ $config['data_lastname']    = 'lastname';
 $config['data_telephone']   = 'telephone';
 $config['data_confirm']     = 'confirmpassword';
 
+$config['data_brandid']     = 'brandid';
 $config['data_title']       = 'title';
 $config['data_description'] = 'description';
 $config['data_mediaurl']    = 'mediaurl';
@@ -105,6 +106,7 @@ $config['frontend_view']    = 'template';
 
 $config['bootstrap_theme']  = 'bootstrap-theme.css';
 
+$config['css_thumbnail_class']    = 'thumbnail_img';
 $config['css_img_class']    = 'constrained_img';
 $config['css_original_img_class']    = 'original_img';
 
@@ -120,7 +122,5 @@ $config['image_icon']       = 'image-2x.png';
  *
  */
 
-$config['base_domain'] = 'https://dev.skearch.com/';
+$config['base_domain'] = BASE_DOMAIN;
 $config['api_get_data'] = 'https://dev.skearch.com/browse/get_data/';
-
-?>

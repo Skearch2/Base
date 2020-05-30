@@ -47,10 +47,19 @@ a:hover, a:visited, a:link, a:active
     /* min-width: 300px; */
 }
 
-.constrained_img {
+.thumbnail_img {
   display:block;
   max-width:100px;
   max-height:100px;
+}
+
+.constrained_img {
+  display:block;
+  max-width:1000px;
+  max-height:auto;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 .original_img {

@@ -54,9 +54,9 @@ class User_model extends CI_Model
             }
         } else {
             $data = array(
-                'name'      => $this->input->post('name'),
+                'name'      => $this->input->post('name_b'),
                 'brandname' => $this->input->post('brandname'),
-                'email'     => $this->input->post('email'),
+                'email'     => $this->input->post('email_b'),
                 'phone'     => $this->input->post('phone')
             );
 
@@ -66,6 +66,28 @@ class User_model extends CI_Model
             } else {
                 return FALSE;
             }
+        }
+    }
+
+    /**
+     * Get brand id for the brand member
+     *
+     * @param int $id ID of the user
+     * @return void
+     */
+    public function get_brand_id($id)
+    {
+        $this->db->select('skearch_brands.id');
+        $this->db->from('skearch_users_brands');
+        $this->db->join('skearch_brands', 'skearch_brands.id = skearch_users_brands.brand_id', 'left');
+        $this->db->where('skearch_users_brands.user_id', $id);
+
+        $query = $this->db->get();
+
+        if ($query->num_rows()) {
+            return $query->row();
+        } else {
+            return FALSE;
         }
     }
 
