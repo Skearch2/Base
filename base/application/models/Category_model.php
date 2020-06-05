@@ -310,4 +310,21 @@ class Category_model extends CI_Model
         $query = $this->db->get();
         return $query->result()[0]->enabled;
     }
+
+    /**
+     * Return all brand keywords and url
+     *
+     * @return void
+     */
+    public function get_brands_keywords()
+    {
+        $this->db->select('keywords, url');
+        $this->db->from('skearch_brands_keywords');
+        $this->db->where('approved', 1);
+        $this->db->where('active', 1);
+
+        $query = $this->db->get();
+
+        return $query->result();
+    }
 }

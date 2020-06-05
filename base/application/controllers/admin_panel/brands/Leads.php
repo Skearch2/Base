@@ -37,18 +37,24 @@ class Leads extends MY_Controller
         $this->load->model('admin_panel/brands/leads_model', 'Leads');
     }
 
-    public function index()
+    /**
+     * Delete a brandlead
+     *
+     * @param int $id
+     * @return void
+     */
+    public function delete($id)
     {
-        if (!$this->ion_auth_acl->has_permission('brandleads_get') && !$this->ion_auth->is_admin()) {
-            // set page title
-            $data['title'] = ucwords('access denied');
-            $this->load->view('admin_panel/errors/error_403', $data);
+        if (!$this->ion_auth_acl->has_permission('brandleads_delete') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
         } else {
+            $delete = $this->Leads->delete($id);
 
-            $data['title'] = ucfirst("Brand Leads");
-
-            // Load page content
-            $this->load->view('admin_panel/pages/brands/leads', $data);
+            if ($delete) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
         }
     }
 
@@ -76,24 +82,18 @@ class Leads extends MY_Controller
         }
     }
 
-    /**
-     * Delete a brandlead
-     *
-     * @param int $id
-     * @return void
-     */
-    public function delete($id)
+    public function index()
     {
-        if (!$this->ion_auth_acl->has_permission('brandleads_delete') && !$this->ion_auth->is_admin()) {
-            echo json_encode(-1);
+        if (!$this->ion_auth_acl->has_permission('brandleads_get') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
         } else {
-            $delete = $this->Leads->delete($id);
 
-            if ($delete) {
-                echo json_encode(1);
-            } else {
-                echo json_encode(0);
-            }
+            $data['title'] = ucfirst("Brand Leads");
+
+            // Load page content
+            $this->load->view('admin_panel/pages/brands/leads', $data);
         }
     }
 }

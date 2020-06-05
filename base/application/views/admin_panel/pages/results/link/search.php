@@ -396,6 +396,9 @@ $this->load->view('admin_panel/templates/close_html');
 
 	// search for links and fetch into datatable
 	function searchLinks(keywords) {
+		// escape special charactors
+		keywords = encodeURIComponent(keywords)
+
 		if (keywords === "") $('#m_table_1').DataTable().clear().draw();
 		else $('#m_table_1').DataTable().ajax.url("<?= site_url() ?>admin/results/links/get/keywords/" + keywords).load();
 	}
