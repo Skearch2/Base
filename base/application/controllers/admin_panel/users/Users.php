@@ -75,6 +75,7 @@ class Users extends MY_Controller
                 if (in_array($group, array(3))) {
                     $this->form_validation->set_rules('brand', 'Brand', 'required');
                     $this->form_validation->set_rules('brand_id', 'Brand ID', 'numeric');
+                    $this->form_validation->set_rules('key_member', 'Key Member', 'required');
                 }
                 if (strlen($this->input->post('phone'))) {
                     $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
@@ -143,7 +144,8 @@ class Users extends MY_Controller
                 // link user to brand
                 if ($group == 3) {
                     $brand_id = $this->input->post('brand_id');
-                    $this->Brand->link_user($user_id, $brand_id);
+                    $is_key_member = $this->input->post('key_member');
+                    $this->Brand->link_user($user_id, $brand_id, $is_key_member);
                 }
 
                 if ($create) {
@@ -488,7 +490,9 @@ class Users extends MY_Controller
                 // $this->form_validation->set_rules('organization', 'Organization', 'trim');
                 // only show to brand member group
                 if (in_array($group, array(3))) {
-                    $this->form_validation->set_rules('brand', 'Brand', 'trim|required');
+                    $this->form_validation->set_rules('brand', 'Brand', 'required');
+                    $this->form_validation->set_rules('brand_id', 'Brand ID', 'numeric');
+                    $this->form_validation->set_rules('key_member', 'Key Member', 'required');
                 }
                 if (strlen($this->input->post('phone'))) {
                     $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
@@ -577,7 +581,8 @@ class Users extends MY_Controller
                 // link user to brand
                 if ($group == 3) {
                     $brand_id = $this->input->post('brand_id');
-                    $this->Brand->link_user($id, $brand_id);
+                    $is_key_member = $this->input->post('key_member');
+                    $this->Brand->link_user($id, $brand_id, $is_key_member);
                 }
 
                 if ($update) {

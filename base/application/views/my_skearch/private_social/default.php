@@ -13,7 +13,7 @@ $this->load->view('my_skearch/templates/start_body');
 $this->load->view('my_skearch/templates/start_page');
 
 // Load header and menu
-$this->load->view('my_skearch/templates/header');
+$this->load->view('my_skearch/templates/header_menu');
 
 // Start page body
 $this->load->view('my_skearch/templates/start_pagebody');

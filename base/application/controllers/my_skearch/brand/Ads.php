@@ -4,7 +4,7 @@ if (!defined('BASEPATH')) {
 }
 
 /**
- * File:    ~/application/controller/Admin_new.php
+ * File:    ~/application/controller/my_skearch/brand/Ads.php
  *
  * This is the My Skearch controller.
  * @package		Skearch
@@ -12,7 +12,7 @@ if (!defined('BASEPATH')) {
  * @copyright	Copyright (c) 2019
  * @version		2.0
  */
-class Brand extends MY_Controller
+class Ads extends MY_Controller
 {
     public function __construct()
     {
@@ -28,15 +28,18 @@ class Brand extends MY_Controller
 
         $this->user_id = $this->session->userdata('id');
 
+        // defines section in myskearch
+        $this->section = 'brand';
+
         $this->load->model('my_skearch/User_model', 'User');
     }
 
     public function index()
     {
-        $brand_id = $this->User->get_brand_id($this->user_id)->id;
+        $brand_id = $this->User->get_brand_details($this->user_id)->brand_id;
 
         // curl request for media box
-        $this->curl->create("https://media.skearch.com/api/npm/activity/$brand_id");
+        $this->curl->create("https://media.skearch.com/api/npm/activity/{$brand_id}");
         $this->curl->{'get'}();
         $this->curl->http_header('X-API-KEY', '374986acc824c8621fa528d04740f308');
         $this->curl->http_header('X-I-USER', 1);
@@ -46,9 +49,11 @@ class Brand extends MY_Controller
         // parse xml to array
         $data['stats'] = new SimpleXMLElement($xml);
 
-        $data['title'] = ucwords("my skearch | brands");
+        $data['section'] = $this->section;
+        $data['page'] = 'ads';
+        $data['title'] = ucwords("my skearch | brands - ads");
 
         // Load page content
-        $this->load->view('my_skearch/brand/default', $data);
+        $this->load->view('my_skearch/brand/ads', $data);
     }
 }

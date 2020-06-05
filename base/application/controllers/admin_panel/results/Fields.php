@@ -252,11 +252,7 @@ class Fields extends MY_Controller
 
             $toggle = $this->fields->update($id, $field_data);
 
-            if ($toggle) {
-                echo json_encode(1);
-            } else {
-                echo json_encode(0);
-            }
+            echo json_encode($status);
         }
     }
 

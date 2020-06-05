@@ -48,7 +48,7 @@
 											<li id="submenu-brands-leads" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands/leads"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Leads</span></a></li>
 											<li class="m-menu__item" aria-haspopup="true" m-menu-link-redirect="1"><a href="https://crm.skearch.com/admin" target="_blank" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">CRM</span></a></li>
 											<li class="m-menu__item" aria-haspopup="true" m-menu-link-redirect="1"><a href="<?= site_url("media-manager") ?>" target="_blank" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Media Engine</span></a></li>
-											<li id="submenu-brands-products" class="m-menu__item" aria-haspopup="true"><a href="#" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Product</span></a></li>
+											<li id="submenu-brands-keywords" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands/keywords"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Keywords</span></a></li>
 											<li id="submenu-brands-sales" class="m-menu__item" aria-haspopup="true"><a href="#" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Sales</span></a></li>
 										</ul>
 									</div>

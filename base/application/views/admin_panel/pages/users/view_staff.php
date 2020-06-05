@@ -204,7 +204,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Gender</th>
 						<th>Level</th>
 						<th>Status</th>
-						<th width=150>Actions</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 			</table>

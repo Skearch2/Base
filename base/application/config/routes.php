@@ -98,8 +98,20 @@ $route['myskearch/digital_assets'] = 'my_skearch/digital_assets';
 /* Private social */
 $route['myskearch/private_social'] = 'my_skearch/private_social';
 
-/* Brand direct */
-$route['myskearch/brand'] = 'my_skearch/brand';
+/* 
+    Brand 
+*/
+
+// Ads
+$route['myskearch/brand/ads'] = 'my_skearch/brand/ads';
+$route['myskearch/brand'] = 'my_skearch/brand/ads/index';
+
+// Keywords
+$route['myskearch/brand/keywords'] = 'my_skearch/brand/keywords';
+$route['myskearch/brand/keywords/add'] = 'my_skearch/brand/keywords/create';
+$route['myskearch/brand/keywords/delete/id/(:num)'] = 'my_skearch/brand/keywords/delete/$1';
+$route['myskearch/brand/keywords/get'] = 'my_skearch/brand/keywords/get';
+$route['myskearch/brand/keywords/toggle/id/(:num)'] = 'my_skearch/brand/keywords/toggle/$1';
 
 /* Profile */
 $route['myskearch/profile'] = 'my_skearch/profile';
@@ -255,6 +267,14 @@ $route['admin/brand/update/id/(:num)']          = 'admin_panel/brands/brands/upd
 $route['admin/brands']                          = 'admin_panel/brands/brands';
 $route['admin/brands/get']                      = 'admin_panel/brands/brands/get';
 $route['admin/brands/search/(:any)']            = 'admin_panel/brands/brands/search/$1';
+
+// Keywords
+$route['admin/brands/keywords']                         = 'admin_panel/brands/keywords';
+$route['admin/brands/keywords/delete/id/(:num)']           = 'admin_panel/brands/keywords/delete/$1';
+$route['admin/brands/keywords/approve/id/(:num)']       = 'admin_panel/brands/keywords/approve/$1';
+$route['admin/brands/keywords/get']                     = 'admin_panel/brands/keywords/get';
+$route['admin/brands/keywords/toggle/id/(:num)']        = 'admin_panel/brands/keywords/toggle/$1';
+
 
 
 /* Link Checker */

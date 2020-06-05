@@ -202,7 +202,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Email Address</th>
 						<th>Gender</th>
 						<th>Status</th>
-						<th width=150>Actions</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 			</table>

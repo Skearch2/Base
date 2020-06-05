@@ -203,7 +203,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Gender</th>
 						<th>Status</th>
 						<th>Payment</th>
-						<th width=150>Actions</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 			</table>
