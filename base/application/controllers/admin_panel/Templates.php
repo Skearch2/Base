@@ -35,7 +35,7 @@ class Templates extends MY_Controller
             redirect('admin/auth/login');
         }
 
-        $this->load->model('admin_panel/Template_model_admin', 'Template_model');
+        $this->load->model('admin_panel/email/Template_model', 'Template_model');
     }
 
     /**
@@ -55,13 +55,13 @@ class Templates extends MY_Controller
             $this->form_validation->set_rules('subject', 'Subject', 'required|trim');
 
             if ($this->form_validation->run() === FALSE) {
-                $query = $this->Template_model->get_template($template_name);
+                $template = $this->Template_model->get_template($template_name);
 
-                if ($query) {
+                if ($template) {
 
                     $data = array(
-                        'subject' => $query->subject,
-                        'body'    => $query->body
+                        'subject' => $template->subject,
+                        'body'    => $template->body
                     );
 
                     $data['title'] = ucwords("Email Template - " . ucwords($template_name));

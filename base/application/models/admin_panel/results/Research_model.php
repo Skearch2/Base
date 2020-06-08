@@ -16,28 +16,6 @@ if (!defined('BASEPATH')) {
 class Research_model extends CI_Model
 {
     /**
-     * Get a research link or list of research links
-     *
-     * @param int $id An id of a research link
-     * 
-     * @return object
-     */
-    public function get($id = NULL)
-    {
-        $this->db->select('rl.id, rl.title, rl.description_short, rl.url, rl.display_url, rl.field_id, rl.enabled, rl.redirect, DATE_FORMAT(rl.date_created, "%m-%d-%Y") as date_created, field.title as field');
-        $this->db->from('skearch_research_links as rl');
-        if ($id !== NULL) {
-            $this->db->where('rl.id', $id);
-            $this->db->join('skearch_subcategories as field', 'rl.field_id = field.id');
-            $query = $this->db->get();
-            return $query->row();
-        }
-        $this->db->join('skearch_subcategories as field', 'rl.field_id = field.id');
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    /**
      * Creae a research link
      *
      * @param String $description
@@ -81,6 +59,27 @@ class Research_model extends CI_Model
         }
     }
 
+    /**
+     * Get a research link or list of research links
+     *
+     * @param int $id An id of a research link
+     * 
+     * @return object
+     */
+    public function get($id = NULL)
+    {
+        $this->db->select('rl.id, rl.title, rl.description_short, rl.url, rl.display_url, rl.field_id, rl.enabled, rl.redirect, DATE_FORMAT(rl.date_created, "%m-%d-%Y") as date_created, field.title as field');
+        $this->db->from('skearch_research_links as rl');
+        if ($id !== NULL) {
+            $this->db->where('rl.id', $id);
+            $this->db->join('skearch_subcategories as field', 'rl.field_id = field.id');
+            $query = $this->db->get();
+            return $query->row();
+        }
+        $this->db->join('skearch_subcategories as field', 'rl.field_id = field.id');
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     /**
      * Save research link

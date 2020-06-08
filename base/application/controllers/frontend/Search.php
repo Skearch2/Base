@@ -23,7 +23,7 @@ class Search extends MY_Controller
         parent::__construct();
         $this->user_id = $this->session->userdata('id');
 
-        $this->load->model('Category_model', 'categoryModel');
+        $this->load->model('Category_model');
         $this->load->model('my_skearch/User_model', 'User');
     }
 
@@ -61,7 +61,7 @@ class Search extends MY_Controller
            redirect to the field  page */
 
         foreach ($sub_cat as $item) {
-            $ptitle = $this->categoryModel->get_category_title($item->parent_id)[0]->title;
+            $ptitle = $this->Category_model->get_category_title($item->parent_id)[0]->title;
             if (strtolower($item->title) === strtolower($keyword)) {
                 //redirect(site_url("browse/" . $ptitle . "/" . $item->title), 'refresh');
                 echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $ptitle . "/" . $item->title)));
@@ -80,7 +80,7 @@ class Search extends MY_Controller
         }
 
         /* If keyword matches with adlink's url then redirect to that url */
-        if ($this->categoryModel->get_brandlinks_status()) {
+        if ($this->Category_model->get_brandlinks_status()) {
             foreach ($links as $item) {
                 if ($item->www) {
                     $urlhost = $this->get_domainInfo($item->www);
