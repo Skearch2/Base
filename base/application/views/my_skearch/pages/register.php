@@ -39,22 +39,25 @@ $this->load->view('my_skearch/templates/head');
 						<fieldset class="m-login__form m-form">
 							<input id="is_regular_signup" name="is_regular_signup" type="hidden" value="<?= $is_regular; ?>">
 							<div id="m-login__form m-form__user" style=<?= $is_regular ? 'display:block' : 'display:none' ?>>
-								<div>Personal Details:</div>
-								<div class="form-group m-form__group">
+								<!-- <div class="form-group m-form__group">
 									<input class="form-control m-input" type="text" placeholder="Name" name="name" value="<?= set_value('name'); ?>">
+								</div> -->
+								<div class="form-group m-form__group">
+									<input class="form-control m-input" type="text" placeholder="Skearch ID or username" name="skearch_id" value="<?= set_value('skearch_id'); ?>">
+								</div>
+								<div class="form-group m-form__group">
+									<input class="form-control m-input" type="text" placeholder="Email" name="email" value="<?= set_value('email'); ?>">
 								</div>
 								<div class="form-group m-form__group row">
-									Gender
 									<select class="form-control m-input" id="dropdown" name="gender" style="padding:0.9em;">
-										<option value="" <?= set_select('gender', '', TRUE) ?>>Select</option>
+										<option value="" <?= set_select('gender', '', TRUE) ?>>Gender</option>
 										<option value="male" <?= set_select('gender', 'male') ?>>Male</option>
 										<option value="female" <?= set_select('gender', 'female') ?>>Female</option>
 									</select>
 								</div>
 								<div class="form-group m-form__group row">
-									Age Group
 									<select class="form-control m-input" id="dropdown" name="age_group" style="padding:0.9em;">
-										<option value="" <?= set_select('age_group', '', TRUE) ?>>Select</option>
+										<option value="" <?= set_select('age_group', '', TRUE) ?>>Age Group</option>
 										<option value="1-17" <?= set_select('age_group', '1-17') ?>>1-17</option>
 										<option value="18-22" <?= set_select('age_group', '18-22') ?>>18-22</option>
 										<option value="23-30" <?= set_select('age_group', '23-30') ?>>23-30</option>
@@ -62,18 +65,11 @@ $this->load->view('my_skearch/templates/head');
 										<option value="51+" <?= set_select('age_group', '51+') ?>>51+</option>
 									</select>
 								</div>
-								<div>Login Details:</div>
-								<div class="form-group m-form__group">
-									<input class="form-control m-input" type="text" placeholder="Skearch ID" name="skearch_id" value="<?= set_value('skearch_id'); ?>">
-								</div>
 								<div class="form-group m-form__group">
 									<input class="form-control m-input" type="password" placeholder="Password" name="password">
 								</div>
 								<div class="form-group m-form__group">
 									<input class="form-control m-input" type="password" placeholder="Confirm Password" name="password2">
-								</div>
-								<div class="form-group m-form__group">
-									<input class="form-control m-input" type="text" placeholder="Email" name="email" value="<?= set_value('email'); ?>">
 								</div>
 								<div class="row form-group m-form__group m-login__form-sub">
 									<div class="col m--align-left">

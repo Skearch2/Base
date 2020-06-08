@@ -348,10 +348,10 @@ class Auth extends MY_Controller
         $is_regular = (null !== $this->input->post("is_regular_signup")) ?  $this->input->post("is_regular_signup") : 1;
 
         if (!empty($is_regular) && $is_regular == 1) {
-            $this->form_validation->set_rules('name', 'Name', 'alpha|trim');
+            // $this->form_validation->set_rules('name', 'Name', 'alpha|trim');
             $this->form_validation->set_rules('gender', 'Gender', 'required');
             $this->form_validation->set_rules('age_group', 'Age group', 'required');
-            $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']|trim');
+            $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']|trim', array('is_unique' => 'The Skearch ID or username already exists.'));
             $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
             $this->form_validation->set_rules('password2', 'Confirm Password', 'required|matches[password]');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[skearch_users.email]|trim');
