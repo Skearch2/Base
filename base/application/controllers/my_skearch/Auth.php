@@ -71,6 +71,12 @@ class Auth extends MY_Controller
             $this->email->message($message);
             $this->email->send();
 
+            // log email
+            $this->Log_model->create(array(
+                'type' => 'Welcome',
+                'user_id' => $id
+            ));
+
             // redirect them to the auth page
             $this->session->set_flashdata('success', $this->ion_auth->messages());
             redirect("myskearch/auth/login");
