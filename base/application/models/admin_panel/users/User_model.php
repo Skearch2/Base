@@ -95,7 +95,7 @@ class User_model extends CI_Model
         $this->db->from('skearch_users');
         $this->db->join('skearch_users_groups', 'skearch_users_groups.user_id = skearch_users.id', 'left');
         $this->db->join('skearch_groups', 'skearch_groups.id = skearch_users_groups.group_id', 'left');
-        $this->db->where_in('skearch_groups.tag', array('brand', 'premium', 'regular'));
+        $this->db->where_in('skearch_groups.id', array(3, 4, 5));
         $query = $this->db->get();
 
         return $query->result();

@@ -23,6 +23,9 @@ class Dashboard extends MY_Controller
 
 		$this->user_id = $this->session->userdata('id');
 
+		// defines section in myskearch
+		$this->section = 'dashboard';
+
 		$this->load->model('Fields_History_model', 'Fields_History');
 		$this->load->model('my_skearch/User_model', 'User');
 	}
@@ -58,8 +61,8 @@ class Dashboard extends MY_Controller
 		}
 		$data['fields_history'] = $fields_history;
 
+		$data['section'] = "dashboard";
 		$data['title'] = ucwords("my skearch | dashboard");
-		$data['page'] = 'dashboard';
 
 		// Load page content
 		$this->load->view('my_skearch/pages/dashboard', $data);

@@ -16,20 +16,6 @@ if (!defined('BASEPATH')) {
 class Leads_model extends CI_Model
 {
     /**
-     * Get all brandleads
-     *
-     * @return object
-     */
-    public function get()
-    {
-        $this->db->select('*');
-        $this->db->from('skearch_brand_leads');
-        $query = $this->db->get();
-
-        return $query->result();
-    }
-
-    /**
      * Delete a brandlead
      *
      * @param int $id
@@ -45,5 +31,19 @@ class Leads_model extends CI_Model
         } else {
             return false;
         }
+    }
+
+    /**
+     * Get all brandleads
+     *
+     * @return object
+     */
+    public function get()
+    {
+        $this->db->select('*');
+        $this->db->from('skearch_brand_leads');
+        $query = $this->db->get();
+
+        return $query->result();
     }
 }

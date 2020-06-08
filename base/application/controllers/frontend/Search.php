@@ -4,13 +4,14 @@ if (!defined('BASEPATH')) {
 }
 
 /**
- * File:    ~/application/controller/Search.php
+ * File:    ~/application/controller/frontend/Search.php
  *
  * This model fetch data based on category and its subcategory.
  * It also provides category listing.
+ * 
  * @package        Skearch
  * @author         Zaawar Ejaz <zaawar@yahoo.com>
- * @copyright      Copyright (c) 2019
+ * @copyright      Copyright (c) 2020
  * @version        2.0
  */
 
@@ -22,18 +23,18 @@ class Search extends MY_Controller
         parent::__construct();
         $this->user_id = $this->session->userdata('id');
 
-        $this->load->model('admin_panel/Category_model', 'categoryModel');
+        $this->load->model('Category_model');
         $this->load->model('my_skearch/User_model', 'User');
     }
 
     public function index()
     {
-
-        $keyword = $this->input->get('search_keyword');
-
         $cat = $this->Category_model->get_categories();
         $sub_cat = $this->Category_model->get_subcategories();
         $links = $this->Category_model->get_results();
+        $brands_keywords = $this->Category_model->get_brands_keywords();
+
+        $keyword = $this->input->get('search_keyword');
 
         /* If keyword matches with the title of umbrella page or given keywords of umbrella page then
            redirect to the umbrella page */
@@ -60,7 +61,7 @@ class Search extends MY_Controller
            redirect to the field  page */
 
         foreach ($sub_cat as $item) {
-            $ptitle = $this->categoryModel->get_category_title($item->parent_id)[0]->title;
+            $ptitle = $this->Category_model->get_category_title($item->parent_id)[0]->title;
             if (strtolower($item->title) === strtolower($keyword)) {
                 //redirect(site_url("browse/" . $ptitle . "/" . $item->title), 'refresh');
                 echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $ptitle . "/" . $item->title)));
@@ -78,12 +79,12 @@ class Search extends MY_Controller
             }
         }
 
-        /* If keyword matches with adlink's url then redirect to the url */
-        if ($this->categoryModel->get_brandlinks_status()) {
+        /* If keyword matches with adlink's url then redirect to that url */
+        if ($this->Category_model->get_brandlinks_status()) {
             foreach ($links as $item) {
                 if ($item->www) {
                     $urlhost = $this->get_domainInfo($item->www);
-                    if (strtolower($urlhost['host']) === strtolower($keyword)) {
+                    if (strcmp(strtolower($urlhost['host']), strtolower($keyword)) == 0) {
                         echo json_encode(array("type" => "external", "url" => $item->www));
                         return;
                     }
@@ -91,10 +92,18 @@ class Search extends MY_Controller
             }
         }
 
+        /* If keyword matches with brand keywords then redirect to brand specified url */
+        foreach ($brands_keywords as $item) {
+            if (strcmp(strtolower($item->keywords), strtolower($keyword)) == 0) {
+                echo json_encode(array("type" => "external", "url" => $item->url));
+                return;
+            }
+        }
+
         // default skearch search engine
         $search_url = 'http://www.duckduckgo.com/?q=';
 
-        // get user set search engine
+        // get user preferred search engine
         if ($this->ion_auth->logged_in()) {
 
             $settings = $this->User->get_settings($this->user_id, 'search_engine');
@@ -120,6 +129,7 @@ class Search extends MY_Controller
     {
         // regex can be replaced with parse_url
         preg_match("/^(https|http|ftp):\/\/(.*?)\//", "$url/", $matches);
+
         $parts = explode(".", $matches[2]);
         $tld = array_pop($parts);
         $host = array_pop($parts);

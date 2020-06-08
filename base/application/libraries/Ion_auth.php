@@ -73,7 +73,8 @@ class Ion_auth
         $this->load->library('session');
 
         $this->load->model('ion_auth_model');
-        $this->load->model('admin_panel/Template_model_admin', 'Template_model');
+        $this->load->model('admin_panel/email/Template_model', 'Template_model');
+        $this->load->model('admin_panel/email/Log_model', 'Log_model');
 
         $this->_cache_user_in_group = &$this->ion_auth_model->_cache_user_in_group;
 
@@ -170,6 +171,7 @@ class Ion_auth
                     $this->email->message($message);
 
                     if ($this->email->send()) {
+                        $this->log_email('Forgot password', $user->id);
                         $this->set_message('forgot_password_successful');
                         return true;
                     }
@@ -289,6 +291,7 @@ class Ion_auth
                 $this->email->message($message);
 
                 if ($this->email->send() === true) {
+                    $this->log_email('Activation', $id);
                     $this->ion_auth_model->trigger_events(['post_account_creation', 'post_account_creation_successful', 'activation_email_successful']);
                     $this->set_message('activation_email_successful');
                     return $id;
@@ -378,6 +381,21 @@ class Ion_auth
         $admin_group = $this->config->item('admin_group', 'ion_auth');
 
         return $this->ion_auth_model->in_group($admin_group, $id);
+    }
+
+    /**
+     * Log email
+     *
+     * @return boolean
+     */
+    public function log_email($type, $user_id)
+    {
+        $query = $this->Log_model->create(array(
+            'type' => $type,
+            'user_id' => $user_id
+        ));
+
+        return $this->db->affected_rows();
     }
 
     /**

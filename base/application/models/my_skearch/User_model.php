@@ -70,17 +70,17 @@ class User_model extends CI_Model
     }
 
     /**
-     * Get brand id for the brand member
+     * Get brand details for the user
+     * Contails brand id for and boolean to if the user is primary brand member
      *
      * @param int $id ID of the user
      * @return void
      */
-    public function get_brand_id($id)
+    public function get_brand_details($id)
     {
-        $this->db->select('skearch_brands.id');
+        $this->db->select('brand_id, primary_brand_user');
         $this->db->from('skearch_users_brands');
-        $this->db->join('skearch_brands', 'skearch_brands.id = skearch_users_brands.brand_id', 'left');
-        $this->db->where('skearch_users_brands.user_id', $id);
+        $this->db->where('user_id', $id);
 
         $query = $this->db->get();
 
@@ -155,7 +155,6 @@ class User_model extends CI_Model
      */
     public function update_settings($id, $search_engine, $theme)
     {
-
         if (!is_null($search_engine))            $data['search_engine']          = $search_engine;
         if (!is_null($theme))                    $data['theme']                  = $theme;
 

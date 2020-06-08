@@ -13,7 +13,7 @@ $this->load->view('my_skearch/templates/start_body');
 $this->load->view('my_skearch/templates/start_page');
 
 // Load header and menu
-$this->load->view('my_skearch/templates/header');
+$this->load->view('my_skearch/templates/header_menu');
 
 // Start page body
 $this->load->view('my_skearch/templates/start_pagebody');
@@ -36,19 +36,30 @@ $this->load->view('my_skearch/templates/start_pagebody');
 						<th>Total Impressions</th>
 					</tr>
 				</thead>
-				<?php foreach ($stats as $stat) : ?>
+				<?php if (empty($stats)) : ?>
 					<tbody>
 						<tr>
-							<td> <img src="https://media.skearch.com/data/<?= $stat->media ?>" alt="No Media" style="display:block; max-width:200px; max-height:100px;"></td>
-							<td><?= $stat->mediaclicks ?></td>
-							<td><?= $stat->mediaimpressions ?></td>
+							<td></td>
+							<td>No Ads found</td>
+							<td></td>
 						</tr>
 					</tbody>
-				<?php endforeach ?>
+				<?php else : ?>
+					<?php foreach ($stats as $stat) : ?>
+						<tbody>
+							<tr>
+								<td> <img src="https://media.skearch.com/data/<?= $stat->media ?>" alt="No Media" style="display:block; max-width:200px; max-height:100px;"></td>
+								<td><?= $stat->mediaclicks ?></td>
+								<td><?= $stat->mediaimpressions ?></td>
+							</tr>
+						</tbody>
+					<?php endforeach ?>
+				<?php endif ?>
 			</table>
 		</div>
 	</div>
 	<!--end::Stats-->
+
 </div>
 
 <?php
