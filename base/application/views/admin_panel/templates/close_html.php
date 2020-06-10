@@ -9,10 +9,12 @@
 
 		<!--begin::Page Scripts -->
 		<script>
+			// mask US number to US format
 			$(document).ready(function() {
 				$('#phone').mask('(000) 000-0000');
 			});
 
+			// settings for toastr notifications
 			toastr.options = {
 				"closeButton": false,
 				"debug": false,
@@ -28,8 +30,17 @@
 				"showEasing": "swing",
 				"hideEasing": "linear",
 				"showMethod": "fadeIn",
-				"hideMethod": "fadeOut"
+				"hideMethod": "fadeOut",
 			};
+
+			// timeout for bootstrap alert - remove after 5 seconds
+			// $(function() {
+			// 	setTimeout(function() {
+			// 		if ($(".alert").is(":visible")) {
+			// 			$(".alert").fadeOut("slow");
+			// 		}
+			// 	}, 5000)
+			// });
 		</script>
 
 		<script src="<?= site_url(ASSETS); ?>/admin_panel/vendors/custom/jquery-ui/jquery-ui.bundle.js" type="text/javascript"></script>

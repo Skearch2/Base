@@ -111,6 +111,5 @@ $this->load->view('admin_panel/templates/close_html');
 
 <!-- Sidemenu class -->
 <script>
-	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-users-permissions").addClass("m-menu__item  m-menu__item--active");
+	$("#menu-permissions").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 </script>

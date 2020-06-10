@@ -35,9 +35,14 @@
 			</div>
 		</div><!-- /.container -->
 	</nav><!-- /.navbar -->
-	
+
 	<div class="container">
-	<a class="navbar-brand" href="https://<?= $_SERVER['HTTP_HOST'] ; ?>">
-		<img src="<?= BASE_URL; ?>/images/logo.jpg" alt="<?= $settings['siteTitle']; ?>">
-	</a>
-</div>
+		<a class="navbar-brand" href="https://<?= $_SERVER['HTTP_HOST']; ?>">
+			<img src="<?= BASE_URL; ?>/images/logo.jpg" alt="<?= $settings['siteTitle']; ?>">
+		</a>
+		<div class="col-md-5 col-xs-12 pull-right text-right">
+			<a href="<?= BASE_URL; ?>">
+				<button type="button" class="btn btn-primary">News</button>
+			</a>
+		</div>
+	</div>

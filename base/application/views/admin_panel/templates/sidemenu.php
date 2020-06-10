@@ -9,13 +9,6 @@
 				<h4 class="m-menu__section-text">Controls</h4>
 				<i class="m-menu__section-icon flaticon-more-v2"></i>
 			</li>
-			<li id="menu-frontend" class="m-menu__item m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-buildings"></i><span class="m-menu__link-text">Front-end</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
-				<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
-					<ul class="m-menu__subnav">
-						<li id="submenu-frontend-homepage_items" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/frontend/homepage"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Homepage Items</span></a></li>
-					</ul>
-				</div>
-			</li>
 			<li id="menu-users" class="m-menu__item m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-users"></i><span class="m-menu__link-text">Users</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 				<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 					<ul class="m-menu__subnav">
@@ -24,7 +17,6 @@
 						<li id="submenu-users-staff" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/group/id/1"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Staff</span></a></li>
 						<li id="submenu-users-brand_users" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/group/id/3"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Brand Users</span></a></li>
 						<li id="submenu-users-groups" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/groups"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Groups</span></a></li>
-						<li id="submenu-users-permissions" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/permissions"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Permissions</span></a></li>
 					</ul>
 				</div>
 			</li>
@@ -33,9 +25,16 @@
 					<ul class="m-menu__subnav">
 						<li id="submenu-results-umbrellas" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/umbrellas/status/all"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Umbrellas</span></a></li>
 						<li id="submenu-results-fields" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/fields/status/all"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Fields</span></a></li>
-						<li id="submenu-results-related_umbrellas" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/frontend/umbrellas"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Related Umbrellas</span></a></li>
-						<li id="submenu-results-related_fields" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/frontend/fields"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Related Fields</span></a></li>
 						<li id="submenu-results-links" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/links/search"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Add Links</span></a></li>
+						<li id="submenu-suggestions" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover" m-menu-link-redirect="1"><a href="javascript:;" class="m-menu__link m-menu__toggle"><i class="m-menu__link-bullet m-menu__link-bullet--line"><span></span></i><span class="m-menu__link-text">Suggestions</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+							<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
+								<ul class="m-menu__subnav">
+									<li id="homepage" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/suggestions/homepage"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Homepage</span></a></li>
+									<li id="umbrellas" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/suggestions/umbrellas"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Umbrellas</span></a></li>
+									<li id="fields" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/suggestions/fields"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Fields</span></a></li>
+								</ul>
+							</div>
+						</li>
 						<li id="submenu-results-research" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/research/list"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Research</span></a></li>
 					</ul>
 				</div>
@@ -67,15 +66,15 @@
 						<li id="submenu-email-message_members" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/message"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Message Members</span></a></li>
 						<li id="submenu-email-invite" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/invite"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Invite</span></a></li>
 						<li id="submenu-email-logs" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/logs"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Logs</span></a></li>
-					</ul>
-				</div>
-			</li>
-			<li id="menu-templates" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-file-2 "></i><span class="m-menu__link-text">Templates</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
-				<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
-					<ul class="m-menu__subnav">
-						<li id="submenu-templates-welcome" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/templates/welcome"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Welcome Email</span></a></li>
-						<li id="submenu-templates-activation" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/templates/activation"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Activation</span></a></li>
-						<li id="submenu-templates-forget" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/templates/forgotten_password"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Forget Password</span></a></li>
+						<li id="submenu-templates" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover" m-menu-link-redirect="1"><a href="javascript:;" class="m-menu__link m-menu__toggle"><i class="m-menu__link-bullet m-menu__link-bullet--line"><span></span></i><span class="m-menu__link-text">Templates</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+							<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
+								<ul class="m-menu__subnav">
+									<li id="welcome" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/templates/welcome"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Welcome Email</span></a></li>
+									<li id="activation" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/templates/activation"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Activation</span></a></li>
+									<li id="forget" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/templates/forgotten_password"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Forget Password</span></a></li>
+								</ul>
+							</div>
+						</li>
 					</ul>
 				</div>
 			</li>
@@ -84,6 +83,7 @@
 				<i class="m-menu__section-icon flaticon-more-v2"></i>
 			</li>
 			<li id="menu-options" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/option"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-settings"></i><span class="m-menu__link-text">Options</span></a></li>
+			<li id="menu-permissions" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/permissions"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-lock"></i><span class="m-menu__link-text">Permissions</span></a></li>
 		</ul>
 	</div>
 

@@ -203,7 +203,7 @@ $this->load->view('admin_panel/templates/close_html');
     $(suggestionList).empty();
 
     $.ajax({
-      url: '<?= site_url(); ?>admin/results/frontend/fields/get/id/' + fieldId,
+      url: '<?= site_url(); ?>admin/results/suggestions/fields/get/id/' + fieldId,
       type: 'GET',
       beforeSend: function() {
         $('#suggestionPanel').fadeOut(100)
@@ -275,5 +275,6 @@ $this->load->view('admin_panel/templates/close_html');
 <!-- Sidemenu class -->
 <script>
   $("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-  $("#submenu-results-related_fields").addClass("m-menu__item  m-menu__item--active");
+  $("#submenu-suggestions").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+  $("#fields").addClass("m-menu__item  m-menu__item--active");
 </script>

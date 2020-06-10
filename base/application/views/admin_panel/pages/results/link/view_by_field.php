@@ -113,25 +113,64 @@ $this->load->view('admin_panel/templates/subheader');
 			</div>
 		</div>
 
-		<!--begin::Modal-->
-		<div class="modal fade" id="m_modal_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-			<div class="modal-dialog" role="document">
+		<!-- begin::Move or duplicate modal dialog -->
+		<div class="modal fade" id="modal_option" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLongTitle">Result Details</h5>
+						<h5 class="modal-title">Move or Duplicate Link</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<div class="modal-body"></div>
+					<div class="modal-body">
+						<form class="m-form m-form--fit m-form--label-align-right">
+							<input type="hidden" id="link_id" name="link_id" value="">
+							<div class="form-group m-form__group row">
+								<label for="field" class="col-2 col-form-label">Field</label>
+								<div class="col-7">
+									<select class="form-control" name="field_id" onchange="getPriorities(this.value)" required>
+										<option id="field" selected value="">Select</option>
+										<?php foreach ($fields as $field) : ?>
+											<option value="<?= $field->id ?> <?= set_select("field", $field->id) ?>"><?= $field->title ?></option>
+										<?php endforeach ?>
+									</select>
+								</div>
+							</div>
+							<div class="form-group m-form__group row">
+								<label for="priority" class="col-2 col-form-label">Priority</label>
+								<div class="col-7">
+									<select class="form-control" id="priority" name="priority" disabled>
+									</select>
+								</div>
+								<div id="priority-loader" class="m-loader m-loader--brand" style="width: 30px; display: none;"></div>
+							</div>
+							<div class="m-form__group form-group row">
+								<label for="action" class="col-2 col-form-label">Action</label>
+								<div class="col-7">
+									<div class="m-radio-inline">
+										<label class="m-radio">
+											<input type="radio" name="option-select" value="1" checked> Duplicate
+											<span></span>
+										</label>
+										<label class="m-radio">
+											<input type="radio" name="option-select" value="2"> Move
+											<span></span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" id="btn-modal-submit" class="btn btn-primary" onclick="moveOrDuplicate()">Submit</button>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<!--end::Modal-->
+		<!--end::Move or duplicate modal dialog-->
 
 		<div class="m-portlet__body">
 
@@ -177,6 +216,141 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
+	// get priorites of the links for the given field
+	function getPriorities(fieldId = false) {
+		if (!fieldId) {
+			$.ajax({
+				url: '<?= site_url(); ?>/admin/results/links/priorities/field/id/' + <?= $field_id; ?>,
+				type: 'GET',
+				success: function(result) {
+					obj = JSON.parse(result);
+					$('#m_table_1').fadeIn("fast");
+				},
+				error: function(err) {
+					toastr.error("", "Unable to process request.");
+				}
+			});
+		} else {
+
+			var selectElement = document.getElementById("priority");
+			selectElement.disabled = true;
+			while (selectElement.length > 0) {
+				selectElement.remove(0);
+			}
+
+			if (fieldId == "") return;
+			$.ajax({
+				url: '<?= site_url('admin/results/links/priorities/field/id/'); ?>' + fieldId,
+				type: 'GET',
+				beforeSend: function(xhr, options) {
+					$("#priority-loader").css("display", "inline-block");
+					setTimeout(function() {
+						$.ajax($.extend(options, {
+							beforeSend: $.noop
+						}));
+					}, 500);
+					return false;
+				},
+				success: function(data, status) {
+					var obj = JSON.parse(data);
+					var option = document.createElement("option");
+					option.text = "Not Set";
+					option.value = "";
+					selectElement.add(option);
+
+					for (i = 1; i <= 255; i++) {
+						var option = document.createElement("option");
+						var array = searchArray(i, obj);
+						if (array) {
+							option.text = i;
+							option.value = i;
+							option.style.backgroundColor = "#99ff99";
+							option.disabled = true;
+						} else {
+							option.text = i;
+							option.value = i;
+						}
+						selectElement.add(option);
+						selectElement.disabled = false;
+					}
+				},
+				complete: function() {
+					$("#priority-loader").css("display", "none");
+				},
+				error: function(xhr, status, error) {
+					toastr.error("Unable to process request.");
+				}
+			});
+		}
+	}
+
+	// Move or duplicate a link to a field
+	function moveOrDuplicate() {
+		var id = $("[name=link_id]").val();
+		var field_id = $("[name=field_id]").val().trim();
+		var priority = $("[name=priority]").val();
+		var option = $("[name=option-select]:checked").val();
+		var url;
+		if (option == 1) {
+			url = '<?= site_url(); ?>admin/results/link/duplicate/id/' + id + '/field/' + field_id + '/priority/' + priority;
+		} else if (option == 2) {
+			url = '<?= site_url(); ?>admin/results/link/move/id/' + id + '/field/' + field_id + '/priority/' + priority;
+		}
+		$.ajax({
+			url: url,
+			type: 'GET',
+			beforeSend: function(xhr, options) {
+				$("#btn-modal-submit").attr("class", "btn m-btn btn-success m-loader m-loader--light m-loader--right");
+				setTimeout(function() {
+					$.ajax($.extend(options, {
+						beforeSend: $.noop
+					}));
+				}, 2000);
+				return false;
+			},
+			success: function(data, status) {
+				$("#modal_option").modal('hide');
+				if (data == -1) {
+					toastr.warning("", "You have no permission.");
+				} else if ((data == 1)) {
+					// hide the link from the list
+					if (option == 1) {
+						toastr.success("The link has been duplicated.");
+					} else if (option == 2) {
+						toastr.success("The link has been moved.");
+						// $("#" + id).fadeOut("slow");
+					}
+					getPriorities(); // get updated priorities
+					$('#m_table_1').DataTable().ajax.reload(null, false);
+				}
+			},
+			error: function(xhr, status, error) {
+				$("#modal_option").modal('hide');
+				toastr.error("Unable to process request.");
+			}
+		});
+	}
+
+	// move of duplicate dialog
+	function moveOrDuplicateDialog(id) {
+		$.ajax({
+			url: '<?= site_url(); ?>admin/results/link/get/id/' + id, // get link information
+			type: 'GET',
+			contentType: 'json',
+			success: function(data, status) {
+				$("#link_id").val(data.id);
+				$("#field").val(data.field_id);
+				$("#field").html(data.field);
+				$("#btn-modal-submit").attr("class", "btn m-btn btn-success");
+				$("#btn-modal-submit").show();
+				getPriorities(data.field_id);
+			},
+			error: function(xhr, status, error) {
+				toastr.error("Unable to process request.");
+			}
+		});
+	}
+
 	// Updates link priority
 	function updatePriority(id, priority) {
 		$('#m_table_1').fadeOut("slow");
@@ -193,7 +367,7 @@ $this->load->view('admin_panel/templates/close_html');
 				}
 			},
 			error: function(err) {
-				toastr.error("", "Unable to update priority.");
+				toastr.error("", "Unable to process request.");
 			}
 		});
 	}
@@ -229,22 +403,8 @@ $this->load->view('admin_panel/templates/close_html');
 		});
 	}
 
-	function getPriorities() {
-		$.ajax({
-			url: '<?= site_url(); ?>/admin/results/links/priorities/field/id/' + <?= $field_id; ?>,
-			type: 'GET',
-			success: function(result) {
-				obj = JSON.parse(result);
-				$('#m_table_1').fadeIn("fast");
-			},
-			error: function(err) {
-				toastr.error("", "Unable to get priorities for the link.");
-			}
-		});
-	}
-
 	// helper method to search into priorities
-	function _searchArray(key, array) {
+	function searchArray(key, array) {
 		for (var i = 0; i < array.length; i++) {
 			if (array[i].priority == key) {
 				return array[i];
@@ -342,7 +502,7 @@ $this->load->view('admin_panel/templates/close_html');
 										"value": i
 									});
 								}
-								if (_searchArray(i, obj)) {
+								if (searchArray(i, obj)) {
 									if (i != 0) {
 										$option.attr('disabled', 'disabled');
 										$option.attr('style', 'background-color:#99ff99');
@@ -361,6 +521,7 @@ $this->load->view('admin_panel/templates/close_html');
 							var row = (n.row).toString().slice(-1);
 							//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
 							return '<a href="<?= site_url() . "admin/results/link/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+								'<a onclick=moveOrDuplicateDialog(' + e['id'] + ') data-toggle="modal" data-target="#modal_option" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Move/Duplicate"><i class="la la-copy"></i></a>' +
 								'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="BL"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
 								'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>' +
 								$select.prop("outerHTML")

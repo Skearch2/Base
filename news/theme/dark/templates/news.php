@@ -7,7 +7,8 @@ if (!is_numeric($this->uri->segment($totSegments))) {
 } else if (is_numeric($this->uri->segment($totSegments))) {
 	$offset = $this->uri->segment($totSegments);
 }
-$limit = 1;
+// Number of posts per page
+$limit = 5;
 ?>
 
 <div class="container content-padding">

@@ -154,29 +154,29 @@ $this->load->view('my_skearch/templates/js_global');
 		});
 	}
 
-	//Toggles keywords status
-	function toggle(id, row) {
-		$.ajax({
-			url: '<?= site_url('myskearch/brand/keywords/toggle/id/'); ?>' + id,
-			type: 'GET',
-			success: function(data, status) {
-				if (data == 0) {
-					document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
-					document.getElementById("tablerow" + row).innerHTML = "Inactive";
-					toastr.success("", "Status updated.");
-				} else if (data == 1) {
-					$("#tablerow" + row).prop("onclick", null).off("click");
-					// $("#tablerow" + row).removeStyle('cursor');
-					document.getElementById("tablerow" + row).className = "m-badge m-badge--warning m-badge--wide";
-					document.getElementById("tablerow" + row).innerHTML = "Pending Approval";
-					toastr.success("", "Request has been sent.");
-				}
-			},
-			error: function(xhr, status, error) {
-				toastr.error("", "Unable to process request.");
-			}
-		});
-	}
+	// //Toggles keywords status
+	// function toggle(id, row) {
+	// 	$.ajax({
+	// 		url: '<?= site_url('myskearch/brand/keywords/toggle/id/'); ?>' + id,
+	// 		type: 'GET',
+	// 		success: function(data, status) {
+	// 			if (data == 0) {
+	// 				document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
+	// 				document.getElementById("tablerow" + row).innerHTML = "Inactive";
+	// 				toastr.success("", "Status updated.");
+	// 			} else if (data == 1) {
+	// 				$("#tablerow" + row).prop("onclick", null).off("click");
+	// 				// $("#tablerow" + row).removeStyle('cursor');
+	// 				document.getElementById("tablerow" + row).className = "m-badge m-badge--warning m-badge--wide";
+	// 				document.getElementById("tablerow" + row).innerHTML = "Pending Approval";
+	// 				toastr.success("", "Request has been sent.");
+	// 			}
+	// 		},
+	// 		error: function(xhr, status, error) {
+	// 			toastr.error("", "Unable to process request.");
+	// 		}
+	// 	});
+	// }
 
 	var DatatablesDataSourceAjaxServer = {
 		init: function() {
@@ -187,6 +187,8 @@ $this->load->view('my_skearch/templates/js_global');
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
+				filter: 0,
+				info: 0,
 				ajax: "<?= site_url(); ?>myskearch/brand/keywords/get",
 				columns: [{
 					data: "#"
@@ -208,7 +210,7 @@ $this->load->view('my_skearch/templates/js_global');
 						<?php if ($is_primary_brand_user) : ?>
 							return '<a onclick=deleteKeyword("' + e['id'] + '","' + keywords + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 						<?php else : ?>
-							return ""
+							return "-"
 						<?php endif ?>
 					}
 				}, {
@@ -229,13 +231,8 @@ $this->load->view('my_skearch/templates/js_global');
 							}
 						};
 						if (e['approved'] == 0) return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[2].class + ' m-badge--wide">' + s[2].title + '</span>'
-						else {
-							<?php if ($is_primary_brand_user) : ?>
-								return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
-							<?php else : ?>
-								return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + '</span>'
-							<?php endif ?>
-						}
+						else
+							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + '</span>'
 					}
 				}, {
 					targets: 2,
