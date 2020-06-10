@@ -209,7 +209,7 @@ $this->load->view('admin_panel/templates/close_html');
 						render: function(a, t, e, n) {
 							var s = {
 								2: {
-									title: "Pending Approval",
+									title: "Approval Needed",
 									class: "m-badge--warning"
 								},
 								1: {
