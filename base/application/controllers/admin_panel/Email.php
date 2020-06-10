@@ -118,7 +118,7 @@ class Email extends MY_Controller
      */
     public function logs_clear()
     {
-        if (!$this->ion_auth_acl->has_permission('email_logs_delete') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('email_logs') && !$this->ion_auth->is_admin()) {
             // set page title
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
@@ -244,7 +244,7 @@ class Email extends MY_Controller
      */
     public function templates($type)
     {
-        if (!$this->ion_auth_acl->has_permission('email_template') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('email_templates') && !$this->ion_auth->is_admin()) {
             // set page title
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);

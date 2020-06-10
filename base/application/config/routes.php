@@ -156,11 +156,11 @@ $route['admin/users/groups']                   = 'admin_panel/users/groups';
 $route['admin/users/groups/get']               = 'admin_panel/users/groups/get';
 
 // Permissions
-$route['admin/users/permission/create']           = 'admin_panel/users/permissions/create';
-$route['admin/users/permission/delete/id/(:num)'] = 'admin_panel/users/permissions/delete/$1';
-$route['admin/users/permission/update/id/(:num)'] = 'admin_panel/users/permissions/update/$1';
-$route['admin/users/permissions']                 = 'admin_panel/users/permissions';
-$route['admin/users/permissions/get']             = 'admin_panel/users/permissions/get';
+$route['admin/permission/create']           = 'admin_panel/permissions/create';
+$route['admin/permission/delete/id/(:num)'] = 'admin_panel/permissions/delete/$1';
+$route['admin/permission/update/id/(:num)'] = 'admin_panel/permissions/update/$1';
+$route['admin/permissions']                 = 'admin_panel/permissions';
+$route['admin/permissions/get']             = 'admin_panel/permissions/get';
 
 
 /* 
@@ -206,11 +206,11 @@ $route['admin/results/links/search']                                           =
 $route['admin/results/links/status/(all|active|inactive)']                     = 'admin_panel/results/links/index/$1';
 
 // Frontend
-$route['admin/results/frontend/homepage']                = 'admin_panel/results/frontend/homepage';
-$route['admin/results/frontend/fields']                  = 'admin_panel/results/frontend/field_suggestions';
-$route['admin/results/frontend/umbrellas']               = 'admin_panel/results/frontend/umbrella_suggestions';
-$route['admin/results/frontend/fields/get/id/(:num)']    = 'admin_panel/results/frontend/get_field_suggestions/$1';
-$route['admin/results/frontend/umbrellas/get/id/(:num)'] = 'admin_panel/results/frontend/get_umbrella_suggestions/$1';
+$route['admin/results/suggestions/homepage']                = 'admin_panel/results/suggestions/homepage';
+$route['admin/results/suggestions/fields']                  = 'admin_panel/results/suggestions/field_suggestions';
+$route['admin/results/suggestions/umbrellas']               = 'admin_panel/results/suggestions/umbrella_suggestions';
+$route['admin/results/suggestions/fields/get/id/(:num)']    = 'admin_panel/results/suggestions/get_field_suggestions/$1';
+$route['admin/results/suggestions/umbrellas/get/id/(:num)'] = 'admin_panel/results/suggestions/get_umbrella_suggestions/$1';
 
 // Research
 $route['admin/results/research/add']              = 'admin_panel/results/research/create';

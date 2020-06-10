@@ -78,17 +78,17 @@ class Admin extends CI_Controller
 			$this->login();
 		}
 	}
-	function ajaxLogin()
-	{
-		$username = $this->input->post('username');
-		$password = md5($this->input->post('password') . SALT);
-		$result = $this->Hoosk_model->login($username, $password);
-		if ($result) {
-			echo 1;
-		} else {
-			echo 0;
-		}
-	}
+	// function ajaxLogin()
+	// {
+	// 	$username = $this->input->post('username');
+	// 	$password = md5($this->input->post('password') . SALT);
+	// 	$result = $this->Hoosk_model->login($username, $password);
+	// 	if ($result) {
+	// 		echo 1;
+	// 	} else {
+	// 		echo 0;
+	// 	}
+	// }
 	public function logout()
 	{
 		$data = array(

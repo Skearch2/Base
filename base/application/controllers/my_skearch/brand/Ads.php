@@ -6,10 +6,11 @@ if (!defined('BASEPATH')) {
 /**
  * File:    ~/application/controller/my_skearch/brand/Ads.php
  *
- * This is the My Skearch controller.
+ * Controller for Brand Ads.
+ * 
  * @package		Skearch
  * @author		Iftikhar Ejaz <ejaziftikhar@gmail.com>
- * @copyright	Copyright (c) 2019
+ * @copyright	Copyright (c) 2020
  * @version		2.0
  */
 class Ads extends MY_Controller
@@ -54,6 +55,6 @@ class Ads extends MY_Controller
         $data['title'] = ucwords("my skearch | brands - ads");
 
         // Load page content
-        $this->load->view('my_skearch/brand/ads', $data);
+        $this->load->view('my_skearch/pages/brand/ads', $data);
     }
 }

@@ -56,8 +56,8 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									</div>
 								<?php endforeach ?>
 							</div>
+							<br><button type="button" class="btn btn-danger btn-sm float-right" onclick="clearHistory()">Clear History</button><br>
 						</div>
-						<button type="button" class="btn btn-danger" onclick="clearHistory()">Clear</button>
 					<?php else : ?>
 						<i>No recent history</i>
 					<?php endif ?>
@@ -65,8 +65,6 @@ $this->load->view('my_skearch/templates/start_pagebody');
 			</div>
 		</div>
 	</div>
-
-
 
 	<!--	Button - Set Skearch as homepage -->
 	<div class='home-footer-btn'>

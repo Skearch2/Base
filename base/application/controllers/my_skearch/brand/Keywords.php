@@ -7,10 +7,11 @@ if (!defined('BASEPATH')) {
 /**
  * File:    ~/application/controller/my_skearch/brands/keywords.php
  *
- * This is the My Skearch controller.
+ * Controller for Brand Keywords.
+ * 
  * @package		Skearch
  * @author		Iftikhar Ejaz <ejaziftikhar@gmail.com>
- * @copyright	Copyright (c) 2019
+ * @copyright	Copyright (c) 2020
  * @version		2.0
  */
 class Keywords extends MY_Controller
@@ -128,30 +129,30 @@ class Keywords extends MY_Controller
         $data['title'] = ucwords("my skearch | brands - keywords");
 
         // Load page content
-        $this->load->view('my_skearch/brand/keywords', $data);
+        $this->load->view('my_skearch/pages/brand/keywords', $data);
     }
 
-    /**
-     * Toggle brand keywords status
-     *
-     * @param int $id Keyword ID
-     * @return void
-     */
-    public function toggle($id)
-    {
-        $user_data = array(
-            'active' => 0,
-            'approved' => 0,
-        );
+    // /**
+    //  * Toggle brand keywords status
+    //  *
+    //  * @param int $id Keyword ID
+    //  * @return void
+    //  */
+    // public function toggle($id)
+    // {
+    //     $user_data = array(
+    //         'active' => 0,
+    //         'approved' => 0,
+    //     );
 
-        $update = $this->Keywords->update($id, $user_data);
+    //     $update = $this->Keywords->update($id, $user_data);
 
-        if ($update) {
-            echo json_encode(1);
-        } else {
-            echo json_encode(0);
-        }
-    }
+    //     if ($update) {
+    //         echo json_encode(1);
+    //     } else {
+    //         echo json_encode(0);
+    //     }
+    // }
 
     /**
      * Callback function to validate url

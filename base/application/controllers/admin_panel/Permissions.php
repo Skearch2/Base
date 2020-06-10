@@ -3,7 +3,7 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 /**
- * File: ~/application/controller/admin_panel/users/Permissions.php
+ * File: ~/application/controller/admin_panel/Permissions.php
  * 
  * Controller for users groups
  *
@@ -43,7 +43,7 @@ class Permissions extends MY_Controller
         if ($this->form_validation->run() === false) {
 
             $data['title'] = ucwords('create permission');
-            $this->load->view('admin_panel/pages/users/permissions/create', $data);
+            $this->load->view('admin_panel/pages/permissions/create', $data);
         } else {
 
             $key = $this->input->post('key');
@@ -55,7 +55,7 @@ class Permissions extends MY_Controller
             } else {
                 $this->session->set_flashdata('success', 0);
             }
-            redirect('admin/users/permission/create');
+            redirect('admin/permission/create');
         }
     }
 
@@ -79,21 +79,19 @@ class Permissions extends MY_Controller
      */
     public function get()
     {
-        if ($this->ion_auth_acl->has_permission('permissions_get') or $this->ion_auth->is_admin()) {
-            $total_permissions = $this->db->count_all_results('permissions');
-            $permissions = $this->ion_auth_acl->permissions();
-            $result = array(
-                'iTotalRecords' => $total_permissions,
-                'iTotalDisplayRecords' => $total_permissions,
-                'sEcho' => 0,
-                'sColumns' => "",
-                'aaData' => $permissions,
-            );
+        $total_permissions = $this->db->count_all_results('permissions');
+        $permissions = $this->ion_auth_acl->permissions();
+        $result = array(
+            'iTotalRecords' => $total_permissions,
+            'iTotalDisplayRecords' => $total_permissions,
+            'sEcho' => 0,
+            'sColumns' => "",
+            'aaData' => $permissions,
+        );
 
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode($result));
-        }
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
     }
 
     /**
@@ -105,7 +103,7 @@ class Permissions extends MY_Controller
     {
         $data['title'] = ucwords("Permissions");
 
-        $this->load->view('admin_panel/pages/users/permissions/view', $data);
+        $this->load->view('admin_panel/pages/permissions/view', $data);
     }
 
     /**
@@ -116,7 +114,7 @@ class Permissions extends MY_Controller
      */
     public function update($id)
     {
-        $this->form_validation->set_rules('description', 'Description', 'required|trim|min_length[8]');
+        $this->form_validation->set_rules('description', 'Description', 'trim|required|min_length[8]');
 
         if ($this->form_validation->run() === false) {
 
@@ -128,7 +126,7 @@ class Permissions extends MY_Controller
             );
 
             $data['title'] = ucwords('edit permission');
-            $this->load->view('admin_panel/pages/users/permissions/edit', $data);
+            $this->load->view('admin_panel/pages/permissions/edit', $data);
         } else {
 
             $additional_data = array(
@@ -142,7 +140,7 @@ class Permissions extends MY_Controller
             } else {
                 $this->session->set_flashdata('success', 0);
             }
-            redirect('admin/users/permissions');
+            redirect('admin/permissions');
         }
     }
 }

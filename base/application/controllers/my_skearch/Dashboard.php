@@ -95,6 +95,19 @@ class Dashboard extends MY_Controller
 	function _time_elapsed($time = false)
 	{
 		$interval =  date_create($time)->diff(date_create('now'));
-		return ($interval->days > 0 ? "--" : ($interval->h < 1 && $interval->i < 1 ? "Just now" : ($interval->h >= 1 ? $interval->h . 'h ago ' : $interval->i . 'm ago')));
+
+		if ($interval->y >= 1) {
+			return ($interval->y = 1) ? "$interval->y year ago" : "$interval->y years ago";
+		} else if ($interval->m >= 1) {
+			return ($interval->m = 1) ? "$interval->m month ago" : "$interval->m months ago";
+		} else if ($interval->d >= 1) {
+			return ($interval->d = 1) ? "$interval->d day ago" : "$interval->d days ago";
+		} else if ($interval->h >= 1) {
+			return ($interval->h = 1) ? "$interval->h hour ago" : "$interval->h hours ago";
+		} else if ($interval->i > 1) {
+			return "$interval->i mins ago";
+		} else {
+			return "Just now";
+		}
 	}
 }

@@ -2,17 +2,16 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * File:    ~/application/controller/results/Frondend.php
+ * File:    ~/application/controller/results/Suggestions.php
  *
- * A controller to manage results on homepage and suggestions on 
- * umbrellas and fields page
+ * A controller to manage suggestions on homepage, umbrellas and fields page
  * 
  * @package		Skearch
  * @author		Zaawar Ejaz <zaawar@yahoo.com>
  * @copyright	Copyright (c) 2020
  * @version		2.0
  */
-class Frontend extends MY_Controller
+class Suggestions extends MY_Controller
 {
 
     /**
@@ -74,10 +73,10 @@ class Frontend extends MY_Controller
 
             // Set page data
             $data['fields'] = $this->Fields->get_by_status();
-            $data['title'] = ucfirst("Related Fields");
+            $data['title'] = ucwords("suggestions | fields");
 
             // Load page content
-            $this->load->view('admin_panel/pages/frontend/field_suggestions', $data);
+            $this->load->view('admin_panel/pages/suggestions/fields', $data);
         }
     }
 
@@ -150,8 +149,8 @@ class Frontend extends MY_Controller
             $data['homepage_results'] = $this->Frontend->get_homepage_fields();
 
             // Load page content
-            $data['title'] = ucfirst("Homepage Results");
-            $this->load->view('admin_panel/pages/frontend/homepage', $data);
+            $data['title'] = ucwords("suggestions | homepage");
+            $this->load->view('admin_panel/pages/suggestions/homepage', $data);
         }
     }
 
@@ -191,10 +190,10 @@ class Frontend extends MY_Controller
 
             // Set page data
             $data['umbrellas'] = $this->Umbrellas->get_by_status();
-            $data['title'] = ucfirst("Related Umbrellas");
+            $data['title'] = ucwords("suggestions | umbrellas");
 
             // Load page content
-            $this->load->view('admin_panel/pages/frontend/umbrella_suggestions', $data);
+            $this->load->view('admin_panel/pages/suggestions/umbrellas', $data);
         }
     }
 }
