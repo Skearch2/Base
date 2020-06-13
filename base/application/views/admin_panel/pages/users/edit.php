@@ -196,10 +196,10 @@ $this->load->view('admin_panel/templates/subheader');
 									<div class="form-group m-form__group row">
 										<label for="key-member" class="col-2 col-form-label">Key Member<font color="red"><sup>*</sup></font></label>
 										<div class="col-7">
-											<input type="hidden" name="key_member" value="0" <?= set_value('key_member', $brand->key_user) == 0 ? 'checked' : "" ?>>
+											<input type="hidden" name="key_member" value="0" <?= set_value('key_member', $brand->primary_brand_user) == 0 ? 'checked' : "" ?>>
 											<span class="m-switch m-switch--icon-check">
 												<label>
-													<input type="checkbox" name="key_member" value="1" <?= set_value('key_member', $brand->key_user) == 1 ? 'checked' : "" ?>>
+													<input type="checkbox" name="key_member" value="1" <?= set_value('key_member', $brand->primary_brand_user) == 1 ? 'checked' : "" ?>>
 													<span></span>
 												</label>
 											</span>
