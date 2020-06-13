@@ -384,13 +384,16 @@ class Ion_auth
     }
 
     /**
-     * Log email
+     * Log email into the database
      *
+     * @param string $type Type of email
+     * @param int $user_id
+     * 
      * @return boolean
      */
     public function log_email($type, $user_id)
     {
-        $query = $this->Log_model->create(array(
+        $this->Log_model->create(array(
             'type' => $type,
             'user_id' => $user_id
         ));

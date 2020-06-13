@@ -48,13 +48,13 @@ class Auth extends MY_Controller
         }
         if ($activation) {
 
-            // create default user settings
+            // generate default user settings
             $this->_create_settings($id);
 
             // User
             $user = $this->ion_auth->user($id)->row();
 
-            // Template
+            // email template
             $template = $this->Template_model->get_template('welcome');
 
             $data = array(
@@ -247,14 +247,13 @@ class Auth extends MY_Controller
             $remember = (bool) $this->input->post('remember');
 
             if ($this->ion_auth->login($this->input->post('skearch_id'), $this->input->post('password'), $remember)) {
-                $user = (array) $this->ion_auth->user()->row();
 
                 // add user group in the user information
-                $user['groupid'] =  $this->ion_auth->get_users_groups($user['id'])->row()->id;
-                $user['group'] =  $this->ion_auth->get_users_groups($user['id'])->row()->name;
+                // $user['groupid'] =  $this->ion_auth->get_users_groups($user_id)->row()->id;
+                // $user['group'] =  $this->ion_auth->get_users_groups($user_id)->row()->name;
 
-                // add user set theme
-                $user['theme'] = $this->User->get_settings($user['id'], 'theme')->theme;
+                // user personalized settings
+                $user['settings'] = $this->User->get_settings($this->session->userdata('user_id'));
 
                 // add user data to session
                 $this->session->set_userdata($user);
@@ -272,12 +271,11 @@ class Auth extends MY_Controller
      */
     public function logout()
     {
-        if (!$this->ion_auth->logged_in()) {
-            redirect('myskearch/auth/login');
+        if ($this->ion_auth->logged_in()) {
+            $this->ion_auth->logout();
+            $this->session->set_flashdata('success', 'You have successfully logged out.');
         }
 
-        $this->ion_auth->logout();
-        $this->session->set_flashdata('success', 'You have successfully logged out.');
         redirect('myskearch/auth/login');
     }
 
@@ -348,13 +346,12 @@ class Auth extends MY_Controller
         $is_regular = (null !== $this->input->post("is_regular_signup")) ?  $this->input->post("is_regular_signup") : 1;
 
         if (!empty($is_regular) && $is_regular == 1) {
-            // $this->form_validation->set_rules('name', 'Name', 'alpha|trim');
+            $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'trim|required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']', array('is_unique' => 'The Skearch ID or username already exists.'));
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[skearch_users.email]');
             $this->form_validation->set_rules('gender', 'Gender', 'required');
             $this->form_validation->set_rules('age_group', 'Age group', 'required');
-            $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']|trim', array('is_unique' => 'The Skearch ID or username already exists.'));
             $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
             $this->form_validation->set_rules('password2', 'Confirm Password', 'required|matches[password]');
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[skearch_users.email]|trim');
             $this->form_validation->set_rules(
                 'agree',
                 'Terms and Conditions',
@@ -393,7 +390,7 @@ class Auth extends MY_Controller
     }
 
     /**
-     * Create customized user settings with default values
+     * Create user settings with default values
      *
      * @param int $id ID of the user
      * @return void

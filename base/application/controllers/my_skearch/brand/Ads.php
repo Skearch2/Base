@@ -23,11 +23,12 @@ class Ads extends MY_Controller
             redirect('myskearch/auth/login', 'refresh');
         }
 
+        // check if user is a brand member
         if (!($this->ion_auth->get_users_groups()->row()->id == 3)) {
             redirect('myskearch', 'refresh');
         }
 
-        $this->user_id = $this->session->userdata('id');
+        $this->user_id = $this->session->userdata('user_id');
 
         // defines section in myskearch
         $this->section = 'brand';

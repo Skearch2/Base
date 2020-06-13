@@ -24,6 +24,7 @@ class Keywords extends MY_Controller
             redirect('myskearch/auth/login', 'refresh');
         }
 
+        // check if user is a brand member
         if (!($this->ion_auth->get_users_groups()->row()->id == 3)) {
             redirect('myskearch', 'refresh');
         }
@@ -31,7 +32,7 @@ class Keywords extends MY_Controller
         $this->load->model('my_skearch/brand/Keywords_model', 'Keywords');
         $this->load->model('my_skearch/User_model', 'User');
 
-        $this->user_id  = $this->session->userdata('id');
+        $this->user_id  = $this->session->userdata('user_id');
         $this->brand_id = $this->User->get_brand_details($this->user_id)->brand_id;
         $this->is_primary_brand_user = $this->User->get_brand_details($this->user_id)->primary_brand_user;
 

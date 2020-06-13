@@ -870,7 +870,13 @@ class Ion_auth_model extends CI_Model
 
         $this->trigger_events('extra_where');
 
-        $query = $this->db->select($this->identity_column . ', email, id, password, active, last_login')
+        $query = $this->db->select($this->identity_column . ', email, ' . $this->tables['users'] . '.id, password, active, last_login, firstname, lastname, ' . $this->tables['groups'] . '.name as group')
+            ->join($this->tables['users_groups'], $this->tables['users_groups'] . '.user_id = ' . $this->tables['users'] . '.id')
+            ->join($this->tables['groups'], $this->tables['groups'] . '.id = ' . $this->tables['users_groups'] . '.group_id')
+            // $query = $this->db->select($this->identity_column . ', email, ' . $this->tables['users'] . '.id, password, active, last_login, ' . $this->tables['users_groups'] . '.group_id, ' . $this->tables['groups'] . '.name as group')
+            // ->join($this->tables['users_groups'], $this->tables['users_groups'] . '.user_id = ' . $this->tables['users'] . '.id')
+            // ->join($this->tables['groups'], $this->tables['groups'] . '.id = ' . $this->tables['users_groups'] . '.group_id')
+
             ->where($this->identity_column, $identity)
             ->limit(1)
             ->order_by('id', 'desc')
@@ -1842,9 +1848,12 @@ class Ion_auth_model extends CI_Model
             'identity' => $user->{$this->identity_column},
             $this->identity_column => $user->{$this->identity_column},
             'email' => $user->email,
+            'firstname' => $user->firstname,
+            'lastname' => $user->lastname,
             'user_id' => $user->id, //everyone likes to overwrite id so we'll use user_id
             'old_last_login' => $user->last_login,
             'last_check' => time(),
+            'group' => $user->group
         ];
 
         $this->session->set_userdata($session_data);

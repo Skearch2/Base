@@ -97,7 +97,7 @@ class Brand_model extends CI_Model
      */
     public function get_by_user($id)
     {
-        $this->db->select('skearch_brands.id, brand as name, key_user');
+        $this->db->select('skearch_brands.id, brand as name, primary_brand_user');
         $this->db->from('skearch_users_brands');
         $this->db->join('skearch_brands', 'skearch_users_brands.brand_id = skearch_brands.id');
         $this->db->where('user_id', $id);
@@ -133,14 +133,14 @@ class Brand_model extends CI_Model
      *
      * @param int $user_id User ID
      * @param int $brand_id Brand ID
-     * @param int $is_key_user Primary user for the brand
+     * @param int $is_primary_brand_user Primary user for the brand
      * @return void
      */
-    public function link_user($user_id, $brand_id, $is_key_user)
+    public function link_user($user_id, $brand_id, $is_primary_brand_user)
     {
         $this->db->replace(
             'skearch_users_brands',
-            array('user_id' => $user_id, 'brand_id' => $brand_id, 'key_user' => $is_key_user)
+            array('user_id' => $user_id, 'brand_id' => $brand_id, 'primary_brand_user' => $is_primary_brand_user)
         );
 
         if ($this->db->affected_rows()) {
