@@ -18,8 +18,6 @@ $this->load->view('my_skearch/templates/header_menu');
 // Start page body
 $this->load->view('my_skearch/templates/start_pagebody');
 
-print_r($search_engine);
-
 ?>
 
 <div class="m-content">
