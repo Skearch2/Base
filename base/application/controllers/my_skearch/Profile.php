@@ -41,35 +41,32 @@ class Profile extends MY_Controller
      */
     public function index()
     {
-        $group = $this->session->userdata('groupid');
+        $group = $this->ion_auth->get_users_groups()->row()->id;
 
-        $this->form_validation->set_rules('username', 'Username', 'required|callback_username_check|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']|trim');
+        $this->form_validation->set_rules('username', 'Username', 'trim|required|callback_username_check|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']');
         // only show to admin, editor, and brand member groups
         if (in_array($group, array(1, 2, 3))) {
-            $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
-            $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
+            $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|alpha');
+            $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|alpha');
         }
         // only show to regular and premium user groups
         else if (in_array($group, array(4, 5))) {
-            $this->form_validation->set_rules('name', 'Name', 'alpha|trim');
+            $this->form_validation->set_rules('name', 'Name', 'trim|alpha');
         }
         // only show to admin, editor, and brand member groups
         if (in_array($group, array(1, 2, 3))) {
-            $this->form_validation->set_rules('organization', 'Organization', 'required|trim');
-            // only show to brand member group
-            if (in_array($group, array(3))) {
-                $this->form_validation->set_rules('brand', 'Brand', 'required|trim');
-            }
-            $this->form_validation->set_rules('address1', 'Address Line 1', 'required|trim');
+            $this->form_validation->set_rules('address1', 'Address Line 1', 'trim');
             $this->form_validation->set_rules('address2', 'Address Line 2', 'trim');
-            $this->form_validation->set_rules('phone', 'Phone', 'required|numeric|exact_length[10]');
-            $this->form_validation->set_rules('city', 'City', 'required|trim');
+            $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
+            $this->form_validation->set_rules('city', 'City', 'trim');
             $this->form_validation->set_rules('state', 'State', 'required');
             $this->form_validation->set_rules('country', 'Country', 'required');
             $this->form_validation->set_rules('zipcode', 'Zipcode', 'required|numeric|exact_length[5]');
         }
 
         if ($this->form_validation->run() === false) {
+
+            $data['user'] =  $this->ion_auth->user()->row();
 
             $data['states'] = $this->Util->get_state_list();
             $data['countries'] = $this->Util->get_country_list();
@@ -112,8 +109,6 @@ class Profile extends MY_Controller
 
             if ($this->ion_auth->update($this->user_id, $data)) {
 
-                $user = (array) $this->ion_auth->user()->row();
-                $this->session->set_userdata($user);
                 $this->session->set_flashdata('success', $this->ion_auth->messages());
                 redirect('myskearch/profile');
             } else {

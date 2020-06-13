@@ -233,20 +233,20 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									<div class="form-group m-form__group row">
 										<label for="firstname" class="col-2 col-form-label">First Name</label>
 										<div class="col-7">
-											<input class="form-control m-input" type="text" name="firstname" value="<?= set_value('firstname', $this->session->userdata('firstname')) ?>">
+											<input class="form-control m-input" type="text" name="firstname" value="<?= set_value('firstname', $user->firstname) ?>">
 										</div>
 									</div>
 									<div class="form-group m-form__group row">
 										<label for="lastname" class="col-2 col-form-label">Last Name</label>
 										<div class="col-7">
-											<input class="form-control m-input" type="text" name="lastname" value="<?= set_value('lastname', $this->session->userdata('lastname')) ?>">
+											<input class="form-control m-input" type="text" name="lastname" value="<?= set_value('lastname', $user->lastname) ?>">
 										</div>
 									</div>
 								<?php elseif (in_array($group, array(4, 5))) : ?>
 									<div class="form-group m-form__group row">
 										<label for="name" class="col-2 col-form-label">Name</label>
 										<div class="col-7">
-											<input class="form-control m-input" type="text" name="name" value="<?= set_value('name', $this->session->userdata('firstname')) ?>">
+											<input class="form-control m-input" type="text" name="name" value="<?= set_value('name', $user->firstname) ?>">
 										</div>
 									</div>
 								<?php endif ?>
@@ -254,7 +254,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									<label for="gender" class="col-2 col-form-label">Gender</label>
 									<div class="col-3">
 										<select class="form-control m-input" id="exampleSelect1" name="gender" disabled>
-											<option><?= $this->session->userdata('gender'); ?></option>
+											<option><?= $user->gender ?></option>
 										</select>
 									</div>
 								</div>
@@ -262,7 +262,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									<label for="age_group" class="col-2 col-form-label">Age Group</label>
 									<div class="col-3">
 										<select class="form-control m-input" id="exampleSelect1" name="age_group" disabled>
-											<option><?= $this->session->userdata('age_group'); ?></option>
+											<option><?= $user->age_group ?></option>
 										</select>
 									</div>
 								</div>
@@ -270,54 +270,40 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 									<div class="form-group m-form__group row">
 										<div class="col-10 ml-auto">
-											<h3 class="m-form__section">3. Organizational Details</h3>
+											<h3 class="m-form__section">3. Contact Details</h3>
 										</div>
 									</div>
-									<div class="form-group m-form__group row">
-										<label for="organization" class="col-2 col-form-label">Organization</label>
-										<div class="col-7">
-											<input class="form-control m-input" type="text" name="organization" value="<?= set_value('organization', $this->session->userdata('organization')) ?>">
-										</div>
-									</div>
-									<?php if (in_array($group, array(3))) : ?>
-										<div class="form-group m-form__group row">
-											<label for="brand" class="col-2 col-form-label">Brand</label>
-											<div class="col-7">
-												<input class="form-control m-input" type="text" name="brand" value="<?= set_value('brand', $this->session->userdata('brand')) ?>">
-											</div>
-										</div>
-									<?php endif ?>
 									<div class="form-group m-form__group row">
 										<label for="phone" class="col-2 col-form-label">Phone No.</label>
 										<div class="col-7">
-											<input class="form-control m-input" type="text" name="phone" value="<?= set_value('phone', $this->session->userdata('phone')) ?>">
+											<input class="form-control m-input" type="text" name="phone" value="<?= set_value('phone', $user->phone) ?>">
 										</div>
 									</div>
 									<div class="form-group m-form__group row">
 										<label for="address1" class="col-2 col-form-label">Address Line 1</label>
 										<div class="col-7">
-											<input class="form-control m-input" type="text" name="address1" value="<?= set_value('address1', $this->session->userdata('address1')) ?>">
+											<input class="form-control m-input" type="text" name="address1" value="<?= set_value('address1', $user->address1) ?>">
 											<span class="m-form__help">Street address, P.O box, company name, c/o</span>
 										</div>
 									</div>
 									<div class="form-group m-form__group row">
 										<label for="address2" class="col-2 col-form-label">Address Line 2</label>
 										<div class="col-7">
-											<input class="form-control m-input" type="text" name="address2" value="<?= set_value('address2', $this->session->userdata('address2')) ?>">
+											<input class="form-control m-input" type="text" name="address2" value="<?= set_value('address2', $user->address2) ?>">
 											<span class="m-form__help">Apartment, suite, unit, buidling, floor, etc</span>
 										</div>
 									</div>
 									<div class="form-group m-form__group row">
 										<label for="city" class="col-2 col-form-label">City</label>
 										<div class="col-7">
-											<input class="form-control m-input" type="text" name="city" value="<?= set_value('city', $this->session->userdata('city')) ?>">
+											<input class="form-control m-input" type="text" name="city" value="<?= set_value('city', $user->city) ?>">
 										</div>
 									</div>
 									<div class="form-group m-form__group row">
 										<label for="state" class="col-2 col-form-label">State</label>
 										<div class="col-2">
 											<select class="form-control m-input" id="exampleSelect1" name="state">
-												<option value="<?= $this->session->userdata('state') ?>" <?= set_select("state", $this->session->userdata('state'), TRUE) ?>><?= $this->session->userdata('state') ?></option>
+												<option value="<?= $user->state ?>" <?= set_select("state", $user->state, TRUE) ?>><?= $user->state ?></option>
 												<?php foreach ($states as $state) : ?>
 													<option value="<?= $state->statecode; ?>" <?= set_select("state", $state->statecode) ?>><?= $state->statecode; ?></option>
 												<?php endforeach; ?>
@@ -328,7 +314,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 										<label for="country" class="col-2 col-form-label">Country</label>
 										<div class="col-3">
 											<select class="form-control m-input" id="exampleSelect1" name="country">
-												<option value="<?= $this->session->userdata('country') ?>" <?= set_select("country", $this->session->userdata('country'), TRUE) ?>><?= $this->session->userdata('country') ?></option>
+												<option value="<?= $user->country ?>" <?= set_select("country", $user->country, TRUE) ?>><?= $user->country ?></option>
 												<?php foreach ($countries as $country) : ?>
 													<option value="<?= $country->country_name ?>" <?= set_select("country", $country->country_name) ?>><?= $country->country_name; ?></option>
 												<?php endforeach; ?>
@@ -338,7 +324,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									<div class="form-group m-form__group row">
 										<label for="zipcode" class="col-2 col-form-label">Zipcode</label>
 										<div class="col-7">
-											<input class="form-control m-input" type="text" name="zipcode" value="<?= set_value('zipcode', $this->session->userdata('zipcode')) ?>">
+											<input class="form-control m-input" type="text" name="zipcode" value="<?= set_value('zipcode', $user->zipcode) ?>">
 										</div>
 									</div>
 								<?php endif ?>

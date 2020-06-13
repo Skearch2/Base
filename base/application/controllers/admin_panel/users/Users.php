@@ -70,7 +70,6 @@ class Users extends MY_Controller
 
             // only show to admin, editor, and brand member groups
             if (in_array($group, array(1, 2, 3))) {
-                // $this->form_validation->set_rules('organization', 'Organization', 'trim');
                 // only show to brand member group
                 if (in_array($group, array(3))) {
                     $this->form_validation->set_rules('brand', 'Brand', 'required');
