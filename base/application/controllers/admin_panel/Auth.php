@@ -4,7 +4,8 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * File:    ~/application/controller/admin_panel/Auth.php
  *
- * This is an authentication ontroller for admin panel.
+ * This is an authentication controller for admin panel.
+ * 
  * @package		Skearch
  * @author		Iftikhar Ejaz <ejaziftikhar@gmail.com>
  * @copyright	Copyright (c) 2019
@@ -55,14 +56,14 @@ class Auth extends MY_Controller
 
 			if ($this->ion_auth->login($this->input->post('id'), $this->input->post('password'), $remember)) {
 
-				$user = (array) $this->ion_auth->user()->row();
+				// $user = (array) $this->ion_auth->user()->row();
 
-				// add user group in the user information
-				$user['groupid'] =  $this->ion_auth->get_users_groups($user['id'])->row()->id;
-				$user['group'] =  $this->ion_auth->get_users_groups($user['id'])->row()->name;
+				// // add user group in the user information
+				// $user['groupid'] =  $this->ion_auth->get_users_groups($user['id'])->row()->id;
+				// $user['group'] =  $this->ion_auth->get_users_groups($user['id'])->row()->name;
 
 				// add user set theme
-				$user['theme'] = $this->User->get_settings($user['id'], 'theme')->theme;
+				$user['settings'] = $this->User->get_settings($this->session->userdata('user_id'));
 
 				// add user data to session
 				$this->session->set_userdata($user);
@@ -82,8 +83,11 @@ class Auth extends MY_Controller
 	 */
 	public function logout()
 	{
-		$this->ion_auth->logout();
-		$this->session->set_flashdata('messages', $this->ion_auth->messages());
+		if ($this->ion_auth->logged_in()) {
+			$this->ion_auth->logout();
+			$this->session->set_flashdata('messages', $this->ion_auth->messages());
+		}
+
 		redirect('admin/auth/login');
 	}
 }

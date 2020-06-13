@@ -222,7 +222,7 @@
 										<span class="m-nav__link-icon m-topbar__usericon  m--hide">
 											<span class="m-nav__link-icon-wrapper"><i class="flaticon-user-ok"></i></span>
 										</span>
-										<span class="m-topbar__username m--hide"><?= $this->session->userdata('username'); ?></span>
+										<span class="m-topbar__username m--hide"><?= ucfirst($this->session->userdata('username')) ?></span>
 									</a>
 									<div class="m-dropdown__wrapper">
 										<span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
@@ -233,7 +233,7 @@
 														<img src="<?= site_url(ASSETS); ?>/my_skearch/app/media/img/users/user-default.jpg" class="m--img-rounded m--marginless" alt="" />
 													</div>
 													<div class="m-card-user__details">
-														<span class="m-card-user__name m--font-weight-500"><?= $this->session->userdata('username') ?></span>
+														<span class="m-card-user__name m--font-weight-500"><?= ucfirst($this->session->userdata('username')) ?></span>
 														<span class="m-card-user__email m--font-weight-300"><?= $this->session->userdata('group'); ?></span>
 													</div>
 												</div>
@@ -340,7 +340,7 @@
 									</ul>
 								</div>
 							</li>
-							<?php if ($this->session->userdata('groupid') == 3) : ?>
+							<?php if (($this->ion_auth->get_users_groups()->row()->id == 3)) : ?>
 								<li class="m-menu__item <?= (isset($section) && $section === 'brand') ? 'm-menu__item--active  m-menu__item--active-tab' : 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="<?= base_url("myskearch/brand"); ?>" class="m-menu__link" title="Brand Section"><span class="m-menu__link-text">Brand</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 									<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 										<ul class="m-menu__subnav">

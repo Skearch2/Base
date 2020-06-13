@@ -6,8 +6,7 @@ if (!defined('BASEPATH')) {
 /**
  * File:    ~/application/controller/frontend/Search.php
  *
- * This model fetch data based on category and its subcategory.
- * It also provides category listing.
+ * Search controller for Skearch
  * 
  * @package        Skearch
  * @author         Zaawar Ejaz <zaawar@yahoo.com>
@@ -21,12 +20,15 @@ class Search extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->user_id = $this->session->userdata('id');
 
         $this->load->model('Category_model');
-        $this->load->model('my_skearch/User_model', 'User');
     }
 
+    /**
+     * Determines web page based on keywords
+     *
+     * @return void
+     */
     public function index()
     {
         $cat = $this->Category_model->get_categories();
@@ -36,43 +38,37 @@ class Search extends MY_Controller
 
         $keyword = $this->input->get('search_keyword');
 
-        /* If keyword matches with the title of umbrella page or given keywords of umbrella page then
+        /* If keyword matches with the title of umbrella page or keywords for umbrella page then
            redirect to the umbrella page */
 
         foreach ($cat as $item) {
             if (strtolower($item->title) === strtolower($keyword)) {
-                //redirect(site_url("browse/" . $item->title), 'refresh');
                 echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $item->title)));
                 return;
             } else if (strtolower($item->keywords) === strtolower($keyword)) {
-                //redirect(site_url("browse/" . $item->title), 'refresh');
                 echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $item->title)));
                 return;
-            } else if (strlen($keyword) > 1 && substr($keyword, -1) == 's') {
+            } else if (strlen($keyword) > 1 && substr($keyword, -1) === 's') {
                 if (strpos(strtolower($item->title), strtolower(substr($keyword, 0, -1))) !== false) {
-                    //redirect(site_url("browse/" . $item->title), 'refresh');
                     echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $item->title)));
                     return;
                 }
             }
         }
 
-        /* If keyword matches with the title of field page or given keywords of field page then
+        /* If keyword matches with the title of field page or keywords for field page then
            redirect to the field  page */
 
         foreach ($sub_cat as $item) {
             $ptitle = $this->Category_model->get_category_title($item->parent_id)[0]->title;
             if (strtolower($item->title) === strtolower($keyword)) {
-                //redirect(site_url("browse/" . $ptitle . "/" . $item->title), 'refresh');
                 echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $ptitle . "/" . $item->title)));
                 return;
             } else if (strtolower($item->keywords) === strtolower($keyword)) {
-                //redirect(site_url("browse/" . $ptitle . "/" . $item->title), 'refresh');
                 echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $ptitle . "/" . $item->title)));
                 return;
-            } else if (strlen($keyword) > 1 && substr($keyword, -1) == 's') {
+            } else if (strlen($keyword) > 1 && substr($keyword, -1) === 's') {
                 if (strtolower($item->title) === strtolower(substr($keyword, 0, -1))) {
-                    //redirect(site_url("browse/" . $ptitle . "/" . $item->title), 'refresh');
                     echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $ptitle . "/" . $item->title)));
                     return;
                 }
@@ -100,17 +96,17 @@ class Search extends MY_Controller
             }
         }
 
-        // default skearch search engine
+        // default external skearch search engine
         $search_url = 'http://www.duckduckgo.com/?q=';
 
-        // get user preferred search engine
+        // get search engine from user settings
         if ($this->ion_auth->logged_in()) {
 
-            $settings = $this->User->get_settings($this->user_id, 'search_engine');
+            $search_engine = $this->session->userdata('settings')->search_engine;
 
-            if ($settings->search_engine === 'startpage') {
+            if ($search_engine === 'startpage') {
                 $search_url = 'https://www.startpage.com/do/dsearch?query=';
-            } elseif ($settings->search_engine === 'google') {
+            } elseif ($search_engine === 'google') {
                 $search_url = 'http://www.google.com/search?q=';
             }
         }
@@ -122,7 +118,7 @@ class Search extends MY_Controller
     /**
      * Returns URL information
      *
-     * @param [type] $url
+     * @param string $url
      * @return void
      */
     private function get_domainInfo($url)

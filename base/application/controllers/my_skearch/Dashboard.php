@@ -21,7 +21,7 @@ class Dashboard extends MY_Controller
 			redirect('myskearch/auth/login', 'refresh');
 		}
 
-		$this->user_id = $this->session->userdata('id');
+		$this->user_id = $this->session->userdata('user_id');
 
 		// defines section in myskearch
 		$this->section = 'dashboard';
@@ -46,11 +46,15 @@ class Dashboard extends MY_Controller
 		}
 	}
 
+	/**
+	 * View page for My Skearch dashboard
+	 *
+	 * @return void
+	 */
 	public function index()
 	{
 		// user settings
-		$user_settings = $this->User->get_settings($this->user_id);
-		$data['search_engine'] = $user_settings->search_engine;
+		$data['search_engine'] = $this->session->userdata('settings')->search_engine;
 
 		//fields history
 		$fields_history = $this->Fields_History->get($this->user_id);
@@ -76,10 +80,13 @@ class Dashboard extends MY_Controller
 	public function update_settings()
 	{
 		$search_engine = $this->input->get('search_engine');
-
-		$update = $this->User->update_settings($this->user_id, $search_engine, NULL);
+		$update = $this->User->update_settings($this->user_id, array('search_engine' => $search_engine));
 
 		if ($update) {
+			// update settings in user session
+			$settings = $this->session->userdata('settings');
+			$settings->search_engine = $search_engine;
+			$this->session->set_userdata('settings', $settings);
 			echo json_encode(1);
 		} else {
 			echo json_encode(0);

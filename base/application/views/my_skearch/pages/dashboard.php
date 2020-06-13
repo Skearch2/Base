@@ -18,6 +18,8 @@ $this->load->view('my_skearch/templates/header_menu');
 // Start page body
 $this->load->view('my_skearch/templates/start_pagebody');
 
+print_r($search_engine);
+
 ?>
 
 <div class="m-content">
@@ -27,7 +29,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 			<div class="form-group m-form__group row">
 				<label for="search-engine" class="col-2 col-form-label">Deafult Search Engine</label>
 				<div class="col-3">
-					<select class="form-control m-input" id="search_engine" name="search_engine" onchange=update_settings(<?= $this->session->userdata('id') ?>)>
+					<select class="form-control m-input" id="search_engine" name="search_engine" onchange=update_settings()>
 						<option value="duckduckgo" <?= ($search_engine === 'duckduckgo') ? 'selected' : '' ?>>DuckDuckGo</option>
 						<option value="startpage" <?= ($search_engine === 'startpage') ? 'selected' : '' ?>>Startpage</option>
 						<option value="google" <?= ($search_engine === 'google') ? 'selected' : '' ?>>Google</option>
@@ -131,10 +133,13 @@ $this->load->view('my_skearch/templates/js_global');
 				search_engine: $('#search_engine').val()
 			},
 			success: function(data, status) {
-				toastr.success("", "Settings updated.");
+				if (data == 1)
+					toastr.success("", "Settings updated.");
+				else
+					toastr.error("", "Unable to update settings.");
 			},
 			error: function(xhr, status, error) {
-				toastr.error("", "Unable to update settings.");
+				toastr.error("", "Unable to process request.");
 			}
 		});
 	}

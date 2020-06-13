@@ -22,7 +22,7 @@ class Pages extends MY_Controller
 {
 
   /**
-   * Undocumented function
+   * Constructor
    */
   public function __construct()
   {
@@ -33,19 +33,23 @@ class Pages extends MY_Controller
     $this->load->model('admin_panel/Option_model_admin', 'Option_model');
     $this->load->model('my_skearch/User_model', 'User');
 
+    $this->user_id = $this->session->userdata('user_id');
+
     // set default skearch theme
-    if (empty($this->session->userdata('theme'))) {
-      $this->session->set_userdata('theme', 'light');
+    if (empty($this->session->userdata('settings'))) {
+      $settings = (object) array('theme' => 'light');
+      $this->session->set_userdata('settings', $settings);
     }
   }
 
   /**
-   * Undocumented function
+   * View page for Skearch Home
    *
    * @return void
    */
   public function index()
   {
+
     $data['results'] = $this->Category_model->get_homepage_results();
 
     $data['user'] = $this->ion_auth->user()->row();
@@ -58,7 +62,7 @@ class Pages extends MY_Controller
   }
 
   /**
-   * Undocumented function
+   * View page for all umbrellas and fields
    *
    * @param string $order
    * @return void
@@ -96,9 +100,9 @@ class Pages extends MY_Controller
 
 
   /**
-   * Undocumented function
+   * View page for an umbrella
    *
-   * @param [type] $umbrella_name
+   * @param string $umbrella_name
    * @return void
    */
   public function browse_umbrella($umbrella_name)
@@ -198,10 +202,10 @@ class Pages extends MY_Controller
   }
 
   /**
-   * Undocumented function
+   * View page for a field
    *
-   * @param [type] $umbrella_name
-   * @param [type] $field_name
+   * @param string $umbrella_name
+   * @param string $field_name
    * @return void
    */
   public function browse_field($umbrella_name, $field_name)
@@ -304,7 +308,7 @@ class Pages extends MY_Controller
         if ($this->ion_auth->logged_in()) {
 
           $user_data = array(
-            'user_id' => $this->session->userdata('id'),
+            'user_id' => $this->session->userdata('user_id'),
             'field_id' => $field_id
           );
 
@@ -324,31 +328,33 @@ class Pages extends MY_Controller
   }
 
   /**
-   * Change Skeach frontend theme
+   * Change theme
    *
    * @return void
    */
   public function change_theme()
   {
-    $user_id = $this->ion_auth->user()->row()->id;
+    $settings = $this->session->userdata('settings');
 
-    if ($this->session->userdata('theme') === 'light') {
-      $this->session->set_userdata('theme', 'dark');
+    if ($settings->theme === 'light') {
+      $settings->theme = 'dark';
+      $this->session->set_userdata('settings', $settings);
       if ($this->ion_auth->logged_in()) {
-        $this->User->update_settings($user_id, NULL, 'dark');
+        $this->User->update_settings($this->user_id, array('theme' => 'dark'));
       }
-    } else if ($this->session->userdata('theme') === 'dark') {
-      $this->session->set_userdata('theme', 'light');
+    } else if ($settings->theme === 'dark') {
+      $settings->theme = 'light';
+      $this->session->set_userdata('settings', $settings);
       if ($this->ion_auth->logged_in()) {
-        $this->User->update_settings($user_id, NULL, 'light');
+        $this->User->update_settings($this->user_id, array('theme' => 'light'));
       }
     }
   }
 
   /**
-   * Undocumented function
+   * Output all umbrellas or fields
    *
-   * @param [type] $keyword
+   * @param string $keyword
    * @return void
    */
   public function get_data($keyword)
@@ -367,10 +373,10 @@ class Pages extends MY_Controller
 
 
   /**
-   * Undocumented function
+   *  Output all results for a given field
    *
-   * @param [type] $field_id
-   * @param [type] $order
+   * @param int $field_id
+   * @param string $order
    * @return void
    */
   public function get_field_results($field_id, $order)
@@ -384,12 +390,12 @@ class Pages extends MY_Controller
   }
 
   /**
-   * Undocumented function
+   * Returns album id
    *
-   * @param [type] $album_type
-   * @param [type] $album_type_id
-   * @param [type] $media_box
-   * @return void
+   * @param string $album_type
+   * @param int $album_type_id
+   * @param string $media_box
+   * @return int
    */
   private function get_album($album_type, $album_type_id, $media_box)
   {
@@ -412,10 +418,10 @@ class Pages extends MY_Controller
   }
 
   /**
-   * Undocumented function
+   * Returns all media for given album
    *
-   * @param [type] $album_id
-   * @return void
+   * @param int $album_id
+   * @return object
    */
   private function get_media_contents($album_id)
   {

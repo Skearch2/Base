@@ -97,18 +97,14 @@ class User_model extends CI_Model
      * @param int $id ID of the user
      * @return void
      */
-    public function get_settings($id, $columns = '*')
+    public function get_settings($id)
     {
-        $this->db->select($columns);
+        $this->db->select('theme, search_engine');
         $this->db->from('skearch_users_settings');
         $this->db->where('user_id', $id);
         $query = $this->db->get();
 
-        if ($query) {
-            return $query->row();
-        } else {
-            return FALSE;
-        }
+        return $query->row();
     }
 
     /**
@@ -146,28 +142,19 @@ class User_model extends CI_Model
     }
 
     /**
-     * Update customized settings for user
+     * Update user personalized settings
      *
      * @param int $id ID of the user
-     * @param int $search_engine Search engine for Skearch frontend
-     * @param int $theme Skearch frontend theme
+     * @param int $user_data Contains user settings
      * @return void
      */
-    public function update_settings($id, $search_engine, $theme)
+    public function update_settings($id, $user_data)
     {
-        if (!is_null($search_engine))            $data['search_engine']          = $search_engine;
-        if (!is_null($theme))                    $data['theme']                  = $theme;
-
-        // check if POST data is null
-        if (!isset($data)) {
-            return FALSE;
-        }
-
         $this->db->where('user_id', $id);
-        $query = $this->db->update('skearch_users_settings', $data);
+        $this->db->update('skearch_users_settings', $user_data);
 
-        if ($query) {
-            return $query;
+        if ($this->db->affected_rows()) {
+            return TRUE;
         } else {
             return FALSE;
         }
