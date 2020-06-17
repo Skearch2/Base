@@ -32,12 +32,11 @@ class Option extends MY_Controller
 
 	public function index()
 	{
-
-		$data['title'] = ucfirst("option");
 		$data['version'] = $this->Option_model->get_skearch_ver();
 		$data['adlink_status'] = $this->Option_model->get_brandlinks_status();
 
 		// Load page content
+		$data['title'] = ucfirst("options");
 		$this->load->view('admin_panel/pages/option', $data);
 	}
 

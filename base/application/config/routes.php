@@ -77,6 +77,7 @@ $route['theme/change'] = 'frontend/pages/change_theme';
 /**********************************************  My Skearch Routes  ***************************************************/
 
 /* Authentication */
+$route['signup']                                    = 'my_skearch/auth/signup';
 $route['myskearch/auth/login']                      = 'my_skearch/auth/login';
 $route['myskearch/auth/logout']                     = 'my_skearch/auth/logout';
 $route['myskearch/auth/signup']                     = 'my_skearch/auth/signup';

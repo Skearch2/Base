@@ -6,6 +6,7 @@
 		<!--begin::Page Vendors -->
 		<script src="<?= site_url(ASSETS); ?>/admin_panel/vendors/custom/datatables/datatables.bundle.js" type="text/javascript"></script>
 		<!--end::Page Vendors -->
+		<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
 		<!--begin::Page Scripts -->
 		<script>

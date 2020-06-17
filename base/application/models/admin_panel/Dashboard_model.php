@@ -13,6 +13,39 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
  */
 class Dashboard_model extends CI_Model
 {
+
+  /**
+   * Returns the statistics of results which includes
+   * Umbrellas, Fields, and Links
+   * 
+   * @return object
+   */
+  public function get_brands_stats()
+  {
+    $this->db->select('links.id');
+    $this->db->from('skearch_listings as links');
+    $this->db->join('skearch_subcategories as fields', 'fields.id = links.sub_id', 'left');
+    $this->db->join('skearch_categories as umbrellas', 'umbrellas.id = fields.parent_id', 'left');
+    $this->db->where('umbrellas.enabled', 1);
+    $this->db->where('fields.enabled', 1);
+    $this->db->where('links.enabled', 1);
+    $this->db->where('links.redirect', 0);
+    $results['total_brandlinks_inactive'] = $this->db->count_all_results();
+
+    // get total links whose field and umbrella is active
+    $this->db->select('links.id');
+    $this->db->from('skearch_listings as links');
+    $this->db->join('skearch_subcategories as fields', 'fields.id = links.sub_id', 'left');
+    $this->db->join('skearch_categories as umbrellas', 'umbrellas.id = fields.parent_id', 'left');
+    $this->db->where('umbrellas.enabled', 1);
+    $this->db->where('fields.enabled', 1);
+    $this->db->where('links.enabled', 1);
+    $this->db->where('links.redirect', 1);
+    $results['total_brandlinks_active'] = $this->db->count_all_results();
+
+    return (object) ($results);
+  }
+
   /**
    * Returns the statistics of results which includes
    * Umbrellas, Fields, and Links

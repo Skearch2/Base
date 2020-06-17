@@ -104,13 +104,13 @@ class Dashboard extends MY_Controller
 		$interval =  date_create($time)->diff(date_create('now'));
 
 		if ($interval->y >= 1) {
-			return ($interval->y = 1) ? "$interval->y year ago" : "$interval->y years ago";
+			return ($interval->y == 1) ? "$interval->y year ago" : "$interval->y years ago";
 		} else if ($interval->m >= 1) {
-			return ($interval->m = 1) ? "$interval->m month ago" : "$interval->m months ago";
+			return ($interval->m == 1) ? "$interval->m month ago" : "$interval->m months ago";
 		} else if ($interval->d >= 1) {
-			return ($interval->d = 1) ? "$interval->d day ago" : "$interval->d days ago";
+			return ($interval->d == 1) ? "$interval->d day ago" : "$interval->d days ago";
 		} else if ($interval->h >= 1) {
-			return ($interval->h = 1) ? "$interval->h hour ago" : "$interval->h hours ago";
+			return ($interval->h == 1) ? "$interval->h hour ago" : "$interval->h hours ago";
 		} else if ($interval->i > 1) {
 			return "$interval->i mins ago";
 		} else {

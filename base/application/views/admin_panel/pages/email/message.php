@@ -58,7 +58,7 @@ $this->load->view('admin_panel/templates/subheader');
                                     <?php endif; ?>
                                 </div>
                                 <div class="m-form__group form-group row">
-                                    <label for="action" class="col-2 col-form-label">Action</label>
+                                    <label for="action" class="col-4 col-form-label"></label>
                                     <div class="col-7">
                                         <div class="m-radio-inline">
                                             <label class="m-radio m-radio--solid m-radio--brand">
@@ -73,12 +73,13 @@ $this->load->view('admin_panel/templates/subheader');
                                     </div>
                                 </div>
                                 <div class="form-group m-form__group row" id="custom" style=<?= $email_custom ? 'display:block' : 'display:none' ?>>
-                                    <div class="col-lg-9 m-form__group-sub">
+                                    <div class="col-lg-12 m-form__group-sub">
                                         <input type="text" class="form-control m-input" id="search" name="email" placeholder="Search email by last name" value="<?= set_value('email') ?>">
                                     </div>
                                 </div>
+                                <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-1x"></div>
                                 <div class=" form-group m-form__group row">
-                                    <div class="col-lg-9 m-form__group-sub">
+                                    <div class="col-lg-12 m-form__group-sub">
                                         <input type="text" name="subject" class="form-control m-input" placeholder="Subject" value="<?= set_value('subject') ?>">
                                     </div>
                                 </div>
@@ -194,6 +195,16 @@ $this->load->view('admin_panel/templates/close_html');
     // initialize html editor
     $(document).ready(function() {
         $('#html-editor').summernote({
+            toolbar: [
+                // [groupName, [list of button]]
+                ['clear', ['clear']],
+                ['fontsize', ['style', 'fontname', 'fontsize']],
+                ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['table', 'link', 'picture', 'video']],
+                ['other', ['fullscreen', 'code', 'help']]
+            ],
             height: 300
         });
     });
