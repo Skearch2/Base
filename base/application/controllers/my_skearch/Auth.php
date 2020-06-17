@@ -359,10 +359,10 @@ class Auth extends MY_Controller
                 array('required' => 'You must agree with the terms and conditions.')
             );
         } else {
-            $this->form_validation->set_rules('name_b', 'Name', 'required|alpha|trim');
-            $this->form_validation->set_rules('brandname', 'Brand Name', 'is_unique[skearch_brand_leads.brandname]|required|trim');
-            $this->form_validation->set_rules('email_b', 'Email', 'required|valid_email|trim');
-            $this->form_validation->set_rules('phone', 'Phone', 'required|numeric|exact_length[10]');
+            $this->form_validation->set_rules('name_b', 'Name', 'trim|required|callback_alpha_dash_space');
+            $this->form_validation->set_rules('brandname', 'Brand Name', 'trim|required|is_unique[skearch_brand_leads.brandname]');
+            $this->form_validation->set_rules('email_b', 'Email', 'trim|required|valid_email');
+            $this->form_validation->set_rules('phone', 'Phone', 'trim|required|numeric|exact_length[10]');
         }
 
         if ($this->form_validation->run() === false) {
@@ -387,6 +387,25 @@ class Auth extends MY_Controller
                 redirect('myskearch/auth/signup');
             }
         }
+    }
+
+
+    /**
+     * Validate if the string has alpha and spaces only
+     *
+     * @param string $string String
+     * @return void
+     */
+    function alpha_dash_space($string)
+    {
+        if (empty($string)) {
+            $this->form_validation->set_message('alpha_dash_space', 'The %s field is required.');
+        } else if (!preg_match('/^[a-zA-Z\s]+$/', $string)) {
+            $this->form_validation->set_message('alpha_dash_space', 'The %s field may only contain alpha characters & white spaces.');
+        } else {
+            return TRUE;
+        }
+        return FALSE;
     }
 
     /**

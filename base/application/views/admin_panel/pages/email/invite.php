@@ -59,16 +59,16 @@ $this->load->view('admin_panel/templates/subheader');
 									<?php endif; ?>
 								</div>
 								<div class="form-group m-form__group row">
-									<div class="col-lg-9 m-form__group-sub" id="recipents">
+									<div class="col-lg-12 m-form__group-sub" id="recipents">
 										<div class="input-group">
 											<a href="javascript:void(0);" class="input-group-prepend" id="add_recipent" title="Add recipents" style="text-decoration:none"><span class="input-group-text"><i class="fa fa-plus-circle" style="color:green"></i></span></a>
 											<input type="text" class="form-control m-input" name="recipents[]" placeholder="Email Address">
 										</div>
 									</div>
 								</div>
-								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-1x"></div>
 								<div class=" form-group m-form__group row">
-									<div class="col-lg-9 m-form__group-sub">
+									<div class="col-lg-12 m-form__group-sub">
 										<input type="text" name="subject" class="form-control m-input" placeholder="Subject" value="<?= set_value('subject'); ?>">
 									</div>
 								</div>
@@ -123,9 +123,41 @@ $this->load->view('admin_panel/templates/close_html');
 	// initialize html editor
 	$(document).ready(function() {
 		$('#html-editor').summernote({
+			toolbar: [
+				// [groupName, [list of button]]
+				['clear', ['clear']],
+				['fontsize', ['style', 'fontname', 'fontsize']],
+				['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript']],
+				['color', ['color']],
+				['para', ['ul', 'ol', 'paragraph']],
+				['insert', ['table', 'link', 'signupLink', 'picture', 'video']],
+				['other', ['fullscreen', 'code', 'help']]
+			],
+			buttons: {
+				signupLink: signupLink
+			},
 			height: 300
 		});
 	});
+
+	// custom button function
+	var signupLink = function(context) {
+		var ui = $.summernote.ui;
+
+		// create button
+		var button = ui.button({
+			contents: '<i class="fa fa-paper-plane"/>',
+			tooltip: 'Sign-up Link',
+			click: function() {
+				var node = document.createElement('span');
+				// invoke insertText method with 'hello' on editor module.
+				node.innerHTML = '<a href="http://www.skearch.com/signup" target="_blank">Sign Up for Skearch today.</a>';
+				context.invoke('editor.insertNode', node);
+			}
+		});
+
+		return button.render(); // return button as jquery object
+	}
 
 	$(document).ready(function() {
 		var maxField = 10; //Input fields increment limitation
@@ -155,6 +187,6 @@ $this->load->view('admin_panel/templates/close_html');
 
 
 <script>
-	$("#menu-email").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-email-invite").addClass("m-menu__item  m-menu__item--active");
+	$("#menu-sales").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#invite").addClass("m-menu__item  m-menu__item--active");
 </script>

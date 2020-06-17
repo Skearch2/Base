@@ -90,7 +90,7 @@ class Leads extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $data['title'] = ucfirst("Brand Leads");
+            $data['title'] = ucfirst("Leads");
 
             // Load page content
             $this->load->view('admin_panel/pages/brands/leads', $data);

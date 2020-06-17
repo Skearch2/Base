@@ -39,9 +39,11 @@ class Dashboard extends MY_Controller
 	 */
 	public function index()
 	{
-		$data['title'] = ucfirst("dashboard");
+
+		$data['brand_stats'] = $this->Dashboard->get_brands_stats();
 		$data['stats'] = $this->Dashboard->get_results_stats();
 
+		$data['title'] = ucfirst("dashboard");
 		$this->load->view('admin_panel/pages/dashboard', $data);
 	}
 }
