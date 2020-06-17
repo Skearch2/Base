@@ -75,8 +75,9 @@ class User_model extends CI_Model
      */
     public function get_by_lastname($lastname)
     {
-        $this->db->select('lastname, firstname, username, email');
+        $this->db->select('lastname, firstname, email');
         $this->db->from('skearch_users');
+        $this->db->where('active', 1);
         $this->db->like('lastname', $lastname, 'after');
         $this->db->order_by('lastname', 'ASC');
         $query = $this->db->get();

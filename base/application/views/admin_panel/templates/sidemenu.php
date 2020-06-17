@@ -43,11 +43,8 @@
 				<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 					<ul class="m-menu__subnav">
 						<li id="submenu-brands" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Brands</span></a></li>
-						<li id="submenu-brands-leads" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands/leads"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Leads</span></a></li>
-						<li class="m-menu__item" aria-haspopup="true" m-menu-link-redirect="1"><a href="https://crm.skearch.com/admin" target="_blank" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">CRM</span></a></li>
 						<li class="m-menu__item" aria-haspopup="true" m-menu-link-redirect="1"><a href="<?= site_url("media-manager") ?>" target="_blank" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Media Engine</span></a></li>
 						<li id="submenu-brands-keywords" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands/keywords"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Keywords</span></a></li>
-						<li id="submenu-brands-sales" class="m-menu__item" aria-haspopup="true"><a href="#" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Sales</span></a></li>
 					</ul>
 				</div>
 			</li>
@@ -63,8 +60,7 @@
 			<li id="menu-email" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-email"></i><span class="m-menu__link-text">Email</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 				<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 					<ul class="m-menu__subnav">
-						<li id="submenu-email-message_members" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/message"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Message Members</span></a></li>
-						<li id="submenu-email-invite" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/invite"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Invite</span></a></li>
+						<li id="submenu-email-members" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/message"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Message Members</span></a></li>
 						<li id="submenu-email-logs" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/logs"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Logs</span></a></li>
 						<li id="submenu-templates" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover" m-menu-link-redirect="1"><a href="javascript:;" class="m-menu__link m-menu__toggle"><i class="m-menu__link-bullet m-menu__link-bullet--line"><span></span></i><span class="m-menu__link-text">Templates</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 							<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
@@ -75,6 +71,15 @@
 								</ul>
 							</div>
 						</li>
+					</ul>
+				</div>
+			</li>
+			<li id="menu-sales" class="m-menu__item m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon la la-dollar"></i><span class="m-menu__link-text">Sales</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+				<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
+					<ul class="m-menu__subnav">
+						<li id="leads" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands/leads"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Leads</span></a></li>
+						<li class="m-menu__item" aria-haspopup="true" m-menu-link-redirect="1"><a href="https://crm.skearch.com/admin" target="_blank" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">CRM</span></a></li>
+						<li id="invite" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/invite"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Invite</span></a></li>
 					</ul>
 				</div>
 			</li>

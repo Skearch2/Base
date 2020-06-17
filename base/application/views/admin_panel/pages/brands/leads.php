@@ -31,16 +31,6 @@ $this->load->view('admin_panel/templates/subheader');
 
 <div class="m-content">
 	<div class="m-portlet m-portlet--mobile">
-		<div class="m-portlet__head">
-			<div class="m-portlet__head-caption">
-				<div class="m-portlet__head-title">
-					<h3 class="m-portlet__head-text">
-						<?= $title; ?>
-					</h3>
-				</div>
-			</div>
-		</div>
-
 		<div class="m-portlet__body">
 
 			<!--begin: Datatable -->
@@ -167,6 +157,6 @@ $this->load->view('admin_panel/templates/close_html');
 
 
 <script>
-	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-brands-leads").addClass("m-menu__item  m-menu__item--active");
+	$("#menu-sales").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#leads").addClass("m-menu__item  m-menu__item--active");
 </script>

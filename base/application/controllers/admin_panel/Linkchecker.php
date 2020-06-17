@@ -64,14 +64,8 @@ class Linkchecker extends MY_Controller
 			$data['title'] = ucwords('access denied');
 			$this->load->view('admin_panel/errors/error_403', $data);
 		} else {
-			if (!file_exists(APPPATH . '/views/admin_panel/pages/linkchecker.php')) {
-				show_404();
-			}
-
-			$data['title'] = ucfirst("Link Checker");
-			$data['status'] = "active"; // Show
-
 			// Load page content
+			$data['title'] = ucfirst("Link Checker");
 			$this->load->view('admin_panel/pages/linkchecker', $data);
 		}
 	}
@@ -118,7 +112,7 @@ class Linkchecker extends MY_Controller
 		);
 		curl_setopt_array($ch, $options);
 
-		$response = curl_exec($ch);
+		curl_exec($ch);
 		$httpinfo = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);
 
@@ -141,7 +135,7 @@ class Linkchecker extends MY_Controller
 				$_SESSION["remainingUrls"] = $totalUrls--;
 				$status_code = $this->run_curl_check($url->www);
 				$this->linkcheck_model->update_http_status($url->id, $status_code);
-				if ($totalUrls <= 4670) break;
+				// if ($totalUrls <= 4670) break;
 			}
 		}
 	}

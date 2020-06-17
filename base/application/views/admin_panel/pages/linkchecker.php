@@ -28,38 +28,30 @@ $this->load->view('admin_panel/templates/start_innerbody');
 $this->load->view('admin_panel/templates/subheader');
 
 ?>
-<style>
-    #progressInfo {
-        width: 0%;
-        height: 30px;
-        background-color: #4CAF50;
-        text-align: center;
-        line-height: 30px;
-        color: white;
-    }
-</style>
 
 <div class="m-content">
+    <div class="progress m-progress--sm" style="height:2px">
+        <div class="progress-bar m--bg-primary" id="progress" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
     <div class="m-portlet m-portlet--mobile">
         <div class="m-portlet__head">
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        <?= $title; ?>
+
                     </h3>
                 </div>
             </div>
 
             <div class="m-portlet__head-tools">
                 <ul class="m-portlet__nav">
-                    <span style="margin:5px">Progress:</span>
-                    <li style="width:100px" class="m-portlet__nav-item">
-                        <span id="progressInfo">0%</span>
+                    <li class="m-portlet__nav-item">
+                        <div id="priority-loader" class="m-loader m-loader--brand" style="width: 30px; display:none"></div>
                     </li>
                     <li class="m-portlet__nav-item">
-                        <a href="#" onclick="runLinkChecker()" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
-                            <span>Run Linkchecker</span>
-                        </a>
+                        <button onclick="runLinkChecker()" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+                            Run Linkchecker
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -108,10 +100,6 @@ $this->load->view('admin_panel/templates/scrolltop');
 $this->load->view('admin_panel/templates/close_html');
 
 ?>
-
-<script>
-    $("#smenu_lcheck").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-</script>
 
 <script>
     function runLinkChecker() {
@@ -315,10 +303,8 @@ $this->load->view('admin_panel/templates/close_html');
 
     ;
     jQuery(document).ready(function() {
-            DatatablesDataSourceAjaxServer.init();
-        }
-
-    );
+        DatatablesDataSourceAjaxServer.init();
+    });
 </script>
 
 <script>
