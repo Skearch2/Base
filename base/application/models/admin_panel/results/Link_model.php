@@ -82,11 +82,40 @@ class Link_model extends CI_Model
         }
     }
 
+
+    /**
+     * Gets links by brand direct status
+     *
+     * @param int $id An id of a link
+     * @param string $status Status for the brandlinks
+     * @return object
+     */
+    public function get_by_branddirect_status($status = NULL)
+    {
+        $this->db->select('links.id, links.title, links.description_short,
+        links.enabled, links.www, links.display_url, links.priority, links.redirect, fields.id AS field_id, fields.title AS field');
+        $this->db->from('skearch_listings as links');
+        $this->db->join('skearch_subcategories as fields', 'fields.id = links.sub_id', 'left');
+        $this->db->join('skearch_categories as umbrellas', 'umbrellas.id = fields.parent_id', 'left');
+        $this->db->where('umbrellas.enabled', 1);
+        $this->db->where('fields.enabled', 1);
+        $this->db->where('links.enabled', 1);
+        if ($status == 'inactive') {
+            $this->db->where('links.redirect', 0);
+        } elseif ($status == 'active') {
+            $this->db->where('links.redirect', 1);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+
     /**
      * Gets links by field
      *
      * @param int $id An id of a link
-     * @param string $status $status Status of the links
+     * @param string $status Status for the links
      * @return object|false
      */
     public function get_by_field($field_id, $status = NULL)
@@ -114,7 +143,7 @@ class Link_model extends CI_Model
      * Gets links by status
      *
      * @param int $id An id of a link
-     * @param string $columns Columns to select from the table in the db
+     * @param string $status Status for the links
      * @return object
      */
     public function get_by_status($status = NULL)

@@ -304,28 +304,32 @@ $this->load->view('admin_panel/templates/close_html');
 	}
 
 	//Toggles user payment status
-	function togglePayment(id, row) {
-		$.ajax({
-			url: '<?= site_url('admin/user/toggle/payment/user/id/') ?>' + id,
-			type: 'GET',
-			success: function(data, status) {
-				if (data == 0) {
-					document.getElementById("payment" + row).className = "m-badge m-badge--metal m-badge--wide";
-					document.getElementById("payment" + row).innerHTML = "Not paid";
-					toastr.success("", "Payment status updated.");
-				} else if (data == 1) {
-					document.getElementById("payment" + row).className = "m-badge m-badge--success m-badge--wide";
-					document.getElementById("payment" + row).innerHTML = "Paid";
-					toastr.success("", "Payment status updated.");
+	function togglePayment(id, username) {
+		swal({
+			title: "Are you sure?",
+			text: "Are you sure you want set it to paid for the user: \"" + username + "\"?",
+			type: "info",
+			confirmButtonClass: "btn btn-success",
+			confirmButtonText: "Set to Paid",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
+			$.ajax({
+				url: '<?= site_url('admin/user/toggle/payment/user/id/'); ?>' + id,
+				type: 'GET',
+				success: function(data, status) {
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else {
+						$('#m_table_1').DataTable().ajax.reload(null, false);
+						swal("Success!", "The payment has been set to paid.", "success")
+					}
+				},
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to process request.", "error")
 				}
-				// if the user has no access to toggle user status
-				else if (data == -1) {
-					toastr.warning("", "You have no permission.");
-				}
-			},
-			error: function(xhr, status, error) {
-				toastr.error("", "Unable to change the payment status.");
-			}
+			});
 		});
 	}
 
@@ -360,7 +364,6 @@ $this->load->view('admin_panel/templates/close_html');
 					orderable: !1,
 					render: function(a, t, e, n) {
 						return '<a onclick=showUserDetails("' + e['id'] + '") data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>' +
-							'<a href="<?= site_url() . "admin/user/get/permissions/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Permissions"><i class="la la-key"></i></a>' +
 							'<a onclick=reset("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Reset Password"><i class="la la-gear"></i></a>' +
 							'<a href="<?= site_url() . "admin/user/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 							'<a onclick=deleteUser("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
@@ -382,7 +385,7 @@ $this->load->view('admin_panel/templates/close_html');
 								class: "m-badge--danger"
 							}
 						};
-						if (e['activation_code'] !== null) return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[2].class + ' m-badge--wide">' + s[2].title + '</span>'
+						if (e['activation_selector'] !== null) return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[2].class + ' m-badge--wide">' + s[2].title + '</span>'
 						else return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 					}
 				}, {
@@ -398,7 +401,8 @@ $this->load->view('admin_panel/templates/close_html');
 								class: "m-badge--metal"
 							}
 						};
-						return void 0 === s[a] ? a : '<span id= payment' + n['row'] + ' title="Toggle Payment Status" onclick=togglePayment(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
+						if (e['is_paid'] == 1) return void 0 === s[a] ? a : '<span class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + '</span>'
+						else return void 0 === s[a] ? a : '<span id= payment' + n['row'] + ' title="Change Payment Status" onclick=togglePayment("' + e['id'] + '","' + e['username'] + '") class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 					}
 				}]
 			})

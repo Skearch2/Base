@@ -10,11 +10,6 @@
 
 		<!--begin::Page Scripts -->
 		<script>
-			// mask US number to US format
-			$(document).ready(function() {
-				$('#phone').mask('(000) 000-0000');
-			});
-
 			// settings for toastr notifications
 			toastr.options = {
 				"closeButton": false,
@@ -45,7 +40,6 @@
 		</script>
 
 		<script src="<?= site_url(ASSETS); ?>/admin_panel/vendors/custom/jquery-ui/jquery-ui.bundle.js" type="text/javascript"></script>
-		<script src="<?= site_url(ASSETS); ?>/frontend/js/jquery.mask.js" type="text/javascript"></script>
 		<script src="<?= site_url(ASSETS); ?>/admin_panel/app/js/dashboard.js" type="text/javascript"></script>
 		<script src="<?= site_url(ASSETS); ?>/plugins/easyautocomplete/jquery.easy-autocomplete.min.js"></script>
 

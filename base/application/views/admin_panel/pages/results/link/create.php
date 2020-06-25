@@ -227,7 +227,6 @@ $this->load->view('admin_panel/templates/close_html');
           if (array) {
             option.text = i + " - " + array.title;
             option.value = i;
-            option.style.backgroundColor = "#99ff99";
             option.disabled = true;
           } else {
             option.text = i;

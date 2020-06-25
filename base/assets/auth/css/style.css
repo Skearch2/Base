@@ -1,0 +1,12 @@
+body {
+background:
+	linear-gradient(0deg, rgba(226, 248, 197, 0.500), rgba(226, 248, 197, 0.500)),
+	url(../../auth/img/bg.jpg);
+background-size: cover;
+}
+
+.logo{
+	background-image: url(../../auth/img/logo.png);
+	height: 210px;
+	width: 420px;
+}

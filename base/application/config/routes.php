@@ -137,6 +137,7 @@ $route['admin/auth/submit']          = 'admin_panel/auth/submit';
 */
 
 // Users
+$route['admin/user/activate/id/(:num)']             = 'admin_panel/users/users/activate/$1';
 $route['admin/user/create/group/id/(:num)']         = 'admin_panel/users/users/create/$1';
 $route['admin/user/delete/id/(:num)']               = 'admin_panel/users/users/delete/$1';
 $route['admin/user/reset/id/(:num)']                = 'admin_panel/users/users/reset/$1';
@@ -198,6 +199,7 @@ $route['admin/results/link/redirect/id/(:num)']                                =
 $route['admin/results/link/toggle/id/(:num)']                                  = 'admin_panel/results/links/toggle/$1';
 $route['admin/results/link/update/id/(:num)']                                  = 'admin_panel/results/links/update/$1';
 $route['admin/results/link/update/id/(:num)/priority/(:num)']                  = 'admin_panel/results/links/update_priority/$1/$2';
+$route['admin/results/links/get/branddirect/status/(active|inactive)']         = 'admin_panel/results/links/get_by_branddirect_status/$1';
 $route['admin/results/links/get/field/id/(:num)']                              = 'admin_panel/results/links/get_by_field/$1';
 $route['admin/results/links/get/keywords/(:any)']                              = 'admin_panel/results/links/get_by_keywords/$1';
 $route['admin/results/links/get/status/(all|active|inactive)']                 = 'admin_panel/results/links/get_by_status/$1';
@@ -205,6 +207,7 @@ $route['admin/results/links/field/id/(:num)']                                  =
 $route['admin/results/links/priorities/field/id/(:num)']                       = 'admin_panel/results/links/priorities/$1';
 $route['admin/results/links/search']                                           = 'admin_panel/results/links/index/search';
 $route['admin/results/links/status/(all|active|inactive)']                     = 'admin_panel/results/links/index/$1';
+$route['admin/results/links/branddirect/status/(active|inactive)']             = 'admin_panel/results/links/brandlinks/$1';
 
 // Frontend
 $route['admin/results/suggestions/homepage']                = 'admin_panel/results/suggestions/homepage';

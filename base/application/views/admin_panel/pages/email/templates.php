@@ -59,7 +59,7 @@ $this->load->view('admin_panel/templates/subheader');
 										</div>
 									<?php endif; ?>
 
-									<div class="m-section">
+									<!-- <div class="m-section">
 										<span class="m-section__sub">
 											<b>Information on how to use variables:</b>
 										</span>
@@ -73,12 +73,8 @@ $this->load->view('admin_panel/templates/subheader');
 												</thead>
 												<tbody>
 													<tr>
-														<td>First Name</td>
-														<td>{firstname}</td>
-													</tr>
-													<tr>
-														<td>Last Name</td>
-														<td>{lastname}</td>
+														<td>Username</td>
+														<td>{username}</td>
 													</tr>
 													<tr>
 														<td>Link</td>
@@ -87,7 +83,7 @@ $this->load->view('admin_panel/templates/subheader');
 												</tbody>
 											</table>
 										</div>
-									</div>
+									</div> -->
 
 								</div>
 								<div class="form-group m-form__group row">

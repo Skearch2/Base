@@ -38,6 +38,34 @@ class Users extends MY_Controller
         $this->load->model('Util_model', 'Util_model');
     }
 
+
+    /**
+     * Manually activate the user, overriding email activation
+     *
+     * @param int $id ID of the user
+     * @return void
+     */
+    public function activate($id)
+    {
+        if (!$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $data = array(
+                'activation_selector' => null,
+                'activation_code' => null,
+                'activation_time' => null,
+                'active' => 1
+            );
+            $update = $this->User->update($id, $data);
+
+            if ($update) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        }
+    }
+
     /**
      * Create user
      *
@@ -421,11 +449,12 @@ class Users extends MY_Controller
      */
     public function toggle_payment($id)
     {
-        if (!$this->ion_auth_acl->has_permission('users_update') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('users_payment') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
             $status = $this->User_payment->get($id);
 
+            // create payment data incase not already created for the user
             if ($status === FALSE) {
                 $this->User_payment->create(array(
                     'user_id' => $id,
@@ -435,19 +464,17 @@ class Users extends MY_Controller
                 echo json_encode(1);
             } else {
 
-                if ($status->is_paid == 0) {
-                    $status->is_paid = 1;
-                } else {
-                    $status->is_paid = 0;
-                }
-
                 $payment_data = array(
-                    'is_paid' => $status->is_paid,
+                    'is_paid' => 1,
                 );
 
-                $this->User_payment->update($id, $payment_data);
+                $update = $this->User_payment->update($id, $payment_data);
 
-                echo json_encode($status->is_paid);
+                if ($update) {
+                    echo json_encode(1);
+                } else {
+                    echo json_encode(0);
+                }
             }
         }
     }
@@ -460,7 +487,6 @@ class Users extends MY_Controller
      */
     public function update($id)
     {
-
         if (!$this->ion_auth_acl->has_permission('users_update') && !$this->ion_auth->is_admin()) {
             // set page title
             $data['title'] = ucwords('access denied');
@@ -534,6 +560,7 @@ class Users extends MY_Controller
                     $data['country'] = $user->country;
                     $data['zipcode'] = $user->zipcode;
                 }
+                $data['activated'] = $user->activation_selector ? 0 : 1;
                 $data['active'] = $user->active;
                 $data['group'] = $this->ion_auth->get_users_groups($id)->row();
 
