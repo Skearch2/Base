@@ -4934,8 +4934,8 @@ select.selectpicker {
 }
 
 .note-toolbar {
-    position: relative;
-    z-index: 500
+    /* position: relative;
+    z-index: 500 */
 }
 
 .note-popover .popover-content,

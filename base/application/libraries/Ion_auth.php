@@ -149,9 +149,8 @@ class Ion_auth
 
             if ($code) {
                 $data = [
-                    'firstname' => $user->firstname,
-                    'lastname' => $user->lastname,
-                    'link' => site_url() . "myskearch/auth/reset_password/$code",
+                    'username' => $user->username,
+                    'reset_password_link' => site_url() . "myskearch/auth/reset_password/$code",
                 ];
 
                 if (!$this->config->item('use_ci_email', 'ion_auth')) {
@@ -269,9 +268,8 @@ class Ion_auth
             $user = $this->ion_auth_model->user($id)->row();
 
             $data = [
-                'firstname' => $user->firstname,
-                'lastname' => $user->lastname,
-                'link' => site_url() . "myskearch/auth/activate/$user->id/$activation_code",
+                'username' => $user->username,
+                'activation_link' => site_url() . "myskearch/auth/activate/$user->id/$activation_code",
             ];
             if (!$this->config->item('use_ci_email', 'ion_auth')) {
                 $this->ion_auth_model->trigger_events(['post_account_creation', 'post_account_creation_successful', 'activation_email_successful']);

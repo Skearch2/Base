@@ -31,7 +31,6 @@ class User_model extends CI_Model
             $password = $this->input->post('password');
             $email = $this->input->post('email');
             $additional_data = array(
-                'firstname' => $this->input->post('name'),
                 'gender'    => $this->input->post('gender'),
                 'age_group' => $this->input->post('age_group')
             );
@@ -54,7 +53,7 @@ class User_model extends CI_Model
             }
         } else {
             $data = array(
-                'name'      => $this->input->post('name_b'),
+                'name'      => $this->input->post('name'),
                 'brandname' => $this->input->post('brandname'),
                 'email'     => $this->input->post('email_b'),
                 'phone'     => $this->input->post('phone')

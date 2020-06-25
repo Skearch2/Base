@@ -331,7 +331,6 @@ $this->load->view('admin_panel/templates/close_html');
 					orderable: !1,
 					render: function(a, t, e, n) {
 						return '<a onclick=showUserDetails("' + e['id'] + '") data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>' +
-							'<a href="<?= site_url() . "admin/user/get/permissions/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Permissions"><i class="la la-key"></i></a>' +
 							'<a onclick=reset("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Reset Password"><i class="la la-gear"></i></a>' +
 							'<a href="<?= site_url() . "admin/user/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 							'<a onclick=deleteUser("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
@@ -353,7 +352,7 @@ $this->load->view('admin_panel/templates/close_html');
 								class: "m-badge--danger"
 							}
 						};
-						if (e['activation_code'] !== null) return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[2].class + ' m-badge--wide">' + s[2].title + '</span>'
+						if (e['activation_selector'] !== null) return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[2].class + ' m-badge--wide">' + s[2].title + '</span>'
 						else return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 					}
 				}]

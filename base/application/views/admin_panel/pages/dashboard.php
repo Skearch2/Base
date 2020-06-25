@@ -133,11 +133,11 @@ $this->load->view('admin_panel/templates/subheader');
 							<div class="m-widget_content-items">
 								<div class="m-widget_content-item">
 									<span>Active</span>
-									<span><a class="m--font-success"><?= $brand_stats->total_brandlinks_active ?></a></span>
+									<span><a class="m--font-success" href="<?= site_url('admin/results/links/branddirect/status/active') ?>"><?= $brand_stats->total_brandlinks_active ?></a></span>
 								</div>
 								<div class="m-widget_content-item">
 									<span>Inactive</span>
-									<span><a class="m--font-danger"><?= $brand_stats->total_brandlinks_inactive ?></a></span>
+									<span><a class="m--font-danger" href="<?= site_url('admin/results/links/branddirect/status/inactive') ?>"><?= $brand_stats->total_brandlinks_inactive ?></a></span>
 								</div>
 							</div>
 						</div>

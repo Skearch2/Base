@@ -257,11 +257,12 @@ $this->load->view('admin_panel/templates/close_html');
 
 	jQuery(document).ready(function() {
 		DatatablesDataSourceAjaxServer.init();
+		//$('#m_table_1').DataTable().ajax.reload(null, false);
 	});
 </script>
 
 <!-- Sidemenu class -->
 <script>
 	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-results-fields").addClass("m-menu__item  m-menu__item--active");
+	$("#submenu-results-links").addClass("m-menu__item  m-menu__item--active");
 </script>

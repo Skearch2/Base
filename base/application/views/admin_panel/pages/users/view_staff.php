@@ -359,7 +359,7 @@ $this->load->view('admin_panel/templates/close_html');
 								class: " m-badge--danger"
 							}
 						};
-						if (e['activation_code'] !== null) return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[2].class + ' m-badge--wide">' + s[2].title + '</span>'
+						if (e['activation_selector'] !== null) return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[2].class + ' m-badge--wide">' + s[2].title + '</span>'
 						else return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 					}
 				}]

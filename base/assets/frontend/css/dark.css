@@ -167,6 +167,7 @@ input:focus {
 	padding: 6px;
 	text-indent: 20px;
 	float: left;
+	font-family: 'Lato', sans-serif;
 }
 
 
@@ -270,10 +271,10 @@ a.btn-cat {
 
 .box h3 {
 	display: inline-block;
-	font-size: 28px;
+	font-size: 26px;
 	color: #000;
 	margin-top: 10px;
-	font-family: 'Conv_NeoSans_4';
+	font-family: 'Lato', sans-serif;
 }
 
 .right-btn a {
