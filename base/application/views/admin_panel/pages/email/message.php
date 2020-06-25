@@ -179,9 +179,7 @@ $this->load->view('admin_panel/templates/close_html');
                         type: "normal", //normal|slide|fade
                         callback: function() {}
                     }
-                },
-
-                theme: "bootstrap"
+                }
             };
 
             // initialize email search

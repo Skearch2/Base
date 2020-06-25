@@ -133,12 +133,6 @@ $this->load->view('admin_panel/templates/subheader');
 											<h3 class="m-form__section">Contact Details</h3>
 										</div>
 									</div>
-									<!-- <div class="form-group m-form__group row">
-										<label for="organization" class="col-2 col-form-label">Organization</label>
-										<div class="col-7">
-											<input class="form-control m-input" type="text" name="organization" value="<?= set_value('organization') ?>">
-										</div>
-									</div> -->
 									<div class="form-group m-form__group row">
 										<label for="phone" class="col-2 col-form-label">Phone No.</label>
 										<div class="col-7">
@@ -221,13 +215,13 @@ $this->load->view('admin_panel/templates/subheader');
 										</div>
 									</div>
 								<?php endif ?>
-								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
-								<div class="form-group m-form__group row">
-									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">Privileges</h3>
-									</div>
-								</div>
 								<?php if (in_array($group, array(1, 2))) : ?>
+									<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+									<div class="form-group m-form__group row">
+										<div class="col-10 ml-auto">
+											<h3 class="m-form__section">Privileges</h3>
+										</div>
+									</div>
 									<div class="form-group m-form__group row">
 										<label for="group" class="col-2 col-form-label">Group<font color="red"><sup>*</sup></font></label>
 										<div class="col-3">
@@ -241,18 +235,6 @@ $this->load->view('admin_panel/templates/subheader');
 								<?php else : ?>
 									<input type="hidden" name="group" value="<?= $group ?>">
 								<?php endif ?>
-								<div class="form-group m-form__group row">
-									<label for="active" class="col-2 col-form-label">Enabled</label>
-									<div class="col-7">
-										<input type="hidden" name="active" value="0" <?= set_value('active', 1) == 0 ? 'checked' : "" ?>>
-										<span class="m-switch m-switch--icon-check">
-											<label>
-												<input type="checkbox" name="active" value="1" <?= set_value('active', 1) == 1 ? 'checked' : "" ?>>
-												<span></span>
-											</label>
-										</span>
-									</div>
-								</div>
 							</div>
 							<div class="m-portlet__foot m-portlet__foot--fit">
 								<div class="m-form__actions">
@@ -338,9 +320,7 @@ $this->load->view('admin_panel/templates/close_html');
 				type: "normal", //normal|slide|fade
 				callback: function() {}
 			}
-		},
-
-		theme: "bootstrap"
+		}
 	};
 
 	// initialize brand search

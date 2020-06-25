@@ -96,8 +96,8 @@ $this->load->view('admin_panel/templates/subheader');
 									<label for="gender" class="col-2 col-form-label">Gender<font color="red"><sup>*</sup></font></label>
 									<div class="col-3">
 										<select class="form-control m-input" id="exampleSelect1" name="gender">
-											<option value="male" <?= set_select('gender', 'male') ?> <?= (strcmp($gender, "male") == 0) ? "selected" : "" ?>>Male</option>
-											<option value="female" <?= set_select('gender', 'female') ?> <?= (strcmp($gender, "female") == 0) ? "selected" : "" ?>>Female</option>
+											<option value="male" <?= set_select('gender', 'male') ?> <?= (strtolower($gender) == "male") ? "selected" : "" ?>>Male</option>
+											<option value="female" <?= set_select('gender', 'female') ?> <?= (strtolower($gender) == "female") ? "selected" : "" ?>>Female</option>
 										</select>
 									</div>
 								</div>
@@ -105,11 +105,11 @@ $this->load->view('admin_panel/templates/subheader');
 									<label for="age_group" class="col-2 col-form-label">Age Group<font color="red"><sup>*</sup></font></label>
 									<div class="col-3">
 										<select class="form-control m-input" id="exampleSelect1" name="age_group">
-											<option value="1-17" <?= set_select('age_group', '1-17') ?> <?= (strcmp($age_group, "1-17") == 0) ? "selected" : "" ?>>1-17</option>
-											<option value="18-22" <?= set_select('age_group', '18-22') ?> <?= (strcmp($age_group, "18-22") == 0) ? "selected" : "" ?>>18-22</option>
-											<option value="23-30" <?= set_select('age_group', '23-30') ?> <?= (strcmp($age_group, "23-30") == 0) ? "selected" : "" ?>>23-30</option>
-											<option value="31-50" <?= set_select('age_group', '31-50') ?> <?= (strcmp($age_group, "31-50") == 0) ? "selected" : "" ?>>31-50</option>
-											<option value="51+" <?= set_select('age_group', '51+') ?> <?= (strcmp($age_group, "50+") == 0) ? "selected" : "" ?>>51+</option>
+											<option value="1-17" <?= set_select('age_group', '1-17') ?> <?= ($age_group == "1-17") ? "selected" : "" ?>>1-17</option>
+											<option value="18-22" <?= set_select('age_group', '18-22') ?> <?= ($age_group == "18-22") ? "selected" : "" ?>>18-22</option>
+											<option value="23-30" <?= set_select('age_group', '23-30') ?> <?= ($age_group == "23-30") ? "selected" : "" ?>>23-30</option>
+											<option value="31-50" <?= set_select('age_group', '31-50') ?> <?= ($age_group == "31-50") ? "selected" : "" ?>>31-50</option>
+											<option value="51+" <?= set_select('age_group', '51+') ?> <?= ($age_group == "51+") ? "selected" : "" ?>>51+</option>
 										</select>
 									</div>
 								</div>
@@ -120,12 +120,6 @@ $this->load->view('admin_panel/templates/subheader');
 											<h3 class="m-form__section">Contact Details</h3>
 										</div>
 									</div>
-									<!-- <div class="form-group m-form__group row">
-										<label for="organization" class="col-2 col-form-label">Organization</label>
-										<div class="col-7">
-											<input class="form-control m-input" type="text" name="organization" value="<?= set_value('organization', $organization); ?>">
-										</div>
-									</div> -->
 									<div class="form-group m-form__group row">
 										<label for="phone" class="col-2 col-form-label">Phone No.</label>
 										<div class="col-7">
@@ -226,15 +220,19 @@ $this->load->view('admin_panel/templates/subheader');
 									<input type="hidden" name="group" value="<?= $group->id ?>">
 								<?php endif ?>
 								<div class="form-group m-form__group row">
-									<label for="active" class="col-2 col-form-label">Enabled</label>
+									<label for="active" class="col-2 col-form-label">Active</label>
 									<div class="col-7">
-										<input type="hidden" name="active" value="0" <?= set_value('active', $active) == 0 ? 'checked' : "" ?>>
-										<span class="m-switch m-switch--icon-check">
-											<label>
-												<input type="checkbox" name="active" value="1" <?= set_value('active', $active) == 1 ? 'checked' : "" ?>>
-												<span></span>
-											</label>
-										</span>
+										<?php if (!$activated) : ?>
+											<span class="m-badge m-badge--warning m-badge--wide" style="cursor:pointer" title="Activate manually" onclick="manualActivate()">Pending Activation</span>
+										<?php else : ?>
+											<input type="hidden" name="active" value="0" <?= set_value('active', $active) == 0 ? 'checked' : "" ?>>
+											<span class="m-switch m-switch--outline m-switch--icon m-switch--success">
+												<label>
+													<input type="checkbox" name="active" value="1" <?= set_value('active', $active) == 1 ? 'checked' : "" ?>>
+													<span></span>
+												</label>
+											</span>
+										<?php endif ?>
 									</div>
 								</div>
 							</div>
@@ -244,7 +242,7 @@ $this->load->view('admin_panel/templates/subheader');
 										<div class="col-2">
 										</div>
 										<div class="col-7">
-											<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Update</button>&nbsp;&nbsp;
+											<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Update</button>
 										</div>
 									</div>
 								</div>
@@ -280,55 +278,91 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-	// settings for brand search
-	var options = {
+	// activate user manually
+	function manualActivate() {
+		swal({
+			title: "Manual Activation?",
+			html: "Are you sure you want activate the user? \
+				   <br> \
+				   <i>Any unsaved changes will be lost.<i>",
+			type: "info",
+			confirmButtonClass: "btn btn-success",
+			confirmButtonText: "Activate",
+			showCancelButton: true
+		}).then(function(e) {
+			if (!e.value) return;
+			$.ajax({
+				url: '<?= site_url('admin/user/activate/id/'); ?>' + <?= $id ?>,
+				type: 'GET',
+				success: function(data, status) {
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else if (data == 0) {
+						swal("Error!", "Unable to activate the user.", "error")
+					} else {
+						swal("Success!", "The user has been activated.", "success").then(function(e) {
+							location.reload();
+						})
+					}
+				},
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to process request.", "error")
+				}
+			});
+		});
+	}
 
-		url: function(phrase) {
-			return "<?= site_url(); ?>admin/brands/search/" + phrase
-		},
+	<?php if ($group->id == 3) : ?>
 
-		getValue: "brand",
+		// settings for brand search
+		var options = {
 
-		template: {
-			type: "description",
-			fields: {
-				description: "organization"
+			url: function(phrase) {
+				return "<?= site_url(); ?>admin/brands/search/" + phrase
+			},
+
+			getValue: "brand",
+
+			template: {
+				type: "description",
+				fields: {
+					description: "organization"
+				}
+			},
+
+			list: {
+				match: {
+					enabled: true
+				},
+
+				sort: {
+					enabled: true
+				},
+
+				onSelectItemEvent: function() {
+					var brand = $("#brand-search").getSelectedItemData().brand;
+					var id = $("#brand-search").getSelectedItemData().id;
+
+					$("#brand-search").val(brand).trigger("change");
+					$("#brand-id").val(id);
+				},
+
+				showAnimation: {
+					type: "slide", //normal|slide|fade
+					callback: function() {}
+				},
+
+				hideAnimation: {
+					type: "normal", //normal|slide|fade
+					callback: function() {}
+				}
 			}
-		},
+		};
 
-		list: {
-			match: {
-				enabled: true
-			},
+		// initialize brand search
+		$("#brand-search").easyAutocomplete(options);
 
-			sort: {
-				enabled: true
-			},
-
-			onSelectItemEvent: function() {
-				var brand = $("#brand-search").getSelectedItemData().brand;
-				var id = $("#brand-search").getSelectedItemData().id;
-
-				$("#brand-search").val(brand).trigger("change");
-				$("#brand-id").val(id);
-			},
-
-			showAnimation: {
-				type: "slide", //normal|slide|fade
-				callback: function() {}
-			},
-
-			hideAnimation: {
-				type: "normal", //normal|slide|fade
-				callback: function() {}
-			}
-		},
-
-		theme: "bootstrap"
-	};
-
-	// initialize brand search
-	$("#brand-search").easyAutocomplete(options);
+	<?php endif ?>
 </script>
 
 <!-- Sidemenu class -->

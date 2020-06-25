@@ -43,6 +43,26 @@ class Links extends MY_Controller
     }
 
     /**
+     * Show brand links page
+     *
+     * @param active|inactive $status Status for the brandlinks
+     * @return void
+     */
+    public function brandlinks($status)
+    {
+        if (!$this->ion_auth_acl->has_permission('links_get') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+            $data['status'] = $status;
+            $data['heading'] = ucfirst($status);
+            $data['title'] = ucfirst("Links");
+            $this->load->view('admin_panel/pages/results/link/view_brandlinks', $data);
+        }
+    }
+
+    /**
      * Creates a link
      *
      * @return void
@@ -170,6 +190,32 @@ class Links extends MY_Controller
     }
 
     /**
+     * Get links by brand direct status
+     *
+     * @param active|inactive $status Status for the fields
+     * @return void
+     */
+    public function get_by_branddirect_status($status = null)
+    {
+        if ($this->ion_auth_acl->has_permission('links_get') or $this->ion_auth->is_admin()) {
+            $links = $this->links->get_by_branddirect_status($status);
+            $total_links = sizeof($links);
+
+            $result = array(
+                'iTotalRecords' => $total_links,
+                'iTotalDisplayRecords' => $total_links,
+                'sEcho' => 0,
+                'sColumns' => "",
+                'aaData' => $links,
+            );
+
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($result));
+        }
+    }
+
+    /**
      * Get links by field
      *
      * @param int $umbrella_id ID of umbrella
@@ -251,7 +297,7 @@ class Links extends MY_Controller
     /**
      * Show links page
      *
-     * @param int|active|inactive|search $value Id of the link or status for the links or search
+     * @param int|active|inactive|search $value Id of the field or status for the links or keyword search
      * @return void
      */
     public function index($value)
@@ -266,12 +312,12 @@ class Links extends MY_Controller
 
             $data['title'] = ucfirst("Links");
 
-            if ($value != null && is_numeric($value)) {
+            if (is_numeric($value)) {
                 $data['field_id'] = $value;
-                $field_title = $this->fields->get($value)->title;
-                $data['heading'] = ucfirst($field_title);
+                $field_name = $this->fields->get($value)->title;
+                $data['heading'] = ucfirst($field_name);
                 $this->load->view('admin_panel/pages/results/link/view_by_field', $data);
-            } else if ($value != null && strcmp($value, "search") === 0) {
+            } else if ($value == "search") {
                 $this->load->view('admin_panel/pages/results/link/search', $data);
             } else {
                 $data['status'] = $value;

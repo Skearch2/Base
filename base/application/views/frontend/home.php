@@ -45,7 +45,7 @@ $this->load->view('frontend/templates/nav');
 <section class="button-section">
     <div class="container">
         <a href="browse">
-            <h1>Browse All<span>Fields</span></h1>
+            <h1>Browse all<span>Fields</span></h1>
         </a>
         <?php foreach ($results as $results) : ?>
             <?php if ($results->result_id == 0) : ?>

@@ -39,7 +39,7 @@ $this->load->view('frontend/templates/header');
         <div class="row">
             <div class="main-box">
                 <div class="box">
-                    <h3>Browse All Fields</h3>
+                    <h3>Browse all Fields</h3>
                     <?php if (!empty($this->uri->segment(2))) : ?>
                         <div class="right-btn ml-auto"> <a href="<?= BASE_URL ?>browse" id="sort-btn">A - Z</a>
                         </div>
