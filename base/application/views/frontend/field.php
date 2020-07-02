@@ -14,21 +14,6 @@ $this->load->view('frontend/templates/header');
 
 ?>
 
-<script type="text/javascript">
-    // var t;
-
-    // var start = $('#myCarouselB').find('.active').attr('data-interval');
-    // t = setTimeout("$('#myCarouselB').carousel({interval: 1000});", start - 1000);
-
-    // $('#myCarouselB').on('slid.bs.carousel', function() {
-    //     clearTimeout(t);
-    //     var duration = $(this).find('.active').attr('data-interval');
-
-    //     $('#myCarouselB').carousel('pause');
-    //     t = setTimeout("$('#myCarouselB').carousel();", duration - 1000);
-    // })
-</script>
-
 <script>
     $(document).ready(function() {
         $.fn.showResults = function(value) {
@@ -114,20 +99,20 @@ $this->load->view('frontend/templates/header');
                 <div class="box inline-box">
                     <h3>Related Fields</h3>
                 </div>
-                <div class="middle-inner browse-inner border-box field">
+                <div class="middle-inner browse-inner border-box">
                     <div class="row category_list_home accessorize-list">
                         <div class="col-sm-12">
                             <div class="row">
-                                <div class="col-sm-3 f-box">
+                                <div class="col-sm-3 f-box umbrella">
                                     <a href="<?= base_url() ?>browse/<?= $umbrella_name ?>" title="<?= $umbrella_name ?>"><?= $umbrella_name ?></a>
                                 </div>
                                 <?php foreach ($results as $results) : ?>
-                                    <?php if ($results->is_result_umbrella != 1) : ?>
+                                    <?php if (!$results->is_result_umbrella) : ?>
                                         <div class="col-sm-3 f-box">
                                             <a href="<?= base_url('browse/') . strtolower($results->umbrella) ?>/<?= strtolower($results->title) ?>" class="btn btn-link" role="button"><?= $results->title ?></a>
                                         </div>
                                     <?php else : ?>
-                                        <div class="col-sm-3 f-box">
+                                        <div class="col-sm-3 f-box umbrella">
                                             <a href="<?= base_url('browse/') . strtolower($results->title) ?>" class="btn btn-link" role="button"><?= $results->title ?></a>
                                         </div>
                                     <?php endif ?>

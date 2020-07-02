@@ -8,6 +8,20 @@
 	<meta name="description" content="<?php echo $page['pageDescription']; ?> " />
 	<meta name="keywords" content="<?php echo $page['pageKeywords']; ?>" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-139872847-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+		gtag('js', new Date());
+		gtag('config', 'UA-139872847-1');
+	</script>
+
+
 	<?php if ($settings['siteFavicon'] != "") { ?>
 		<link rel="icon" href="<?php echo BASE_URL; ?>/images/<?php echo $settings['siteFavicon']; ?>" />
 	<?php } ?>
