@@ -305,12 +305,8 @@ a.btn-cat {
     border: 0px none;
 }
 
-.field .accessorize-list .f-box:first-child a {
+.accessorize-list .f-box.umbrella a {
     border: 2px solid #608112;
-}
-
-.accessorize-list .f-box:first-child a {
-    border: 2px solid #000;
 }
 
 .accessorize-list .f-box>a {

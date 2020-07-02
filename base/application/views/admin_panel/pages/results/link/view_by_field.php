@@ -157,32 +157,32 @@ $this->load->view('admin_panel/templates/close_html');
 
 <script>
 	// shows priorities dropdown
-	function showPriorities(id, priority) {
-		var $select = $("<select onclick=event.stopPropagation() onchange= updatePriority(" + id + ",this.value)></select>");
-		for (var i = 0; i <= 250; i++) {
-			if (i == 0) {
-				var $option = $("<option></option>", {
-					"text": "Not Set",
-					"value": i
-				});
-			} else {
-				var $option = $("<option></option>", {
-					"text": i,
-					"value": i
-				});
-			}
-			if (searchArray(i, obj)) {
-				if (i != 0) {
-					$option.attr('disabled', 'disabled');
-				}
-			}
-			if (i == priority) {
-				$option.attr("selected", "selected")
-			}
-			$select.append($option);
-		}
-		$("#priority-dropdown-" + id).html($select.prop("outerHTML"));
-	}
+	// function showPriorities(id, priority) {
+	// 	var $select = $("<select onclick=event.stopPropagation() onchange= updatePriority(" + id + ",this.value)></select>");
+	// 	for (var i = 0; i <= 250; i++) {
+	// 		if (i == 0) {
+	// 			var $option = $("<option></option>", {
+	// 				"text": "Not Set",
+	// 				"value": i
+	// 			});
+	// 		} else {
+	// 			var $option = $("<option></option>", {
+	// 				"text": i,
+	// 				"value": i
+	// 			});
+	// 		}
+	// 		if (searchArray(i, obj)) {
+	// 			if (i != 0) {
+	// 				$option.attr('disabled', 'disabled');
+	// 			}
+	// 		}
+	// 		if (i == priority) {
+	// 			$option.attr("selected", "selected")
+	// 		}
+	// 		$select.append($option);
+	// 	}
+	// 	$("#priority-dropdown-" + id).html($select.prop("outerHTML"));
+	// }
 
 	// get priorites of the links for the given field
 	function getPriorities(fieldId = false) {
@@ -456,22 +456,52 @@ $this->load->view('admin_panel/templates/close_html');
 						title: "Actions",
 						orderable: !1,
 						render: function(a, t, e, n) {
+							var $select = $("<select onchange= updatePriority(" + e['id'] + ",this.value)></select>", {
+								"id": "priority" + e['id'],
+							});
+							for (var i = 0; i <= 250; i++) {
+								if (i == 0) {
+									var $option = $("<option></option>", {
+										"text": "Not Set",
+										"value": i
+									});
+								} else {
+									var $option = $("<option></option>", {
+										"text": i,
+										"value": i
+									});
+								}
+								if (searchArray(i, obj)) {
+									if (i != 0) {
+										$option.attr('disabled', 'disabled');
+										$option.attr('style', 'background-color:#99ff99');
+									}
+								}
+								if (i == e['priority']) {
+									$option.attr("selected", "selected")
+								}
+								$select.append($option);
+							}
+
 							var redirectVal;
 							if (e['redirect'] == 0) redirectVal = "red";
 							else redirectVal = "#34bfa3";
 							var title = e['title'].replace(/ /g, '%20');
 							var row = (n.row).toString().slice(-1);
+
 							//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
 							return '<a href="<?= site_url() . "admin/results/link/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 								'<a onclick=moveOrDuplicateDialog(' + e['id'] + ') data-toggle="modal" data-target="#modal_option" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Move/Duplicate"><i class="la la-copy"></i></a>' +
 								'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="BL"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
-								'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+								'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>' +
+								$select.prop("outerHTML")
 						}
 					},
 					{
 						targets: 0,
 						render: function(a, t, e, n) {
-							return '<a href="javascript:;" id="priority-dropdown-' + e['id'] + '" title="Change Priority" onclick="showPriorities(' + e['id'] + ',' + e['priority'] + ')">' + e['priority'] + '</a>'
+							// return '<a href="javascript:;" id="priority-dropdown-' + e['id'] + '" title="Change Priority" onclick="showPriorities(' + e['id'] + ',' + e['priority'] + ')">' + e['priority'] + '</a>'
+							return e['priority']
 						}
 					},
 					{

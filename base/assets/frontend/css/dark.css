@@ -341,12 +341,9 @@ a.btn-cat {
 .accessorize-list .f-box:first-child .acz-sublist ul li a {
     border: 0px none;
 }
-.field .accessorize-list .f-box:first-child a {
-    border: 2px solid #a6c102;
-}
 
-.accessorize-list .f-box:first-child a {
-    border: 2px solid #fff
+.accessorize-list .f-box.umbrella a {
+    border: 2px solid #a6c102;
 }
 
 .accessorize-list .f-box>a {
