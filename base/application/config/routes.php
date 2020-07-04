@@ -229,9 +229,10 @@ $route['admin/results/research/make_link/(:num)'] = 'admin_panel/results/researc
 */
 
 // Leads
-$route['admin/brands/leads']               = 'admin_panel/brands/leads';
-$route['admin/brands/leads/get']           = 'admin_panel/brands/leads/get';
-$route['admin/brands/leads/delete/(:num)'] = 'admin_panel/brands/leads/delete/$1';
+$route['admin/brands/leads']                      = 'admin_panel/brands/leads';
+$route['admin/brands/leads/create_user/(:num)']   = 'admin_panel/brands/leads/create_user/$1';
+$route['admin/brands/leads/get']                  = 'admin_panel/brands/leads/get';
+$route['admin/brands/leads/delete/(:num)']        = 'admin_panel/brands/leads/delete/$1';
 
 // Brands
 $route['admin/brand/create']                    = 'admin_panel/brands/brands/create';
