@@ -34,7 +34,97 @@ class Leads extends MY_Controller
             redirect('admin/auth/login');
         }
 
+        $this->load->model('admin_panel/brands/Brand_model', 'Brand');
         $this->load->model('admin_panel/brands/leads_model', 'Leads');
+        $this->load->model('admin_panel/users/User_model', 'User');
+        $this->load->model('Util_model', 'Util_model');
+    }
+
+    /**
+     * Create brand user from the lead
+     *  
+     * @param int $id Lead id
+     * @return void
+     */
+    public function create_user($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('user_create') && !$this->ion_auth->is_admin()) {
+            error_403('admin');
+        } else {
+
+            $this->form_validation->set_rules('username', 'Username', 'trim|required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']');
+            $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[skearch_users.email]');
+            $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|alpha');
+            $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|alpha');
+            $this->form_validation->set_rules('gender', 'Gender', 'required');
+            $this->form_validation->set_rules('age_group', 'Age group', 'required');
+            $this->form_validation->set_rules('brand', 'Brand', 'required');
+            $this->form_validation->set_rules('brand_id', 'Brand ID', 'numeric');
+            $this->form_validation->set_rules('key_member', 'Key Member', 'required');
+            $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
+            $this->form_validation->set_rules('address1', 'Address 1', 'trim');
+            $this->form_validation->set_rules('address2', 'Address 2', 'trim');
+            $this->form_validation->set_rules('city', 'City', 'trim');
+            if (strlen($this->input->post('zipcode'))) {
+                $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
+            }
+
+            if ($this->form_validation->run() == false) {
+                $lead = $this->Leads->get($id);
+
+                if (!$lead) {
+                    error_404('admin');
+                    return;
+                }
+
+                $name = explode(' ', $lead->name, 2);
+
+                $data['firstname'] = $name[0];
+                $data['lastname'] = ltrim($lead->name, $name[0] . ' ');
+                $data['email'] = $lead->email;
+                $data['phone'] = $lead->phone;
+
+                $data['states'] = $this->Util_model->get_state_list();
+                $data['countries'] = $this->Util_model->get_country_list();
+
+                $data['title'] = ucwords("create brand user");
+
+                // Load page content
+                $this->load->view('admin_panel/pages/brands/leads/create_user', $data);
+            } else {
+
+                $username = $this->input->post('username');
+                $password = $this->input->post('password');
+                $email = $this->input->post('email');
+
+                $additional_data['firstname'] = $this->input->post('firstname');
+                $additional_data['lastname'] = $this->input->post('lastname');
+                $additional_data['gender'] = $this->input->post('gender');
+                $additional_data['age_group'] = $this->input->post('age_group');
+                $additional_data['phone'] = $this->input->post('phone');
+                $additional_data['address1'] = $this->input->post('address1');
+                $additional_data['address2'] = $this->input->post('address2');
+                $additional_data['city'] = $this->input->post('city');
+                $additional_data['state'] = $this->input->post('state');
+                $additional_data['country'] = $this->input->post('country');
+                $additional_data['zipcode'] = $this->input->post('zipcode');
+
+                $create = $user_id = $this->User->create($username, $password, $email, $additional_data, array(3));
+
+                // link user to brand
+                $brand_id = $this->input->post('brand_id');
+                $is_key_member = $this->input->post('key_member');
+                $this->Brand->link_user($user_id, $brand_id, $is_key_member);
+
+                if ($create) {
+                    $this->session->set_flashdata('create_success', 1);
+                } else {
+                    $this->session->set_flashdata('create_success', 0);
+                }
+                redirect("admin/brands/leads");
+            }
+        }
     }
 
     /**
@@ -82,6 +172,11 @@ class Leads extends MY_Controller
         }
     }
 
+    /**
+     * View page for leads
+     *
+     * @return void
+     */
     public function index()
     {
         if (!$this->ion_auth_acl->has_permission('brandleads_get') && !$this->ion_auth->is_admin()) {
@@ -93,7 +188,7 @@ class Leads extends MY_Controller
             $data['title'] = ucfirst("Leads");
 
             // Load page content
-            $this->load->view('admin_panel/pages/brands/leads', $data);
+            $this->load->view('admin_panel/pages/brands/leads/view', $data);
         }
     }
 }

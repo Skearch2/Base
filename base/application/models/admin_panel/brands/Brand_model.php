@@ -53,6 +53,7 @@ class Brand_model extends CI_Model
     /**
      * Gets brand
      *
+     * @param int $id Brand ID
      * @return object
      */
     public function get($id = null)
