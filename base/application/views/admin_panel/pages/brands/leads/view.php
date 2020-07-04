@@ -33,11 +33,32 @@ $this->load->view('admin_panel/templates/subheader');
 	<div class="m-portlet m-portlet--mobile">
 		<div class="m-portlet__body">
 
-			<!--begin: Datatable -->
+			<!-- Notifications -->
+			<?php if ($this->session->flashdata('create_success') === 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The brand user has been created.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('create_success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to create the brand user.
+					</div>
+				</div>
+			<?php endif ?>
+
+			<!-- Datatable -->
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
-						<th>ID</th>
+						<th>#</th>
 						<th>Name</th>
 						<th>Brand Name</th>
 						<th>Email Address</th>
@@ -48,8 +69,7 @@ $this->load->view('admin_panel/templates/subheader');
 			</table>
 		</div>
 	</div>
-
-	<!-- END EXAMPLE TABLE PORTLET-->
+</div>
 </div>
 
 <?php
@@ -120,7 +140,7 @@ $this->load->view('admin_panel/templates/close_html');
 				serverSide: !1,
 				ajax: "<?= site_url("admin/brands/leads/get"); ?>",
 				columns: [{
-					data: "id"
+					data: "#"
 				}, {
 					data: "name"
 				}, {
@@ -137,13 +157,19 @@ $this->load->view('admin_panel/templates/close_html');
 					title: "Actions",
 					orderable: !1,
 					render: function(a, t, e, n) {
-						return '<a onclick=deleteEntry("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+						return '<a href="<?= site_url() . "admin/brands/leads/create_user/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Create Brand User"><i class="la la-user-plus"></i></a>' +
+							'<a onclick=deleteEntry("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}, {
 					targets: 4,
 					render: function(a, t, e, n) {
 						// convert phone number to US format
-						return e['phone'].replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');;
+						return e['phone'].replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+					}
+				}, {
+					targets: 0,
+					render: function(a, t, e, n) {
+						return n['row'] + 1;
 					}
 				}]
 			})

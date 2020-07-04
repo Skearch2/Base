@@ -34,16 +34,26 @@ class Leads_model extends CI_Model
     }
 
     /**
-     * Get all brandleads
+     * Gets leads
      *
+     * @param int $id Lead ID
      * @return object
      */
-    public function get()
+    public function get($id = null)
     {
+
         $this->db->select('*');
         $this->db->from('skearch_brand_leads');
-        $query = $this->db->get();
 
-        return $query->result();
+        if ($id) {
+            $this->db->where('id', $id);
+            $query = $this->db->get();
+
+            return $query->row();
+        } else {
+            $query = $this->db->get();
+
+            return $query->result();
+        }
     }
 }
