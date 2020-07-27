@@ -27,7 +27,8 @@ $bs   = $this->config->item('bootstrap_theme');
   <!-- Custom styles for this template -->
   <link href="<?= css_url(); ?><?= $theme; ?>" rel="stylesheet">
 
-  <link href="<?= base_url('assets/js/easyautocomplete/easy-autocomplete.min.css') ?>" rel="stylesheet" type="text/css">
+  <link href="<?= base_url('assets/css/easyautocomplete/easy-autocomplete.min.css') ?>" rel="stylesheet" type="text/css">
+  <link href="<?= base_url('assets/css/bootstrap-fileinput/fileinput.css') ?>" rel="stylesheet" type="text/css">
 
   <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
   <!--[if lt IE 9]><script src="assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -43,5 +44,6 @@ $bs   = $this->config->item('bootstrap_theme');
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
   <script src="<?= base_url('assets/js/easyautocomplete/jquery.easy-autocomplete.min.js') ?>"></script>
-
+  <script src="<?= base_url('assets/js/bootstrap-fileinput/fileinput.js') ?>"></script>
+  <script src="<?= base_url('assets/js/bootstrap-fileinput/theme.js') ?>"></script>
 </head>

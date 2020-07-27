@@ -47,114 +47,122 @@ $basedomain = $this->config->item('base_domain');
   <?php else : ?>
     <img src="<?= (!is_string($image->{$ifile}) ? 'unknown' : $image->{$ifile}); ?>" alt="No Media" title="<?= $image->{$idesc}; ?>" class="<?= $css; ?>">
   <?php endif; ?>
-  <div>
+</div>
 
+<br>
+
+<form id="edit-image-form" class="form-horizontal" method="POST" action="<?= base_url(); ?><?= $main; ?>/updateimage/<?= $image->{$aid}; ?>/<?= $image->{$iid}; ?>" enctype="multipart/form-data">
+
+  <label for="<?= $title; ?>" class="control-label">Brand</label>
+  <input type="text" name="brand" id="brand-search" class="form-control" placeholder="Change Brand" autofocus>
+  <input type="hidden" name="<?= $brandid; ?>" id="<?= $brandid; ?>" value="<?= $image->{$ibrandid}; ?>">
+
+  <br>
+
+  <label for="<?= $title; ?>" class="control-label">Title</label>
+  <input type="text" name="<?= $title; ?>" id="<?= $title; ?>" class="form-control" value="<?= $image->{$ititle}; ?>" required>
+
+  <br>
+
+  <label for="<?= $desc; ?>" class="control-label">Description</label>
+  <input type="text" name="<?= $desc; ?>" id="<?= $desc; ?>" class="form-control" value="<?= $image->{$idesc}; ?>" required>
+
+  <br>
+
+  <label for="<?= $url; ?>" class="control-label">Link Reference</label>
+  <input type="url" name="<?= $url; ?>" id="<?= $url; ?>" class="form-control" value="<?= $image->{$iurl}; ?>">
+
+  <br>
+
+  <label for="<?= $duration; ?>" class="control-label">Duration</label>
+  <input type="number" name="<?= $duration; ?>" id="<?= $duration; ?>" class="form-control" min="1" max="120" value="<?= $image->{$iduration}; ?>">
+
+  <br>
+
+  <?php if (strcasecmp($image->$imediaurl, '#') == 0) : ?>
+    <label for="<?= $media; ?>" class="control-label">Media</label>
+    <input id="mediaupload" name="<?= $media; ?>" type="file" data-show-preview="true" data-msg-placeholder="Upload Media" data-allowed-file-extensions='["mp4", "gif", "jpeg", "jpg", "png"]'>
+    <input type="hidden" name="<?= $mediaurl; ?>" value="<?= $image->{$imediaurl}; ?>">
+  <?php else : ?>
+    <label for="<?= $media; ?>" class="control-label">Youtube Link</label>
+    <input type="url" name="<?= $mediaurl; ?>" id="mediaurl" class="form-control" value=<?= $image->{$imediaurl}; ?>>
+    <input type="hidden" name="<?= $media; ?>">
     <br>
+  <?php endif; ?>
 
-    <form id="edit-image-form" class="form-horizontal" method="POST" action="<?= base_url(); ?><?= $main; ?>/updateimage/<?= $image->{$aid}; ?>/<?= $image->{$iid}; ?>" enctype="multipart/form-data">
+  <br>
 
-      <label for="<?= $title; ?>" class="control-label">Brand</label>
-      <input type="text" name="brand" id="brand-search" class="form-control" placeholder="Change Brand" autofocus>
-      <input type="hidden" name="<?= $brandid; ?>" id="<?= $brandid; ?>" value="<?= $image->{$ibrandid}; ?>">
+  <button class="btn btn-small btn-primary" type="submit" form="edit-image-form">Submit</button>
+  <button class="btn btn-small btn-secondary" type="button" form="edit-image-form" onclick="history.back();">Cancel</button>
+  <a href="<?= base_url(); ?><?= $main; ?>/deleteimageglobal/<?= $image->{$iid}; ?>" class="btn btn-small btn-danger float-right">Delete</a><br>
+</form>
 
-      <br>
+<script>
+  // settings for brand search
+  var options = {
 
-      <label for="<?= $title; ?>" class="control-label">Title</label>
-      <input type="text" name="<?= $title; ?>" id="<?= $title; ?>" class="form-control" value="<?= $image->{$ititle}; ?>" required>
+    url: function(phrase) {
+      return "<?= $basedomain ?>/admin/brands/search/" + phrase
+    },
 
-      <br>
+    getValue: "brand",
 
-      <label for="<?= $desc; ?>" class="control-label">Description</label>
-      <input type="text" name="<?= $desc; ?>" id="<?= $desc; ?>" class="form-control" value="<?= $image->{$idesc}; ?>" required>
+    template: {
+      type: "description",
+      fields: {
+        description: "organization"
+      }
+    },
 
-      <br>
+    list: {
+      match: {
+        enabled: true
+      },
 
-      <label for="<?= $url; ?>" class="control-label">Link Reference</label>
-      <input type="url" name="<?= $url; ?>" id="<?= $url; ?>" class="form-control" value="<?= $image->{$iurl}; ?>">
+      sort: {
+        enabled: true
+      },
 
-      <br>
+      onSelectItemEvent: function() {
+        var brand = $("#brand-search").getSelectedItemData().brand;
+        var id = $("#brand-search").getSelectedItemData().id;
 
-      <label for="<?= $duration; ?>" class="control-label">Duration</label>
-      <input type="number" name="<?= $duration; ?>" id="<?= $duration; ?>" class="form-control" min="1" max="120" value="<?= $image->{$iduration}; ?>">
+        $("#brand-search").val(brand).trigger("change");
+        $("#<?= $brandid ?>").val(id);
+      },
 
-      <br>
+      showAnimation: {
+        type: "slide", //normal|slide|fade
+        callback: function() {}
+      },
 
-      <?php if (strcasecmp($image->$imediaurl, '#') == 0) : ?>
-        <label for="<?= $media; ?>" class="control-label">Media</label>
-        <div class="input-group" id="mediaupload">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-          </div>
-          <div class="custom-file">
-            <input type="file" class="custom-file-input" id="inputGroupFile01" name="<?= $media; ?>" aria-describedby="inputGroupFileAddon01">
-            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-          </div>
-        </div>
-        <input type="hidden" name="<?= $mediaurl; ?>" value="<?= $image->{$imediaurl}; ?>">
-      <?php else : ?>
-        <label for="<?= $media; ?>" class="control-label">Youtube Link</label>
-        <input type="url" name="<?= $mediaurl; ?>" id="mediaurl" class="form-control" value=<?= $image->{$imediaurl}; ?>>
-        <input type="hidden" name="<?= $media; ?>">
-        <br>
-      <?php endif; ?>
+      hideAnimation: {
+        type: "normal", //normal|slide|fade
+        callback: function() {}
+      }
+    },
 
-      <br>
+    theme: "bootstrap"
+  };
 
-      <button class="btn btn-small btn-primary" type="submit" form="edit-image-form">Submit</button>
-      <button class="btn btn-small btn-secondary" type="button" form="edit-image-form" onclick="history.back();">Cancel</button>
-      <a href="<?= base_url(); ?><?= $main; ?>/deleteimageglobal/<?= $image->{$iid}; ?>" class="btn btn-small btn-danger float-right">Delete</a><br>
-    </form>
+  // initialize brand search
+  $("#brand-search").easyAutocomplete(options);
+</script>
 
-    <script>
-      // settings for brand search
-      var options = {
+<script>
+  $("#mediaupload").fileinput({
+    'theme': "fas",
+    'showUpload': false,
+    'showClose': false,
+    'focusCaptionOnBrowse': false,
+    'focusCaptionOnClear': false,
+    'previewFileType': ['mp4 ', 'jpeg', 'jpg', 'gif', 'png'],
+    'dropZoneEnabled': false,
+    'maxFileCount': 1,
+    'fileActionSettings': {
+      'showZoom': false
+    }
+  });
+</script>
 
-        url: function(phrase) {
-          return "<?= $basedomain ?>/admin/brands/search/" + phrase
-        },
-
-        getValue: "brand",
-
-        template: {
-          type: "description",
-          fields: {
-            description: "organization"
-          }
-        },
-
-        list: {
-          match: {
-            enabled: true
-          },
-
-          sort: {
-            enabled: true
-          },
-
-          onSelectItemEvent: function() {
-            var brand = $("#brand-search").getSelectedItemData().brand;
-            var id = $("#brand-search").getSelectedItemData().id;
-
-            $("#brand-search").val(brand).trigger("change");
-            $("#<?= $brandid ?>").val(id);
-          },
-
-          showAnimation: {
-            type: "slide", //normal|slide|fade
-            callback: function() {}
-          },
-
-          hideAnimation: {
-            type: "normal", //normal|slide|fade
-            callback: function() {}
-          }
-        },
-
-        theme: "bootstrap"
-      };
-
-      // initialize brand search
-      $("#brand-search").easyAutocomplete(options);
-    </script>
-
-    <!-- End editimage.php -->
+<!-- End editimage.php -->

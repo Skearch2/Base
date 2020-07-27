@@ -403,7 +403,7 @@ class Curler extends Common_Model
    *
    * @return boolean - true on success; false on failure
    */
-  public function upload($pImageId, $pUrl = Null)
+  public function upload($pImageId, $pUrl = null)
   {
     if (!$pUrl) {
       // We set a flag!
