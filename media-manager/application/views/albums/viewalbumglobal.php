@@ -69,7 +69,7 @@ $desc   = $this->config->item('data_description');
           <th>Impressions</th>
           <th>Time</th>
           <th>Active</th>
-          <th>Action</th>
+          <th width="150px">Action</th>
         </tr>
       </thead>
       <tbody>
