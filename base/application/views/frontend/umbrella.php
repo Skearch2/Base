@@ -69,16 +69,17 @@ $this->load->view('frontend/templates/header');
         <?php $media_box_u_index = 0; ?>
         <?php foreach ($media_box_u as $banner) : ?>
           <div class="<?= ($media_box_u_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
-            <?php if (strcasecmp($banner['mediaurl'], '#') == 0) : ?>
-              <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
-                <img class="responsive" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
-              </a>
-            <?php else : ?>
-              <iframe id="ytplayer" width="600" height="300" src="https://www.youtube.com/embed/<?= $banner['mediaurl']; ?>?rel=0&modestbranding=1&autohide=1&mute=0&showinfo=0&controls=0&autoplay=1" frameborder="0" allow="autoplay; encrypted-media;"></iframe>
-              <!-- <div id="P1" class="player"
-								 		 data-property="{videoURL:'<?= $banner['mediaurl']; ?>',containment:'self',autoPlay:true,loop:true,useOnMobile:true,showControls:false,optimizeDisplay:false}">
-							 </div> -->
-            <?php endif ?>
+            <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
+              <?php $is_video = substr(strtolower($banner['image']), -3) == 'mp4' ? 1 : 0 ?>
+              <?php if ($is_video) : ?>
+                <video class="responsive" width="600" height="300" loop>
+                  <source src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" type="video/mp4">
+                  Unable to play video, incompatible browser.
+                </video>
+              <?php else : ?>
+                <img class="responsive" width="600" height="300" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
+              <?php endif ?>
+            </a>
           </div>
           <?php $media_box_u_index++; ?>
         <?php endforeach ?>
@@ -88,9 +89,17 @@ $this->load->view('frontend/templates/header');
 </section>
 
 <script>
-  // $(function() {
-  //   $("#P1").YTPlayer();
-  // });
+  $('#myCarouselU').on('slid.bs.carousel', function() {
+    $(this).find('.active video').each(function() {
+      this.play();
+    });
+  });
+  $('#myCarouselU').on('slide.bs.carousel', function() {
+    $(this).find('.active video').each(function() {
+      this.pause();
+      this.currentTime = 0;
+    });
+  });
 </script>
 
 <script src="<?= base_url(ASSETS); ?>/frontend/js/jquery.mb.YTPlayer.js"></script>
