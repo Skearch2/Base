@@ -102,13 +102,20 @@ if ($albumtype === $alb_umbrella) {
             // On the </item>, build the html
             if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
 
+              // check if the media is a video (only mp4 format)
+              $is_video = substr(strtolower($images[$ifile]), -3) == 'mp4' ? 1 : 0;
+
               echo  "<tr style='cursor: grab;'>" . PHP_EOL;
               echo  "<td style='display: none'>$mediaboxa_images[$iid]</td>" . PHP_EOL;
               echo  "<td>$mediaboxa_images[$ipriority]</td>" . PHP_EOL;
               echo  "<td>$mediaboxa_images[$ititle]</td>" . PHP_EOL;
               echo  "<td>$mediaboxa_images[$idesc]</td>" . PHP_EOL;
               echo  '<td>' . PHP_EOL;
-              echo '<img src="' . $mediaboxa_images[$ifile] . '" alt="No Image" id="image_' . $mediaboxa_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+              if ($is_video) {
+                echo '<i title="Video" class="fas fa-video"></i>';
+              } else {
+                echo '<img src="' . $mediaboxa_images[$ifile] . '" alt="No Media" id="image_' . $mediaboxa_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+              }
               echo  '</td>' . PHP_EOL;
               echo  "<td>$mediaboxa_images[$iclicks]</td>" . PHP_EOL;
               echo  "<td>$mediaboxa_images[$iimp]</td>" . PHP_EOL;
@@ -125,7 +132,7 @@ if ($albumtype === $alb_umbrella) {
               <?php endif;
               echo  '<td>' . PHP_EOL;
               ?>
-              <a href="#" onclick="viewMedia('<?= $mediaboxa_images[$ifile] ?>');" title="View Media" class="fas fa-eye"></a>&nbsp;
+              <a href="#" onclick="viewMedia('<?= $mediaboxa_images[$ifile] ?>',<?= $is_video ?>);" title="View Media" class="fas fa-eye"></a>&nbsp;
         <?php
               echo '&nbsp;';
               echo '&nbsp;';
@@ -219,6 +226,9 @@ if ($albumtype === $alb_umbrella) {
               // On the </item>, build the html
               if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
 
+                // check if the media is a video (only mp4 format)
+                $is_video = substr(strtolower($images[$ifile]), -3) == 'mp4' ? 1 : 0;
+
                 echo '<tr>' . PHP_EOL;
                 echo  "<tr style='cursor: grab;'>" . PHP_EOL;
                 echo  "<td style='display: none'>$mediaboxu_images[$iid]</td>" . PHP_EOL;
@@ -226,7 +236,11 @@ if ($albumtype === $alb_umbrella) {
                 echo  "<td>$mediaboxu_images[$ititle]</td>" . PHP_EOL;
                 echo  "<td>$mediaboxu_images[$idesc]</td>" . PHP_EOL;
                 echo  '<td>' . PHP_EOL;
-                echo '<img src="' . $mediaboxu_images[$ifile] . '" alt="No Image" id="image_' . $mediaboxu_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+                if ($is_video) {
+                  echo '<i title="Video" class="fas fa-video"></i>';
+                } else {
+                  echo '<img src="' . $mediaboxu_images[$ifile] . '" alt="No Media" id="image_' . $mediaboxu_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+                }
                 echo  '</td>' . PHP_EOL;
                 echo  "<td>$mediaboxu_images[$iclicks]</td>" . PHP_EOL;
                 echo  "<td>$mediaboxu_images[$iimp]</td>" . PHP_EOL;
@@ -244,7 +258,7 @@ if ($albumtype === $alb_umbrella) {
                 echo  '</td>' . PHP_EOL;
                 echo  '<td>' . PHP_EOL;
                 ?>
-                <a href="#" onclick="viewMedia('<?= $mediaboxu_images[$ifile] ?>');" title="View Media" class="fas fa-eye"></a>&nbsp;
+                <a href="#" onclick="viewMedia('<?= $mediaboxu_images[$ifile] ?>',<?= $is_video ?>);" title="View Media" class="fas fa-eye"></a>&nbsp;
           <?php
                 echo '&nbsp;';
                 echo '&nbsp;';
@@ -350,6 +364,9 @@ if ($albumtype === $alb_umbrella) {
               // On the </item>, build the html
               if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
 
+                // check if the media is a video (only mp4 format)
+                $is_video = substr(strtolower($images[$ifile]), -3) == 'mp4' ? 1 : 0;
+
                 echo '<tr>' . PHP_EOL;
                 echo  "<tr style='cursor: grab;'>" . PHP_EOL;
                 echo  "<td style='display: none'>$mediaboxb_images[$iid]</td>" . PHP_EOL;
@@ -357,7 +374,11 @@ if ($albumtype === $alb_umbrella) {
                 echo  "<td>$mediaboxb_images[$ititle]</td>" . PHP_EOL;
                 echo  "<td>$mediaboxb_images[$idesc]</td>" . PHP_EOL;
                 echo  '<td>' . PHP_EOL;
-                echo '<img src="' . $mediaboxb_images[$ifile] . '" alt="No Image" id="image_' . $mediaboxb_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+                if ($is_video) {
+                  echo '<i title="Video" class="fas fa-video"></i>';
+                } else {
+                  echo '<img src="' . $mediaboxb_images[$ifile] . '" alt="No Media" id="image_' . $mediaboxb_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+                }
                 echo  '</td>' . PHP_EOL;
                 echo  "<td>$mediaboxb_images[$iclicks]</td>" . PHP_EOL;
                 echo  "<td>$mediaboxb_images[$iimp]</td>" . PHP_EOL;
@@ -375,7 +396,7 @@ if ($albumtype === $alb_umbrella) {
                 echo  '</td>' . PHP_EOL;
                 echo  '<td>' . PHP_EOL;
                 ?>
-                <a href="#" onclick="viewMedia('<?= $mediaboxb_images[$ifile] ?>');" title="View Media" class="fas fa-eye"></a>&nbsp;
+                <a href="#" onclick="viewMedia('<?= $mediaboxb_images[$ifile] ?>',<?= $is_video ?>);" title="View Media" class="fas fa-eye"></a>&nbsp;
           <?php
                 echo '&nbsp;';
                 echo '&nbsp;';

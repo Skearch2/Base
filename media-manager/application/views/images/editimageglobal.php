@@ -43,9 +43,17 @@ $basedomain = $this->config->item('base_domain');
 
 <div class="img-container">
   <?php if (strcasecmp($image->{$imediaurl}, '#')) : ?>
-    <iframe width="590" height="300" src="https://www.youtube.com/embed/<?= $image->{$imediaurl}; ?>?&rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="<?= $css; ?>"></iframe>
+    <iframe width="590" height="300" src="https://www.youtube.com/embed/<?= $image->{$imediaurl} ?>?&rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="<?= $css; ?>"></iframe>
   <?php else : ?>
-    <img src="<?= (!is_string($image->{$ifile}) ? 'unknown' : $image->{$ifile}); ?>" alt="No Media" title="<?= $image->{$idesc}; ?>" class="<?= $css; ?>">
+    <?php $is_video = substr(strtolower($image->{$ifile}), -3) == 'mp4' ? 1 : 0 ?>
+    <?php if ($is_video) : ?>
+      <video class="<?= $css; ?>" controls autoplay>
+        <source src="<?= $image->{$ifile} ?>" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    <?php else : ?>
+      <img src="<?= (!is_string($image->{$ifile}) ? 'unknown' : $image->{$ifile}); ?>" alt="No Media" title="<?= $image->{$idesc}; ?>" class="<?= $css; ?>">
+    <?php endif; ?>
   <?php endif; ?>
 </div>
 

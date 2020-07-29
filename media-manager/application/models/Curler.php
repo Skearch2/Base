@@ -422,7 +422,6 @@ class Curler extends Common_Model
       $config['encrypt_name']   = true;
       $this->load->library('upload', $config);
 
-
       // Do the upload
       $upload = $this->upload->do_upload($this->config->item('data_userfile'));
 

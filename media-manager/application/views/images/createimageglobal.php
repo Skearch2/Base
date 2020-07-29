@@ -56,7 +56,6 @@ $basedomain = $this->config->item('base_domain');
   <br>
 
   <label for="<?= $media; ?>" class="control-label">Media</label>
-
   <input id="mediaupload" name="<?= $media; ?>" type="file" class="file" data-show-preview="true" data-msg-placeholder="Upload Media" data-allowed-file-extensions='["mp4", "gif", "jpeg", "jpg", "png"]'>
   <input type="url" name="<?= $mediaurl; ?>" id="mediaurl" class="form-control" placeholder="https://www.youtube.com/watch?v=abcxyz">
 

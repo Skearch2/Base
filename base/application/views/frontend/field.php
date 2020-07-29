@@ -81,7 +81,7 @@ $this->load->view('frontend/templates/header');
                 <?php foreach ($media_box_a as $banner) : ?>
                     <div class="<?= ($media_box_a_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
                         <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
-                            <img class="responsive" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
+                            <img class="responsive" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" width="728" height="120" />
                         </a>
                     </div>
                     <?php $media_box_a_index++; ?>
@@ -159,7 +159,15 @@ $this->load->view('frontend/templates/header');
                         <?php foreach ($media_box_b as $banner) : ?>
                             <div class="<?= ($media_box_b_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
                                 <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
-                                    <img class="responsive" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
+                                    <?php $is_video = substr(strtolower($banner['image']), -3) == 'mp4' ? 1 : 0 ?>
+                                    <?php if ($is_video) : ?>
+                                        <video class="responsive" width="300" height="600" loop>
+                                            <source src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    <?php else : ?>
+                                        <img class="responsive" width="300" height="600" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
+                                    <?php endif ?>
                                 </a>
                             </div>
                             <?php $media_box_b_index++; ?>
@@ -175,8 +183,23 @@ $this->load->view('frontend/templates/header');
 
 // Load default footer.
 $this->load->view('frontend/templates/footer');
+?>
 
+<script>
+    $('#myCarouselB').on('slid.bs.carousel', function() {
+        $(this).find('.active video').each(function() {
+            this.play();
+        });
+    });
+    $('#myCarouselB').on('slide.bs.carousel', function() {
+        $(this).find('.active video').each(function() {
+            this.pause();
+            this.currentTime = 0;
+        });
+    });
+</script>
+
+<?php
 // Close body and html elements.
 $this->load->view('frontend/templates/closepage');
-
 ?>
