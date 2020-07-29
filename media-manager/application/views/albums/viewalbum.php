@@ -297,6 +297,22 @@ if ($albumtype === $alb_umbrella) {
     </div>
   </div>
 
+  <!-- Creates the bootstrap modal where the video will appear -->
+  <div class="modal fade" id="videomodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        </div>
+        <div class="modal-body">
+          <video controls autoplay id="videopreview">
+            Unable to play video, incompatible browser.
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <?php elseif ($albumtype === $alb_field) : ?>
 
   <div class="page-header">
@@ -488,6 +504,7 @@ if ($albumtype === $alb_umbrella) {
     });
   }
 
+  // Show modal dialog to preview media
   function viewMedia(src, isVideo = 0) {
     if (isVideo == 1) {
       $('#videopreview').attr('src', src);
@@ -498,6 +515,11 @@ if ($albumtype === $alb_umbrella) {
     }
   }
 
+  // Stop the video when the modal dialog is closed
+  $('body').on('hidden.bs.modal', '.modal', function() {
+    $('video').trigger('pause');
+  });
+
   // Update media duration
   function updateMediaDuration(mediaId, duration) {
     // duration must be within 1 to 300 range
@@ -505,9 +527,7 @@ if ($albumtype === $alb_umbrella) {
       $.ajax({
         url: "<?= site_url("main/updatemediaduration/"); ?>" + mediaId + "/" + duration,
         type: 'GET',
-        success: function(status) {
-          console.log("Success updating media duration");
-        },
+        success: function(status) {},
         error: function() {
           console.log("Unable to updating media duration.");
         }

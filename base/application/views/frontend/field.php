@@ -163,7 +163,7 @@ $this->load->view('frontend/templates/header');
                                     <?php if ($is_video) : ?>
                                         <video class="responsive" width="300" height="600" loop>
                                             <source src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" type="video/mp4">
-                                            Your browser does not support the video tag.
+                                            Unable to play video, incompatible browser.
                                         </video>
                                     <?php else : ?>
                                         <img class="responsive" width="300" height="600" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />

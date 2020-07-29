@@ -209,7 +209,7 @@ $desc   = $this->config->item('data_description');
       </div>
       <div class="modal-body">
         <video controls autoplay id="videopreview">
-          Your browser does not support the video tag.
+          Unable to play video, incompatible browser.
         </video>
       </div>
     </div>
@@ -290,6 +290,7 @@ $desc   = $this->config->item('data_description');
 
   <?php endif; ?>
 
+  // Show modal dialog to preview media
   function viewMedia(src, isVideo = 0) {
     if (isVideo == 1) {
       $('#videopreview').attr('src', src);
@@ -300,6 +301,11 @@ $desc   = $this->config->item('data_description');
     }
   }
 
+  // Stop the video when the modal dialog is closed
+  $('body').on('hidden.bs.modal', '.modal', function() {
+    $('video').trigger('pause');
+  });
+
   // Update media duration
   function updateMediaDuration(mediaId, duration) {
     // duration must be within 1 to 300 range
@@ -307,9 +313,7 @@ $desc   = $this->config->item('data_description');
       $.ajax({
         url: "<?= site_url("main/updatemediaduration/"); ?>" + mediaId + "/" + duration,
         type: 'GET',
-        success: function(status) {
-          console.log("Success updating media duration");
-        },
+        success: function(status) {},
         error: function() {
           console.log("Unable to updating media duration.");
         }

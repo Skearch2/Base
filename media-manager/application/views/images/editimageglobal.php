@@ -49,7 +49,7 @@ $basedomain = $this->config->item('base_domain');
     <?php if ($is_video) : ?>
       <video class="<?= $css; ?>" controls autoplay>
         <source src="<?= $image->{$ifile} ?>" type="video/mp4">
-        Your browser does not support the video tag.
+        Unable to play video, incompatible browser.
       </video>
     <?php else : ?>
       <img src="<?= (!is_string($image->{$ifile}) ? 'unknown' : $image->{$ifile}); ?>" alt="No Media" title="<?= $image->{$idesc}; ?>" class="<?= $css; ?>">
