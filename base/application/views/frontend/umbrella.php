@@ -23,7 +23,7 @@ $this->load->view('frontend/templates/header');
         <?php foreach ($media_box_a as $banner) : ?>
           <div class="<?= ($media_box_a_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
             <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
-              <img class="responsive" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
+              <img class="responsive" width="1000" height="110" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
             </a>
           </div>
           <?php $media_box_a_index++; ?>
@@ -64,6 +64,7 @@ $this->load->view('frontend/templates/header');
 <!-- Media Box U -->
 <section class="ad">
   <div class="container">
+    <i id="speaker" class="fas fa-volume-mute" title="Unmute" onclick="toggleMute()"></i>
     <div id="myCarouselU" class="carousel slide carousel-fade" data-ride="carousel">
       <div class="carousel-inner">
         <?php $media_box_u_index = 0; ?>
@@ -72,12 +73,12 @@ $this->load->view('frontend/templates/header');
             <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
               <?php $is_video = substr(strtolower($banner['image']), -3) == 'mp4' ? 1 : 0 ?>
               <?php if ($is_video) : ?>
-                <video class="responsive" width="600" height="300" loop>
+                <video class="responsive" width="600" height="450" loop muted>
                   <source src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" type="video/mp4">
                   Unable to play video, incompatible browser.
                 </video>
               <?php else : ?>
-                <img class="responsive" width="600" height="300" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
+                <img class="responsive" width="600" height="450" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
               <?php endif ?>
             </a>
           </div>
@@ -89,17 +90,32 @@ $this->load->view('frontend/templates/header');
 </section>
 
 <script>
+  // Video settings for carousel
   $('#myCarouselU').on('slid.bs.carousel', function() {
-    $(this).find('.active video').each(function() {
+    $(this).find('.carousel-item.active video').each(function() {
+      $('#speaker').show();
       this.play();
     });
   });
   $('#myCarouselU').on('slide.bs.carousel', function() {
-    $(this).find('.active video').each(function() {
+    $(this).find('.carousel-item.active video').each(function() {
+      $("#speaker").hide();
       this.pause();
       this.currentTime = 0;
     });
   });
+
+  // Mute or unmute html video
+  function toggleMute() {
+    var muted = $("video").prop("muted");
+    if (muted) {
+      $('video').prop('muted', false);
+      $('#speaker').attr('class', 'fa fa-volume-up').prop('title', 'Mute');
+    } else {
+      $('video').prop('muted', true);
+      $('#speaker').attr('class', 'fas fa-volume-mute').prop('title', 'Unmute');
+    }
+  }
 </script>
 
 <script src="<?= base_url(ASSETS); ?>/frontend/js/jquery.mb.YTPlayer.js"></script>

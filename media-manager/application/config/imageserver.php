@@ -101,7 +101,7 @@ $config['imageserver_data_limit']       = 'limit';
  *  each type is separated by a bar (|).
  *
  */
-$config['imageserver_acceptedtypes']    = 'mp4|gif|jpeg|jpg|png';
+$config['imageserver_acceptedtypes']    = '*';
 $config['imageserver_maxsize']          = '*';
 
 

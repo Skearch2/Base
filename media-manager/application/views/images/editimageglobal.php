@@ -47,7 +47,7 @@ $basedomain = $this->config->item('base_domain');
   <?php else : ?>
     <?php $is_video = substr(strtolower($image->{$ifile}), -3) == 'mp4' ? 1 : 0 ?>
     <?php if ($is_video) : ?>
-      <video class="<?= $css; ?>" controls autoplay>
+      <video class="<?= $css; ?>" controls>
         <source src="<?= $image->{$ifile} ?>" type="video/mp4">
         Unable to play video, incompatible browser.
       </video>

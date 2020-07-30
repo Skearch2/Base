@@ -224,6 +224,7 @@ a.btn-cat {
 
 .container {
 	max-width: 960px;
+	position: relative;
 }
 
 .search-bar {
@@ -745,6 +746,13 @@ media
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     transition: transform .6s ease-in-out,-webkit-transform .6s ease-in-out;
+}
+#speaker{
+	display: none;
+	position: absolute;
+	top: -20px;
+	right: 20px;
+	cursor: pointer;
 }
 .logo .logo-header {
 	background-image: url(../images/logo-light.png);

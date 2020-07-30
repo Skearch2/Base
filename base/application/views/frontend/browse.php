@@ -23,7 +23,7 @@ $this->load->view('frontend/templates/header');
                 <?php foreach ($media_box_va as $banner) : ?>
                     <div class="<?= ($media_box_va_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
                         <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
-                            <img class="responsive" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
+                            <img class="responsive" width="1000" height="110" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
                         </a>
                     </div>
                     <?php $media_box_va_index++; ?>
