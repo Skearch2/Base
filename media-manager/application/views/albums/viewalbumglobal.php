@@ -63,13 +63,13 @@ $desc   = $this->config->item('data_description');
           <th>Priority</th>
           <th>Name</th>
           <th>Description</th>
-          <th>Brand ID</th>
+          <!-- <th>Brand ID</th> -->
           <th>Thumbnail</th>
           <th>Clicks</th>
           <th>Impressions</th>
           <th>Time</th>
           <th>Active</th>
-          <th>Action</th>
+          <th width="150px">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -80,7 +80,7 @@ $desc   = $this->config->item('data_description');
           echo  '<td></td>';
           echo  '<td></td>';
           echo  '<td></td>';
-          echo  '<td></td>';
+          // echo  '<td></td>';
           echo  '<td style=\'text-align:right\'>No Media</td>';
           echo  '<td></td>';
           echo  '<td></td>';
@@ -116,14 +116,21 @@ $desc   = $this->config->item('data_description');
 
             // On the </item>, build the html
             if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
+              // check if the media is a video (only mp4 format)
+              $is_video = substr(strtolower($images[$ifile]), -3) == 'mp4' ? 1 : 0;
+
               echo ($archived == 0 ? "<tr style='cursor: grab;'>" : "<tr>") . PHP_EOL;
               echo  "<td style='display: none'>$images[$iid]</td>" . PHP_EOL;
               echo  "<td>$images[$ipriority]</td>" . PHP_EOL;
               echo  "<td>$images[$ititle]</td>" . PHP_EOL;
               echo  "<td>$images[$idesc]</td>" . PHP_EOL;
-              echo  "<td>$images[$ibrandid]</td>" . PHP_EOL;
+              // echo  "<td>$images[$ibrandid]</td>" . PHP_EOL;
               echo  '<td>' . PHP_EOL;
-              echo '<img src="' . $images[$ifile] . '" alt="No Media" id="image_' . $images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+              if ($is_video) {
+                echo '<i title="Video" class="fas fa-video"></i>';
+              } else {
+                echo '<img src="' . $images[$ifile] . '" alt="No Media" id="image_' . $images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+              }
               echo  '</td>' . PHP_EOL;
               echo  "<td>$images[$iclicks]</td>" . PHP_EOL;
               echo  "<td>$images[$iimp]</td>" . PHP_EOL;
@@ -141,11 +148,8 @@ $desc   = $this->config->item('data_description');
               echo  '</td>' . PHP_EOL;
               echo  '<td>' . PHP_EOL;
               ?>
-              <?php if (strcasecmp($images[$imediaurl], '#')) : ?>
-                <a href="#" onclick="viewMedia('https://www.youtube.com/embed/<?= $images[$imediaurl] ?>?&autoplay=1&mute=0&controls=0&rel=0',1);" title="View Media" class="fas fa-eye"></a>&nbsp;
-              <?php else : ?>
-                <a href="#" onclick="viewMedia('<?= $images[$ifile] ?>');" title="View Media" class="fas fa-eye"></a>&nbsp;
-              <?php endif; ?>
+              <a href="#" onclick="viewMedia('<?= $images[$ifile] ?>',<?= $is_video ?>)" title="View Media" class="fas fa-eye"></a>&nbsp;
+
         <?php
               echo '&nbsp;';
               echo '&nbsp;';
@@ -182,7 +186,7 @@ $desc   = $this->config->item('data_description');
   </div>
 </div>
 
-<!-- Creates the bootstrap modal where the media will appear -->
+<!-- bootstrap modal where the image will appear -->
 <div class="modal fade" id="mediamodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -190,7 +194,7 @@ $desc   = $this->config->item('data_description');
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
       </div>
       <div class="modal-body">
-        <img src="" id="mediapreview">
+        <img id="mediapreview">
       </div>
     </div>
   </div>
@@ -204,7 +208,9 @@ $desc   = $this->config->item('data_description');
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
       </div>
       <div class="modal-body">
-        <iframe width="590" height="300" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" id="videopreview"></iframe>
+        <video controls autoplay id="videopreview">
+          Unable to play video, incompatible browser.
+        </video>
       </div>
     </div>
   </div>
@@ -284,6 +290,7 @@ $desc   = $this->config->item('data_description');
 
   <?php endif; ?>
 
+  // Show modal dialog to preview media
   function viewMedia(src, isVideo = 0) {
     if (isVideo == 1) {
       $('#videopreview').attr('src', src);
@@ -294,6 +301,11 @@ $desc   = $this->config->item('data_description');
     }
   }
 
+  // Stop the video when the modal dialog is closed
+  $('body').on('hidden.bs.modal', '.modal', function() {
+    $('video').trigger('pause');
+  });
+
   // Update media duration
   function updateMediaDuration(mediaId, duration) {
     // duration must be within 1 to 300 range
@@ -301,9 +313,7 @@ $desc   = $this->config->item('data_description');
       $.ajax({
         url: "<?= site_url("main/updatemediaduration/"); ?>" + mediaId + "/" + duration,
         type: 'GET',
-        success: function(status) {
-          console.log("Success updating media duration");
-        },
+        success: function(status) {},
         error: function() {
           console.log("Unable to updating media duration.");
         }

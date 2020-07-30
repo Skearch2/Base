@@ -403,7 +403,7 @@ class Curler extends Common_Model
    *
    * @return boolean - true on success; false on failure
    */
-  public function upload($pImageId, $pUrl = Null)
+  public function upload($pImageId, $pUrl = null)
   {
     if (!$pUrl) {
       // We set a flag!
@@ -421,7 +421,6 @@ class Curler extends Common_Model
       $config['max_size']       = $this->config->item('imageserver_maxsize');
       $config['encrypt_name']   = true;
       $this->load->library('upload', $config);
-
 
       // Do the upload
       $upload = $this->upload->do_upload($this->config->item('data_userfile'));

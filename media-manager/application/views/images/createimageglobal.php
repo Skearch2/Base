@@ -1,4 +1,4 @@
-<!-- Start createimage.php -->
+<!-- Start createimageglobal.php -->
 
 <?php
 $main   = $this->config->item('main_class');
@@ -46,7 +46,7 @@ $basedomain = $this->config->item('base_domain');
   <br>
 
   <label for="<?= $url; ?>" class="control-label">Link Reference</label>
-  <input type="url" name="<?= $url; ?>" id="<?= $url; ?>" class="form-control" placeholder="http://www.example.com"" required>
+  <input type="url" name="<?= $url; ?>" id="<?= $url; ?>" class="form-control" placeholder="http://www.example.com" required>
 
   <br>
 
@@ -56,16 +56,7 @@ $basedomain = $this->config->item('base_domain');
   <br>
 
   <label for="<?= $media; ?>" class="control-label">Media</label>
-  <div class="input-group" id="mediaupload">
-    <div class="input-group-prepend">
-      <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-    </div>
-    <div class="custom-file">
-      <input type="file" class="custom-file-input" id="inputGroupFile01" name="<?= $media; ?>" aria-describedby="inputGroupFileAddon01" required>
-      <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-    </div>
-  </div>
-
+  <input id="mediaupload" name="<?= $media; ?>" type="file" class="file" data-show-preview="true" data-msg-placeholder="Upload Media" data-allowed-file-extensions='["mp4", "gif", "jpeg", "jpg", "png"]'>
   <input type="url" name="<?= $mediaurl; ?>" id="mediaurl" class="form-control" placeholder="https://www.youtube.com/watch?v=abcxyz">
 
   <?php if (strcasecmp($album->$amediabox, $mediaboxu) == 0) : ?>
@@ -153,6 +144,20 @@ $basedomain = $this->config->item('base_domain');
       });
     <?php endif; ?>
   });
+
+  $("#mediaupload").fileinput({
+    'theme': "fas",
+    'showUpload': false,
+    'showClose': false,
+    'focusCaptionOnBrowse': false,
+    'focusCaptionOnClear': false,
+    'previewFileType': ['mp4 ', 'jpeg', 'jpg', 'gif', 'png'],
+    'dropZoneEnabled': false,
+    'maxFileCount': 1,
+    'fileActionSettings': {
+      'showZoom': false
+    }
+  });
 </script>
 
-<!-- End createimage.php -->
+<!-- End createimageglobal.php -->

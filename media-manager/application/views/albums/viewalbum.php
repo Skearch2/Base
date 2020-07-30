@@ -55,7 +55,7 @@ if ($albumtype === $alb_umbrella) {
           <th>Impressions</th>
           <th>Time</th>
           <th>Active</th>
-          <th>Action</th>
+          <th width="150px">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -102,13 +102,20 @@ if ($albumtype === $alb_umbrella) {
             // On the </item>, build the html
             if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
 
+              // check if the media is a video (only mp4 format)
+              $is_video = substr(strtolower($images[$ifile]), -3) == 'mp4' ? 1 : 0;
+
               echo  "<tr style='cursor: grab;'>" . PHP_EOL;
               echo  "<td style='display: none'>$mediaboxa_images[$iid]</td>" . PHP_EOL;
               echo  "<td>$mediaboxa_images[$ipriority]</td>" . PHP_EOL;
               echo  "<td>$mediaboxa_images[$ititle]</td>" . PHP_EOL;
               echo  "<td>$mediaboxa_images[$idesc]</td>" . PHP_EOL;
               echo  '<td>' . PHP_EOL;
-              echo '<img src="' . $mediaboxa_images[$ifile] . '" alt="No Image" id="image_' . $mediaboxa_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+              if ($is_video) {
+                echo '<i title="Video" class="fas fa-video"></i>';
+              } else {
+                echo '<img src="' . $mediaboxa_images[$ifile] . '" alt="No Media" id="image_' . $mediaboxa_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+              }
               echo  '</td>' . PHP_EOL;
               echo  "<td>$mediaboxa_images[$iclicks]</td>" . PHP_EOL;
               echo  "<td>$mediaboxa_images[$iimp]</td>" . PHP_EOL;
@@ -125,7 +132,7 @@ if ($albumtype === $alb_umbrella) {
               <?php endif;
               echo  '<td>' . PHP_EOL;
               ?>
-              <a href="#" onclick="viewMedia('<?= $mediaboxa_images[$ifile] ?>');" title="View Media" class="fas fa-eye"></a>&nbsp;
+              <a href="#" onclick="viewMedia('<?= $mediaboxa_images[$ifile] ?>',<?= $is_video ?>);" title="View Media" class="fas fa-eye"></a>&nbsp;
         <?php
               echo '&nbsp;';
               echo '&nbsp;';
@@ -172,7 +179,7 @@ if ($albumtype === $alb_umbrella) {
             <th>Impressions</th>
             <th>Time</th>
             <th>Active</th>
-            <th>Action</th>
+            <th width="150px">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -219,6 +226,9 @@ if ($albumtype === $alb_umbrella) {
               // On the </item>, build the html
               if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
 
+                // check if the media is a video (only mp4 format)
+                $is_video = substr(strtolower($images[$ifile]), -3) == 'mp4' ? 1 : 0;
+
                 echo '<tr>' . PHP_EOL;
                 echo  "<tr style='cursor: grab;'>" . PHP_EOL;
                 echo  "<td style='display: none'>$mediaboxu_images[$iid]</td>" . PHP_EOL;
@@ -226,7 +236,11 @@ if ($albumtype === $alb_umbrella) {
                 echo  "<td>$mediaboxu_images[$ititle]</td>" . PHP_EOL;
                 echo  "<td>$mediaboxu_images[$idesc]</td>" . PHP_EOL;
                 echo  '<td>' . PHP_EOL;
-                echo '<img src="' . $mediaboxu_images[$ifile] . '" alt="No Image" id="image_' . $mediaboxu_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+                if ($is_video) {
+                  echo '<i title="Video" class="fas fa-video"></i>';
+                } else {
+                  echo '<img src="' . $mediaboxu_images[$ifile] . '" alt="No Media" id="image_' . $mediaboxu_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+                }
                 echo  '</td>' . PHP_EOL;
                 echo  "<td>$mediaboxu_images[$iclicks]</td>" . PHP_EOL;
                 echo  "<td>$mediaboxu_images[$iimp]</td>" . PHP_EOL;
@@ -244,7 +258,7 @@ if ($albumtype === $alb_umbrella) {
                 echo  '</td>' . PHP_EOL;
                 echo  '<td>' . PHP_EOL;
                 ?>
-                <a href="#" onclick="viewMedia('<?= $mediaboxu_images[$ifile] ?>');" title="View Media" class="fas fa-eye"></a>&nbsp;
+                <a href="#" onclick="viewMedia('<?= $mediaboxu_images[$ifile] ?>',<?= $is_video ?>);" title="View Media" class="fas fa-eye"></a>&nbsp;
           <?php
                 echo '&nbsp;';
                 echo '&nbsp;';
@@ -283,6 +297,22 @@ if ($albumtype === $alb_umbrella) {
     </div>
   </div>
 
+  <!-- Creates the bootstrap modal where the video will appear -->
+  <div class="modal fade" id="videomodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        </div>
+        <div class="modal-body">
+          <video controls autoplay id="videopreview">
+            Unable to play video, incompatible browser.
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <?php elseif ($albumtype === $alb_field) : ?>
 
   <div class="page-header">
@@ -303,7 +333,7 @@ if ($albumtype === $alb_umbrella) {
             <th>Impressions</th>
             <th>Time</th>
             <th>Active</th>
-            <th>Action</th>
+            <th width="150px">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -350,6 +380,9 @@ if ($albumtype === $alb_umbrella) {
               // On the </item>, build the html
               if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
 
+                // check if the media is a video (only mp4 format)
+                $is_video = substr(strtolower($images[$ifile]), -3) == 'mp4' ? 1 : 0;
+
                 echo '<tr>' . PHP_EOL;
                 echo  "<tr style='cursor: grab;'>" . PHP_EOL;
                 echo  "<td style='display: none'>$mediaboxb_images[$iid]</td>" . PHP_EOL;
@@ -357,7 +390,11 @@ if ($albumtype === $alb_umbrella) {
                 echo  "<td>$mediaboxb_images[$ititle]</td>" . PHP_EOL;
                 echo  "<td>$mediaboxb_images[$idesc]</td>" . PHP_EOL;
                 echo  '<td>' . PHP_EOL;
-                echo '<img src="' . $mediaboxb_images[$ifile] . '" alt="No Image" id="image_' . $mediaboxb_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+                if ($is_video) {
+                  echo '<i title="Video" class="fas fa-video"></i>';
+                } else {
+                  echo '<img src="' . $mediaboxb_images[$ifile] . '" alt="No Media" id="image_' . $mediaboxb_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
+                }
                 echo  '</td>' . PHP_EOL;
                 echo  "<td>$mediaboxb_images[$iclicks]</td>" . PHP_EOL;
                 echo  "<td>$mediaboxb_images[$iimp]</td>" . PHP_EOL;
@@ -375,7 +412,7 @@ if ($albumtype === $alb_umbrella) {
                 echo  '</td>' . PHP_EOL;
                 echo  '<td>' . PHP_EOL;
                 ?>
-                <a href="#" onclick="viewMedia('<?= $mediaboxb_images[$ifile] ?>');" title="View Media" class="fas fa-eye"></a>&nbsp;
+                <a href="#" onclick="viewMedia('<?= $mediaboxb_images[$ifile] ?>',<?= $is_video ?>);" title="View Media" class="fas fa-eye"></a>&nbsp;
           <?php
                 echo '&nbsp;';
                 echo '&nbsp;';
@@ -467,6 +504,7 @@ if ($albumtype === $alb_umbrella) {
     });
   }
 
+  // Show modal dialog to preview media
   function viewMedia(src, isVideo = 0) {
     if (isVideo == 1) {
       $('#videopreview').attr('src', src);
@@ -477,6 +515,11 @@ if ($albumtype === $alb_umbrella) {
     }
   }
 
+  // Stop the video when the modal dialog is closed
+  $('body').on('hidden.bs.modal', '.modal', function() {
+    $('video').trigger('pause');
+  });
+
   // Update media duration
   function updateMediaDuration(mediaId, duration) {
     // duration must be within 1 to 300 range
@@ -484,9 +527,7 @@ if ($albumtype === $alb_umbrella) {
       $.ajax({
         url: "<?= site_url("main/updatemediaduration/"); ?>" + mediaId + "/" + duration,
         type: 'GET',
-        success: function(status) {
-          console.log("Success updating media duration");
-        },
+        success: function(status) {},
         error: function() {
           console.log("Unable to updating media duration.");
         }

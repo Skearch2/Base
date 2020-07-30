@@ -38,7 +38,19 @@ $basedomain = $this->config->item('base_domain');
 <br>
 
 <div class="img-container">
-  <img src="<?= (!is_string($image->{$ifile}) ? 'unknown' : $image->{$ifile}); ?>" alt="No Media" title="<?= $image->{$idesc}; ?>" class="<?= $css; ?>">
+  <?php if (strcasecmp($image->{$imediaurl}, '#')) : ?>
+    <iframe width="590" height="300" src="https://www.youtube.com/embed/<?= $image->{$imediaurl} ?>?&rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="<?= $css; ?>"></iframe>
+  <?php else : ?>
+    <?php $is_video = substr(strtolower($image->{$ifile}), -3) == 'mp4' ? 1 : 0 ?>
+    <?php if ($is_video) : ?>
+      <video class="<?= $css; ?>" controls>
+        <source src="<?= $image->{$ifile} ?>" type="video/mp4">
+        Unable to play video, incompatible browser.
+      </video>
+    <?php else : ?>
+      <img src="<?= (!is_string($image->{$ifile}) ? 'unknown' : $image->{$ifile}); ?>" alt="No Media" title="<?= $image->{$idesc}; ?>" class="<?= $css; ?>">
+    <?php endif; ?>
+  <?php endif; ?>
 </div>
 
 <br>
@@ -76,15 +88,7 @@ $basedomain = $this->config->item('base_domain');
 
   <?php if (strcasecmp($image->$imediaurl, '#') == 0) : ?>
     <label for="<?= $media; ?>" class="control-label">Media</label>
-    <div class="input-group" id="mediaupload">
-      <div class="input-group-prepend">
-        <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-      </div>
-      <div class="custom-file">
-        <input type="file" class="custom-file-input" id="inputGroupFile01" name="<?= $media; ?>" aria-describedby="inputGroupFileAddon01">
-        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-      </div>
-    </div>
+    <input id="mediaupload" name="<?= $media; ?>" type="file" data-show-preview="true" data-msg-placeholder="Upload Media" data-allowed-file-extensions='["mp4", "gif", "jpeg", "jpg", "png"]'>
     <input type="hidden" name="<?= $mediaurl; ?>" value="<?= $image->{$imediaurl}; ?>">
   <?php else : ?>
     <label for="<?= $media; ?>" class="control-label">Youtube Link</label>

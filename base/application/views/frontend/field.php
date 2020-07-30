@@ -81,7 +81,7 @@ $this->load->view('frontend/templates/header');
                 <?php foreach ($media_box_a as $banner) : ?>
                     <div class="<?= ($media_box_a_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
                         <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
-                            <img class="responsive" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
+                            <img class="responsive" width="1000" height="110" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" width="728" height="120" />
                         </a>
                     </div>
                     <?php $media_box_a_index++; ?>
@@ -153,13 +153,22 @@ $this->load->view('frontend/templates/header');
                 </div>
             </div>
             <div class="col-md-4 col-sm-3">
+                <i id="speaker" class="fas fa-volume-mute" title="Unmute" onclick="toggleMute()"></i>
                 <div id="myCarouselB" class="carousel slide carousel-fade" data-ride="carousel">
                     <div class="carousel-inner">
                         <?php $media_box_b_index = 0; ?>
                         <?php foreach ($media_box_b as $banner) : ?>
                             <div class="<?= ($media_box_b_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
                                 <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
-                                    <img class="responsive" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
+                                    <?php $is_video = substr(strtolower($banner['image']), -3) == 'mp4' ? 1 : 0 ?>
+                                    <?php if ($is_video) : ?>
+                                        <video class="responsive" width="300" height="600" loop muted>
+                                            <source src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" type="video/mp4">
+                                            Unable to play video, incompatible browser.
+                                        </video>
+                                    <?php else : ?>
+                                        <img class="responsive" width="300" height="600" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
+                                    <?php endif ?>
                                 </a>
                             </div>
                             <?php $media_box_b_index++; ?>
@@ -175,8 +184,42 @@ $this->load->view('frontend/templates/header');
 
 // Load default footer.
 $this->load->view('frontend/templates/footer');
+?>
 
+<script>
+    // Video settings for carousel
+    // $(document).ready(function() {
+    //     var video = $('#myCarouselB').find('.carousel-item.active video');
+    //     video[0].play()
+    // });
+    $('#myCarouselB').on('slid.bs.carousel', function() {
+        $(this).find('.carousel-item.active video').each(function() {
+            $('#speaker').show();
+            this.play();
+        });
+    });
+    $('#myCarouselB').on('slide.bs.carousel', function() {
+        $(this).find('.carousel-item.active video').each(function() {
+            $("#speaker").hide();
+            this.pause();
+            this.currentTime = 0;
+        });
+    });
+
+    // Mute or unmute html video
+    function toggleMute() {
+        var muted = $("video").prop("muted");
+        if (muted) {
+            $('video').prop('muted', false);
+            $('#speaker').attr('class', 'fa fa-volume-up').prop('title', 'Mute');
+        } else {
+            $('video').prop('muted', true);
+            $('#speaker').attr('class', 'fas fa-volume-mute').prop('title', 'Unmute');
+        }
+    }
+</script>
+
+<?php
 // Close body and html elements.
 $this->load->view('frontend/templates/closepage');
-
 ?>

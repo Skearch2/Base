@@ -17,12 +17,12 @@ body {
   width: auto;
 }
 
-.fas {
+.table .fas {
   font-size:18px;
   color:black;
 }
 
-.fa-trash {
+.table .fa-trash {
   color:red;
 }
 
