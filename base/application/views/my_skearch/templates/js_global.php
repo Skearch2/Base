@@ -3,6 +3,19 @@
 <script src="<?= site_url(ASSETS); ?>/my_skearch/demo/demo8/base/scripts.bundle.js" type="text/javascript"></script>
 
 <script>
+    // Ping the server every 10 seconds that the user is active
+    setInterval(function() {
+        ping();
+    }, 10000);
+
+    // Update user activity
+    function ping() {
+        $.ajax({
+            url: "<?= base_url(); ?>myskearch/private_social/ping",
+            method: "GET"
+        })
+    }
+
     // settings for toastr notifications
     toastr.options = {
         "closeButton": false,
