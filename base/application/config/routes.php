@@ -97,7 +97,16 @@ $route['myskearch/dashboard/settings/update']   = 'my_skearch/dashboard/update_s
 $route['myskearch/digital_assets'] = 'my_skearch/digital_assets';
 
 /* Private social */
-$route['myskearch/private_social'] = 'my_skearch/private_social';
+$route['myskearch/private_social']                      = 'my_skearch/private_social';
+$route['myskearch/private_social/get/chats']            = 'my_skearch/private_social/chats';
+$route['myskearch/private_social/get/conversation']     = 'my_skearch/private_social/conversation';
+$route['myskearch/private_social/get/notifications']    = 'my_skearch/private_social/notifications';
+$route['myskearch/private_social/get/requests']         = 'my_skearch/private_social/requests';
+$route['myskearch/private_social/message']              = 'my_skearch/private_social/message';
+$route['myskearch/private_social/ping']                 = 'my_skearch/private_social/ping';
+$route['myskearch/private_social/request']              = 'my_skearch/private_social/request';
+$route['myskearch/private_social/search']               = 'my_skearch/private_social/users';
+
 
 /* 
     Brand 
