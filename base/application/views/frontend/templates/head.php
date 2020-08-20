@@ -79,10 +79,8 @@
         function submit_me() {
             document.google_search_form.submit();
         }
-    </script>
 
-    <!-- Search -->
-    <script type="text/javascript">
+        // Search for keyword
         function ajaxSearch(keyword) {
             if (keyword.length > 0) {
                 $.ajax({
@@ -110,9 +108,8 @@
                 });
             }
         }
-    </script>
 
-    <script>
+        // Change front end theme
         function changeTheme() {
             $.ajax({
                 url: '<?= base_url('theme/change'); ?>',
@@ -126,16 +123,27 @@
 
             });
         }
-    </script>
 
-    <!-- Update media impressions shown on media box -->
-    <script type="text/javascript">
+        // Update media impressions shown on media box
         $(function() {
             $('.carousel').on('slide.bs.carousel', function(event) {
                 imageid = $(event.relatedTarget).attr('data-imageid');
                 $.get("<?= site_url("impression/image/id/"); ?>" + imageid, function() {});
             })
         });
+
+        // Ping the server every 10 seconds that the user is active
+        setInterval(function() {
+            update_activity();
+        }, 10000);
+
+        // Update user activity
+        function update_activity() {
+            $.ajax({
+                url: "<?= base_url(); ?>myskearch/private_social/ping",
+                method: "GET"
+            })
+        }
     </script>
 
 </head>
