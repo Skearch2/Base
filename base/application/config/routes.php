@@ -142,6 +142,15 @@ $route['admin/auth/redirect/(:any)'] = 'admin_panel/auth/redirect/$1';
 $route['admin/auth/submit']          = 'admin_panel/auth/submit';
 
 /* 
+    Staff Messaging 
+*/
+$route['admin/messaging/get/staff']            = 'admin_panel/staff_messaging/staff';
+$route['admin/messaging/get/conversation']     = 'admin_panel/staff_messaging/conversation';
+$route['admin/messaging/get/notifications']    = 'admin_panel/staff_messaging/notifications';
+$route['admin/messaging/message']              = 'admin_panel/staff_messaging/message';
+$route['admin/messaging/ping']                 = 'admin_panel/staff_messaging/ping';
+
+/* 
     USERS 
 */
 
@@ -172,7 +181,6 @@ $route['admin/permission/delete/id/(:num)'] = 'admin_panel/permissions/delete/$1
 $route['admin/permission/update/id/(:num)'] = 'admin_panel/permissions/update/$1';
 $route['admin/permissions']                 = 'admin_panel/permissions';
 $route['admin/permissions/get']             = 'admin_panel/permissions/get';
-
 
 /* 
     RESULTS
