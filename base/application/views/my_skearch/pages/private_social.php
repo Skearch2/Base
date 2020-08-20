@@ -176,7 +176,7 @@ $this->load->view('my_skearch/templates/js_global');
 			var receiver_userid = $(this).data('receiver_userid');
 			var send_userid = $(this).data('send_userid');
 			$.ajax({
-				url: "<?= base_url(); ?>myskearch/private_social/request/send",
+				url: "<?= base_url(); ?>myskearch/private_social/request",
 				method: "GET",
 				data: {
 					receiver_userid: receiver_userid,
@@ -196,7 +196,7 @@ $this->load->view('my_skearch/templates/js_global');
 			var id = $(this).attr('id');
 			var chat_request_id = $(this).data('chat_request_id');
 			$.ajax({
-				url: "<?= base_url(); ?>myskearch/private_social/request/accept",
+				url: "<?= base_url(); ?>myskearch/private_social/request",
 				method: "GET",
 				data: {
 					chat_request_id: chat_request_id
@@ -272,7 +272,7 @@ $this->load->view('my_skearch/templates/js_global');
 						}
 						$('#hidden_receiver_id_array').val(receiver_id_array);
 					} else {
-						output += '<div align="center"><b>No Chats Found</b></div>';
+						output += '<div align="center">No Chats Found</div>';
 					}
 					output += '</ul>';
 					$('#chat_user_area').html(output);
