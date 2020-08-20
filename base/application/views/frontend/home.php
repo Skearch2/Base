@@ -49,7 +49,7 @@ $this->load->view('frontend/templates/nav');
         </a>
         <?php foreach ($results as $results) : ?>
             <?php if ($results->result_id == 0) : ?>
-                <button style="visibility: hidden; display:none;" class="btn btn-link"></button>
+                <button style="visibility: hidden;" class="btn btn-link"></button>
             <?php else : ?>
                 <?php if ($results->is_result_umbrella != 1) : ?>
                     <a href="browse/<?= strtolower($results->umbrella) ?>/<?= strtolower($results->title) ?>" class="btn btn-link" role="button"><?= $results->title ?></a>
