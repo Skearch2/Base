@@ -182,11 +182,13 @@ $this->load->view('admin_panel/templates/close_html');
 			url: '<?= site_url('admin/user/get/id/'); ?>' + id,
 			type: 'GET',
 			success: function(data, status) {
+				var date = new Date(data.created_on * 1000);
+				var formattedDate = date.getMonth() + '-' + date.getDate() + '-' + date.getFullYear();
+
 				$("div.modal-body").html(
 					"<p>Username: " + data.username + " </p>\
 					<p>Email Address: " + data.email + " </p>\
-					<p>First Name: " + data.firstname + " </p>\
-					<p>Last Name: " + data.lastname + " </p>\
+					<p>Name: " + data.firstname + " </p>\
 					<p>Gender: " + data.gender + " </p>\
 					<p>Age group: " + data.age_group + " </p>\
 					<p>Phone: " + data.phone + " </p>\
@@ -195,7 +197,8 @@ $this->load->view('admin_panel/templates/close_html');
 					<p>City: " + data.city + " </p>\
 					<p>State: " + data.state + " </p>\
 					<p>Country: " + data.country + " </p>\
-					<p>Zipcode: " + data.zipcode + " </p>"
+					<p>Zipcode: " + data.zipcode + " </p>\
+					<p>Date Created: " + formattedDate + " </p>"
 				)
 			},
 			error: function(xhr, status, error) {

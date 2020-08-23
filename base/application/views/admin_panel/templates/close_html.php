@@ -37,6 +37,19 @@
 			// 		}
 			// 	}, 5000)
 			// });
+
+			// Ping the server every 10 seconds that the user is active
+			setInterval(function() {
+				ping();
+			}, 10000);
+
+			// Update user activity
+			function ping() {
+				$.ajax({
+					url: "<?= base_url(); ?>admin/messaging/ping",
+					method: "GET"
+				})
+			}
 		</script>
 
 		<script>
@@ -44,12 +57,6 @@
 				var receiver_id;
 
 				get_chats();
-				get_message_requests();
-
-				//check for new requests every 10 seconds
-				setInterval(function() {
-					get_message_requests();
-				}, 10000);
 
 				// check for new messages and notifications every second
 				setInterval(function() {
@@ -59,7 +66,17 @@
 					get_chat_notifications(receiver_id);
 				}, 1000);
 
+				$(document).on('click', '#m_quick_sidebar_tabs_btn_staff', function() {
+					$("#m_quick_sidebar_tabs_staff").show();
+					$("#m_quick_sidebar_tabs_messenger").hide();
+					receiver_id = 0;
+					$(".user_chat_list").removeClass("active");
+				});
+
 				$(document).on('click', '.user_chat_list', function() {
+					$("#m_quick_sidebar_tabs_btn_staff").removeClass("active");
+					$("#m_quick_sidebar_tabs_staff").hide();
+					$("#m_quick_sidebar_tabs_messenger").show();
 					$('#send_chat').attr('disabled', false);
 					receiver_id = $(this).data('receiver_id');
 					var receiver_name = $(this).text();
@@ -71,17 +88,17 @@
 				});
 
 				// send message
-				$('#chat_message_area').keypress(function(e) {
+				$('#message_area').keypress(function(e) {
 					if (e.keyCode == 13 && !e.shiftKey) {
 						e.preventDefault();
 						$("#send_chat").click();
 					}
 				});
-				$(document).on('click', '#send_chat', function() {
-					var chat_message = $.trim($('#chat_message_area').html());
+				$(document).on('click', '#send_chat', function(e) {
+					var chat_message = $.trim($('#message_area').val());
 					if (chat_message != '') {
 						$.ajax({
-							url: "<?php echo base_url(); ?>myskearch/private_social/message",
+							url: "<?= base_url(); ?>admin/messaging/message",
 							method: "GET",
 							data: {
 								receiver_id: receiver_id,
@@ -91,14 +108,14 @@
 								$('#send_chat').attr('disabled', 'disabled');
 							},
 							success: function(data) {
-								$('#send_chat').attr('disabled', false);
-								$('#chat_message_area').html('');
-								$('#chat_body').stop().animate({
+								$('#message_area').val('');
+								$('#chat_body').animate({
 									scrollTop: $('#chat_body')[0].scrollHeight
 								});
 							}
 						});
 					}
+
 				});
 
 				// get chat users
@@ -117,7 +134,7 @@
 								for (var count = 0; count < data.length; count++) {
 									output += '<li class="list-group-item list-group-item-action user_chat_list" data-receiver_id="' + data[count].receiver_id + '">';
 
-									output += '<img src="http://localhost/skearch/base/assets/my_skearch/app/media/img/users/user-default.jpg" class="img-circle" width="35" />';
+									output += '<img src="http://localhost/skearch/base/assets/admin_panel/app/media/img/users/user-default.jpg" class="img-circle" width="35" />';
 
 									output += ' ' + data[count].firstname + ' ' + data[count].lastname;
 
@@ -142,7 +159,7 @@
 				// get chat conversation
 				function get_chat_conversation(receiver_id, update_data) {
 					$.ajax({
-						url: "<?= base_url(); ?>myskearch/private_social/get/conversation",
+						url: "<?= base_url(); ?>admin/messaging/get/conversation",
 						method: "GET",
 						data: {
 							receiver_id: receiver_id,
@@ -152,18 +169,29 @@
 						success: function(data) {
 							var html = '';
 							for (var count = 0; count < data.length; count++) {
-								html += '<div style="margin-right:10px">';
-								if (data[count].message_direction == 'right') {
-									html += '<div align="right">';
-									html += '<div><span><small>' + data[count].chat_messages_datetime + '</small></span></div>';
-									html += '<div class="alert alert-success" style="display:inline-block;">';
+								if (data[count].message_direction == 'left') {
+									html += '<div class="m-messenger__wrapper">';
+									html += '<div class="m-messenger__message m-messenger__message--in">';
+									html += '<div class="m-messenger__message-pic">';
+									html += '<img src="<?= site_url(ASSETS); ?>/admin_panel/app/media/img/users/user-default.jpg" alt="" />';
+									html += '</div>';
 								} else {
-									html += '<div align="left">';
-									html += '<div><span><small>' + data[count].chat_messages_datetime + '</small></span></div>';
-									html += '<div class="alert alert-primary" style="display:inline-block;">';
-
+									html += '<div class="m-messenger__wrapper">';
+									html += '<div class="m-messenger__message m-messenger__message--out">';
 								}
-								html += data[count].chat_messages_text + '</div></div></div>';
+								html += '<div class="m-messenger__message-body">';
+								html += '<div class="m-messenger__message-arrow"></div>';
+								html += '<div class="m-messenger__message-content">';
+								html += '<div class="m-messenger__message-username">';
+								html += data[count].chat_messages_datetime;
+								html += '</div>';
+								html += '<div class="m-messenger__message-text">';
+								html += data[count].chat_messages_text;
+								html += '</div>';
+								html += '</div>';
+								html += '</div>';
+								html += '</div>';
+								html += '</div>';
 							}
 							$('#chat_body').html(html);
 							// $('#chat_body').stop().animate({
@@ -179,13 +207,13 @@
 
 					// var is_type = 'no';
 					// if (receiver_id > 0) {
-					// 	if ($.trim($('#chat_message_area').text()) != '') {
+					// 	if ($.trim($('#message_area').text()) != '') {
 					// 		is_type = 'yes';
 					// 	}
 					// }
 
 					$.ajax({
-						url: "<?= base_url(); ?>myskearch/private_social/get/notifications",
+						url: "<?= base_url(); ?>admin/messaging/get/notifications",
 						method: "GET",
 						data: {
 							user_id_array: user_id_array,
@@ -222,13 +250,6 @@
 							}
 						}
 					})
-				}
-
-				// show loading icon
-				function loading() {
-					var output = '<div align="center"><br /><br /><br />';
-					output += '<img src="<?= base_url(ASSETS) ?>/my_skearch/demo/demo8/media/img/loading.gif" /> Loading...</div>';
-					return output;
 				}
 			});
 		</script>

@@ -40,11 +40,21 @@ class Staff_messaging_model extends CI_Model
     /**
      * Get staff
      *
+     * @param int $user_id
      * @return object User data
      */
-    function get_staff()
+    function get_staff($user_id)
     {
-        return $this->ion_auth->users(array(1, 2))->result();
+        $this->db->select('skearch_users.id, firstname, lastname, group_id');
+        $this->db->from('skearch_users');
+        $this->db->join('skearch_users_groups', 'skearch_users_groups.user_id = skearch_users.id', 'left');
+        $this->db->join('skearch_groups', 'skearch_groups.id = skearch_users_groups.group_id', 'left');
+        $this->db->where_not_in('skearch_users.id', $user_id);
+        $this->db->where_in('skearch_groups.id', $this->config->item('staff', 'ion_auth'));
+        $this->db->order_by('firstname', 'ASC');
+        $query = $this->db->get();
+
+        return $query->result();
     }
 
 
@@ -131,7 +141,7 @@ class Staff_messaging_model extends CI_Model
     function update_user_activity($user_id)
     {
         $this->db->where('user_id', $user_id);
-        $query = $this->db->get('login_data');
+        $query = $this->db->get('activity_staff');
 
         if ($query->num_rows() > 0) {
             $data = array(
@@ -140,7 +150,7 @@ class Staff_messaging_model extends CI_Model
             );
 
             $this->db->where('user_id', $user_id);
-            $this->db->update('login_data', $data);
+            $this->db->update('activity_staff', $data);
         } else {
             $data = array(
                 'user_id' => $user_id,
@@ -148,7 +158,7 @@ class Staff_messaging_model extends CI_Model
                 // 'is_type'   => $this->input->get('is_type')
             );
 
-            $this->db->insert('login_data', $data);
+            $this->db->insert('activity_staff', $data);
         }
     }
 
@@ -163,7 +173,7 @@ class Staff_messaging_model extends CI_Model
         $this->db->select('last_activity');
         $this->db->where('user_id', $user_id);
         $this->db->order_by('last_activity', 'DESC');
-        $query = $this->db->get('login_data');
+        $query = $this->db->get('activity_staff');
 
         return $query->row();
     }
@@ -176,16 +186,16 @@ class Staff_messaging_model extends CI_Model
      * @param [type] $current_timestamp
      * @return void
      */
-    function check_type_notification($sender_id, $receiver_id, $current_timestamp)
-    {
-        $this->db->where('receiver_user_id', $receiver_id);
-        $this->db->where('user_id', $sender_id);
-        $this->db->where('last_activity >', $current_timestamp);
-        $this->db->order_by('login_data_id', 'DESC');
-        $this->db->limit(1);
-        $query = $this->db->get('login_data');
-        foreach ($query->result() as $row) {
-            return $row->is_type;
-        }
-    }
+    // function check_type_notification($sender_id, $receiver_id, $current_timestamp)
+    // {
+    //     $this->db->where('receiver_user_id', $receiver_id);
+    //     $this->db->where('user_id', $sender_id);
+    //     $this->db->where('last_activity >', $current_timestamp);
+    //     $this->db->order_by('login_data_id', 'DESC');
+    //     $this->db->limit(1);
+    //     $query = $this->db->get('login_data');
+    //     foreach ($query->result() as $row) {
+    //         return $row->is_type;
+    //     }
+    // }
 }
