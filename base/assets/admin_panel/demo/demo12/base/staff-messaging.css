@@ -1,0 +1,35 @@
+.user_chat_list {
+	cursor: pointer;
+}
+
+.notification_circle {
+	width: 16px;
+	height: 16px;
+	border-radius: 100%;
+	background-color: #FF0000;
+	text-align: center;
+	color: #fff;
+	padding: 0px 6px;
+}
+
+.online {
+	width: 16px;
+	height: 16px;
+	border-radius: 100%;
+	background-color: #5cb85c;
+	text-align: center;
+	color: #fff;
+	padding: 0px 6px;
+	margin: 7px;
+}
+
+.offline {
+	width: 16px;
+	height: 16px;
+	border-radius: 100%;
+	background-color: #ccc;
+	text-align: center;
+	color: #fff;
+	padding: 0px 6px;
+	margin: 7px;
+}

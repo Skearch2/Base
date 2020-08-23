@@ -44,16 +44,16 @@ class Staff_messaging extends CI_Controller
     {
         if ($this->input->get('action')) {
             $output = '';
-            $data = $this->Staff_messaging->get_staff();
-            // echo "<pre>";
-            // print_r($data);
-            // die();
+            $data = $this->Staff_messaging->get_staff($this->session->userdata('user_id'));
+
             if (!empty($data)) {
                 $output = array();
                 foreach ($data as $i => $row) {
                     $output[$i] = array(
+                        'receiver_id' => $row->id,
                         'firstname'  => $row->firstname,
                         'lastname'   => $row->lastname,
+                        'group'   => $row->group_id,
                         //'profile_picture' => $userdata['profile_picture']
                     );
                 }
@@ -78,7 +78,9 @@ class Staff_messaging extends CI_Controller
                 $this->Staff_messaging->Update_chat_message_status($sender_id, $receiver_id);
             }
             $chat_data = $this->Staff_messaging->Fetch_chat_data($sender_id, $receiver_id);
+            $output = '';
             if ($chat_data->num_rows() > 0) {
+                $output = array();
                 foreach ($chat_data->result() as $row) {
                     $message_direction = '';
                     if ($row->sender_id == $sender_id) {
@@ -137,21 +139,26 @@ class Staff_messaging extends CI_Controller
             foreach ($user_id_array as $sender_id) {
                 if ($sender_id != '') {
                     $status = "offline";
-                    $last_activity = $this->Staff_messaging->User_last_activity($sender_id)->last_activity;
+                    $data = $this->Staff_messaging->User_last_activity($sender_id);
 
-                    // $is_type = '';
+                    if (!empty($data)) {
 
-                    if ($last_activity != '') {
+                        $last_activity = $data->last_activity;
 
-                        $current_timestamp = strtotime(date("Y-m-d H:i:s"));
-                        $last_activity = strtotime($last_activity);
+                        // $is_type = '';
 
-                        $diff = ($current_timestamp - $last_activity);
+                        if ($last_activity != '') {
 
-                        // status is 'online' if the time difference is >= 10 seconds
-                        if ($diff <= 10) {
-                            $status = 'online';
-                            // $is_type = $this->Staff_messaging->Check_type_notification($sender_id, $receiver_id, $current_timestamp);
+                            $current_timestamp = strtotime(date("Y-m-d H:i:s"));
+                            $last_activity = strtotime($last_activity);
+
+                            $diff = ($current_timestamp - $last_activity);
+
+                            // status is 'online' if the time difference is >= 10 seconds
+                            if ($diff <= 10) {
+                                $status = 'online';
+                                // $is_type = $this->Staff_messaging->Check_type_notification($sender_id, $receiver_id, $current_timestamp);
+                            }
                         }
                     }
 
