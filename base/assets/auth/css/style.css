@@ -10,3 +10,15 @@ background-size: cover;
 	height: 210px;
 	width: 420px;
 }
+
+#btn_signup{
+	display: flex;
+}
+
+#btn_signup_user, #btn_signup_brand{
+	margin: 0 auto;
+}
+
+#captcha_img {
+	width: 100%;
+}

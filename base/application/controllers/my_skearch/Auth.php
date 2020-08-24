@@ -331,11 +331,48 @@ class Auth extends MY_Controller
     }
 
     /**
+     *  Get new captcha code
+     */
+    public function refresh_captcha()
+    {
+        // remove previous captcha data
+        if (file_exists(FCPATH . "base/captcha/" . $this->session->userdata('captcha')->image)) {
+            unlink(FCPATH . "base/captcha/" . $this->session->userdata('captcha')->image);
+        }
+        $this->session->unset_userdata('captcha');
+
+        // settings for captcha
+        $cap_settings = array(
+            'img_id'        => 'captcha_img',
+            'img_path'      => './base/captcha/',
+            'img_url'       => base_url('base/captcha/'),
+            'img_width'     => '250',
+            'img_height'    => '50',
+            'font_path'     => './base/captcha/font/Momоt___.ttf',
+            'font_size'     => 20,
+            'pool'          => '23456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ',
+            'word_length'   => 6,
+            'colors'        => array(
+                'background' => array(255, 255, 255),
+                'border' => array(255, 255, 255),
+                'text' => array(156, 154, 151),
+                'grid' => array(129, 131, 138)
+            )
+        );
+
+        $cap = create_captcha($cap_settings);
+        $cap_data = (object) array('text' => $cap['word'], 'image' => $cap['time'] . '.jpg', 'ip_address' => $this->input->ip_address());
+
+        $this->session->set_userdata('captcha', $cap_data);
+
+        echo $cap['image'];
+    }
+
+    /**
      * Allow user to signup to My Skearch
      */
     public function signup()
     {
-
         if ($this->ion_auth->logged_in()) {
             redirect('myskearch/dashboard', 'refresh');
         }
@@ -362,9 +399,35 @@ class Auth extends MY_Controller
             $this->form_validation->set_rules('email_b', 'Email', 'trim|required|valid_email');
             $this->form_validation->set_rules('phone', 'Phone', 'trim|required|numeric|exact_length[10]');
         }
+        $this->form_validation->set_rules('captcha', 'Captcha', 'trim|required|callback_validate_captcha');
 
         if ($this->form_validation->run() === false) {
 
+            // settings for captcha
+            $cap_settings = array(
+                'img_path'      => './base/captcha/',
+                'img_url'       => base_url('base/captcha/'),
+                'img_width'     => '250',
+                'img_height'    => '50',
+                'img_id'        => 'captcha_img',
+                'font_path'     => './base/captcha/font/Momоt___.ttf',
+                'font_size'     => 20,
+                'pool'          => '23456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ',
+                'word_length'   => 6,
+                'colors'        => array(
+                    'background' => array(255, 255, 255),
+                    'border' => array(255, 255, 255),
+                    'text' => array(156, 154, 151),
+                    'grid' => array(129, 131, 138)
+                )
+            );
+
+            $cap = create_captcha($cap_settings);
+            $cap_data = (object) array('text' => $cap['word'], 'image' => $cap['time'] . '.jpg', 'ip_address' => $this->input->ip_address());
+
+            $this->session->set_userdata('captcha', $cap_data);
+
+            $data['captcha'] = $cap;
             $data['is_regular'] = $is_regular;
             $data['states'] = $this->Util->get_state_list();
             $data['countries'] = $this->Util->get_country_list();
@@ -372,10 +435,19 @@ class Auth extends MY_Controller
             $data['title'] = ucwords('my skearch  | sign up');
             $this->load->view('auth/pages/register', $data);
         } else {
+            // remove captcha data
+            if (file_exists(FCPATH . "base/captcha/" . $this->session->userdata('captcha')->image)) {
+                unlink(FCPATH . "base/captcha/" . $this->session->userdata('captcha')->image);
+            }
+            $this->session->unset_userdata('captcha');
+
             if ($this->User->create($is_regular)) {
+
+                $this->session->set_flashdata('signup_success', true);
+
                 if ($is_regular) {
                     $this->session->set_flashdata('success', 'An email has been sent to you for account activation.');
-                    redirect('myskearch/auth/login');
+                    redirect('myskearch/auth/signup');
                 } else {
                     $this->session->set_flashdata('success', 'Thank You for your inquiry! Someone from Skearch will be contacting you soon.');
                     redirect('myskearch/auth/signup');
@@ -416,6 +488,23 @@ class Auth extends MY_Controller
         $this->session->set_flashdata('csrfkey', $key);
         $this->session->set_flashdata('csrfvalue', $value);
         return [$key => $value];
+    }
+
+    /**
+     * Validates Captcha
+     *
+     * @return bool Whether the posted Captcha token matches
+     */
+    public function validate_captcha()
+    {
+        if (
+            $this->input->post('captcha') != $this->session->userdata('captcha')->text
+        ) {
+            $this->form_validation->set_message('validate_captcha', 'The Captcha code was incorrect.');
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
