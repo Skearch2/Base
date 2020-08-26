@@ -24,6 +24,12 @@ class Media extends MY_Controller
     parent::__construct();
   }
 
+  /**
+   * Undocumented function
+   *
+   * @param [type] $brand_id
+   * @return void
+   */
   public function get_brand_ads_stats($brand_id)
   {
     // curl request for media box
@@ -38,6 +44,12 @@ class Media extends MY_Controller
     $objxml = new SimpleXMLElement($xml);
   }
 
+  /**
+   * Undocumented function
+   *
+   * @param [type] $image_id
+   * @return void
+   */
   public function media_redirect($image_id)
   {
     // curl request for media box
@@ -57,6 +69,12 @@ class Media extends MY_Controller
     redirect($url);
   }
 
+  /**
+   * Undocumented function
+   *
+   * @param [type] $image_id
+   * @return void
+   */
   public function update_image_impression($image_id)
   {
 

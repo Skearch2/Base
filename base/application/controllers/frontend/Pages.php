@@ -210,7 +210,6 @@ class Pages extends MY_Controller
    */
   public function browse_field($umbrella_name, $field_name)
   {
-
     // redirect if umbrella is not found
     if (!$this->Category_model->get_category_id($umbrella_name)) {
       redirect(site_url() . '/browse', 'refresh');
@@ -250,7 +249,11 @@ class Pages extends MY_Controller
           if ($album_id != NULL) {
             // get the global media for field
             $data['media_box_a'] = $this->get_media_contents($album_id);
+
             if ($data['media_box_a'] == NULL) {
+              // var_dump($data['media_box_a']);
+              // //var_dump($album_id);
+              // die();
               $album_id = $this->get_album("default", 0, "A");
               // get the default media for field
               $data['media_box_a'] = $this->get_media_contents($album_id);
@@ -440,9 +443,9 @@ class Pages extends MY_Controller
 
     if (!is_object($objxml->images) || count(get_object_vars($objxml->images)) !== 0) {
 
-      if ($objxml->images->image->item) {
+      if ($objxml->images->item->item) {
 
-        foreach ($objxml->images->image->item as $banner) {
+        foreach ($objxml->images->item->item as $banner) {
           $banner_id = (string) $banner->imageid;
           if ($banner->imagestatus == 1) {
             $media_contents[$banner_id] = array(
@@ -457,7 +460,7 @@ class Pages extends MY_Controller
         }
       } else {
 
-        foreach ($objxml->images->image as $banner) {
+        foreach ($objxml->images->item as $banner) {
           $banner_id = (string) $banner->imageid;
           if ($banner->imagestatus == 1) {
             $media_contents[$banner_id] = array(
