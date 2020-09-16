@@ -114,8 +114,8 @@ $route['myskearch/private_social/search']               = 'my_skearch/private_so
 */
 
 // Ads
-$route['myskearch/brand/ads']   = 'my_skearch/brand/ads';
 $route['myskearch/brand']       = 'my_skearch/brand/ads/index';
+$route['myskearch/brand/ads']   = 'my_skearch/brand/ads';
 
 // Keywords
 $route['myskearch/brand/keywords']                      = 'my_skearch/brand/keywords';
@@ -266,6 +266,10 @@ $route['admin/brands/keywords/delete/id/(:num)']           = 'admin_panel/brands
 $route['admin/brands/keywords/approve/id/(:num)']       = 'admin_panel/brands/keywords/approve/$1';
 $route['admin/brands/keywords/get']                     = 'admin_panel/brands/keywords/get';
 $route['admin/brands/keywords/toggle/id/(:num)']        = 'admin_panel/brands/keywords/toggle/$1';
+
+// View as
+$route['admin/viewas/brand/ads/id/(:num)']      = 'my_skearch/brand/ads/index/$1';
+$route['admin/viewas/brand/keywords/id/(:num)'] = 'my_skearch/brand/keywords/index/$1';
 
 
 

@@ -13,7 +13,11 @@ $this->load->view('my_skearch/templates/start_body');
 $this->load->view('my_skearch/templates/start_page');
 
 // Load header and menu
-$this->load->view('my_skearch/templates/header_menu');
+if (isset($viewas)) {
+	$this->load->view('my_skearch/templates/viewas/header_menu');
+} else {
+	$this->load->view('my_skearch/templates/header_menu');
+}
 
 // Start page body
 $this->load->view('my_skearch/templates/start_pagebody');
@@ -189,7 +193,14 @@ $this->load->view('my_skearch/templates/js_global');
 				serverSide: !1,
 				filter: 0,
 				info: 0,
-				ajax: "<?= site_url(); ?>myskearch/brand/keywords/get",
+				ajax: {
+					url: "<?= site_url(); ?>myskearch/brand/keywords/get",
+					type: "GET",
+					data: {
+						brand_id: <?= $brand_id ?>
+					}
+				},
+				//ajax: "<?= site_url(); ?>myskearch/brand/keywords/get",
 				columns: [{
 					data: "#"
 				}, {

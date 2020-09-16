@@ -348,15 +348,15 @@ class Auth extends MY_Controller
             'img_url'       => base_url('base/captcha/'),
             'img_width'     => '250',
             'img_height'    => '50',
-            'font_path'     => './base/captcha/font/Momоt___.ttf',
+            'font_path'     => './base/captcha/font/Adamina-Regular.ttf',
             'font_size'     => 20,
-            'pool'          => '23456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ',
+            'pool'          => '34567adefghjmnrtADEFGHJMNRT',
             'word_length'   => 6,
             'colors'        => array(
                 'background' => array(255, 255, 255),
                 'border' => array(255, 255, 255),
-                'text' => array(156, 154, 151),
-                'grid' => array(129, 131, 138)
+                'text' => array(0, 0, 0),
+                'grid' => array(0, 0, 255)
             )
         );
 
@@ -387,12 +387,6 @@ class Auth extends MY_Controller
             $this->form_validation->set_rules('age_group', 'Age group', 'required');
             $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
             $this->form_validation->set_rules('password2', 'Confirm Password', 'required|matches[password]');
-            $this->form_validation->set_rules(
-                'agree',
-                'Terms and Conditions',
-                'required',
-                array('required' => 'You must agree with the terms and conditions.')
-            );
         } else {
             $this->form_validation->set_rules('name', 'Name', 'trim|required');
             $this->form_validation->set_rules('brandname', 'Brand Name', 'trim|required|is_unique[skearch_brand_leads.brandname]');
@@ -400,6 +394,12 @@ class Auth extends MY_Controller
             $this->form_validation->set_rules('phone', 'Phone', 'trim|required|numeric|exact_length[10]');
         }
         $this->form_validation->set_rules('captcha', 'Captcha', 'trim|required|callback_validate_captcha');
+        $this->form_validation->set_rules(
+            'agree',
+            'Terms and Conditions',
+            'required',
+            array('required' => 'You must agree with the terms and conditions.')
+        );
 
         if ($this->form_validation->run() === false) {
 
@@ -410,15 +410,15 @@ class Auth extends MY_Controller
                 'img_width'     => '250',
                 'img_height'    => '50',
                 'img_id'        => 'captcha_img',
-                'font_path'     => './base/captcha/font/Momоt___.ttf',
+                'font_path'     => './base/captcha/font/neo_sans-webfont.ttf',
                 'font_size'     => 20,
-                'pool'          => '23456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ',
+                'pool'          => '34567adefghjmnrtADEFGHJMNRT',
                 'word_length'   => 6,
                 'colors'        => array(
                     'background' => array(255, 255, 255),
                     'border' => array(255, 255, 255),
-                    'text' => array(156, 154, 151),
-                    'grid' => array(129, 131, 138)
+                    'text' => array(0, 0, 0),
+                    'grid' => array(0, 0, 255)
                 )
             );
 
