@@ -25,16 +25,18 @@ class Keywords extends MY_Controller
         }
 
         // check if user is a brand member
-        if (!($this->ion_auth->get_users_groups()->row()->id == 3)) {
+        if (!($this->ion_auth->get_users_groups()->row()->id == 3 || $this->ion_auth->is_admin())) {
             redirect('myskearch', 'refresh');
         }
 
         $this->load->model('my_skearch/brand/Keywords_model', 'Keywords');
         $this->load->model('my_skearch/User_model', 'User');
 
-        $this->user_id  = $this->session->userdata('user_id');
-        $this->brand_id = $this->User->get_brand_details($this->user_id)->brand_id;
-        $this->is_primary_brand_user = $this->User->get_brand_details($this->user_id)->primary_brand_user;
+        if (!$this->ion_auth->is_admin()) {
+            $this->user_id  = $this->session->userdata('user_id');
+            $this->brand_id = $this->User->get_brand_details($this->user_id)->brand_id;
+            $this->is_primary_brand_user = $this->User->get_brand_details($this->user_id)->primary_brand_user;
+        }
 
         // defines section in myskearch
         $this->section = 'brand';
@@ -99,7 +101,9 @@ class Keywords extends MY_Controller
      */
     public function get()
     {
-        $keywords = $this->Keywords->get_by_brand($this->brand_id);
+        $brand_id = $this->input->get('brand_id') != 0 ? $this->input->get('brand_id') : $this->brand_id;
+
+        $keywords = $this->Keywords->get_by_brand($brand_id);
         $total_keywords = count($keywords);
         $result = array(
             'iTotalRecords' => $total_keywords,
@@ -119,10 +123,17 @@ class Keywords extends MY_Controller
      *
      * @return void
      */
-    public function index()
+    public function index($brand_id = null)
     {
-        // page data
-        $data['is_primary_brand_user'] = $this->is_primary_brand_user;
+
+        if ($brand_id) {
+            $data['viewas'] = 1;
+            $data['brand_id'] = $brand_id;
+            $data['is_primary_brand_user'] = 0;
+        } else {
+            $data['brand_id'] = 0;
+            $data['is_primary_brand_user'] = $this->is_primary_brand_user;
+        }
 
         // template data
         $data['section'] = $this->section;

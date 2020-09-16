@@ -37,7 +37,7 @@
 		<link href="<?= site_url(ASSETS); ?>/my_skearch/vendors/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css">
 		<link href="<?= site_url(ASSETS); ?>/my_skearch/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css">
 		<link href="<?= site_url(ASSETS); ?>/my_skearch/demo/demo8/base/style.bundle.css" rel="stylesheet" type="text/css">
-		<link href="<?= site_url(ASSETS); ?>/my_skearch/demo/demo8/base/private-social.css" rel="stylesheet" type="text/css">
+		<link href="<?= site_url(ASSETS); ?>/my_skearch/demo/demo8/custom/style.css" rel="stylesheet" type="text/css">
 
 		<!-- Background Image -->
 		<style>

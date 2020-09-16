@@ -200,7 +200,7 @@ $desc   = $this->config->item('data_description');
   </div>
 </div>
 
-<!-- Creates the bootstrap modal where the video will appear -->
+<!-- bootstrap modal where the video will appear -->
 <div class="modal fade" id="videomodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

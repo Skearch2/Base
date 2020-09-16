@@ -315,38 +315,23 @@
 					<button class="m-aside-header-menu-mobile-close  m-aside-header-menu-mobile-close--skin-light " id="m_aside_header_menu_mobile_close_btn"><i class="la la-close"></i></button>
 					<div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-light m-aside-header-menu-mobile--submenu-skin-light ">
 						<ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
-							<li class="m-menu__item  <?= (isset($section) && $section == 'dashboard') ? 'm-menu__item--active  m-menu__item--active-tab' : 'm-menu__item--submenu  m-menu__item--tab'; ?>  m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="<?= base_url("myskearch/dashboard"); ?>" class="m-menu__link"><span class="m-menu__link-text">Dashboard</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+							<li class="m-menu__item  <?= (isset($section) && $section == 'dashboard') ? 'm-menu__item--active  m-menu__item--active-tab' : 'm-menu__item--submenu  m-menu__item--tab'; ?>  m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="#" class="m-menu__link"><span class="m-menu__link-text">Dashboard</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 								<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 								</div>
 							</li>
-							<?php if (($this->ion_auth->get_users_groups()->row()->id == 4)) : ?>
-								<li class="m-menu__item <?= (isset($section) && $section == 'digital assets') ? 'm-menu__item--active  m-menu__item--active-tab' : 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="" aria-haspopup="true"><a href="<?= base_url("myskearch/digital_assets"); ?>" class="m-menu__link" title="Digital Assets"><span class="m-menu__link-text">Digital Assets</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
-									<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
-										<ul class="m-menu__subnav">
-											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-graphic-2"></i><span class="m-menu__link-text">Revenue</span></a></li>
-											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-analytics"></i><span class="m-menu__link-text">Bills</span></a></li>
-											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-notes"></i><span class="m-menu__link-text">IPO</span></a></li>
-											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-clipboard"></i><span class="m-menu__link-text">Tax Management</span></a></li>
-											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-alarm-1"></i><span class="m-menu__link-text">Invoices</span></a></li>
-										</ul>
-									</div>
-								</li>
-							<?php endif; ?>
-							<li class="m-menu__item  <?= (isset($section) && $section == 'private social') ? 'm-menu__item--active  m-menu__item--active-tab' : 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="<?= base_url("myskearch/private_social"); ?>" class="m-menu__link" title="Private Social"><span class="m-menu__link-text">Private Social</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+							<li class="m-menu__item  <?= (isset($section) && $section == 'private social') ? 'm-menu__item--active  m-menu__item--active-tab' : 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="#" class="m-menu__link" title="Private Social"><span class="m-menu__link-text">Private Social</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 								<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 								</div>
 							</li>
-							<?php if (($this->ion_auth->get_users_groups()->row()->id == 3)) : ?>
-								<li class="m-menu__item <?= (isset($section) && $section == 'brand') ? 'm-menu__item--active  m-menu__item--active-tab' : 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="<?= base_url("myskearch/brand"); ?>" class="m-menu__link" title="Brand Section"><span class="m-menu__link-text">Brand</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
-									<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
-										<ul class="m-menu__subnav">
-											<li class="m-menu__item <?= (isset($page) && $page == 'ads') ? 'm-menu__item--active' : '' ?>" m-menu-link-redirect="0" aria-haspopup="true"><a href="<?= base_url("myskearch/brand/ads"); ?>" class="m-menu__link "><i class="m-menu__link-icon flaticon-diagram"></i><span class="m-menu__link-text">Ads</span></a></li>
-											<li class="m-menu__item <?= (isset($page) && $page == 'keywords') ? 'm-menu__item--active' : '' ?>" m-menu-link-redirect="0" aria-haspopup="true"><a href="<?= base_url("myskearch/brand/keywords"); ?>" class="m-menu__link "><i class="m-menu__link-icon flaticon-paper-plane"></i><span class="m-menu__link-text">Keywords</span></a></li>
-											<li class="m-menu__item" m-menu-link-redirect="1" aria-haspopup="true"><a href="https://crm.skearch.com" class="m-menu__link "><i class="m-menu__link-icon flaticon-graph"></i><span class="m-menu__link-text">CRM</span></a></li>
-										</ul>
-									</div>
-								</li>
-							<?php endif; ?>
+							<li class="m-menu__item <?= (isset($section) && $section == 'brand') ? 'm-menu__item--active  m-menu__item--active-tab' : 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="#" class="m-menu__link" title="Brand Section"><span class="m-menu__link-text">Brand</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+								<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
+									<ul class="m-menu__subnav">
+										<li class="m-menu__item <?= (isset($page) && $page == 'ads') ? 'm-menu__item--active' : '' ?>" m-menu-link-redirect="0" aria-haspopup="true"><a href="<?= base_url("admin/viewas/brand/ads/id/{$brand_id}"); ?>" class="m-menu__link "><i class="m-menu__link-icon flaticon-diagram"></i><span class="m-menu__link-text">Ads</span></a></li>
+										<li class="m-menu__item <?= (isset($page) && $page == 'keywords') ? 'm-menu__item--active' : '' ?>" m-menu-link-redirect="0" aria-haspopup="true"><a href="<?= base_url("admin/viewas/brand/keywords/id/{$brand_id}"); ?>" class="m-menu__link "><i class="m-menu__link-icon flaticon-paper-plane"></i><span class="m-menu__link-text">Keywords</span></a></li>
+										<li class="m-menu__item" m-menu-link-redirect="1" aria-haspopup="true"><a href="https://crm.skearch.com" class="m-menu__link "><i class="m-menu__link-icon flaticon-graph"></i><span class="m-menu__link-text">CRM</span></a></li>
+									</ul>
+								</div>
+							</li>
 						</ul>
 					</div>
 				</div>
