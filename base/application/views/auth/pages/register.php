@@ -68,15 +68,7 @@ $this->load->view('auth/templates/head');
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="password" placeholder="Confirm Password" name="password2">
 							</div>
-							<div class="form-group m-form__group m-login__form-sub">
-								<div class="col m--align-left" style="padding-top: 20px;">
-									<label class="m-checkbox m-checkbox--secondary">
-										<input type="checkbox" name="agree" <?= ($this->input->post('agree')) ? "checked" : ""; ?>>I Agree to the <a href="https://www.skearch.io/tos" target="_blank" class="m-link m-link--primary"><b>terms of service</b></a> and <a href="https://www.skearch.io/privacy" target="_blank" class="m-link m-link--primary"><b>privacy policy</b></a>.
-										<span></span>
-									</label>
-									<span class="m-form__help"></span>
-								</div>
-							</div>
+							<br>
 						</div>
 						<div id="m-login__form m-form__brand" style=<?= !$is_regular ? 'display:block' : 'display:none' ?>>
 							<div class="form-group m-form__group">
@@ -98,7 +90,15 @@ $this->load->view('auth/templates/head');
 							<input class="form-control m-input" type="text" placeholder="Captcha code" name="captcha" id="captcha_code" maxlength="6">
 							<div class="input-group-prepend"><span class="input-group-text" id="captcha-refresh" style="cursor:pointer" title="Refresh"><i class="flaticon-refresh"></i></span></div>
 						</div>
-
+						<div class="form-group m-form__group m-login__form-sub">
+							<div class="col m--align-left" style="padding-top: 20px;">
+								<label class="m-checkbox m-checkbox--secondary">
+									<input type="checkbox" name="agree" <?= ($this->input->post('agree')) ? "checked" : ""; ?>>I Agree to the <a href="https://www.skearch.io/tos" target="_blank" class="m-link m-link--primary"><b>terms of service</b></a> and <a href="https://www.skearch.io/privacy" target="_blank" class="m-link m-link--primary"><b>privacy policy</b></a>.
+									<span></span>
+								</label>
+								<span class="m-form__help"></span>
+							</div>
+						</div>
 						<div class="m-login__form-action">
 							<button id="m_login_signup_submit" class="btn btn-outline-info m-btn m-btn--custom m-login__btn">Sign Up</button>&nbsp;&nbsp;
 							<a href="login">

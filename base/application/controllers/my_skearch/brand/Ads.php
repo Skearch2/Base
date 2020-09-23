@@ -24,7 +24,7 @@ class Ads extends MY_Controller
         }
 
         // check if user is a brand member
-        if (!($this->ion_auth->get_users_groups()->row()->id == 3)) {
+        if (!($this->ion_auth->get_users_groups()->row()->id == 3 || $this->ion_auth->is_admin())) {
             redirect('myskearch', 'refresh');
         }
 
@@ -36,9 +36,15 @@ class Ads extends MY_Controller
         $this->load->model('my_skearch/User_model', 'User');
     }
 
-    public function index()
+    /**
+     * View page for brand ads
+     *
+     * @param int $id Brand Id
+     * @return void
+     */
+    public function index($id = null)
     {
-        $brand_id = $this->User->get_brand_details($this->user_id)->brand_id;
+        $brand_id = !is_null($id) ? $id : $this->User->get_brand_details($this->user_id)->brand_id;
 
         // curl request for media box
         $this->curl->create("https://media.skearch.com/api/npm/activity/{$brand_id}");
@@ -50,6 +56,11 @@ class Ads extends MY_Controller
 
         // parse xml to array
         $data['stats'] = new SimpleXMLElement($xml);
+
+        if ($id) {
+            $data['viewas'] = 1;
+            $data['brand_id'] = $brand_id;
+        }
 
         $data['section'] = $this->section;
         $data['page'] = 'ads';

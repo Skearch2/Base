@@ -209,7 +209,8 @@ $this->load->view('admin_panel/templates/close_html');
 					title: "Actions",
 					orderable: !1,
 					render: function(a, t, e, n) {
-						return '<a href="<?= site_url() . "admin/brand/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+						return '<a href="<?= site_url() . "admin/viewas/brand/ads/id/" ?>' + e['id'] + '" target="_blank" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View as Brand"><i class="la la-bold"></i></a>' +
+							'<a href="<?= site_url() . "admin/brand/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 							'<a onclick=deleteBrand("' + e['id'] + '","' + e['brand'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}]

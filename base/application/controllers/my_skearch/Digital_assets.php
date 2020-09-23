@@ -1,5 +1,5 @@
 <?php
-if (! defined('BASEPATH')) exit('No direct script access allowed');
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * File:    ~/application/controller/Admin_new.php
@@ -10,43 +10,30 @@ if (! defined('BASEPATH')) exit('No direct script access allowed');
  * @copyright	Copyright (c) 2019
  * @version		2.0
  */
-class Digital_Assets extends MY_Controller {
+class Digital_Assets extends MY_Controller
+{
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 
 		if (!$this->ion_auth->logged_in()) {
-      redirect('myskearch/auth/login', 'refresh');
-    }
-
-	 }
-
-	public function index() {
-
-
-	  if ( ! file_exists(APPPATH.'/views/my_skearch/digital_assets/default.php')) {
-		/*
-		 * If a predefined page file of the name in the parameter
-		 * does not exist in the /view/pages/ad2 directory
-		 * display a 404.
-		 */
-	 	  show_404();
-  	}
-
-		/*
-		 * 	Set Page Data:
-		 *		Relative URL for building canonical URL in page header
-		 * 		Page title (Capitalize first letter)
-		 * 		Admin page flag (Boolean: True)
-		 */
-
-		$data['title'] = ucwords("my skearch | digital assets");
-		$data['page'] = 'digital assets';
-
-
-		// Load page content
-		$this->load->view('my_skearch/digital_assets/default', $data);
+			redirect('myskearch/auth/login', 'refresh');
+		}
 	}
 
+	/**
+	 * View page for digital assets
+	 *
+	 * @return void
+	 */
+	public function index()
+	{
+		$data['section'] = 'digital assets';
+		$data['page'] = 'digital assets';
+		$data['title'] = ucwords("my skearch | digital assets");
 
+		// Load page content
+		$this->load->view('my_skearch/pages/digital_assets/default', $data);
+	}
 }
