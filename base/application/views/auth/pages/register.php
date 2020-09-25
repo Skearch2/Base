@@ -102,7 +102,10 @@ $this->load->view('auth/templates/head');
 						<div class="m-login__form-action">
 							<button id="m_login_signup_submit" class="btn btn-outline-info m-btn m-btn--custom m-login__btn">Sign Up</button>&nbsp;&nbsp;
 							<a href="login">
-								<button type="button" id="m_login_signup_cancel" class="btn btn-outline-danger m-btn m-btn--custom m-login__btn">Cancel</button>
+								<button type="button" id="m_login_signup_cancel" class="btn btn-outline-danger m-btn m-btn--custom m-login__btn">Cancel</button>&nbsp;&nbsp;
+							</a>
+							<a href="payment">
+								<button type="button" id="m_login_payment" class="btn btn-outline-success m-btn m-btn--custom m-login__btn" style="visibility:hidden">Make a Payment</button>
 							</a>
 						</div>
 						<?= form_close() ?>
@@ -135,6 +138,7 @@ $this->load->view('auth/templates/head');
 			$("#is_regular_signup").val(1);
 			$('#btn_signup_user').removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide active');
 			$("#btn_signup_brand").removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide');
+			$("#m_login_payment").css('visibility', 'hidden');
 		}
 
 		// Show sign up form for brand user
@@ -148,6 +152,7 @@ $this->load->view('auth/templates/head');
 			$("#is_regular_signup").val(0);
 			$('#btn_signup_user').removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide');
 			$("#btn_signup_brand").removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide active');
+			$("#m_login_payment").css('visibility', 'visible');
 		}
 
 		// Mask phone field to US number format

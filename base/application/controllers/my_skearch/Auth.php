@@ -278,6 +278,15 @@ class Auth extends MY_Controller
     }
 
     /**
+     * Allow user to signup to My Skearch
+     */
+    public function payment()
+    {
+        $data['title'] = ucwords("my skearch | make payment");
+        $this->load->view('auth/pages/payment', $data);
+    }
+
+    /**
      * Set new password for My Skearch member
      *
      * @param string|null $code The resset code
@@ -349,7 +358,7 @@ class Auth extends MY_Controller
             'img_width'     => '250',
             'img_height'    => '50',
             'font_path'     => './base/captcha/font/Adamina-Regular.ttf',
-            'font_size'     => 20,
+            'font_size'     => 22,
             'pool'          => '34567adefghjmnrtADEFGHJMNRT',
             'word_length'   => 6,
             'colors'        => array(
@@ -411,7 +420,7 @@ class Auth extends MY_Controller
                 'img_height'    => '50',
                 'img_id'        => 'captcha_img',
                 'font_path'     => './base/captcha/font/neo_sans-webfont.ttf',
-                'font_size'     => 20,
+                'font_size'     => 22,
                 'pool'          => '34567adefghjmnrtADEFGHJMNRT',
                 'word_length'   => 6,
                 'colors'        => array(
