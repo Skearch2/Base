@@ -342,7 +342,7 @@
 										<ul class="m-menu__subnav">
 											<li class="m-menu__item <?= (isset($page) && $page == 'ads') ? 'm-menu__item--active' : '' ?>" m-menu-link-redirect="0" aria-haspopup="true"><a href="<?= base_url("myskearch/brand/ads"); ?>" class="m-menu__link "><i class="m-menu__link-icon flaticon-diagram"></i><span class="m-menu__link-text">Ads</span></a></li>
 											<li class="m-menu__item <?= (isset($page) && $page == 'keywords') ? 'm-menu__item--active' : '' ?>" m-menu-link-redirect="0" aria-haspopup="true"><a href="<?= base_url("myskearch/brand/keywords"); ?>" class="m-menu__link "><i class="m-menu__link-icon flaticon-paper-plane"></i><span class="m-menu__link-text">Keywords</span></a></li>
-											<li class="m-menu__item" m-menu-link-redirect="1" aria-haspopup="true"><a href="https://crm.skearch.com" class="m-menu__link "><i class="m-menu__link-icon flaticon-graph"></i><span class="m-menu__link-text">CRM</span></a></li>
+											<li class="m-menu__item" m-menu-link-redirect="1" aria-haspopup="true"><a href="#" class="m-menu__link "><i class="m-menu__link-icon flaticon-graph"></i><span class="m-menu__link-text">CRM</span></a></li>
 										</ul>
 									</div>
 								</li>

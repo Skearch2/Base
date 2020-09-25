@@ -87,6 +87,7 @@ $route['myskearch/auth/forgot_password']            = 'my_skearch/auth/forgot_pa
 $route['myskearch/auth/captcha/refresh']            = 'my_skearch/auth/refresh_captcha';
 $route['myskearch/auth/reset_password/(:any)']      = 'my_skearch/auth/reset_password/$1';
 $route['myskearch/auth/change_email']               = 'my_skearch/auth/change_email';
+$route['myskearch/auth/payment']                    = 'my_skearch/auth/payment';
 
 /* Dashboard */
 $route['myskearch']                             = 'my_skearch/dashboard';
