@@ -15,6 +15,15 @@
   <!-- /footer-inner -->
 </div>
 <!-- /footer -->
+<!-- remote modals -->
+<div id="remote-modals">
+  <div class="modal fade" id="ajaxModal" aria-labelledby="ajaxModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      </div> <!-- /.modal-content -->
+    </div> <!-- /.modal-dialog -->
+  </div> <!-- /.modal -->
+</div>
 </body>
 
 </html>
