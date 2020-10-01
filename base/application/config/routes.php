@@ -82,12 +82,14 @@ $route['myskearch/auth/login']                      = 'my_skearch/auth/login';
 $route['myskearch/auth/logout']                     = 'my_skearch/auth/logout';
 $route['myskearch/auth/signup']                     = 'my_skearch/auth/signup';
 $route['myskearch/auth/activate/(:num)/(:any)']     = 'my_skearch/auth/activate/$1/$2';
+$route['myskearch/auth/search/brand/(:any)']        = 'my_skearch/auth/brand_search/$1';
 $route['myskearch/auth/change_password']            = 'my_skearch/auth/change_password';
 $route['myskearch/auth/forgot_password']            = 'my_skearch/auth/forgot_password';
 $route['myskearch/auth/captcha/refresh']            = 'my_skearch/auth/refresh_captcha';
 $route['myskearch/auth/reset_password/(:any)']      = 'my_skearch/auth/reset_password/$1';
 $route['myskearch/auth/change_email']               = 'my_skearch/auth/change_email';
 $route['myskearch/auth/payment']                    = 'my_skearch/auth/payment';
+$route['myskearch/auth/payment/transaction/done']   = 'my_skearch/auth/payment/1';
 
 /* Dashboard */
 $route['myskearch']                             = 'my_skearch/dashboard';
@@ -256,6 +258,7 @@ $route['admin/brands/leads/delete/(:num)']        = 'admin_panel/brands/leads/de
 // Brands
 $route['admin/brand/create']                    = 'admin_panel/brands/brands/create';
 $route['admin/brand/delete/id/(:num)']          = 'admin_panel/brands/brands/delete/$1';
+$route['admin/brand/get/id/(:num)']             = 'admin_panel/brands/brands/get/$1';
 $route['admin/brand/update/id/(:num)']          = 'admin_panel/brands/brands/update/$1';
 $route['admin/brands']                          = 'admin_panel/brands/brands';
 $route['admin/brands/get']                      = 'admin_panel/brands/brands/get';
@@ -263,10 +266,14 @@ $route['admin/brands/search/(:any)']            = 'admin_panel/brands/brands/sea
 
 // Keywords
 $route['admin/brands/keywords']                         = 'admin_panel/brands/keywords';
-$route['admin/brands/keywords/delete/id/(:num)']           = 'admin_panel/brands/keywords/delete/$1';
+$route['admin/brands/keywords/delete/id/(:num)']        = 'admin_panel/brands/keywords/delete/$1';
 $route['admin/brands/keywords/approve/id/(:num)']       = 'admin_panel/brands/keywords/approve/$1';
 $route['admin/brands/keywords/get']                     = 'admin_panel/brands/keywords/get';
 $route['admin/brands/keywords/toggle/id/(:num)']        = 'admin_panel/brands/keywords/toggle/$1';
+
+// Payments
+$route['admin/brand/payments/id/(:num)']                = 'admin_panel/brands/payments/index/$1';
+$route['admin/brand/payments/get/id/(:num)']            = 'admin_panel/brands/payments/get/$1';
 
 // View as
 $route['admin/viewas/brand/ads/id/(:num)']      = 'my_skearch/brand/ads/index/$1';
@@ -275,11 +282,11 @@ $route['admin/viewas/brand/keywords/id/(:num)'] = 'my_skearch/brand/keywords/ind
 
 
 /* Link Checker */
-$route['admin/linkchecker'] = 'admin_panel/linkchecker';
-$route['admin/linkchecker/get'] = 'admin_panel/linkchecker/get';
-$route['admin/linkchecker/get_status_info'] = 'admin_panel/option/get_status_info';
-$route['admin/linkchecker/remove/id/(:num)'] = 'admin_panel/linkchecker/remove/$1';
-$route['admin/linkchecker/update_urls_status'] = 'admin_panel/linkchecker/update_urls_status';
+$route['admin/linkchecker']                         = 'admin_panel/linkchecker';
+$route['admin/linkchecker/get']                     = 'admin_panel/linkchecker/get';
+$route['admin/linkchecker/get_status_info']         = 'admin_panel/option/get_status_info';
+$route['admin/linkchecker/remove/id/(:num)']        = 'admin_panel/linkchecker/remove/$1';
+$route['admin/linkchecker/update_urls_status']      = 'admin_panel/linkchecker/update_urls_status';
 
 /* Email */
 $route['admin/email/invite']                = 'admin_panel/email/invite';
@@ -290,8 +297,8 @@ $route['admin/email/message']               = 'admin_panel/email/message';
 $route['admin/email/templates/(:any)']      = 'admin_panel/email/templates/$1';
 
 /* Option Routes */
-$route['admin/option'] = 'admin_panel/option';
-$route['admin/option/update_option'] = 'admin_panel/option/update_option';
+$route['admin/option']                       = 'admin_panel/option';
+$route['admin/option/update_option']         = 'admin_panel/option/update_option';
 $route['admin/option/brandlinks_status_all'] = 'admin_panel/option/brandlinks_status_all';
 
 

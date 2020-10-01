@@ -63,6 +63,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Brand Name</th>
 						<th>Email Address</th>
 						<th>Phone</th>
+						<th>Date Requested</th>
 						<th width=150>Actions</th>
 					</tr>
 				</thead>
@@ -150,28 +151,38 @@ $this->load->view('admin_panel/templates/close_html');
 				}, {
 					data: "phone"
 				}, {
+					data: "date_created"
+				}, {
 					data: "Actions"
 				}],
 				columnDefs: [{
-					targets: -1,
-					title: "Actions",
-					orderable: !1,
-					render: function(a, t, e, n) {
-						return '<a href="<?= site_url() . "admin/brands/leads/create_user/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Create Brand User"><i class="la la-user-plus"></i></a>' +
-							'<a onclick=deleteEntry("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+						targets: -1,
+						title: "Actions",
+						orderable: !1,
+						render: function(a, t, e, n) {
+							return '<a href="<?= site_url() . "admin/brands/leads/create_user/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Create Brand User"><i class="la la-user-plus"></i></a>' +
+								'<a onclick=deleteEntry("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+						}
+					}, {
+						targets: 5,
+						render: function(a, t, e, n) {
+							return new Date(e['date_created']).toLocaleString();
+						}
+					},
+					{
+						targets: 4,
+						render: function(a, t, e, n) {
+							// convert phone number to US format
+							return e['phone'].replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+						}
+					},
+					{
+						targets: 0,
+						render: function(a, t, e, n) {
+							return n['row'] + 1;
+						}
 					}
-				}, {
-					targets: 4,
-					render: function(a, t, e, n) {
-						// convert phone number to US format
-						return e['phone'].replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
-					}
-				}, {
-					targets: 0,
-					render: function(a, t, e, n) {
-						return n['row'] + 1;
-					}
-				}]
+				]
 			})
 		}
 	}

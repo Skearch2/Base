@@ -38,7 +38,7 @@
           <a href="<?php echo BASE_URL; ?>" target="_blank"><i class="fa fa-home"></i></a>
         </li>
         <li>
-          <a href="https://<?= parse_url(BASE_URL)['host']; ?>/admin" );"> <i class="fa fa-cog"></i> Admin Panel</b></a>
+          <a href="https://<?= parse_url(BASE_URL)['host']; ?>/admin"> <i class="fa fa-cog"></i> Admin Panel</a>
         </li>
       </ul>
       <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
