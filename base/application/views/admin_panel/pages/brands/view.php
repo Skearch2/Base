@@ -120,6 +120,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Brand</th>
 						<th>Organization</th>
 						<th>Members</th>
+						<th>Payments</th>
 						<th width=150>Actions</th>
 					</tr>
 				</thead>
@@ -183,6 +184,40 @@ $this->load->view('admin_panel/templates/close_html');
 		});
 	}
 
+	//Shows brand details
+	function showBrandDetails(id) {
+		$.ajax({
+			url: '<?= site_url('admin/brand/get/id/'); ?>' + id,
+			type: 'GET',
+			success: function(data, status) {
+				$("div.modal-body").html(
+					"<p>Brand: " + data.brand + " </p>\
+					<p>Organization: " + data.organization + " </p>\
+					<p>Street Address: " + data.address1 + " </p>\
+					<p>Apt/Unit/Suite: " + data.address2 + " </p>\
+					<p>City: " + data.city + " </p>\
+					<p>State: " + data.state + " </p>\
+					<p>Country: " + data.country + " </p>\
+					<p>Zipcode: " + data.zipcode + " </p>\
+					<p>Members: " + data.members + " </p>\
+					<p>Date Created: " + new Date((data.date_created)).toLocaleString() + " </p>"
+				)
+			},
+			error: function(xhr, status, error) {
+				$("div.modal-body").html(
+					"<div class='m-alert m-alert--icon m-alert--air m-alert--square alert alert-danger' role='alert'>\
+						<div class='m-alert__icon'>\
+							<i class='la la-times'></i>\
+						</div>\
+						<div class='m-alert__text'>\
+							<strong>Error!</strong> Unable to get user details.\
+						</div>\
+					</div>"
+				)
+			}
+		});
+	}
+
 	var DatatablesDataSourceAjaxServer = {
 		init: function() {
 			$("#m_table_1").DataTable({
@@ -202,18 +237,36 @@ $this->load->view('admin_panel/templates/close_html');
 				}, {
 					data: "members"
 				}, {
+					data: "payments"
+				}, {
 					data: "Actions"
 				}],
 				columnDefs: [{
-					targets: -1,
-					title: "Actions",
-					orderable: !1,
-					render: function(a, t, e, n) {
-						return '<a href="<?= site_url() . "admin/viewas/brand/ads/id/" ?>' + e['id'] + '" target="_blank" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View as Brand"><i class="la la-bold"></i></a>' +
-							'<a href="<?= site_url() . "admin/brand/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-							'<a onclick=deleteBrand("' + e['id'] + '","' + e['brand'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+						targets: -1,
+						title: "Actions",
+						orderable: !1,
+						render: function(a, t, e, n) {
+							return '<a onclick=showBrandDetails("' + e['id'] + '") data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View Details"><i class="la la-search-plus"></i></a>' +
+								'<a href="<?= site_url() . "admin/viewas/brand/ads/id/" ?>' + e['id'] + '" target="_blank" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View as Brand"><i class="la la-eye"></i></a>' +
+								'<a href="<?= site_url() . "admin/brand/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+								'<a onclick=deleteBrand("' + e['id'] + '","' + e['brand'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+						}
+					},
+					{
+						targets: 3,
+						title: "Members",
+						render: function(a, t, e, n) {
+							return '<a href="#" title="View members">' + e['members'] + '</a>'
+						}
+					},
+					{
+						targets: 4,
+						title: "Payments",
+						render: function(a, t, e, n) {
+							return '<a href="<?= site_url() . "admin/brand/payments/id/" ?>' + e['id'] + '" title="View payments">' + e['payments'] + '</a>'
+						}
 					}
-				}]
+				]
 			})
 		}
 	}

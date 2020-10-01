@@ -262,7 +262,7 @@ class Email extends MY_Controller
                         'body'    => $query->body
                     );
 
-                    $data['title'] = ucwords("Email Template - " . ucwords($type));
+                    $data['title'] = ucwords("Email Template - " . ucwords(str_replace('_', ' ', $type)));
 
                     $this->load->view('admin_panel/pages/email/templates', $data);
                 } else {

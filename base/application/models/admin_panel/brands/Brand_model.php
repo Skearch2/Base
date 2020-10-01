@@ -112,13 +112,17 @@ class Brand_model extends CI_Model
      * Get brand users associated to the brand
      *
      * @param string $id Brand ID
+     * @param int $primary_member_only Wheter to get only primary member of the brand
      * @return object
      */
-    public function get_members($id)
+    public function get_members($id, $primary_member_only = 0)
     {
         $this->db->select('user_id');
         $this->db->from('skearch_users_brands');
         $this->db->where('brand_id', $id);
+        if ($primary_member_only) {
+            $this->db->where('primary_brand_user', 1);
+        }
         $sub_query = $this->db->get_compiled_select();
 
         $this->db->select('id');
