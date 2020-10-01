@@ -42,6 +42,13 @@ $this->load->view('auth/templates/head');
 						</div>
 						<div align="center"><small><i>Please close this page for security reasons<i></small></div>
 					</div>
+					<div id="section_dberror_action" style="display:none">
+						<div align="center" class="alert m-alert--outline alert-warning">
+							Your payment was processed, however, we were unable to provide you our receipt. Please contact sales.
+							<br>
+						</div>
+						<div align="center"><small><i>Please close this page for security reasons<i></small></div>
+					</div>
 					<?= form_open('', array('class' => 'm-login__form m-form m-form--fit')) ?>
 					<div id="section_payment_form">
 						<div class="m-login__signup">
@@ -52,6 +59,7 @@ $this->load->view('auth/templates/head');
 						<div id="smart-button-container">
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="text" placeholder="Brand Name" name="descriptionInput" id="brand" maxlength="50" value="">
+								<input type="hidden" id="brand-id" name="brand_id" value="">
 							</div>
 							<span id="brandError" style="visibility: hidden; color:red;">Brand Name is required</span>
 							<br>
@@ -99,8 +107,58 @@ $this->load->view('auth/templates/head');
 	?>
 
 	<!--begin::Page Scripts -->
+	<script src="<?= site_url(ASSETS); ?>/plugins/easyautocomplete/jquery.easy-autocomplete.min.js"></script>
+	<script>
+		// settings for brand search
+		var options = {
 
-	<script src="https://www.paypal.com/sdk/js?client-id=AbNAM8VBhUEX-d11vWG1v0F9atk_Oz1CZpKKBMUemqt0-ucUDc_8QLUlmfKmIR0ZjCfLXVpbhgeiL7hK&currency=USD" data-sdk-integration-source="button-factory"></script>
+			url: function(phrase) {
+				return "<?= site_url(); ?>myskearch/auth/search/brand/" + phrase
+			},
+
+			getValue: "brand",
+
+			template: {
+				type: "description",
+				fields: {
+					description: "organization"
+				}
+			},
+
+			list: {
+				match: {
+					enabled: true
+				},
+
+				sort: {
+					enabled: true
+				},
+
+				onSelectItemEvent: function() {
+					var brand = $("#brand").getSelectedItemData().brand;
+					var id = $("#brand").getSelectedItemData().id;
+
+					$("#brand").val(brand).trigger("change");
+					$("#brand-id").val(id);
+				},
+
+				showAnimation: {
+					type: "slide", //normal|slide|fade
+					callback: function() {}
+				},
+
+				hideAnimation: {
+					type: "normal", //normal|slide|fade
+					callback: function() {}
+				}
+			}
+		};
+
+		// initialize brand search
+		$("#brand").easyAutocomplete(options);
+	</script>
+
+	<script src="https://www.paypal.com/sdk/js?client-id=AQAgLduhXxQ3SygUqNW1V-lSwRIPuS-HgQWqIbOw1BK6E-9gv9tl9FUcZHFjHVcQefrDvKN15aFTjWS_&currency=USD" data-sdk-integration-source="button-factory"></script>
 	<script>
 		function initPayPalButton() {
 			var description = document.querySelector('#smart-button-container #brand');
@@ -154,6 +212,12 @@ $this->load->view('auth/templates/head');
 						descriptionError.style.visibility = "hidden";
 					}
 
+					if (description.value.length < 1) {
+						descriptionError.style.visibility = "visible";
+					} else {
+						descriptionError.style.visibility = "hidden";
+					}
+
 					if (amount.value.length < 1 || isNaN(amount.value)) {
 						priceError.style.visibility = "visible";
 					} else {
@@ -179,8 +243,26 @@ $this->load->view('auth/templates/head');
 					document.getElementById("section_payment_form").style.display = "none";
 					document.getElementById("spinner").style.display = "block";
 					return actions.order.capture().then(function(details) {
-						document.getElementById("spinner").style.display = "none";
-						document.getElementById("section_approved_action").style.display = "block";
+						$.ajax({
+							url: '<?= site_url('myskearch/auth/payment/transaction/done'); ?>',
+							type: 'GET',
+							data: {
+								brand_id: document.getElementById("brand-id").value,
+								service: "Paypal",
+								transaction_id: details.purchase_units[0].payments.captures[0].id,
+								payment_type: type,
+								amount: details.purchase_units[0].payments.captures[0].amount.value,
+								payment_date: details.purchase_units[0].payments.captures[0].create_time,
+							},
+							success: function(data, status) {
+								document.getElementById("spinner").style.display = "none";
+								if (data == 1) {
+									document.getElementById("section_approved_action").style.display = "block";
+								} else if (data == 0) {
+									document.getElementById("section_dberror_action").style.display = "block";
+								}
+							}
+						});
 					});
 				},
 				onCancel: function(data) {

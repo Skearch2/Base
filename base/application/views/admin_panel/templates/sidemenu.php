@@ -44,7 +44,7 @@
 					<ul class="m-menu__subnav">
 						<li id="submenu-brands" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Brands</span></a></li>
 						<li class="m-menu__item" aria-haspopup="true" m-menu-link-redirect="1"><a href="<?= site_url("media-manager") ?>" target="_blank" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Media Engine</span></a></li>
-						<li id="submenu-brands-keywords" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands/keywords"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Keywords</span></a></li>
+						<li id="submenu-brands" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands/keywords"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Keywords</span></a></li>
 					</ul>
 				</div>
 			</li>
@@ -68,6 +68,7 @@
 									<li id="welcome" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/templates/welcome"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Welcome Email</span></a></li>
 									<li id="activation" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/templates/activation"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Activation</span></a></li>
 									<li id="forget" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/templates/forgotten_password"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Forget Password</span></a></li>
+									<li id="brand_payment_confirmation" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/templates/brand_payment_confirmation"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Payment Confirmation</span></a></li>
 								</ul>
 							</div>
 						</li>

@@ -32,6 +32,7 @@ class Brands extends MY_Controller
         }
 
         $this->load->model('admin_panel/brands/Brand_model', 'Brand');
+        $this->load->model('admin_panel/brands/Payments_model', 'Payments');
         $this->load->model('Util_model', 'Util_model');
     }
 
@@ -133,24 +134,37 @@ class Brands extends MY_Controller
      *
      * @return void
      */
-    public function get()
+    public function get($id = null)
     {
         if ($this->ion_auth_acl->has_permission('brands_get') or $this->ion_auth->is_admin()) {
 
-            $total_brands = $this->db->count_all_results('skearch_brands');
-            $brands = $this->Brand->get();
-            $result = array(
-                'iTotalRecords' => $total_brands,
-                'iTotalDisplayRecords' => $total_brands,
-                'sEcho' => 0,
-                'sColumns' => "",
-                'aaData' => $brands,
-            );
+            if (!is_null($id) && $id > 0) {
+                $result = $this->Brand->get($id);
 
-            // add members associated to each brand
-            for ($i = 0; $i < sizeof($result['aaData']); $i++) {
-                $members = $this->Brand->get_members($result['aaData'][$i]->id);
-                $result['aaData'][$i]->members = sizeof($members);
+                // include members associated to the brand
+                $members = $this->Brand->get_members($id);
+                $result->members = sizeof($members);
+            } else {
+                $total_brands = $this->db->count_all_results('skearch_brands');
+                $brands = $this->Brand->get();
+                $result = array(
+                    'iTotalRecords' => $total_brands,
+                    'iTotalDisplayRecords' => $total_brands,
+                    'sEcho' => 0,
+                    'sColumns' => "",
+                    'aaData' => $brands,
+                );
+
+
+                for ($i = 0; $i < sizeof($result['aaData']); $i++) {
+                    // add members associated to each brand
+                    $members = $this->Brand->get_members($result['aaData'][$i]->id);
+                    $result['aaData'][$i]->members = sizeof($members);
+
+                    // add # of payments by each brand
+                    $payments = $this->Payments->get($result['aaData'][$i]->id);
+                    $result['aaData'][$i]->payments = sizeof($payments);
+                }
             }
 
             $this->output

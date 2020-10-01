@@ -30,6 +30,8 @@ class Auth extends MY_Controller
 
         $this->load->model('my_skearch/User_model', 'User');
         $this->load->model('Util_model', 'Util');
+        $this->load->model('admin_panel/email/Template_model', 'Template_model');
+        $this->load->model('admin_panel/email/Log_model', 'Log_model');
     }
 
     /**
@@ -84,6 +86,22 @@ class Auth extends MY_Controller
             $this->session->set_flashdata('error', $this->ion_auth->errors());
             redirect("myskearch/auth/forgot_password");
         }
+    }
+
+    /**
+     * Search for the brand
+     *
+     * @param string $brand Brand name
+     * @return object
+     */
+    public function brand_search($brand)
+    {
+        $this->load->model('admin_panel/brands/brand_model', 'Brand');
+
+        $result = $this->Brand->get_by_name($brand);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
     }
 
     /**
@@ -278,12 +296,78 @@ class Auth extends MY_Controller
     }
 
     /**
-     * Allow user to signup to My Skearch
+     * Payment page for Brands to pay
      */
-    public function payment()
+    public function payment($approved = 0)
     {
-        $data['title'] = ucwords("my skearch | make payment");
-        $this->load->view('auth/pages/payment', $data);
+        if ($approved && $this->input->get('transaction_id')) {
+            $this->load->model('admin_panel/brands/payments_model', 'Payments');
+            $this->load->model('admin_panel/brands/brand_model', 'Brand');
+
+            // transaction details
+            $reference_id   = strtoupper(bin2hex(random_bytes(6))); // create random string of length 12
+            $service        = $this->input->get('service');
+            $transaction_id = $this->input->get('transaction_id');
+            $payment_type   = $this->input->get('payment_type');
+            $amount         = $this->input->get('amount');
+            $payment_date   = $this->input->get('payment_date');
+
+            // get the id and details of the lead member of the brand
+            $id = $this->Brand->get_members($this->input->get('brand_id'), 1)[0]->id;
+            $user = $this->ion_auth->user($id)->row();
+
+            // email template
+            $template = $this->Template_model->get_template('brand_payment_confirmation');
+
+            // data used in email body
+            $data = array(
+                'username'       => $user->username,
+                'reference_id'   => $reference_id,
+                'service'        => $service,
+                'transaction_id' => $transaction_id,
+                'payment_type'   => $payment_type,
+                'amount'         => $amount,
+                'payment_date'   => $payment_date
+            );
+
+            $message = $this->parser->parse_string($template->body, $data, TRUE);
+
+            // send email regarding payment confirmation
+            $this->email->clear();
+            $this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+            $this->email->to($user->email);
+            $this->email->subject($template->subject);
+            $this->email->message($message);
+
+            if ($this->email->send()) {
+                // log email
+                $this->Log_model->create(array(
+                    'type' => 'Payment Confirmation',
+                    'user_id' => $user->id
+                ));
+            }
+
+            $transaction_data = array(
+                'id'             => $reference_id,
+                'brand_id'       => $this->input->get('brand_id'),
+                'service'        => $service,
+                'transaction_id' => $transaction_id,
+                'payment_type'   => $payment_type,
+                'amount'         => $amount,
+                'payment_date'   => $payment_date
+            );
+
+            $create = $this->Payments->create($transaction_data);
+
+            if ($create) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        } else {
+            $data['title'] = ucwords("my skearch | make payment");
+            $this->load->view('auth/pages/payment', $data);
+        }
     }
 
     /**
