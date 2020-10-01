@@ -210,7 +210,7 @@ $this->load->view('admin_panel/templates/close_html');
 							<i class='la la-times'></i>\
 						</div>\
 						<div class='m-alert__text'>\
-							<strong>Error!</strong> Unable to get user details.\
+							<strong>Error!</strong> Unable to get brand details.\
 						</div>\
 					</div>"
 				)
@@ -263,7 +263,11 @@ $this->load->view('admin_panel/templates/close_html');
 						targets: 4,
 						title: "Payments",
 						render: function(a, t, e, n) {
-							return '<a href="<?= site_url() . "admin/brand/payments/id/" ?>' + e['id'] + '" title="View payments">' + e['payments'] + '</a>'
+							if (e['payments'] > 0) {
+								return '<a href="<?= site_url() . "admin/brand/payments/id/" ?>' + e['id'] + '" title="View payments">' + e['payments'] + '</a>'
+							} else {
+								return 'None'
+							}
 						}
 					}
 				]
