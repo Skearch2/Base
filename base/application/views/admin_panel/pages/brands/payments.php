@@ -150,7 +150,7 @@ $this->load->view('admin_panel/templates/close_html');
 						}, 0),
 						i = o
 						.column(6, {
-							page: "current"
+							page: "all"
 						})
 						.data()
 						.reduce(function(t, e) {
