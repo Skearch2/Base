@@ -454,7 +454,8 @@ class Pages extends MY_Controller
               'description' => (string) $banner->imagedescription,
               'mediaurl' => (string) $banner->mediaurl,
               'image' => (string) $banner->imagefilename,
-              'duration' => (string) ($banner->imageduration * 1000)
+              'duration' => (string) ($banner->imageduration * 1000),
+              'adsign' => (string) $banner->adsign
             );
           }
         }
@@ -469,7 +470,8 @@ class Pages extends MY_Controller
               'description' => (string) $banner->imagedescription,
               'mediaurl' => (string) $banner->mediaurl,
               'image' => (string) $banner->imagefilename,
-              'duration' => (string) ($banner->imageduration * 1000)
+              'duration' => (string) ($banner->imageduration * 1000),
+              'adsign' => (string) $banner->adsign
             );
           }
         }

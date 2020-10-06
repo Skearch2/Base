@@ -16,6 +16,7 @@ $ifile    = $this->config->item('imageserver_field_image_filename');
 $imediaurl  = $this->config->item('imageserver_field_image_mediaurl');
 $iurl     = $this->config->item('imageserver_field_image_url');
 $iduration = $this->config->item('imageserver_field_image_duration');
+$isign = $this->config->item('imageserver_field_image_sign');
 
 $imageid  = $this->config->item('data_imageid');
 $albumid  = $this->config->item('data_albumid');
@@ -25,6 +26,7 @@ $media     = $this->config->item('data_userfile');
 $mediaurl  = $this->config->item('data_mediaurl');
 $url      = $this->config->item('data_url');
 $duration = $this->config->item('data_duration');
+$sign = $this->config->item('data_sign');
 
 $mediaboxu = $this->config->item('mediaboxu');
 
@@ -98,6 +100,12 @@ $basedomain = $this->config->item('base_domain');
   <?php endif; ?>
 
   <br>
+
+  <label for="<?= $sign; ?>" class="control-label">Show Ad Sign</label>
+  <input type="hidden" name="<?= $sign; ?>" value="0" <?= $image->{$isign} == 0 ? 'checked' : "" ?>>
+  <input type="checkbox" name="<?= $sign; ?>" value="1" <?= $image->{$isign} == 1 ? 'checked' : "" ?>>
+
+  <br><br>
 
   <button class="btn btn-small btn-primary" type="submit" form="edit-image-form">Submit</button>
   <button class="btn btn-small btn-secondary" type="button" form="create-image-form" onclick="history.back();">Cancel</button>

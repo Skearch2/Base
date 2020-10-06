@@ -14,6 +14,7 @@ $media  = $this->config->item('data_userfile');
 $mediaurl  = $this->config->item('data_mediaurl');
 $url    = $this->config->item('data_url');
 $duration = $this->config->item('data_duration');
+$sign = $this->config->item('data_sign');
 
 $mediaboxu = $this->config->item('mediaboxu');
 
@@ -29,7 +30,7 @@ $basedomain = $this->config->item('base_domain');
 
 <form id="create-image-form" class="form-horizontal" method="POST" action="<?= base_url(); ?><?= "$main/createimageglobal/{$album->$aid}"; ?>" enctype="multipart/form-data">
 
-  <label for="<?= $title; ?>" class="control-label">Brand</label>
+  <label for="<?= $brandid; ?>" class="control-label">Brand</label>
   <input type="text" name="brand" id="brand-search" class="form-control" placeholder="Search Brand" required autofocus>
   <input type="hidden" name="<?= $brandid; ?>" id="<?= $brandid; ?>">
 
@@ -51,7 +52,7 @@ $basedomain = $this->config->item('base_domain');
   <br>
 
   <label for=" <?= $duration; ?>" class="control-label">Duration</label>
-  <input type=" number" name="<?= $duration; ?>" id="<?= $duration; ?>" class="form-control" min="1" max="120" placeholder="Duration in seconds" required>
+  <input type="number" name="<?= $duration; ?>" id="<?= $duration; ?>" class="form-control" min="1" max="120" placeholder="Duration in seconds" required>
 
   <br>
 
@@ -61,10 +62,14 @@ $basedomain = $this->config->item('base_domain');
 
   <?php if (strcasecmp($album->$amediabox, $mediaboxu) == 0) : ?>
     <button type="button" class="btn btn-link" id="mediaurl_button">or Add Youtube Link</button>
-    <br>
   <?php endif; ?>
 
   <br>
+
+  <label for="<?= $sign; ?>" class="control-label">Show Ad Sign</label>
+  <input type="checkbox" id="<?= $sign; ?>" name="<?= $sign; ?>">
+
+  <br><br>
 
   <button class="btn btn-small btn-primary" type="submit" form="create-image-form">Submit</button>
   <button class="btn btn-small btn-secondary" type="button" form="create-image-form" onclick="history.back();">Cancel</button>

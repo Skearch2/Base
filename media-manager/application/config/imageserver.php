@@ -83,6 +83,7 @@ $config['imageserver_data_title']       = 'title';
 $config['imageserver_data_description'] = 'description';
 $config['imageserver_data_url']         = 'url';
 $config['imageserver_data_duration']    = 'duration';
+$config['imageserver_data_sign']        = 'sign';
 
 $config['imageserver_data_filename']    = 'filename';
 $config['imageserver_data_userfile']    = 'file';
@@ -132,6 +133,7 @@ $config['imageserver_field_image_filename']     = 'imagefilename';
 $config['imageserver_field_image_mediaurl']     = 'mediaurl';
 $config['imageserver_field_image_url']          = 'imageurl';
 $config['imageserver_field_image_duration']     = 'imageduration';
+$config['imageserver_field_image_sign']         = 'adsign';
 $config['imageserver_field_image_clicks']       = 'imageclicks';
 $config['imageserver_field_image_impressions']  = 'imageimpressions';
 $config['imageserver_field_image_priority']     = 'imagepriority';
