@@ -14,6 +14,7 @@ $media  = $this->config->item('data_userfile');
 $mediaurl  = $this->config->item('data_mediaurl');
 $url    = $this->config->item('data_url');
 $duration = $this->config->item('data_duration');
+$sign = $this->config->item('data_sign');
 $mediabox = $this->config->item('data_albummediabox');
 
 $mediaboxu = $this->config->item('mediaboxu');
@@ -55,7 +56,7 @@ $basedomain = $this->config->item('base_domain');
   <br>
 
   <label for=" <?= $duration; ?>" class="control-label">Duration</label>
-  <input type=" number" name="<?= $duration; ?>" id="<?= $duration; ?>" class="form-control" min="1" max="120" placeholder="Duration in seconds" required>
+  <input type="number" name="<?= $duration; ?>" id="<?= $duration; ?>" class="form-control" min="1" max="120" placeholder="Duration in seconds" required>
 
   <br>
 
@@ -69,6 +70,11 @@ $basedomain = $this->config->item('base_domain');
   <?php endif; ?>
 
   <br>
+
+  <label for="<?= $sign; ?>" class="control-label">Show Ad Sign</label>
+  <input type="checkbox" id="<?= $sign; ?>" name="<?= $sign; ?>">
+
+  <br><br>
 
   <button class="btn btn-small btn-primary" type="submit" form="create-image-form">Submit</button>
   <button class="btn btn-small btn-secondary" type="button" form="create-image-form" onclick="history.back();">Cancel</button>
