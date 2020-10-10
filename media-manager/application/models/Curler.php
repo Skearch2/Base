@@ -227,7 +227,7 @@ class Curler extends Common_Model
    * @param string - the hyperlink of the image to be
    * @param string - the duration of the image to be
    */
-  public function newImage($pAlbumId, $pBrandId, $pTitle, $pDescription, $pMediaUrl, $pUrl, $pDuration)
+  public function newImage($pAlbumId, $pBrandId, $pTitle, $pDescription, $pMediaUrl, $pUrl, $pDuration, $pSign)
   {
     $albumas        = $this->config->item('imageserver_data_albums');
     $brandidas      = $this->config->item('imageserver_data_brandid');
@@ -236,6 +236,7 @@ class Curler extends Common_Model
     $mediaurlas     = $this->config->item('imageserver_data_mediaurl');
     $urlas          = $this->config->item('imageserver_data_url');
     $durationas     = $this->config->item('imageserver_data_duration');
+    $signas         = $this->config->item('imageserver_data_sign');
 
     // get the video id from the youtube video link
     parse_str(parse_url($pMediaUrl, PHP_URL_QUERY), $videoId);
@@ -249,7 +250,8 @@ class Curler extends Common_Model
         $descriptionas  => $pDescription,
         $mediaurlas     => $videoId,
         $urlas          => $pUrl,
-        $durationas     => $pDuration
+        $durationas     => $pDuration,
+        $signas         => $pSign
       )
     );
 
@@ -318,7 +320,7 @@ class Curler extends Common_Model
    * @param string - the hyperlink of the album to be updated
    * @param string - the duration of the album to be updated
    */
-  public function updateImage($pImageId, $pAlbumId, $pBrandId, $pTitle, $pDescription, $pMediaUrl, $pUrl, $pDuration)
+  public function updateImage($pImageId, $pAlbumId, $pBrandId, $pTitle, $pDescription, $pMediaUrl, $pUrl, $pDuration, $pSign)
   {
     //$imageas        = $this -> config -> item('imageserver_data_images');
     $albumas        = $this->config->item('imageserver_data_albums');
@@ -328,6 +330,7 @@ class Curler extends Common_Model
     $mediaurlas     = $this->config->item('imageserver_data_mediaurl');
     $urlas          = $this->config->item('imageserver_data_url');
     $durationas     = $this->config->item('imageserver_data_duration');
+    $signas         = $this->config->item('imageserver_data_sign');
 
     // get the video id from the youtube video link
     parse_str(parse_url($pMediaUrl, PHP_URL_QUERY), $videoId);
@@ -341,7 +344,8 @@ class Curler extends Common_Model
         $descriptionas  => $pDescription,
         $mediaurlas     => $videoId,
         $urlas          => $pUrl,
-        $durationas     => $pDuration
+        $durationas     => $pDuration,
+        $signas         => $pSign
       )
     );
   }

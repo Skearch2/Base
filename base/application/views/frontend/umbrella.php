@@ -18,10 +18,13 @@ $this->load->view('frontend/templates/header');
 <section class="ad">
   <div class="container">
     <div id="myCarouselA" class="carousel slide carousel-fade" data-ride="carousel">
+      <div class="ads" id="media-box-a-sign" style="visibility:hidden">
+        <p>Ad</p>
+      </div>
       <div class="carousel-inner">
         <?php $media_box_a_index = 0; ?>
         <?php foreach ($media_box_a as $banner) : ?>
-          <div class="<?= ($media_box_a_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
+          <div class="<?= ($media_box_a_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>" data-ad-sign="<?= $banner['adsign'] ?>">
             <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
               <img class="responsive" width="1000" height="110" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
             </a>
@@ -66,10 +69,13 @@ $this->load->view('frontend/templates/header');
   <div class="container">
     <i id="speaker" class="fas fa-volume-mute" title="Unmute" onclick="toggleMute()"></i>
     <div id="myCarouselU" class="carousel slide carousel-fade" data-ride="carousel">
+      <div class="ads" id="media-box-u-sign" style="visibility:hidden">
+        <p>Ad</p>
+      </div>
       <div class="carousel-inner">
         <?php $media_box_u_index = 0; ?>
         <?php foreach ($media_box_u as $banner) : ?>
-          <div class="<?= ($media_box_u_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
+          <div class="<?= ($media_box_u_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>" data-ad-sign="<?= $banner['adsign'] ?>">
             <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
               <?php $is_video = substr(strtolower($banner['image']), -3) == 'mp4' ? 1 : 0 ?>
               <?php if ($is_video) : ?>
@@ -89,7 +95,50 @@ $this->load->view('frontend/templates/header');
   </div>
 </section>
 
+<?php
+// Load default footer.
+$this->load->view('frontend/templates/footer');
+?>
+
+<!-- Page Scripts -->
 <script>
+  // show ad sign on sponsered banner
+  var isAd = $('#myCarouselA .carousel-item.active').data("ad-sign");
+  if (isAd) {
+    $('#media-box-a-sign').css('visibility', 'visible');
+  } else {
+    $('#media-box-a-sign').css('visibility', 'hidden');
+  }
+
+  var isAd = $('#myCarouselU .carousel-item.active').data("ad-sign");
+  if (isAd) {
+    $('#media-box-u-sign').css('visibility', 'visible');
+  } else {
+    $('#media-box-u-sign').css('visibility', 'hidden');
+  }
+
+  $('#myCarouselA').on('slid.bs.carousel', function() {
+    $(this).find('.carousel-item.active').each(function() {
+      var isAd = $(this).data("ad-sign");
+      if (isAd) {
+        $('#media-box-a-sign').css('visibility', 'visible');
+      } else {
+        $('#media-box-a-sign').css('visibility', 'hidden');
+      }
+    });
+  });
+
+  $('#myCarouselU').on('slid.bs.carousel', function() {
+    $(this).find('.carousel-item.active').each(function() {
+      var isAd = $(this).data("ad-sign");
+      if (isAd) {
+        $('#media-box-u-sign').css('visibility', 'visible');
+      } else {
+        $('#media-box-u-sign').css('visibility', 'hidden');
+      }
+    });
+  });
+
   // Video settings for carousel
   $('#myCarouselU').on('slid.bs.carousel', function() {
     $(this).find('.carousel-item.active video').each(function() {
@@ -122,11 +171,6 @@ $this->load->view('frontend/templates/header');
 <script src="<?= base_url(ASSETS); ?>/frontend/js/apikey.js"></script>
 
 <?php
-
-// Load default footer.
-$this->load->view('frontend/templates/footer');
-
 // Close body and html elements.
 $this->load->view('frontend/templates/closepage');
-
 ?>

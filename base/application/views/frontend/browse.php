@@ -18,10 +18,13 @@ $this->load->view('frontend/templates/header');
 <section class="ad">
     <div class="container">
         <div id="mediabox-va" class="carousel slide carousel-fade" data-ride="carousel">
+            <div class="ads" id="media-box-va-sign" style="visibility:hidden">
+                <p>Ad</p>
+            </div>
             <div class="carousel-inner">
                 <?php $media_box_va_index = 0; ?>
                 <?php foreach ($media_box_va as $banner) : ?>
-                    <div class="<?= ($media_box_va_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
+                    <div class="<?= ($media_box_va_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>" data-ad-sign="<?= $banner['adsign'] ?>">
                         <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
                             <img class="responsive" width="1000" height="110" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
                         </a>
@@ -75,6 +78,31 @@ $this->load->view('frontend/templates/header');
 
 // Load default footer.
 $this->load->view('frontend/templates/footer');
+?>
+
+<!-- Page Scripts -->
+<script>
+    // show ad sign on sponsered banner
+    var isAd = $('.carousel-item.active').data("ad-sign");
+    if (isAd) {
+        $('#media-box-va-sign').css('visibility', 'visible');
+    } else {
+        $('#media-box-va-sign').css('visibility', 'hidden');
+    }
+
+    $('#mediabox-va').on('slid.bs.carousel', function() {
+        $(this).find('.carousel-item.active').each(function() {
+            var isAd = $(this).data("ad-sign");
+            if (isAd) {
+                $('#media-box-va-sign').css('visibility', 'visible');
+            } else {
+                $('#media-box-va-sign').css('visibility', 'hidden');
+            }
+        });
+    });
+</script>
+
+<?php
 
 // Close body and html elements.
 $this->load->view('frontend/templates/closepage');

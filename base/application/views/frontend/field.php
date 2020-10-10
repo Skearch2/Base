@@ -76,10 +76,13 @@ $this->load->view('frontend/templates/header');
 <section class="ad">
     <div class="container">
         <div id="myCarouselA" class="carousel slide carousel-fade" data-ride="carousel">
+            <div class="ads" id="media-box-a-sign">
+                <p>Ad</p>
+            </div>
             <div class="carousel-inner">
                 <?php $media_box_a_index = 0; ?>
                 <?php foreach ($media_box_a as $banner) : ?>
-                    <div class="<?= ($media_box_a_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
+                    <div class="<?= ($media_box_a_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>" data-ad-sign="<?= $banner['adsign'] ?>">
                         <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
                             <img class="responsive" width="1000" height="110" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" width="728" height="120" />
                         </a>
@@ -155,10 +158,13 @@ $this->load->view('frontend/templates/header');
             <div class="col-md-4 col-sm-3">
                 <i id="speaker" class="fas fa-volume-mute" title="Unmute" onclick="toggleMute()"></i>
                 <div id="myCarouselB" class="carousel slide carousel-fade" data-ride="carousel">
+                    <div class="ads" id="media-box-b-sign">
+                        <p>Ad</p>
+                    </div>
                     <div class="carousel-inner">
                         <?php $media_box_b_index = 0; ?>
                         <?php foreach ($media_box_b as $banner) : ?>
-                            <div class="<?= ($media_box_b_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>">
+                            <div class="<?= ($media_box_b_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>" data-ad-sign="<?= $banner['adsign'] ?>">
                                 <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
                                     <?php $is_video = substr(strtolower($banner['image']), -3) == 'mp4' ? 1 : 0 ?>
                                     <?php if ($is_video) : ?>
@@ -181,13 +187,50 @@ $this->load->view('frontend/templates/header');
 </section>
 
 <?php
-
 // Load default footer.
 $this->load->view('frontend/templates/footer');
 ?>
 
+<!-- Page Scripts -->
 <script>
-    // Video settings for carousel
+    // show ad sign on sponsered banner
+    var isAd = $('#myCarouselA .carousel-item.active').data("ad-sign");
+    if (isAd) {
+        $('#media-box-a-sign').css('visibility', 'visible');
+    } else {
+        $('#media-box-a-sign').css('visibility', 'hidden');
+    }
+
+    var isAd = $('#myCarouselB .carousel-item.active').data("ad-sign");
+    if (isAd) {
+        $('#media-box-b-sign').css('visibility', 'visible');
+    } else {
+        $('#media-box-b-sign').css('visibility', 'hidden');
+    }
+
+    $('#myCarouselA').on('slid.bs.carousel', function() {
+        $(this).find('.carousel-item.active').each(function() {
+            var isAd = $(this).data("ad-sign");
+            if (isAd) {
+                $('#media-box-a-sign').css('visibility', 'visible');
+            } else {
+                $('#media-box-a-sign').css('visibility', 'hidden');
+            }
+        });
+    });
+
+    $('#myCarouselB').on('slid.bs.carousel', function() {
+        $(this).find('.carousel-item.active').each(function() {
+            var isAd = $(this).data("ad-sign");
+            if (isAd) {
+                $('#media-box-b-sign').css('visibility', 'visible');
+            } else {
+                $('#media-box-b-sign').css('visibility', 'hidden');
+            }
+        });
+    });
+
+    // Video playback settings for carousel
     // $(document).ready(function() {
     //     var video = $('#myCarouselB').find('.carousel-item.active video');
     //     video[0].play()

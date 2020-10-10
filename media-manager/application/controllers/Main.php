@@ -160,9 +160,10 @@ class Main extends Common_Controller
     $mediaurl     = $this->input->post($this->config('data_mediaurl'), true);
     $url          = $this->input->post($this->config('data_url'), true);
     $duration     = $this->input->post($this->config('data_duration'), true);
+    $sign         = $this->input->post($this->config('data_sign'), true);
 
     // cURL it
-    $imageid = $this->curler->newImage($albumid, $brandid, $title, $description, $mediaurl, $url, $duration);
+    $imageid = $this->curler->newImage($albumid, $brandid, $title, $description, $mediaurl, $url, $duration, $sign);
 
     // upload media
     $this->curler->upload($imageid);
@@ -193,9 +194,10 @@ class Main extends Common_Controller
     $mediaurl     = $this->input->post($this->config('data_mediaurl'), true);
     $url          = $this->input->post($this->config('data_url'), true);
     $duration     = $this->input->post($this->config('data_duration'), true);
+    $sign         = $this->input->post($this->config('data_sign'), true);
 
     // cURL it
-    $imageid = $this->curler->newImage($albumid, $brandid, $title, $description, $mediaurl, $url, $duration);
+    $imageid = $this->curler->newImage($albumid, $brandid, $title, $description, $mediaurl, $url, $duration, $sign);
 
     // upload media
     $this->curler->upload($imageid);
@@ -369,9 +371,10 @@ class Main extends Common_Controller
     $url          = $this->input->post($this->config('data_url'), true);
     $mediaurl     = $this->input->post($this->config('data_mediaurl'), true);
     $duration     = $this->input->post($this->config('data_duration'), true);
+    $sign         = $this->input->post($this->config('data_sign'), true);
 
     // cURL it
-    $this->curler->updateImage($imageid, $albumid, $brandid, $title, $description, $mediaurl, $url, $duration);
+    $this->curler->updateImage($imageid, $albumid, $brandid, $title, $description, $mediaurl, $url, $duration, $sign);
 
     // upload media
     $this->curler->upload($imageid);

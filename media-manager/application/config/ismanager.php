@@ -76,6 +76,7 @@ $config['data_description'] = 'description';
 $config['data_mediaurl']    = 'mediaurl';
 $config['data_url']         = 'url';
 $config['data_duration']    = 'duration';
+$config['data_sign']        = 'sign';
 
 $config['data_userfile']    = 'file';
 $config['data_filename']    = 'filename';
