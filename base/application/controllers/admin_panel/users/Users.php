@@ -622,6 +622,26 @@ class Users extends MY_Controller
     }
 
     /**
+     * Upgrade user to premium
+     *
+     * @param int $id ID of the user
+     * @return void
+     */
+    public function upgrade($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('users_upgrade') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            // add user to premium user group
+            if ($this->User->get($id)->active && $this->ion_auth->remove_from_group(NULL, $id) && $this->ion_auth->add_to_group($this->config->item('premium', 'ion_auth'), $id)) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        }
+    }
+
+    /**
      * Callback for username validation
      *
      * @param string $username Username of the user
