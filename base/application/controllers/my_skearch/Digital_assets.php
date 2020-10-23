@@ -20,6 +20,11 @@ class Digital_Assets extends MY_Controller
 		if (!$this->ion_auth->logged_in()) {
 			redirect('myskearch/auth/login', 'refresh');
 		}
+
+		// prevent access to regular users
+		if ($this->ion_auth->in_group($this->config->item('regular', 'ion_auth'))) {
+            redirect('myskearch');
+		}
 	}
 
 	/**
@@ -29,6 +34,7 @@ class Digital_Assets extends MY_Controller
 	 */
 	public function index()
 	{
+		// page data
 		$data['section'] = 'digital assets';
 		$data['page'] = 'digital assets';
 		$data['title'] = ucwords("my skearch | digital assets");

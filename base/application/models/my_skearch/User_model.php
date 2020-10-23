@@ -46,22 +46,21 @@ class User_model extends CI_Model
 
             // $group = array('5'); // regular member group
             $query = $this->ion_auth->register($username, $password, $email, $additional_data);
-            if ($query) {
-                return TRUE;
-            } else {
-                return FALSE;
-            }
+            
+            return $query;
+
         } else {
             $data = array(
                 'name'      => $this->input->post('name'),
                 'brandname' => $this->input->post('brandname'),
                 'email'     => $this->input->post('email_b'),
-                'phone'     => $this->input->post('phone')
+                'phone'     => preg_replace("/[^0-9]/", "", $this->input->post('phone'))
             );
 
             $query = $this->db->insert('skearch_brand_leads', $data);
-            if ($query) {
-                return $query;
+            
+            if ($this->db->affected_rows() > 0) {
+                return TRUE;
             } else {
                 return FALSE;
             }

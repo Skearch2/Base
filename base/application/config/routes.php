@@ -166,6 +166,7 @@ $route['admin/user/reset/id/(:num)']                = 'admin_panel/users/users/r
 $route['admin/user/toggle/id/(:num)']               = 'admin_panel/users/users/toggle/$1';
 $route['admin/user/toggle/payment/user/id/(:num)']  = 'admin_panel/users/users/toggle_payment/$1';
 $route['admin/user/update/id/(:num)']               = 'admin_panel/users/users/update/$1';
+$route['admin/user/upgrade/id/(:num)']              = 'admin_panel/users/users/upgrade/$1';
 $route['admin/user/get/id/(:num)']                  = 'admin_panel/users/users/get/$1';
 $route['admin/user/get/permissions/id/(:num)']      = 'admin_panel/users/users/permissions/$1';
 $route['admin/users/get/group/id/(:num)']           = 'admin_panel/users/users/get/$1/1';
