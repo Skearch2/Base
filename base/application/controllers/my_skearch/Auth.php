@@ -471,7 +471,7 @@ class Auth extends MY_Controller
         }
 
         // check if user is signing up as regular user
-        $is_regular = (null !== $this->input->post("is_regular_signup")) ?  $this->input->post("is_regular_signup") : 1;
+        $is_regular = (null !== $this->input->post("is_regular_signup")) ? $this->input->post("is_regular_signup") : 0;
 
         if (!empty($is_regular) && $is_regular == 1) {
             $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'trim|required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']', array('is_unique' => 'The Skearch ID or username already exists.'));
@@ -484,7 +484,7 @@ class Auth extends MY_Controller
             $this->form_validation->set_rules('name', 'Name', 'trim|required');
             $this->form_validation->set_rules('brandname', 'Brand Name', 'trim|required|is_unique[skearch_brand_leads.brandname]');
             $this->form_validation->set_rules('email_b', 'Email', 'trim|required|valid_email');
-            $this->form_validation->set_rules('phone', 'Phone', 'trim|required|numeric|exact_length[10]');
+            $this->form_validation->set_rules('phone', 'Phone', 'trim|required|callback_validate_phone');
         }
         $this->form_validation->set_rules('captcha', 'Captcha', 'trim|required|callback_validate_captcha');
         $this->form_validation->set_rules(
@@ -534,8 +534,15 @@ class Auth extends MY_Controller
             }
             $this->session->unset_userdata('captcha');
 
-            if ($this->User->create($is_regular)) {
+            $user = $this->User->create($is_regular);
 
+            if ($user) {
+                if ($this->input->post('is_premium')) {
+                     // add user to premium user group
+                    $this->ion_auth->remove_from_group(NULL, $user);
+                    $this->ion_auth->add_to_group($this->config->item('premium', 'ion_auth'), $user);
+                }
+                
                 $this->session->set_flashdata('signup_success', true);
 
                 if ($is_regular) {
@@ -549,6 +556,22 @@ class Auth extends MY_Controller
                 $this->session->set_flashdata('error', $this->ion_auth->errors());
                 redirect('myskearch/auth/signup');
             }
+        }
+    }
+
+    /**
+     * Validates US phone numnber
+     *
+     * @return bool Whether the posted Captcha token matches
+     */
+    public function validate_phone()
+    {
+        $phone = preg_replace("/[^0-9]/", "", $this->input->post('phone'));
+        if (strlen($phone) != 10) {
+            $this->form_validation->set_message('validate_phone', 'You have entered invalid Phone number.');
+            return false;
+        } else {
+            return true;
         }
     }
 

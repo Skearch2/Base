@@ -319,15 +319,12 @@
 								<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 								</div>
 							</li>
-							<?php if (($this->ion_auth->get_users_groups()->row()->id == 4)) : ?>
+							<?php if (!$this->ion_auth->in_group($this->config->item('regular', 'ion_auth'))) : ?>
 								<li class="m-menu__item <?= (isset($section) && $section == 'digital assets') ? 'm-menu__item--active  m-menu__item--active-tab' : 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="" aria-haspopup="true"><a href="<?= base_url("myskearch/digital_assets"); ?>" class="m-menu__link" title="Digital Assets"><span class="m-menu__link-text">Digital Assets</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 									<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 										<ul class="m-menu__subnav">
 											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-graphic-2"></i><span class="m-menu__link-text">Revenue</span></a></li>
 											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-analytics"></i><span class="m-menu__link-text">Bills</span></a></li>
-											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-notes"></i><span class="m-menu__link-text">IPO</span></a></li>
-											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-clipboard"></i><span class="m-menu__link-text">Tax Management</span></a></li>
-											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-alarm-1"></i><span class="m-menu__link-text">Invoices</span></a></li>
 										</ul>
 									</div>
 								</li>
@@ -336,7 +333,7 @@
 								<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 								</div>
 							</li>
-							<?php if (($this->ion_auth->get_users_groups()->row()->id == 3)) : ?>
+							<?php if ($this->ion_auth->in_group($this->config->item('brand', 'ion_auth'))) : ?>
 								<li class="m-menu__item <?= (isset($section) && $section == 'brand') ? 'm-menu__item--active  m-menu__item--active-tab' : 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="tab" aria-haspopup="true"><a href="<?= base_url("myskearch/brand"); ?>" class="m-menu__link" title="Brand Section"><span class="m-menu__link-text">Brand</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 									<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 										<ul class="m-menu__subnav">

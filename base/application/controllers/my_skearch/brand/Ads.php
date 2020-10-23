@@ -24,7 +24,7 @@ class Ads extends MY_Controller
         }
 
         // check if user is a brand member
-        if (!($this->ion_auth->get_users_groups()->row()->id == 3 || $this->ion_auth->is_admin())) {
+        if (!$this->ion_auth->in_group($this->config->item('brand', 'ion_auth') || $this->ion_auth->is_admin())) {
             redirect('myskearch', 'refresh');
         }
 
@@ -44,6 +44,11 @@ class Ads extends MY_Controller
      */
     public function index($id = null)
     {
+        // id is required to view as brand by admin
+        if (!$id) {
+            redirect('myskearch', 'refresh');
+        }
+        
         $brand_id = !is_null($id) ? $id : $this->User->get_brand_details($this->user_id)->brand_id;
 
         // curl request for media box
