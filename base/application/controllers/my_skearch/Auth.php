@@ -304,6 +304,8 @@ class Auth extends MY_Controller
             $this->load->model('admin_panel/brands/payments_model', 'Payments');
             $this->load->model('admin_panel/brands/brand_model', 'Brand');
 
+            $brand = $this->input->get('brand');
+
             // transaction details
             $reference_id   = strtoupper(bin2hex(random_bytes(6))); // create random string of length 12
             $service        = $this->input->get('service');
@@ -313,15 +315,15 @@ class Auth extends MY_Controller
             $payment_date   = $this->input->get('payment_date');
 
             // get the id and details of the lead member of the brand
-            $id = $this->Brand->get_members($this->input->get('brand_id'), 1)[0]->id;
-            $user = $this->ion_auth->user($id)->row();
+            // $id = $this->Brand->get_members($this->input->get('brand_id'), 1)[0]->id;
+            // $user = $this->ion_auth->user($id)->row();
 
             // email template
             $template = $this->Template_model->get_template('brand_payment_confirmation');
 
             // data used in email body
             $data = array(
-                'username'       => $user->username,
+                'brand'          => $brand,
                 'reference_id'   => $reference_id,
                 'service'        => $service,
                 'transaction_id' => $transaction_id,
@@ -333,23 +335,28 @@ class Auth extends MY_Controller
             $message = $this->parser->parse_string($template->body, $data, TRUE);
 
             // send email regarding payment confirmation
-            $this->email->clear();
-            $this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
-            $this->email->to($user->email);
-            $this->email->subject($template->subject);
-            $this->email->message($message);
+            // $this->email->clear();
+            // $this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+            // $this->email->to($user->email);
+            // $this->email->subject($template->subject);
+            // $this->email->message($message);
 
-            if ($this->email->send()) {
-                // log email
-                $this->Log_model->create(array(
-                    'type' => 'Payment Confirmation',
-                    'user_id' => $user->id
-                ));
-            }
+            // if ($this->email->send()) {
+            //     // log email
+            //     $this->Log_model->create(array(
+            //         'type' => 'Payment Confirmation',
+            //         'user_id' => $user->id
+            //     ));
+            // }
+
+            // create a brand by the name given during payment
+            $brand_id = $this->Brand->create(array(
+                'brand' => $brand
+            ));
 
             $transaction_data = array(
                 'id'             => $reference_id,
-                'brand_id'       => $this->input->get('brand_id'),
+                'brand_id'       => $brand_id,
                 'service'        => $service,
                 'transaction_id' => $transaction_id,
                 'payment_type'   => $payment_type,
