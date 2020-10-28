@@ -106,7 +106,7 @@ class Fields extends MY_Controller
         if (!$this->ion_auth_acl->has_permission('fields_delete') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
-            $delete =  $this->links->delete($id);
+            $delete =  $this->fields->delete($id);
 
             if ($delete) {
                 echo json_encode(1);

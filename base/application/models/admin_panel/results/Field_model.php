@@ -34,9 +34,9 @@ class Field_model extends CI_Model
         //     'enabled'           => $data['$enabled']
         // );
 
-        $query = $this->db->insert('skearch_subcategories', $data);
+        $this->db->insert('skearch_subcategories', $data);
 
-        if ($query) {
+        if ($this->db->affected_rows()) {
             return true;
         } else {
             return false;
@@ -53,9 +53,9 @@ class Field_model extends CI_Model
     public function delete($id)
     {
         $this->db->where('id', $id);
-        $query = $this->db->delete('skearch_research_links');
+        $this->db->delete('skearch_subcategories');
 
-        if ($query) {
+        if ($this->db->affected_rows()) {
             return true;
         } else {
             return false;
@@ -181,9 +181,9 @@ class Field_model extends CI_Model
         // if (array_key_exists('enabled', $field_data))                    $data['enabled']            = $field_data['enabled'];
 
         $this->db->where('id', $id);
-        $query = $this->db->update('skearch_subcategories', $field_data);
+        $this->db->update('skearch_subcategories', $field_data);
 
-        if ($query) {
+        if ($this->db->affected_rows()) {
             return true;
         } else {
             return false;
