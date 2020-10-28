@@ -823,7 +823,7 @@ section.button-section {
 	position: absolute;
 	z-index: 100000;
 	bottom: 0;
-	right: -9px;
+	right: 10px;
 	height: 25px;
 	width: 85px;
 	color: #fff;

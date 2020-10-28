@@ -50,9 +50,9 @@ class Research_model extends CI_Model
     public function delete($id)
     {
         $this->db->where('id', $id);
-        $query = $this->db->delete('skearch_research_links');
+        $this->db->delete('skearch_research_links');
 
-        if ($query) {
+        if ($this->db->affected_rows()) {
             return true;
         } else {
             return false;

@@ -59,7 +59,7 @@ $this->load->view('auth/templates/head');
 						<div id="smart-button-container">
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="text" placeholder="Brand Name" name="descriptionInput" id="brand" maxlength="50" value="">
-								<input type="hidden" id="brand-id" name="brand_id" value="">
+								<!-- <input type="hidden" id="brand-id" name="brand_id" value=""> -->
 							</div>
 							<span id="brandError" style="visibility: hidden; color:red;">Brand Name is required</span>
 							<br>
@@ -107,7 +107,7 @@ $this->load->view('auth/templates/head');
 	?>
 
 	<!--begin::Page Scripts -->
-	<script src="<?= site_url(ASSETS); ?>/plugins/easyautocomplete/jquery.easy-autocomplete.min.js"></script>
+	<!-- <script src="<?= site_url(ASSETS); ?>/plugins/easyautocomplete/jquery.easy-autocomplete.min.js"></script>
 	<script>
 		// settings for brand search
 		var options = {
@@ -156,7 +156,7 @@ $this->load->view('auth/templates/head');
 
 		// initialize brand search
 		$("#brand").easyAutocomplete(options);
-	</script>
+	</script> -->
 
 	<script src="https://www.paypal.com/sdk/js?client-id=AbNAM8VBhUEX-d11vWG1v0F9atk_Oz1CZpKKBMUemqt0-ucUDc_8QLUlmfKmIR0ZjCfLXVpbhgeiL7hK&currency=USD" data-sdk-integration-source="button-factory"></script>
 	<script>
@@ -247,7 +247,7 @@ $this->load->view('auth/templates/head');
 							url: '<?= site_url('myskearch/auth/payment/transaction/done'); ?>',
 							type: 'GET',
 							data: {
-								brand_id: document.getElementById("brand-id").value,
+								brand: description.value,
 								service: "Paypal",
 								transaction_id: details.purchase_units[0].payments.captures[0].id,
 								payment_type: type,
