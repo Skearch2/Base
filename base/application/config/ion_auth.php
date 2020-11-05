@@ -239,4 +239,3 @@ $config['staff']   = array(1, 2);
 $config['brand']   = 3;
 $config['premium'] = 4;
 $config['regular'] = 5;
-

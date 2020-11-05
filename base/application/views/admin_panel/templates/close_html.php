@@ -5,8 +5,9 @@
 
 		<!--begin::Page Vendors -->
 		<script src="<?= site_url(ASSETS); ?>/admin_panel/vendors/custom/datatables/datatables.bundle.js" type="text/javascript"></script>
-		<!--end::Page Vendors -->
+		<script src="<?= site_url(ASSETS) ?>/admin_panel/demo/demo12/custom/crud/forms/widgets/bootstrap-tagsinput.js" type="text/javascript"></script>
 		<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+		<!--end::Page Vendors -->
 
 		<!--begin::Page Scripts -->
 		<script>

@@ -149,7 +149,6 @@ class Ion_auth
 
             if ($code) {
                 $data = [
-                    'username' => $user->username,
                     'reset_password_link' => site_url() . "myskearch/auth/reset_password/$code",
                 ];
 
@@ -170,7 +169,7 @@ class Ion_auth
                     $this->email->message($message);
 
                     if ($this->email->send()) {
-                        $this->log_email('Forgot password', $user->id);
+                        $this->log_email('Reset password', $user->id);
                         $this->set_message('forgot_password_successful');
                         return true;
                     }
@@ -268,7 +267,7 @@ class Ion_auth
             $user = $this->ion_auth_model->user($id)->row();
 
             $data = [
-                'username' => $user->username,
+                'email' => $user->email,
                 'activation_link' => site_url() . "myskearch/auth/activate/$user->id/$activation_code",
             ];
             if (!$this->config->item('use_ci_email', 'ion_auth')) {
@@ -276,8 +275,6 @@ class Ion_auth
                 $this->set_message('activation_email_successful');
                 return $data;
             } else {
-
-                // Template
                 $template = $this->Template_model->get_template('activation');
 
                 $message = $this->parser->parse_string($template->body, $data);
@@ -289,7 +286,7 @@ class Ion_auth
                 $this->email->message($message);
 
                 if ($this->email->send() === true) {
-                    $this->log_email('Activation', $id);
+                    $this->log_email('activation', $id);
                     $this->ion_auth_model->trigger_events(['post_account_creation', 'post_account_creation_successful', 'activation_email_successful']);
                     $this->set_message('activation_email_successful');
                     return $id;
