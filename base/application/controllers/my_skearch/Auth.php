@@ -56,12 +56,24 @@ class Auth extends MY_Controller
             // User
             $user = $this->ion_auth->user($id)->row();
 
-            // email template
-            $template = $this->Template_model->get_template('welcome');
-
-            $data = array(
-                'username' => $user->username
-            );
+            // select welcome email based on type of account
+            if ($this->ion_auth->in_group($this->config->item('regular', 'ion_auth'), $id)) {
+                $data = array(
+                    'username' => $user->username
+                );
+                $template = $this->Template_model->get_template('welcome_regular');
+            } else if ($this->ion_auth->in_group($this->config->item('premium', 'ion_auth'), $id)) {
+                $data = array(
+                    'username' => $user->username
+                );
+                $template = $this->Template_model->get_template('welcome_premium');
+            } else {
+                $data = array(
+                    'firstname' => $user->firstname,
+                    'lastname' => $user->lastname
+                );
+                $template = $this->Template_model->get_template('welcome_brand');
+            }
 
             $message = $this->parser->parse_string($template->body, $data);
 
@@ -72,11 +84,13 @@ class Auth extends MY_Controller
             $this->email->message($message);
             $this->email->send();
 
-            // log email
-            $this->Log_model->create(array(
-                'type' => 'Welcome',
-                'user_id' => $id
-            ));
+            // log email if sent
+            if ($this->email->send()) {
+                $this->Log_model->create(array(
+                    'type' => 'Welcome',
+                    'user_id' => $id
+                ));
+            }
 
             // redirect them to the auth page
             $this->session->set_flashdata('success', $this->ion_auth->messages());
@@ -482,7 +496,7 @@ class Auth extends MY_Controller
 
         if (!empty($is_regular) && $is_regular == 1) {
             $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'trim|required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']', array('is_unique' => 'The Skearch ID or username already exists.'));
-            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[skearch_users.email]');
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
             $this->form_validation->set_rules('gender', 'Gender', 'required');
             $this->form_validation->set_rules('age_group', 'Age group', 'required');
             $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
@@ -545,11 +559,11 @@ class Auth extends MY_Controller
 
             if ($user) {
                 if ($this->input->post('is_premium')) {
-                     // add user to premium user group
+                    // add user to premium user group
                     $this->ion_auth->remove_from_group(NULL, $user);
                     $this->ion_auth->add_to_group($this->config->item('premium', 'ion_auth'), $user);
                 }
-                
+
                 $this->session->set_flashdata('signup_success', true);
 
                 if ($is_regular) {

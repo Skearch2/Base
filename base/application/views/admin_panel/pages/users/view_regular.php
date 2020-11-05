@@ -137,7 +137,6 @@ $this->load->view('admin_panel/templates/subheader');
 				<thead>
 					<tr>
 						<th>Username</th>
-						<th>Name</th>
 						<th>Email Address</th>
 						<th>Gender</th>
 						<th>Status</th>
@@ -183,7 +182,6 @@ $this->load->view('admin_panel/templates/close_html');
 				$("div.modal-body").html(
 					"<p>Username: " + data.username + " </p>\
 					<p>Email Address: " + data.email + " </p>\
-					<p>Name: " + data.firstname + " </p>\
 					<p>Gender: " + data.gender + " </p>\
 					<p>Age group: " + data.age_group + " </p>\
 					<p>Phone: " + data.phone + " </p>\
@@ -303,8 +301,8 @@ $this->load->view('admin_panel/templates/close_html');
 		});
 	}
 
-		// Upgrade user to premium
-		function upgrade(id, username) {
+	// Upgrade user to premium
+	function upgrade(id, username) {
 		swal({
 			title: "Upgrade User: " + username,
 			text: "Are you sure you want to upgrade the user to premium?",
@@ -348,8 +346,6 @@ $this->load->view('admin_panel/templates/close_html');
 				columns: [{
 					data: "username"
 				}, {
-					data: "firstname"
-				}, {
 					data: "email"
 				}, {
 					data: "gender"
@@ -370,7 +366,7 @@ $this->load->view('admin_panel/templates/close_html');
 							'<a onclick=deleteUser("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}, {
-					targets: 4,
+					targets: 3,
 					render: function(a, t, e, n) {
 						var s = {
 							2: {
