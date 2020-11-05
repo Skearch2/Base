@@ -36,6 +36,8 @@ class Users extends MY_Controller
         $this->load->model('admin_panel/users/Group_model', 'Group');
         $this->load->model('admin_panel/users/Payment_model', 'User_payment');
         $this->load->model('Util_model', 'Util_model');
+        $this->load->model('admin_panel/email/Template_model', 'Template_model');
+        $this->load->model('admin_panel/email/Log_model', 'Log_model');
     }
 
 
@@ -82,15 +84,12 @@ class Users extends MY_Controller
 
             $this->form_validation->set_rules('username', 'Username', 'required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']|trim');
             $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[skearch_users.email]|trim');
+            $this->form_validation->set_rules('email', 'Email', 'required|valid_email|trim');
 
             if (in_array($group, array(1, 2, 3))) {
                 // only for admin, editor, and brand member groups
                 $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
                 $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
-            } else if (in_array($group, array(4, 5))) {
-                // only for regular and premium user groups
-                $this->form_validation->set_rules('name', 'Name', 'required|alpha|trim');
             }
 
             $this->form_validation->set_rules('gender', 'Gender', 'required');
@@ -503,10 +502,6 @@ class Users extends MY_Controller
                 $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
                 $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
             }
-            // only show to regular and premium user groups
-            else if (in_array($group, array(4, 5))) {
-                $this->form_validation->set_rules('name', 'Name', 'required|alpha|trim');
-            }
             $this->form_validation->set_rules('gender', 'Gender', 'required');
             $this->form_validation->set_rules('age_group', 'Age group', 'required');
 
@@ -634,6 +629,31 @@ class Users extends MY_Controller
         } else {
             // add user to premium user group
             if ($this->User->get($id)->active && $this->ion_auth->remove_from_group(NULL, $id) && $this->ion_auth->add_to_group($this->config->item('premium', 'ion_auth'), $id)) {
+
+                $template = $this->Template_model->get_template('welcome_premium');
+
+                $user = $this->User->get($id);
+
+                $data = array(
+                    'username' => $user->username
+                );
+
+                $message = $this->parser->parse_string($template->body, $data);
+
+                $this->email->clear();
+                $this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+                $this->email->to($user->email);
+                $this->email->subject($template->subject);
+                $this->email->message($message);
+
+                // log email if sent
+                if ($this->email->send()) {
+                    $this->Log_model->create(array(
+                        'type' => 'Welcome Upgrade',
+                        'user_id' => $id
+                    ));
+                }
+
                 echo json_encode(1);
             } else {
                 echo json_encode(0);

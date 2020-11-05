@@ -84,13 +84,6 @@ $this->load->view('admin_panel/templates/subheader');
 											<input class="form-control m-input" type="text" name="lastname" value="<?= set_value('lastname', $lastname); ?>">
 										</div>
 									</div>
-								<?php elseif (in_array($group->id, array(4, 5))) : ?>
-									<div class="form-group m-form__group row">
-										<label for="first_name" class="col-2 col-form-label">Name<font color="red"><sup>*</sup></font></label>
-										<div class="col-7">
-											<input class="form-control m-input" type="text" name="name" value="<?= set_value('name', $name) ?>">
-										</div>
-									</div>
 								<?php endif ?>
 								<div class="form-group m-form__group row">
 									<label for="gender" class="col-2 col-form-label">Gender<font color="red"><sup>*</sup></font></label>
