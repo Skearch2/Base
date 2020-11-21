@@ -12,7 +12,7 @@
 			<li id="menu-users" class="m-menu__item m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover"><a href="javascript:;" class="m-menu__link m-menu__toggle"><span class="m-menu__item-here"></span><i class="m-menu__link-icon flaticon-users"></i><span class="m-menu__link-text">Users</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 				<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 					<ul class="m-menu__subnav">
-						<li id="submenu-users-registered" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/group/id/5"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Registered Users</span></a></li>
+						<li id="submenu-users-regular" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/group/id/5"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Regular Users</span></a></li>
 						<li id="submenu-users-premium" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/group/id/4"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Premium Users</span></a></li>
 						<li id="submenu-users-brand_users" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/group/id/3"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Brand Users</span></a></li>
 						<li id="submenu-users-staff" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/users/group/id/1"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Staff</span></a></li>
@@ -35,6 +35,7 @@
 								</ul>
 							</div>
 						</li>
+						<li id="submenu-results-keywords" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/keywords"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Search Keywords</span></a></li>
 						<li id="submenu-results-research" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/results/research/list"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Research</span></a></li>
 					</ul>
 				</div>

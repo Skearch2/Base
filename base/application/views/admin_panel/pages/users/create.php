@@ -330,6 +330,6 @@ $this->load->view('admin_panel/templates/close_html');
 	<?php elseif ($group == 4) : ?>
 		$("#submenu-users-premium").addClass("m-menu__item  m-menu__item--active");
 	<?php elseif ($group == 5) : ?>
-		$("#submenu-users-registered").addClass("m-menu__item  m-menu__item--active");
+		$("#submenu-users-regular").addClass("m-menu__item  m-menu__item--active");
 	<?php endif ?>
 </script>

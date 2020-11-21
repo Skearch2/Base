@@ -141,11 +141,6 @@ class Users extends MY_Controller
                     $additional_data['firstname'] = $this->input->post('firstname');
                     $additional_data['lastname'] = $this->input->post('lastname');
                 }
-                // only show to regular and premium user groups
-                elseif (in_array($group, array(4, 5))) {
-                    $additional_data['firstname'] = $this->input->post('name');
-                }
-
                 $additional_data['gender'] = $this->input->post('gender');
                 $additional_data['age_group'] = $this->input->post('age_group');
 
@@ -303,7 +298,7 @@ class Users extends MY_Controller
             } elseif ($id == 4) {
                 $group = "Premium Users";
             } else {
-                $group = "Registered Users";
+                $group = "Regular Users";
             }
 
             $data['group'] = $id;
