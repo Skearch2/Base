@@ -238,6 +238,15 @@ $route['admin/results/suggestions/umbrellas']               = 'admin_panel/resul
 $route['admin/results/suggestions/fields/get/id/(:num)']    = 'admin_panel/results/suggestions/get_field_suggestions/$1';
 $route['admin/results/suggestions/umbrellas/get/id/(:num)'] = 'admin_panel/results/suggestions/get_umbrella_suggestions/$1';
 
+
+// Search Keywords
+$route['admin/results/keyword/add']                 = 'admin_panel/results/keywords/create';
+$route['admin/results/keyword/delete/id/(:num)']    = 'admin_panel/results/keywords/delete/$1';
+$route['admin/results/keyword/toggle/id/(:num)']    = 'admin_panel/results/keywords/toggle/$1';
+$route['admin/results/keyword/update/id/(:num)']    = 'admin_panel/results/keywords/update/$1';
+$route['admin/results/keywords/get']                = 'admin_panel/results/keywords/get';
+$route['admin/results/keywords']                    = 'admin_panel/results/keywords';
+
 // Research
 $route['admin/results/research/add']              = 'admin_panel/results/research/create';
 $route['admin/results/research/delete/(:num)']    = 'admin_panel/results/research/delete/$1';

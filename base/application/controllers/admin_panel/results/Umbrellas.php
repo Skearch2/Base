@@ -40,6 +40,7 @@ class Umbrellas extends MY_Controller
 
         $this->load->model('admin_panel/results/umbrella_model', 'umbrellas');
         $this->load->model('admin_panel/results/field_model', 'fields');
+        $this->load->model('Keywords_model', 'Keywords');
     }
 
     /**
@@ -60,7 +61,7 @@ class Umbrellas extends MY_Controller
             $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
             $this->form_validation->set_rules('umbrella_name', 'Umbrella Name', 'alpha_numeric_spaces|trim');
             $this->form_validation->set_rules('home_display', 'Home Display', 'alpha_numeric_spaces|trim');
-            $this->form_validation->set_rules('keywords', 'Keywords', 'required|trim');
+            $this->form_validation->set_rules('keywords', 'Keyword(s)', 'callback_validate_keywords');
             $this->form_validation->set_rules('featured', 'Featured', 'required|numeric');
             $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
 
@@ -72,19 +73,32 @@ class Umbrellas extends MY_Controller
                     'description_short' => $this->input->post('description_short'),
                     'umbrella_name' => $this->input->post('umbrella_name'),
                     'home_display' => $this->input->post('home_display'),
-                    'keywords' => $this->input->post('keywords'),
                     'featured' => $this->input->post('featured'),
                     'enabled' => $this->input->post('enabled'),
                 );
 
-                $create = $this->umbrellas->create($umbrella_data);
+                $umbrella_id = $this->umbrellas->create($umbrella_data);
 
-                if ($create) {
+                if ($umbrella_id) {
+
+                    if (!empty($this->input->post('keywords'))) {
+                        $keywords = explode(',', $this->input->post('keywords'));
+                        foreach ($keywords as $i => $keyword) {
+                            $keywords_data[$i] = array(
+                                'keyword' => $keyword,
+                                'link_id' => $umbrella_id,
+                                'link_type' => 'umbrella',
+                                'status' => 1
+                            );
+                        }
+                        $this->Keywords->create($keywords_data);
+                    }
+
                     $this->session->set_flashdata('create_success', 1);
-                    redirect('/admin/results/umbrella/create');
                 } else {
                     $this->session->set_flashdata('create_success', 0);
                 }
+                redirect('/admin/results/umbrella/create');
             }
 
             $data['title'] = ucfirst("add umbrella");
@@ -224,18 +238,27 @@ class Umbrellas extends MY_Controller
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
-            $this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces|trim');
-            $this->form_validation->set_rules('description', 'Description', 'max_length[500]|trim');
-            $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
+            $this->form_validation->set_rules('title', 'Title', 'trim|required|alpha_numeric_spaces');
+            $this->form_validation->set_rules('description', 'Description', 'trim|max_length[500]');
+            $this->form_validation->set_rules('description_short', 'Short Description', 'trim|required|max_length[140]');
             $this->form_validation->set_rules('umbrella_name', 'Umbrella Name', 'alpha_numeric_spaces|trim');
             $this->form_validation->set_rules('home_display', 'Home Display', 'alpha_numeric_spaces|trim');
-            $this->form_validation->set_rules('keywords', 'Keywords', 'required|trim');
+            $this->form_validation->set_rules('keywords', 'Keyword(s)', 'trim|callback_validate_keywords[' . $id . ']');
             $this->form_validation->set_rules('featured', 'Featured', 'required|numeric');
             $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
 
             if ($this->form_validation->run() === false) {
 
+                // umbrella data
                 $data['umbrella'] = $this->umbrellas->get($id);
+
+                // keywords for umbrella
+                // convert keywords to single string seperated by comma
+                $keywords = array_map(function ($object) {
+                    return $object->keyword;
+                }, $this->Keywords->get_by_link_id($id, 'umbrella'));
+
+                $data['keywords'] = implode(',', $keywords);
 
                 $data['title'] = ucfirst("edit umbrella");
                 $this->load->view('admin_panel/pages/results/umbrella/edit', $data);
@@ -246,20 +269,68 @@ class Umbrellas extends MY_Controller
                     'description_short' => $this->input->post('description_short'),
                     'umbrella_name' => $this->input->post('umbrella_name'),
                     'home_display' => $this->input->post('home_display'),
-                    'keywords' => $this->input->post('keywords'),
                     'featured' => $this->input->post('featured'),
                     'enabled' => $this->input->post('enabled'),
                 );
 
-                $create = $this->umbrellas->update($id, $umbrella_data);
+                if (empty($this->input->post('keywords'))) {
+                    $this->Keywords->replace($id, null);
+                } else {
+                    $keywords = explode(',', $this->input->post('keywords'));
+                    foreach ($keywords as $i => $keyword) {
+                        $keywords_data[$i] = array(
+                            'keyword' => $keyword,
+                            'link_id' => $id,
+                            'link_type' => 'umbrella',
+                            'status' => 1
+                        );
+                    }
+                    $this->Keywords->replace($id, $keywords_data);
+                }
 
-                if ($create) {
+                $update = $this->umbrellas->update($id, $umbrella_data);
+
+                if ($update) {
                     $this->session->set_flashdata('update_success', 1);
-                    redirect('/admin/results/umbrellas/status/all');
                 } else {
                     $this->session->set_flashdata('update_success', 0);
                 }
+                redirect('/admin/results/umbrellas/status/all');
             }
         }
+    }
+
+    /**
+     * Validate keywords
+     *
+     * @param string $string Keywords seperated by comma
+     * @return void
+     */
+    public function validate_keywords($string, $link_id = null)
+    {
+        if (empty($string)) {
+            return true;
+        }
+
+        $keywords = explode(',', $string);
+
+        $check =  true;
+
+        $duplicate_keywords = array();
+
+        foreach ($keywords as $keyword) {
+            if (ctype_alpha(str_replace(array("\n", "\t", ' '), '', $keyword)) === false) {
+                $this->form_validation->set_message('validate_keywords', "The Keyword(s) can only have alphabets and spaces.");
+                $check = false;
+            }
+            if ($this->Keywords->duplicate_check($keyword, $link_id)) {
+                array_push($duplicate_keywords, $keyword);
+                $duplicate_keywords_in_string = implode(' , ', $duplicate_keywords);
+                $this->form_validation->set_message('validate_keywords', "Keyword(s) already taken: $duplicate_keywords_in_string");
+                $check = false;
+            }
+        }
+
+        return $check;
     }
 }

@@ -41,6 +41,7 @@ class Fields extends MY_Controller
         $this->load->model('admin_panel/results/umbrella_model', 'umbrellas');
         $this->load->model('admin_panel/results/field_model', 'fields');
         $this->load->model('admin_panel/results/link_model', 'links');
+        $this->load->model('Keywords_model', 'Keywords');
     }
 
     /**
@@ -61,7 +62,7 @@ class Fields extends MY_Controller
             $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
             $this->form_validation->set_rules('parent_id', 'Umbrella', 'required');
             $this->form_validation->set_rules('home_display', 'Home Display', 'alpha_numeric_spaces|trim');
-            $this->form_validation->set_rules('keywords', 'Keywords', 'required|trim');
+            $this->form_validation->set_rules('keywords', 'Keyword(s)', 'callback_validate_keywords');
             $this->form_validation->set_rules('featured', 'Featured', 'required|numeric');
             $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
 
@@ -73,19 +74,32 @@ class Fields extends MY_Controller
                     'description_short' => $this->input->post('description_short'),
                     'parent_id' => $this->input->post('parent_id'),
                     'home_display' => $this->input->post('home_display'),
-                    'keywords' => $this->input->post('keywords'),
                     'featured' => $this->input->post('featured'),
                     'enabled' => $this->input->post('enabled'),
                 );
 
-                $create = $this->fields->create($field_data);
+                $field_id = $this->fields->create($field_data);
 
-                if ($create) {
+                if ($field_id) {
+
+                    if (!empty($this->input->post('keywords'))) {
+                        $keywords = explode(',', $this->input->post('keywords'));
+                        foreach ($keywords as $i => $keyword) {
+                            $keywords_data[$i] = array(
+                                'keyword' => $keyword,
+                                'link_id' => $field_id,
+                                'link_type' => 'field',
+                                'status' => 1
+                            );
+                        }
+                        $this->Keywords->create($keywords_data);
+                    }
+
                     $this->session->set_flashdata('create_success', 1);
-                    redirect('/admin/results/field/create');
                 } else {
                     $this->session->set_flashdata('create_success', 0);
                 }
+                redirect('/admin/results/field/create');
             }
 
             $data['umbrellas'] = $this->umbrellas->get_by_status();
@@ -275,7 +289,7 @@ class Fields extends MY_Controller
             $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
             $this->form_validation->set_rules('parent_id', 'Umbrella', 'required');
             $this->form_validation->set_rules('home_display', 'Home Display', 'alpha_numeric_spaces|trim');
-            $this->form_validation->set_rules('keywords', 'Keywords', 'required|trim');
+            $this->form_validation->set_rules('keywords', 'Keyword(s)', 'trim|callback_validate_keywords[' . $id . ']');
             $this->form_validation->set_rules('featured', 'Featured', 'required|numeric');
             $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
 
@@ -284,6 +298,14 @@ class Fields extends MY_Controller
                 $data['field'] = $this->fields->get($id);
                 // get all umbrellas
                 $data['umbrellas'] = $this->umbrellas->get_by_status();
+
+                // keywords for field
+                // convert keywords to single string seperated by comma
+                $keywords = array_map(function ($object) {
+                    return $object->keyword;
+                }, $this->Keywords->get_by_link_id($id, 'field'));
+
+                $data['keywords'] = implode(',', $keywords);
 
                 $data['title'] = ucfirst("edit field");
                 $this->load->view('admin_panel/pages/results/field/edit', $data);
@@ -294,20 +316,69 @@ class Fields extends MY_Controller
                     'description_short' => $this->input->post('description_short'),
                     'parent_id' => $this->input->post('parent_id'),
                     'home_display' => $this->input->post('home_display'),
-                    'keywords' => $this->input->post('keywords'),
                     'featured' => $this->input->post('featured'),
                     'enabled' => $this->input->post('enabled'),
                 );
 
-                $create = $this->fields->update($id, $field_data);
+                if (empty($this->input->post('keywords'))) {
+                    $this->Keywords->replace($id, null);
+                } else {
+                    $keywords = explode(',', $this->input->post('keywords'));
+                    foreach ($keywords as $i => $keyword) {
+                        $keywords_data[$i] = array(
+                            'keyword' => $keyword,
+                            'link_id' => $id,
+                            'link_type' => 'field',
+                            'status' => 1
+                        );
+                    }
+                    $this->Keywords->replace($id, $keywords_data);
+                }
 
-                if ($create) {
+                $update = $this->fields->update($id, $field_data);
+
+                if ($update) {
                     $this->session->set_flashdata('update_success', 1);
-                    redirect('/admin/results/fields/status/all');
                 } else {
                     $this->session->set_flashdata('update_success', 0);
                 }
+                redirect('/admin/results/fields/status/all');
             }
         }
+    }
+
+
+    /**
+     * Validate keywords
+     *
+     * @param string $string Keywords seperated by comma
+     * @return void
+     */
+    public function validate_keywords($string, $link_id = null)
+    {
+        if (empty($string)) {
+            return true;
+        }
+
+        $keywords = explode(',', $string);
+
+        $check =  true;
+
+        $duplicate_keywords = array();
+
+        foreach ($keywords as $keyword) {
+            if (ctype_alpha(str_replace(array("\n", "\t", ' '), '', $keyword)) === false) {
+                $this->form_validation->set_message('validate_keywords', "The Keyword(s) can only have alphabets and spaces.");
+                $check = false;
+            }
+            if ($this->Keywords->duplicate_check($keyword, $link_id)) {
+                array_push($duplicate_keywords, $keyword);
+                $duplicate_keywords_in_string = implode(' , ', $duplicate_keywords);
+                $this->form_validation->set_message('validate_keywords', "Keyword(s) already taken: $duplicate_keywords_in_string");
+                $check = false;
+            }
+        }
+
+        return $check;
     }
 }

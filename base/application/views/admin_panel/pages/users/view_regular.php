@@ -111,7 +111,6 @@ $this->load->view('admin_panel/templates/subheader');
 					</div>
 				</div>
 			<?php endif ?>
-
 			<?php if ($this->session->flashdata('permission_success') === 1) : ?>
 				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -402,5 +401,5 @@ $this->load->view('admin_panel/templates/close_html');
 <!-- Sidemenu class -->
 <script>
 	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-users-registered").addClass("m-menu__item  m-menu__item--active");
+	$("#submenu-users-regular").addClass("m-menu__item  m-menu__item--active");
 </script>

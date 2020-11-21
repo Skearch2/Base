@@ -37,7 +37,7 @@ class Field_model extends CI_Model
         $this->db->insert('skearch_subcategories', $data);
 
         if ($this->db->affected_rows()) {
-            return true;
+            return $this->db->insert_id();
         } else {
             return false;
         }

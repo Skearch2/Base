@@ -233,9 +233,9 @@ $config['error_end_delimiter'] = '</p>'; // Error message end delimiter
 | -------------------------------------------------------------------------
  */
 
-// Admin = 1, Editor = 2
 $config['staff']   = array(1, 2);
-
+$config['admin']   = 1;
+$config['editor']  = 2;
 $config['brand']   = 3;
 $config['premium'] = 4;
 $config['regular'] = 5;

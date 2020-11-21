@@ -35,10 +35,10 @@ class Umbrella_model extends CI_Model
         //     'enabled'           => $data['enabled']
         // );
 
-        $query = $this->db->insert('skearch_categories', $umbrella_data);
+        $this->db->insert('skearch_categories', $umbrella_data);
 
-        if ($query) {
-            return true;
+        if ($this->db->affected_rows()) {
+            return $this->db->insert_id();
         } else {
             return false;
         }
