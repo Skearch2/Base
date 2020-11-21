@@ -32,7 +32,7 @@
 		<link href="<?= site_url(ASSETS); ?>/admin_panel/vendors/custom/jquery-ui/jquery-ui.bundle.css" rel="stylesheet" type="text/css">
 		<link href="<?= site_url(ASSETS); ?>/plugins/easyautocomplete/easy-autocomplete.min.css" rel="stylesheet" type="text/css">
 		<link href="<?= site_url(ASSETS); ?>/admin_panel/demo/demo12/base/staff-messaging.css" rel="stylesheet" type="text/css">
-		<link href="<?= site_url(ASSETS); ?>/admin_panel/demo/demo12/base/bootstrap-tagsinput.css" rel="stylesheet" type="text/css">
+		<link href="<?= site_url(ASSETS); ?>/admin_panel/demo/demo12/base/tagsinput.css" rel="stylesheet" type="text/css">
 		<!--end::Page Vendors Styles -->
 
 		<!--Custom style for datatable -->

@@ -98,7 +98,6 @@ $this->load->view('admin_panel/templates/subheader');
                   <label for="example-text-input" class="col-2 col-form-label">URL</label>
                   <div class="col-7">
                     <input class="form-control m-input" type="text" name="www" value="<?= set_value('www'); ?>">
-
                   </div>
                 </div>
                 <div class="form-group m-form__group row">

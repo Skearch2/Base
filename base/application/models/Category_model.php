@@ -95,13 +95,13 @@ class Category_model extends CI_Model
     /**
      * Get listings from a category/subcategory
      * Order is used to order the data
+     * 
      * @param string $subcategory_id
      * @param string $order
      * @return object
      */
     public function get_adlinks($subcategory_id, $orderby)
     {
-
         if ($orderby == 'asc')
             $query = $this->db->query("SELECT * FROM skearch_listings WHERE enabled = 1 AND sub_id = $subcategory_id
             ORDER BY title ASC");
@@ -122,25 +122,13 @@ class Category_model extends CI_Model
         return $query->result();
     }
 
-    /* Return homepage fields */
+    /**
+     * Get suggestions for the homepage
+     * 
+     * @return object|boolean
+     */
     public function get_homepage_results()
     {
-        // $query = $this->db->query("SELECT * FROM (
-        //     (SELECT skearch_homepage_fields.id AS id, skearch_categories.title, null AS parent_title FROM skearch_categories
-        //     INNER JOIN skearch_homepage_fields
-        //     ON skearch_categories.id = skearch_homepage_fields.field_id AND skearch_categories.title = skearch_homepage_fields.title)
-        //     UNION
-        //     (SELECT skearch_homepage_fields.id AS id, skearch_subcategories.title, (SELECT title FROM skearch_categories WHERE skearch_categories.id = skearch_subcategories.parent_id) FROM skearch_subcategories
-        //     INNER JOIN skearch_homepage_fields
-        //     ON skearch_subcategories.id = skearch_homepage_fields.field_id AND skearch_subcategories.title = skearch_homepage_fields.title)
-        //     UNION
-        //     (SELECT skearch_homepage_fields.id AS id, skearch_homepage_fields.title, null AS parent_title FROM skearch_homepage_fields
-        //     WHERE skearch_homepage_fields.title = 'empty' )
-        //     )
-        //     AS mytable
-        //     ORDER BY id");
-        // return $query->result();
-
         $this->db->select('title');
         $this->db->from('skearch_categories');
         $this->db->where('skearch_categories.id = skearch_homepage_fields.result_id');
@@ -177,24 +165,43 @@ class Category_model extends CI_Model
     }
 
     /**
-     * Returns number of categories based on defined limit
+     * Get umbrella title
+     * 
      * @param int $limit
      * @return object
      */
-    public function get_category_title($id)
+    public function get_category_title($umbrella_id)
     {
 
-        $query = $this->db->select('title');
-        $query = $this->db->from('skearch_categories');
-        $query = $this->db->where('id', $id);
+        $this->db->select('title');
+        $this->db->from('skearch_categories');
+        $this->db->where('id', $umbrella_id);
         $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    /**
+     * Get field and its umbrella title
+     * 
+     * @param int $field_id
+     * @return object
+     */
+    public function get_field_and_umbrella_title($field_id)
+    {
+
+        $this->db->select('skearch_categories.title as umbrella, skearch_subcategories.title as field');
+        $this->db->from('skearch_subcategories');
+        $this->db->join('skearch_categories', 'skearch_subcategories.parent_id = skearch_categories.id', 'left');
+        $this->db->where('skearch_subcategories.id', $field_id);
+        $query = $this->db->get();
+
         return $query->result();
     }
 
     /*
      * Returns ad results that are enabled and has active redirection
      */
-
     public function get_results()
     {
         $query = $this->db->select('display_url, www');
@@ -206,11 +213,10 @@ class Category_model extends CI_Model
     }
 
     /**
-     * Updates fields suggestions
+     * Get suggestions for the field
      *
-     * @param [type] $field_id
-     * @param [type] $suggest_array
-     * @return void
+     * @param int $field_id
+     * @return object|boolean
      */
     public function get_field_suggestions($field_id)
     {
@@ -252,11 +258,10 @@ class Category_model extends CI_Model
     }
 
     /**
-     * Updates umbrella suggestions
+     * Get suggestions for the umbrella
      *
-     * @param [type] $field_id
-     * @param [type] $suggest_array
-     * @return void
+     * @param int $umbrella_id
+     * @return object|boolean
      */
     public function get_umbrella_suggestions($umbrella_id)
     {

@@ -22,6 +22,7 @@ class Search extends MY_Controller
         parent::__construct();
 
         $this->load->model('Category_model');
+        $this->load->model('Keywords_model', 'Keywords');
     }
 
     /**
@@ -31,47 +32,29 @@ class Search extends MY_Controller
      */
     public function index()
     {
+        $keyword = $this->input->get('search_keyword');
+
         $cat = $this->Category_model->get_categories();
         $sub_cat = $this->Category_model->get_subcategories();
         $links = $this->Category_model->get_results();
         $brands_keywords = $this->Category_model->get_brands_keywords();
 
-        $keyword = $this->input->get('search_keyword');
-
         /* If keyword matches with the title of umbrella page or keywords for umbrella page then
            redirect to the umbrella page */
-
         foreach ($cat as $item) {
             if (strtolower($item->title) === strtolower($keyword)) {
                 echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $item->title)));
                 return;
-            } else if (strtolower($item->keywords) === strtolower($keyword)) {
-                echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $item->title)));
-                return;
-            } else if (strlen($keyword) > 1 && substr($keyword, -1) === 's') {
-                if (strpos(strtolower($item->title), strtolower(substr($keyword, 0, -1))) !== false) {
-                    echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $item->title)));
-                    return;
-                }
             }
         }
 
         /* If keyword matches with the title of field page or keywords for field page then
            redirect to the field  page */
-
         foreach ($sub_cat as $item) {
             $ptitle = $this->Category_model->get_category_title($item->parent_id)[0]->title;
             if (strtolower($item->title) === strtolower($keyword)) {
                 echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $ptitle . "/" . $item->title)));
                 return;
-            } else if (strtolower($item->keywords) === strtolower($keyword)) {
-                echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $ptitle . "/" . $item->title)));
-                return;
-            } else if (strlen($keyword) > 1 && substr($keyword, -1) === 's') {
-                if (strtolower($item->title) === strtolower(substr($keyword, 0, -1))) {
-                    echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $ptitle . "/" . $item->title)));
-                    return;
-                }
             }
         }
 
@@ -92,6 +75,20 @@ class Search extends MY_Controller
         foreach ($brands_keywords as $item) {
             if (strcmp(strtolower($item->keywords), strtolower($keyword)) == 0) {
                 echo json_encode(array("type" => "external", "url" => $item->url));
+                return;
+            }
+        }
+
+        /* If keyword matches with search keyword then redirect to its linked umbrella or field page */
+        $matched_keyword = $this->Keywords->get_by_keyword($keyword);
+        if ($matched_keyword) {
+            if ($matched_keyword->link_type === 'umbrella') {
+                $data = $this->Category_model->get_category_title($matched_keyword->link_id);
+                echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $data[0]->title)));
+                return;
+            } else if ($matched_keyword->link_type === 'field') {
+                $data = $this->Category_model->get_field_and_umbrella_title($matched_keyword->link_id);
+                echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $data[0]->umbrella . "/" . $data[0]->field)));
                 return;
             }
         }

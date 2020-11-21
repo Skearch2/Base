@@ -199,19 +199,18 @@ $this->load->view('admin_panel/templates/subheader');
 										<h3 class="m-form__section">Privileges</h3>
 									</div>
 								</div>
-								<?php if (in_array($group->id, array(1, 2))) : ?>
-									<div class="form-group m-form__group row">
-										<label for="group" class="col-2 col-form-label">Group<font color="red"><sup>*</sup></font></label>
-										<div class="col-3">
-											<select class="form-control m-input" id="exampleSelect1" name="group">
-												<option value="1" <?= set_select('group', 1) ?> <?= ($group->id == 1) ? "selected" : "" ?>>Admin</option>
-												<option value="2" <?= set_select('group', 2) ?> <?= ($group->id == 2) ? "selected" : "" ?>>Editor</option>
-											</select>
-										</div>
+								<div class="form-group m-form__group row">
+									<label for="group" class="col-2 col-form-label">Group<font color="red"><sup>*</sup></font></label>
+									<div class="col-3">
+										<select class="form-control m-input" id="exampleSelect1" name="group">
+											<option value="<?= $this->config->item('admin', 'ion_auth') ?>" <?= set_select('group', $this->config->item('admin', 'ion_auth')) ?> <?= ($group->id == $this->config->item('admin', 'ion_auth')) ? "selected" : "" ?>>Admin</option>
+											<option value="<?= $this->config->item('editor', 'ion_auth') ?>" <?= set_select('group', $this->config->item('editor', 'ion_auth')) ?> <?= ($group->id == $this->config->item('editor', 'ion_auth')) ? "selected" : "" ?>>Editor</option>
+											<option value="<?= $this->config->item('brand', 'ion_auth') ?>" <?= set_select('group', $this->config->item('brand', 'ion_auth')) ?> <?= ($group->id == $this->config->item('brand', 'ion_auth')) ? "selected" : "" ?>>Brand</option>
+											<option value="<?= $this->config->item('premium', 'ion_auth') ?>" <?= set_select('group', $this->config->item('premium', 'ion_auth')) ?> <?= ($group->id == $this->config->item('premium', 'ion_auth')) ? "selected" : "" ?>>Premium</option>
+											<option value="<?= $this->config->item('regular', 'ion_auth') ?>" <?= set_select('group', $this->config->item('regular', 'ion_auth')) ?> <?= ($group->id == $this->config->item('regular', 'ion_auth')) ? "selected" : "" ?>>Regular</option>
+										</select>
 									</div>
-								<?php else : ?>
-									<input type="hidden" name="group" value="<?= $group->id ?>">
-								<?php endif ?>
+								</div>
 								<div class="form-group m-form__group row">
 									<label for="active" class="col-2 col-form-label">Active</label>
 									<div class="col-7">
@@ -368,6 +367,6 @@ $this->load->view('admin_panel/templates/close_html');
 	<?php elseif ($group->id == 4) : ?>
 		$("#submenu-users-premium").addClass("m-menu__item  m-menu__item--active");
 	<?php elseif ($group->id == 5) : ?>
-		$("#submenu-users-registered").addClass("m-menu__item  m-menu__item--active");
+		$("#submenu-users-regular").addClass("m-menu__item  m-menu__item--active");
 	<?php endif ?>
 </script>
