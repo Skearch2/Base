@@ -158,7 +158,7 @@ class Ion_auth
                 } else {
 
                     // Template
-                    $template = $this->Template_model->get_template('forgotten_password');
+                    $template = $this->Template_model->get_template('reset_password');
 
                     $message = $this->parser->parse_string($template->body, $data);
 
