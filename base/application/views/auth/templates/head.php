@@ -34,10 +34,10 @@
 		<!--end::Web font -->
 
 		<!--begin::Global Theme Styles -->
+		<link href="<?= site_url(ASSETS) ?>/auth/vendors/custom/slidercaptcha/slidercaptcha.css" rel="stylesheet">
 		<link href="<?= site_url(ASSETS) ?>/auth/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css">
 		<link href="<?= site_url(ASSETS) ?>/auth/demo/default/base/style.bundle.css" rel="stylesheet" type="text/css">
 		<link href="<?= site_url(ASSETS) ?>/auth/css/style.css" rel="stylesheet" type="text/css">
-		<link href="<?= site_url(ASSETS); ?>/plugins/easyautocomplete/easy-autocomplete.min.css" rel="stylesheet" type="text/css">
 		<!--end::Global Theme Styles -->
 
 		<link rel="shortcut icon" href="<?= site_url(ASSETS); ?>/auth/img/favicon.ico" />

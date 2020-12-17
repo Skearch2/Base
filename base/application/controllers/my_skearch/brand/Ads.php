@@ -44,11 +44,12 @@ class Ads extends MY_Controller
      */
     public function index($id = null)
     {
+        // brand wont access brand page due to this condition - fix needed
         // id is required to view as brand by admin
-        if (!$id) {
+        if ($this->ion_auth->admin() && !$id) {
             redirect('myskearch', 'refresh');
         }
-        
+
         $brand_id = !is_null($id) ? $id : $this->User->get_brand_details($this->user_id)->brand_id;
 
         // curl request for media box
