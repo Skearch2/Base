@@ -36,8 +36,6 @@
         this.init();
     };
 
-    SliderCaptcha.VERSION = '1.0';
-    SliderCaptcha.Author = '';
     SliderCaptcha.DEFAULTS = {
         width: 280,     // canvas width
         height: 155,    // canvas height
@@ -48,6 +46,7 @@
         loadingText: 'Loading...',
         failedText: 'Try again',
         barText: 'Swipe right to fill the puzzle',
+        //refreshTitle: 'Refresh',
         repeatIcon: 'fa fa-repeat',
         maxLoadCount: 3,
         localImages: function () {
@@ -103,10 +102,11 @@
         var canvas = createCanvas(this.options.width - 2, this.options.height); // canvas
         var block = canvas.cloneNode(true); // slider
         var sliderContainer = createElement('div', 'sliderContainer');
-        var refreshIcon = createElement('i', 'refreshIcon ' + this.options.repeatIcon);
+        //var refreshIcon = createElement('i', 'refreshIcon ' + this.options.repeatIcon);
         var sliderMask = createElement('div', 'sliderMask');
         var sliderbg = createElement('div', 'sliderbg');
         var slider = createElement('div', 'slider');
+        slider.setAttribute("id", "slider");
         var sliderIcon = createElement('i', 'fa fa-arrow-right sliderIcon');
         var text = createElement('span', 'sliderText');
 
@@ -115,7 +115,7 @@
 
         var el = this.$element;
         el.appendChild(canvas);
-        el.appendChild(refreshIcon);
+        //el.appendChild(refreshIcon);
         el.appendChild(block);
         slider.appendChild(sliderIcon);
         sliderMask.appendChild(slider);
@@ -128,7 +128,7 @@
             canvas: canvas,
             block: block,
             sliderContainer: sliderContainer,
-            refreshIcon: refreshIcon,
+            //refreshIcon: refreshIcon,
             slider: slider,
             sliderMask: sliderMask,
             sliderIcon: sliderIcon,
@@ -244,11 +244,12 @@
             return false;
         });
 
-        this.refreshIcon.addEventListener('click', function () {
-            that.text.text(that.options.barText);
-            that.reset();
-            if (isFunction(that.options.onRefresh)) that.options.onRefresh.call(that.$element);
-        });
+        // this.refreshIcon.setAttribute('title', this.options.refreshTitle);
+        // this.refreshIcon.addEventListener('click', function () {
+        //     that.text.textContent = that.options.barText;
+        //     that.reset();
+        //     if (isFunction(that.options.onRefresh)) that.options.onRefresh.call(that.$element);
+        // });
 
         var originX, originY, trail = [],
             isMouseDown = false;
@@ -286,12 +287,15 @@
             var data = that.verify();
             if (data.spliced && data.verified) {
                 that.sliderContainer.classList.add('sliderContainer_success');
+                that.slider.removeEventListener('mousedown', handleDragStart);
+                that.slider.removeEventListener('touchstart', handleDragStart);
+                that.slider.style.cursor = 'default';
                 if (isFunction(that.options.onSuccess)) that.options.onSuccess.call(that.$element);
             } else {
                 that.sliderContainer.classList.add('sliderContainer_fail');
                 if (isFunction(that.options.onFail)) that.options.onFail.call(that.$element);
                 setTimeout(function () {
-                    that.text.text(that.options.failedText);
+                    that.text.textContent = that.options.failedText;
                     that.reset();
                 }, 1000);
             }

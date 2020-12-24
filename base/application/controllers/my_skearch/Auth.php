@@ -258,6 +258,39 @@ class Auth extends MY_Controller
     }
 
     /**
+     *  Generate captcha
+     */
+    public function generate_captcha()
+    {
+        // settings for captcha
+        $vals = array(
+            'img_path'      => $this->config->item('captcha_img_path'),
+            'img_url'       => $this->config->item('captcha_img_url'),
+            'expiration'    => $this->config->item('captcha_expiration')
+        );
+
+        $cap = create_captcha($vals);
+
+        $data = array(
+            'captcha_time'  => $cap['time'],
+            'ip_address'    => $this->input->ip_address(),
+            'word'          => $cap['word']
+        );
+
+        $query = $this->db->insert_string('captcha', $data);
+        $this->db->query($query);
+
+        $id = $this->db->insert_id();
+        $query = $this->db->get_where('captcha', array('captcha_id' => $id));
+
+        $captcha = $query->row();
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($captcha->word));
+    }
+
+    /**
      * Allow user to login to My Skearch
      */
     public function login()
@@ -445,44 +478,6 @@ class Auth extends MY_Controller
     }
 
     /**
-     *  Get new captcha code
-     */
-    public function refresh_captcha()
-    {
-        // remove previous captcha data
-        if (file_exists(FCPATH . "base/captcha/" . $this->session->userdata('captcha')->image)) {
-            unlink(FCPATH . "base/captcha/" . $this->session->userdata('captcha')->image);
-        }
-        $this->session->unset_userdata('captcha');
-
-        // settings for captcha
-        $cap_settings = array(
-            'img_id'        => 'captcha_img',
-            'img_path'      => './base/captcha/',
-            'img_url'       => base_url('base/captcha/'),
-            'img_width'     => '250',
-            'img_height'    => '50',
-            'font_path'     => './base/captcha/font/Adamina-Regular.ttf',
-            'font_size'     => 22,
-            'pool'          => '34567adefghjmnrtADEFGHJMNRT',
-            'word_length'   => 6,
-            'colors'        => array(
-                'background' => array(255, 255, 255),
-                'border' => array(255, 255, 255),
-                'text' => array(0, 0, 0),
-                'grid' => array(0, 0, 255)
-            )
-        );
-
-        $cap = create_captcha($cap_settings);
-        $cap_data = (object) array('text' => $cap['word'], 'image' => $cap['time'] . '.jpg', 'ip_address' => $this->input->ip_address());
-
-        $this->session->set_userdata('captcha', $cap_data);
-
-        echo $cap['image'];
-    }
-
-    /**
      * Allow user to signup to My Skearch
      */
     public function signup()
@@ -507,41 +502,16 @@ class Auth extends MY_Controller
             $this->form_validation->set_rules('email_b', 'Email', 'trim|required|valid_email');
             $this->form_validation->set_rules('phone', 'Phone', 'trim|required|callback_validate_phone');
         }
-        $this->form_validation->set_rules('captcha', 'Captcha', 'trim|required|callback_validate_captcha');
         $this->form_validation->set_rules(
             'agree',
             'Terms and Conditions',
             'required',
             array('required' => 'You must agree with the terms and conditions.')
         );
+        $this->form_validation->set_rules('captcha', 'Security Verification', 'trim|required|callback_validate_captcha');
 
         if ($this->form_validation->run() === false) {
 
-            // settings for captcha
-            $cap_settings = array(
-                'img_path'      => './base/captcha/',
-                'img_url'       => base_url('base/captcha/'),
-                'img_width'     => '250',
-                'img_height'    => '50',
-                'img_id'        => 'captcha_img',
-                'font_path'     => './base/captcha/font/neo_sans-webfont.ttf',
-                'font_size'     => 22,
-                'pool'          => '34567adefghjmnrtADEFGHJMNRT',
-                'word_length'   => 6,
-                'colors'        => array(
-                    'background' => array(255, 255, 255),
-                    'border' => array(255, 255, 255),
-                    'text' => array(0, 0, 0),
-                    'grid' => array(0, 0, 255)
-                )
-            );
-
-            $cap = create_captcha($cap_settings);
-            $cap_data = (object) array('text' => $cap['word'], 'image' => $cap['time'] . '.jpg', 'ip_address' => $this->input->ip_address());
-
-            $this->session->set_userdata('captcha', $cap_data);
-
-            $data['captcha'] = $cap;
             $data['is_regular'] = $is_regular;
             $data['states'] = $this->Util->get_state_list();
             $data['countries'] = $this->Util->get_country_list();
@@ -549,41 +519,67 @@ class Auth extends MY_Controller
             $data['title'] = ucwords('my skearch  | sign up');
             $this->load->view('auth/pages/register', $data);
         } else {
-            // remove captcha data
-            if (file_exists(FCPATH . "base/captcha/" . $this->session->userdata('captcha')->image)) {
-                unlink(FCPATH . "base/captcha/" . $this->session->userdata('captcha')->image);
-            }
-            $this->session->unset_userdata('captcha');
 
-            $user = $this->User->create($is_regular);
+            // verify captcha
+            $expiration = time() - $this->config->item('captcha_expiration');
+            $this->db->where('captcha_time < ', $expiration)
+                ->delete('captcha');
 
-            if ($user) {
-                if ($this->input->post('is_premium')) {
-                    // add user to premium user group
-                    $this->ion_auth->remove_from_group(NULL, $user);
-                    $this->ion_auth->add_to_group($this->config->item('premium', 'ion_auth'), $user);
-                }
+            $sql = 'SELECT COUNT(*) AS count FROM captcha WHERE word = ? AND ip_address = ? AND captcha_time > ?';
+            $binds = array($this->input->post('captcha'), $this->input->ip_address(), $expiration);
+            $query = $this->db->query($sql, $binds);
+            $row = $query->row();
 
-                $this->session->set_flashdata('signup_success', true);
+            if ($row->count > 0) {
 
-                if ($is_regular) {
-                    $this->session->set_flashdata('success', 'An email has been sent to you for account activation.');
-                    redirect('myskearch/auth/signup');
+                $user = $this->User->create($is_regular);
+
+                if ($user) {
+                    if ($this->input->post('is_premium')) {
+                        // add user to premium user group
+                        $this->ion_auth->remove_from_group(NULL, $user);
+                        $this->ion_auth->add_to_group($this->config->item('premium', 'ion_auth'), $user);
+                    }
+
+                    $this->session->set_flashdata('signup_success', true);
+
+                    if ($is_regular) {
+                        $this->session->set_flashdata('success', 'An email has been sent to you for account activation.');
+                        redirect('myskearch/auth/signup');
+                    } else {
+                        $this->session->set_flashdata('success', 'Thank You for your inquiry! Someone from Skearch will be contacting you soon.');
+                        redirect('myskearch/auth/signup');
+                    }
                 } else {
-                    $this->session->set_flashdata('success', 'Thank You for your inquiry! Someone from Skearch will be contacting you soon.');
+                    $this->session->set_flashdata('error', $this->ion_auth->errors());
                     redirect('myskearch/auth/signup');
                 }
             } else {
-                $this->session->set_flashdata('error', $this->ion_auth->errors());
+                $this->session->set_flashdata('error', "Unable to complete security validation. Please try again!");
                 redirect('myskearch/auth/signup');
             }
         }
     }
 
     /**
+     * Validates Captcha
+     *
+     * @return bool
+     */
+    public function validate_captcha()
+    {
+        if (null !== $this->input->post('captcha')) {
+            return true;
+        } else {
+            $this->form_validation->set_message('validate_captcha', 'Security verification is required.');
+            return false;
+        }
+    }
+
+    /**
      * Validates US phone numnber
      *
-     * @return bool Whether the posted Captcha token matches
+     * @return bool
      */
     public function validate_phone()
     {
@@ -625,23 +621,6 @@ class Auth extends MY_Controller
         $this->session->set_flashdata('csrfkey', $key);
         $this->session->set_flashdata('csrfvalue', $value);
         return [$key => $value];
-    }
-
-    /**
-     * Validates Captcha
-     *
-     * @return bool Whether the posted Captcha token matches
-     */
-    public function validate_captcha()
-    {
-        if (
-            $this->input->post('captcha') != $this->session->userdata('captcha')->text
-        ) {
-            $this->form_validation->set_message('validate_captcha', 'The Captcha code was incorrect.');
-            return false;
-        } else {
-            return true;
-        }
     }
 
     /**

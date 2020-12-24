@@ -200,14 +200,15 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="group" class="col-2 col-form-label">Group<font color="red"><sup>*</sup></font></label>
+									<label for="group" class="col-2 col-form-label">Group</label>
 									<div class="col-3">
-										<select class="form-control m-input" id="exampleSelect1" name="group">
-											<option value="<?= $this->config->item('admin', 'ion_auth') ?>" <?= set_select('group', $this->config->item('admin', 'ion_auth')) ?> <?= ($group->id == $this->config->item('admin', 'ion_auth')) ? "selected" : "" ?>>Admin</option>
-											<option value="<?= $this->config->item('editor', 'ion_auth') ?>" <?= set_select('group', $this->config->item('editor', 'ion_auth')) ?> <?= ($group->id == $this->config->item('editor', 'ion_auth')) ? "selected" : "" ?>>Editor</option>
-											<option value="<?= $this->config->item('brand', 'ion_auth') ?>" <?= set_select('group', $this->config->item('brand', 'ion_auth')) ?> <?= ($group->id == $this->config->item('brand', 'ion_auth')) ? "selected" : "" ?>>Brand</option>
-											<option value="<?= $this->config->item('premium', 'ion_auth') ?>" <?= set_select('group', $this->config->item('premium', 'ion_auth')) ?> <?= ($group->id == $this->config->item('premium', 'ion_auth')) ? "selected" : "" ?>>Premium</option>
-											<option value="<?= $this->config->item('regular', 'ion_auth') ?>" <?= set_select('group', $this->config->item('regular', 'ion_auth')) ?> <?= ($group->id == $this->config->item('regular', 'ion_auth')) ? "selected" : "" ?>>Regular</option>
+										<span id="change-group-button" class="m-badge m-badge--warning m-badge--wide" style="cursor:pointer" title="Change user group" onclick="changeGroup()">Change Group</span>
+										<select class="form-control m-input" id="group-list" name="group" style="display:none">
+											<option value="<?= $this->config->item('admin', 'ion_auth') ?>" <?= set_select('group', $this->config->item('admin', 'ion_auth')) ?> <?= ($group->id == $this->config->item('admin', 'ion_auth')) ? "disabled" : "" ?>>Admin</option>
+											<option value="<?= $this->config->item('editor', 'ion_auth') ?>" <?= set_select('group', $this->config->item('editor', 'ion_auth')) ?> <?= ($group->id == $this->config->item('editor', 'ion_auth')) ? "disabled" : "" ?>>Editor</option>
+											<option value="<?= $this->config->item('brand', 'ion_auth') ?>" <?= set_select('group', $this->config->item('brand', 'ion_auth')) ?> <?= ($group->id == $this->config->item('brand', 'ion_auth')) ? "disabled" : "" ?>>Brand</option>
+											<option value="<?= $this->config->item('premium', 'ion_auth') ?>" <?= set_select('group', $this->config->item('premium', 'ion_auth')) ?> <?= ($group->id == $this->config->item('premium', 'ion_auth')) ? "disabled" : "" ?>>Premium</option>
+											<option value="<?= $this->config->item('regular', 'ion_auth') ?>" <?= set_select('group', $this->config->item('regular', 'ion_auth')) ?> <?= ($group->id == $this->config->item('regular', 'ion_auth')) ? "disabled" : "" ?>>Regular</option>
 										</select>
 									</div>
 								</div>
@@ -277,7 +278,7 @@ $this->load->view('admin_panel/templates/close_html');
 			html: "Are you sure you want activate the user? \
 				   <br> \
 				   <i>Any unsaved changes will be lost.<i>",
-			type: "info",
+			type: "warning",
 			confirmButtonClass: "btn btn-success",
 			confirmButtonText: "Activate",
 			showCancelButton: true
@@ -301,6 +302,23 @@ $this->load->view('admin_panel/templates/close_html');
 					swal("Error!", "Unable to process request.", "error")
 				}
 			});
+		});
+	}
+
+	// change user group
+	function changeGroup() {
+		swal({
+			title: "Group change",
+			text: "Are you sure you want to change the user's group?",
+			type: "warning",
+			confirmButtonClass: "btn btn-primary",
+			confirmButtonText: "Show groups",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
+			$("#change-group-button").hide();
+			$("#group-list").show();
 		});
 	}
 
