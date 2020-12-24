@@ -30,7 +30,7 @@ $this->load->view('auth/templates/head');
 								<h3 class="m-login__title">Sign Up</h3>
 							</div>
 						</div>
-						<?= form_open('', array('class' => 'm-login__form m-form m-form--fit')) ?>
+						<?= form_open('', array('id' => 'form_signup', 'class' => 'm-login__form m-form m-form--fit')) ?>
 						<div class="form-group" id="btn_signup">
 							<button id="btn_signup_brand" type="button" onclick="showFormBrand()" class="btn m-btn--square <?= !$is_regular ? 'btn-success m-btn--wide active' : 'btn-secondary m-btn--wide' ?>">Brand</button>
 							&nbsp;
@@ -92,12 +92,6 @@ $this->load->view('auth/templates/head');
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="text" placeholder="Phone" name="phone" id="phone" value="<?= set_value('phone'); ?>">
 							</div>
-							<br>
-						</div>
-						<div class="input-group">
-							<?= $captcha['image'] ?>
-							<input class="form-control m-input" type="text" placeholder="Captcha code" name="captcha" id="captcha_code" maxlength="6">
-							<div class="input-group-prepend"><span class="input-group-text" id="captcha-refresh" style="cursor:pointer" title="Refresh"><i class="flaticon-refresh"></i></span></div>
 						</div>
 						<div class="form-group m-form__group m-login__form-sub">
 							<div class="col m--align-left" style="padding-top: 20px;">
@@ -105,6 +99,16 @@ $this->load->view('auth/templates/head');
 									<input type="checkbox" name="agree" <?= ($this->input->post('agree')) ? "checked" : ""; ?>>I Agree to the <a href="https://www.skearch.io/tos" target="_blank" class="m-link m-link--primary"><b>terms of service</b></a> and <a href="https://www.skearch.io/privacy" target="_blank" class="m-link m-link--primary"><b>privacy policy</b></a>.
 									<span></span>
 								</label>
+							</div>
+						</div>
+						<div class="form-group m-form__group">
+							<div class="slidercaptcha card">
+								<div class="card-header">
+									<span>Please complete security verification!</span>
+								</div>
+								<div class="card-body">
+									<div id="captcha"></div>
+								</div>
 							</div>
 						</div>
 						<div class="m-login__form-action">
@@ -131,7 +135,7 @@ $this->load->view('auth/templates/head');
 	?>
 
 	<!--begin::Page Scripts -->
-
+	<script src="<?= site_url(ASSETS) ?>/auth/vendors/custom/slidercaptcha/slidercaptcha.js"></script>
 	<script>
 		// Show sign up form for brand user
 		function showFormBrand() {
@@ -167,26 +171,35 @@ $this->load->view('auth/templates/head');
 			$('.alert').hide();
 		}
 
-		// Mask phone field to US number format
 		$(document).ready(function() {
+			// Mask phone field to US number format
 			$("#phone").inputmask("mask", {
 				mask: "(999) 999-9999"
-			})
-
+			});
 			$("#m_login_payment").css('visibility', 'visible');
 		});
 
-		// refresh captcha
-		$(document).on('click', '#captcha-refresh', function() {
-			$.ajax({
-				url: "<?= base_url(); ?>myskearch/auth/captcha/refresh",
-				method: "GET",
-				success: function(data) {
-					$("#captcha_img").replaceWith(data);
-					$("#captcha_code").val('');
-
-				}
-			})
+		var captcha = sliderCaptcha({
+			id: 'captcha',
+			repeatIcon: 'fa fa-redo',
+			onSuccess: function() {
+				$.ajax({
+					url: 'captcha/generate',
+					async: false,
+					cache: false,
+					type: 'GET',
+					contentType: 'application/json',
+					dataType: 'json',
+					success: function(result) {
+						$('#form_signup').submit(function() {
+							$('<input />').attr('type', 'hidden')
+								.attr('name', 'captcha')
+								.attr('value', result)
+								.appendTo('#form_signup');
+						});
+					}
+				});
+			}
 		});
 	</script>
 

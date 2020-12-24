@@ -300,38 +300,6 @@ $this->load->view('admin_panel/templates/close_html');
 		});
 	}
 
-	// Upgrade user to premium
-	function upgrade(id, username) {
-		swal({
-			title: "Upgrade User: " + username,
-			text: "Are you sure you want to upgrade the user to premium?",
-			type: "warning",
-			confirmButtonClass: "btn btn-primary",
-			confirmButtonText: "Upgrade",
-			showCancelButton: true,
-			timer: 5000
-		}).then(function(e) {
-			if (!e.value) return;
-			$.ajax({
-				url: '<?= site_url('admin/user/upgrade/id/'); ?>' + id,
-				type: 'GET',
-				success: function(data, status) {
-					if (data == -1) {
-						swal("Not Allowed!", "You have no permission.", "warning")
-					} else if (data == 0) {
-						swal("Error!", "Unable to upgrade user to premium.", "error")
-					} else {
-						$("#" + id).remove();
-						swal("Success!", "The user has been upgraded to premium.", "success")
-					}
-				},
-				error: function(xhr, status, error) {
-					swal("Error!", "Unable to process the request.", "error")
-				}
-			});
-		});
-	}
-
 	var DatatablesDataSourceAjaxServer = {
 		init: function() {
 			$("#m_table_1").DataTable({
@@ -359,7 +327,6 @@ $this->load->view('admin_panel/templates/close_html');
 					orderable: !1,
 					render: function(a, t, e, n) {
 						return '<a onclick=showUserDetails("' + e['id'] + '") data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>' +
-							'<a onclick=upgrade("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Upgrade to Premium"><i style="color:black" class="flaticon-user-add"></i></a>' +
 							// '<a onclick=reset("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Reset Password"><i class="la la-gear"></i></a>' +
 							'<a href="<?= site_url() . "admin/user/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 							'<a onclick=deleteUser("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
