@@ -30,7 +30,7 @@ $this->load->view('auth/templates/head');
 								<h3 class="m-login__title">Sign Up</h3>
 							</div>
 						</div>
-						<?= form_open('', array('class' => 'm-login__form m-form m-form--fit')) ?>
+						<?= form_open('', array('id' => 'form_signup', 'class' => 'm-login__form m-form m-form--fit')) ?>
 						<div class="form-group" id="btn_signup">
 							<button id="btn_signup_brand" type="button" onclick="showFormBrand()" class="btn m-btn--square <?= !$is_regular ? 'btn-success m-btn--wide active' : 'btn-secondary m-btn--wide' ?>">Brand</button>
 							&nbsp;
@@ -183,10 +183,22 @@ $this->load->view('auth/templates/head');
 			id: 'captcha',
 			repeatIcon: 'fa fa-redo',
 			onSuccess: function() {
-				var handler = setTimeout(function() {
-					window.clearTimeout(handler);
-					captcha.reset();
-				}, 500);
+				$.ajax({
+					url: 'captcha/generate',
+					async: false,
+					cache: false,
+					type: 'GET',
+					contentType: 'application/json',
+					dataType: 'json',
+					success: function(result) {
+						$('#form_signup').submit(function() {
+							$('<input />').attr('type', 'hidden')
+								.attr('name', 'captcha')
+								.attr('value', result)
+								.appendTo('#form_signup');
+						});
+					}
+				});
 			}
 		});
 	</script>
