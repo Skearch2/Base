@@ -36,7 +36,7 @@ class Email extends MY_Controller
         }
 
         $this->load->model('admin_panel/users/User_model', 'Users');
-        $this->load->model('admin_panel/email/Log_model', 'Logs');
+        $this->load->model('admin_panel/email/Log_model', 'Email_Logs');
 
         $this->email->initialize($this->config->item('email_config', 'ion_auth'));
     }
@@ -59,6 +59,31 @@ class Email extends MY_Controller
             return FALSE;
         } else {
             return TRUE;
+        }
+    }
+
+    /**
+     * Get all emails sent to the user
+     * @param int $user_id User ID
+     *
+     * @return void
+     */
+    public function get_logs($user_id)
+    {
+        if ($this->ion_auth_acl->has_permission('emails_logs') or $this->ion_auth->is_admin()) {
+            $emails = $this->Email_Logs->get($user_id);
+            $total_emails = count($emails);
+            $result = array(
+                'iTotalRecords' => $total_emails,
+                'iTotalDisplayRecords' => $total_emails,
+                'sEcho' => 0,
+                'sColumns' => "",
+                'aaData' => $emails,
+            );
+
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($result));
         }
     }
 
@@ -96,11 +121,6 @@ class Email extends MY_Controller
                 $this->email->message($content);
 
                 if ($this->email->send()) {
-                    // log email
-                    $this->Log_model->create(array(
-                        'type' => 'Invitation',
-                        'user_id' => 0
-                    ));
                     $this->session->set_flashdata('email_sent_success', 'The Email has been sent.');
                 } else {
                     $this->session->set_flashdata('email_sent_failed', 'Unable to send email.');
@@ -112,18 +132,19 @@ class Email extends MY_Controller
     }
 
     /**
-     * Clear all email logs
-
+     * Clear email logs of the user
+     * @param boolean $user_id User ID
+     * 
      * @return void
      */
-    public function logs_clear()
+    public function clear_logs($user_id)
     {
         if (!$this->ion_auth_acl->has_permission('email_logs') && !$this->ion_auth->is_admin()) {
             // set page title
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
-            $clear = $this->Logs->delete();
+            $clear = $this->Email_Logs->delete($user_id);
 
             if ($clear) {
                 $this->session->set_flashdata('clear_success', 1);
@@ -131,41 +152,27 @@ class Email extends MY_Controller
                 $this->session->set_flashdata('clear_success', 0);
             }
 
-            redirect('admin/email/logs');
+            redirect("admin/email/logs/get/user/id/$user_id");
         }
     }
 
     /**
-     * View email logs sent by Skearch
-     * @param boolean $get If true get json data
+     * View email logs page
+     * @param boolean $user_id User ID
+     * 
      * @return void
      */
-    public function logs($get = false)
+    public function logs($user_id)
     {
         if (!$this->ion_auth_acl->has_permission('email_logs') && !$this->ion_auth->is_admin()) {
             // set page title
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
-            if ($get) {
-                $logs = $this->Logs->get();
-                $total_logs = sizeof($logs);
+            $data['user_id'] = $user_id;
 
-                $result = array(
-                    'iTotalRecords' => $total_logs,
-                    'iTotalDisplayRecords' => $total_logs,
-                    'sEcho' => 0,
-                    'sColumns' => "",
-                    'aaData' => $logs,
-                );
-
-                $this->output
-                    ->set_content_type('application/json')
-                    ->set_output(json_encode($result));
-            } else {
-                $data['title'] = ucwords("Email Logs");
-                $this->load->view('admin_panel/pages/email/logs', $data);
-            }
+            $data['title'] = ucwords("Email Logs");
+            $this->load->view('admin_panel/pages/email/logs', $data);
         }
     }
 
@@ -188,7 +195,7 @@ class Email extends MY_Controller
                 $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
             }
             $this->form_validation->set_rules('subject', 'Subject', 'required');
-            $this->form_validation->set_rules('content', 'Body', 'required|min_length[5]|max_length[1000]');
+            $this->form_validation->set_rules('content', 'Body', 'required|min_length[5]');
 
             if ($this->form_validation->run() == FALSE) {
 
@@ -201,19 +208,20 @@ class Email extends MY_Controller
                 $subject = $this->input->post('subject');
                 $content = $this->input->post('content');
 
-                $this->email->from('no-reply@skearch.com', 'Skearch');
+                $this->email->from($this->config->item('default_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
 
                 if ($email_custom) {
                     $recipent = $this->input->post('email');
+                    $recipent_id = $this->input->post('user_id');
                     $this->email->to($recipent);
                 } else {
-                    $emails = $this->Users->get_members_email();
-                    foreach ($emails as $email) {
-                        $recipents[] = $email->email;
+                    $users = $this->Users->get_active_users();
+                    foreach ($users as $user) {
+                        $recipents[] = $user->email;
                     }
                     $recipents = implode(', ', $recipents);
 
-                    $this->email->to('no-reply@skearch.com');
+                    $this->email->to($this->config->item('default_email', 'ion_auth'));
                     $this->email->bcc($recipents);
                 }
                 $this->email->subject($subject);
@@ -221,11 +229,13 @@ class Email extends MY_Controller
 
                 if ($this->email->send()) {
                     // log email
-                    $this->Log_model->create(array(
-                        'type' => 'All Members',
-                        'user_id' => 0
-                    ));
-
+                    if (!isset($users)) {
+                        log_email($recipent_id, "Custom Message", $subject, $content);
+                    } else {
+                        foreach ($users as $user) {
+                            log_email($user->id, "Custom Message", $subject, $content);
+                        }
+                    }
                     $this->session->set_flashdata('email_sent_success', 'The Email has been sent.');
                 } else {
                     $this->session->set_flashdata('email_sent_failed', 'Unable to send email.');
@@ -277,6 +287,26 @@ class Email extends MY_Controller
                     redirect("admin/email/templates/$type");
                 }
             }
+        }
+    }
+
+    /**
+     * View email snapshot that was sent
+     * @param boolean $id Email ID
+     * 
+     * @return void
+     */
+    public function view($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('email_logs') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+            $data['email'] = $this->Email_Logs->get_email($id);
+
+            $data['title'] = ucwords("Email Snapshot");
+            $this->load->view('admin_panel/pages/email/view', $data);
         }
     }
 }

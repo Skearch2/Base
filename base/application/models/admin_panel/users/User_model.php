@@ -75,7 +75,7 @@ class User_model extends CI_Model
      */
     public function get_by_lastname($lastname)
     {
-        $this->db->select('lastname, firstname, email');
+        $this->db->select('id, lastname, firstname, email');
         $this->db->from('skearch_users');
         $this->db->where('active', 1);
         $this->db->like('lastname', $lastname, 'after');
@@ -86,17 +86,18 @@ class User_model extends CI_Model
     }
 
     /**
-     * Get all members email
+     * Get all active users from brands, premium, and registered group
      *
      * @return object
      */
-    public function get_members_email()
+    public function get_active_users()
     {
-        $this->db->select('email');
+        $this->db->select('id, email');
         $this->db->from('skearch_users');
         $this->db->join('skearch_users_groups', 'skearch_users_groups.user_id = skearch_users.id', 'left');
         $this->db->join('skearch_groups', 'skearch_groups.id = skearch_users_groups.group_id', 'left');
         $this->db->where_in('skearch_groups.id', array(3, 4, 5));
+        $this->db->where('skearch_users.active', 1);
         $query = $this->db->get();
 
         return $query->result();

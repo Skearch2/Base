@@ -41,73 +41,12 @@ $this->load->view('admin_panel/templates/subheader');
 			</div>
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
-					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/email/logs/clear"); ?>" class="btn btn-danger m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
-							<span>
-								<i class="la la-trash"></i>
-								<span>Clear logs</span>
-							</span>
-						</a>
-					<li class="m-portlet__nav-item"></li>
-					<li class="m-portlet__nav-item">
-						<div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push" m-dropdown-toggle="hover" aria-expanded="true">
-							<a href="#" class="m-portlet__nav-link btn btn-lg btn-secondary  m-btn m-btn--icon m-btn--icon-only m-btn--pill  m-dropdown__toggle">
-								<i class="la la-ellipsis-h m--font-brand"></i>
-							</a>
-							<div class="m-dropdown__wrapper">
-								<span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
-								<div class="m-dropdown__inner">
-									<div class="m-dropdown__body">
-										<div class="m-dropdown__content">
-											<ul class="m-nav">
-												<li class="m-nav__section m-nav__section--first">
-													<span class="m-nav__section-text">Quick Actions</span>
-												</li>
-												<li class="m-nav__item">
-													<a href="" class="m-nav__link">
-														<i class="m-nav__link-icon flaticon-share"></i>
-														<span class="m-nav__link-text">Create Post</span>
-													</a>
-												</li>
-												<li class="m-nav__item">
-													<a href="" class="m-nav__link">
-														<i class="m-nav__link-icon flaticon-chat-1"></i>
-														<span class="m-nav__link-text">Send Messages</span>
-													</a>
-												</li>
-												<li class="m-nav__item">
-													<a href="" class="m-nav__link">
-														<i class="m-nav__link-icon flaticon-multimedia-2"></i>
-														<span class="m-nav__link-text">Upload File</span>
-													</a>
-												</li>
-												<li class="m-nav__section">
-													<span class="m-nav__section-text">Useful Links</span>
-												</li>
-												<li class="m-nav__item">
-													<a href="" class="m-nav__link">
-														<i class="m-nav__link-icon flaticon-info"></i>
-														<span class="m-nav__link-text">FAQ</span>
-													</a>
-												</li>
-												<li class="m-nav__item">
-													<a href="" class="m-nav__link">
-														<i class="m-nav__link-icon flaticon-lifebuoy"></i>
-														<span class="m-nav__link-text">Support</span>
-													</a>
-												</li>
-												<li class="m-nav__separator m-nav__separator--fit m--hide">
-												</li>
-												<li class="m-nav__item m--hide">
-													<a href="#" class="btn btn-outline-danger m-btn m-btn--pill m-btn--wide btn-sm">Submit</a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</li>
+					<a onclick="clearLogs()" href="javascript:void(0)" class="btn btn-danger m-btn m-btn--icon m-btn--pill">
+						<span>
+							<i class="la la-trash"></i>
+							<span>Clear logs</span>
+						</span>
+					</a>
 				</ul>
 			</div>
 		</div>
@@ -127,7 +66,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						Unable to clear logs.
+						Unable to clear logs or no logs to delete.
 					</div>
 				</div>
 			<?php endif ?>
@@ -136,8 +75,8 @@ $this->load->view('admin_panel/templates/subheader');
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
-						<th>Email Type</th>
-						<th>User</th>
+						<th>Type</th>
+						<th>Subject</th>
 						<th>Date Sent</th>
 					</tr>
 				</thead>
@@ -171,6 +110,22 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
+	// promtp for clear email logs
+	function clearLogs() {
+		swal({
+			title: "Clear Logs",
+			text: "Are you sure you want to clear email logs of this user?",
+			type: "warning",
+			confirmButtonClass: "btn btn-danger",
+			confirmButtonText: "Clear All",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
+			window.location.replace("<?= site_url('admin/email/logs/clear/user/id/') . $user_id ?>");
+
+		});
+	}
 	var DatatablesDataSourceAjaxServer = {
 		init: function() {
 			$("#m_table_1").DataTable({
@@ -180,13 +135,26 @@ $this->load->view('admin_panel/templates/close_html');
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
-				ajax: "<?= site_url('admin/email/logs/get'); ?>",
+				ajax: "<?= site_url('admin/email/logs/get/user/id/') . $user_id ?>",
 				columns: [{
 					data: "type"
 				}, {
-					data: "email"
+					data: "subject"
 				}, {
 					data: "date_sent"
+				}],
+				columnDefs: [{
+					targets: 1,
+					render: function(a, t, e, n) {
+						return '<a href="<?= site_url() . "admin/email/log/view/id/" ?>' + e['id'] + '" title="View">' + e['subject'] + '</a>'
+					}
+				}, {
+					targets: 0,
+					render: function(a, t, e, n) {
+						return e['type'].toLowerCase().replace(/\b[a-z]/g, function(letter) {
+							return letter.toUpperCase();
+						});
+					}
 				}]
 			})
 		}
@@ -201,6 +169,5 @@ $this->load->view('admin_panel/templates/close_html');
 
 <!-- Sidemenu class -->
 <script>
-	$("#menu-email").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-email-logs").addClass("m-menu__item  m-menu__item--active");
+	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 </script>

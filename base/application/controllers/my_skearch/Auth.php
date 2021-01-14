@@ -31,7 +31,6 @@ class Auth extends MY_Controller
         $this->load->model('my_skearch/User_model', 'User');
         $this->load->model('Util_model', 'Util');
         $this->load->model('admin_panel/email/Template_model', 'Template_model');
-        $this->load->model('admin_panel/email/Log_model', 'Log_model');
     }
 
     /**
@@ -86,10 +85,7 @@ class Auth extends MY_Controller
 
             // log email if sent
             if ($this->email->send()) {
-                $this->Log_model->create(array(
-                    'type' => 'Welcome',
-                    'user_id' => $id
-                ));
+                log_email($id, "Welcome", $template->subject, $message);
             }
 
             // redirect them to the auth page
