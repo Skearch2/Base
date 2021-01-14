@@ -66,7 +66,7 @@ $this->load->view('admin_panel/templates/subheader');
                                                 <span></span>
                                             </label>
                                             <label class="m-radio m-radio--solid m-radio--brand">
-                                                <input type="radio" name="email_custom" value="1" onclick="customSearch(true)" <?= set_value('email_custom') == 1 ? 'checked' : "" ?>> Custom Users
+                                                <input type="radio" name="email_custom" value="1" onclick="customSearch(true)" <?= set_value('email_custom') == 1 ? 'checked' : "" ?>> Custom User
                                                 <span></span>
                                             </label>
                                         </div>
@@ -75,6 +75,7 @@ $this->load->view('admin_panel/templates/subheader');
                                 <div class="form-group m-form__group row" id="custom" style=<?= $email_custom ? 'display:block' : 'display:none' ?>>
                                     <div class="col-lg-12 m-form__group-sub">
                                         <input type="text" class="form-control m-input" id="search" name="email" placeholder="Search email by last name" value="<?= set_value('email') ?>">
+                                        <input type="hidden" id="user-id" name="user_id" value="<?= set_value('user_id') ?>">
                                     </div>
                                 </div>
                                 <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-1x"></div>
@@ -166,8 +167,10 @@ $this->load->view('admin_panel/templates/close_html');
 
                     onSelectItemEvent: function() {
                         var value = $("#search").getSelectedItemData().email;
+                        var id = $("#search").getSelectedItemData().id
 
                         $("#search").val(value).trigger("change");
+                        $("#user-id").val(id);
                     },
 
                     showAnimation: {

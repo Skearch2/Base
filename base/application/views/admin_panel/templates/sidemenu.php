@@ -62,7 +62,6 @@
 				<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 					<ul class="m-menu__subnav">
 						<li id="submenu-email-members" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/message"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Message Members</span></a></li>
-						<li id="submenu-email-logs" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/logs"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Logs</span></a></li>
 						<li id="submenu-templates" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover" m-menu-link-redirect="1"><a href="javascript:;" class="m-menu__link m-menu__toggle"><i class="m-menu__link-bullet m-menu__link-bullet--line"><span></span></i><span class="m-menu__link-text">Templates</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 							<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
 								<ul class="m-menu__subnav">

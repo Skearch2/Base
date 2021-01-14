@@ -314,6 +314,9 @@ $this->load->view('admin_panel/templates/close_html');
 				processing: !0,
 				serverSide: !1,
 				ajax: "<?= site_url("admin/users/get/group/id/$group"); ?>",
+				order: [
+					[5, 'asc']
+				],
 				columns: [{
 					data: "username"
 				}, {
@@ -331,27 +334,34 @@ $this->load->view('admin_panel/templates/close_html');
 				}, {
 					data: "Actions"
 				}],
-				drawCallback: function (a) {
+				drawCallback: function(a) {
 					var e = this.api(),
-						t = e.rows({ page: "current" }).nodes(),
+						t = e.rows({
+							page: "current"
+						}).nodes(),
 						n = null;
-					e.column(5, { page: "current" })
+					e.column(5, {
+							page: "current"
+						})
 						.data()
-						.each(function (a, e) {
+						.each(function(a, e) {
 							n !== a &&
 								($(t)
 									.eq(e)
 									.before('<tr class="group"><td colspan="10">' + a + "</td></tr>"),
-								(n = a));
+									(n = a));
 						});
-            	},
-				columnDefs: [
-					 { targets: [5], visible: !1 },{
+				},
+				columnDefs: [{
+					targets: [5],
+					visible: !1
+				}, {
 					targets: -1,
 					title: "Actions",
 					orderable: !1,
 					render: function(a, t, e, n) {
 						return '<a onclick=showUserDetails("' + e['id'] + '") data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>' +
+							'<a href="<?= site_url() . "admin/email/logs/user/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Email Logs"><i class="la la-envelope"></i></a>' +
 							'<a href="<?= site_url() . "admin/user/get/permissions/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Permissions"><i class="la la-key"></i></a>' +
 							// '<a onclick=reset("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Reset Password"><i class="la la-gear"></i></a>' +
 							'<a href="<?= site_url() . "admin/user/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
@@ -382,7 +392,6 @@ $this->load->view('admin_panel/templates/close_html');
 		}
 	}
 
-	;
 	jQuery(document).ready(function() {
 			DatatablesDataSourceAjaxServer.init()
 		}

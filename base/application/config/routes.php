@@ -299,12 +299,13 @@ $route['admin/linkchecker/remove/id/(:num)']        = 'admin_panel/linkchecker/r
 $route['admin/linkchecker/update_urls_status']      = 'admin_panel/linkchecker/update_urls_status';
 
 /* Email */
-$route['admin/email/invite']                = 'admin_panel/email/invite';
-$route['admin/email/logs']                  = 'admin_panel/email/logs';
-$route['admin/email/logs/get']              = 'admin_panel/email/logs/1';
-$route['admin/email/logs/clear']            = 'admin_panel/email/logs_clear';
-$route['admin/email/message']               = 'admin_panel/email/message';
-$route['admin/email/templates/(:any)']      = 'admin_panel/email/templates/$1';
+$route['admin/email/invite']                        = 'admin_panel/email/invite';
+$route['admin/email/logs/user/id/(:num)']           = 'admin_panel/email/logs/$1';
+$route['admin/email/logs/get/user/id/(:num)']       = 'admin_panel/email/get_logs/$1';
+$route['admin/email/logs/clear/user/id/(:num)']     = 'admin_panel/email/clear_logs/$1';
+$route['admin/email/log/view/id/(:num)']            = 'admin_panel/email/view/$1';
+$route['admin/email/message']                       = 'admin_panel/email/message';
+$route['admin/email/templates/(:any)']              = 'admin_panel/email/templates/$1';
 
 /* Option Routes */
 $route['admin/option']                       = 'admin_panel/option';
