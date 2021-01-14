@@ -74,7 +74,6 @@ class Ion_auth
 
         $this->load->model('ion_auth_model');
         $this->load->model('admin_panel/email/Template_model', 'Template_model');
-        $this->load->model('admin_panel/email/Log_model', 'Log_model');
 
         $this->_cache_user_in_group = &$this->ion_auth_model->_cache_user_in_group;
 
@@ -163,13 +162,13 @@ class Ion_auth
                     $message = $this->parser->parse_string($template->body, $data);
 
                     $this->email->clear();
-                    $this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+                    $this->email->from($this->config->item('default_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
                     $this->email->to($user->email);
                     $this->email->subject($template->subject);
                     $this->email->message($message);
 
                     if ($this->email->send()) {
-                        $this->log_email('Reset password', $user->id);
+                        log_email($user->id, "Password Reset", $template->subject, $message);
                         $this->set_message('forgot_password_successful');
                         return true;
                     }
@@ -280,13 +279,13 @@ class Ion_auth
                 $message = $this->parser->parse_string($template->body, $data);
 
                 $this->email->clear();
-                $this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+                $this->email->from($this->config->item('default_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
                 $this->email->to($email);
                 $this->email->subject($template->subject);
                 $this->email->message($message);
 
                 if ($this->email->send() === true) {
-                    $this->log_email('activation', $id);
+                    log_email($id, "Account Activation", $template->subject, $message);
                     $this->ion_auth_model->trigger_events(['post_account_creation', 'post_account_creation_successful', 'activation_email_successful']);
                     $this->set_message('activation_email_successful');
                     return $id;
@@ -376,24 +375,6 @@ class Ion_auth
         $admin_group = $this->config->item('admin_group', 'ion_auth');
 
         return $this->ion_auth_model->in_group($admin_group, $id);
-    }
-
-    /**
-     * Log email into the database
-     *
-     * @param string $type Type of email
-     * @param int $user_id
-     * 
-     * @return boolean
-     */
-    public function log_email($type, $user_id)
-    {
-        $this->Log_model->create(array(
-            'type' => $type,
-            'user_id' => $user_id
-        ));
-
-        return $this->db->affected_rows();
     }
 
     /**

@@ -6,19 +6,20 @@ if (!defined('BASEPATH')) {
 /**
  * File:    ~/application/models/admin_panel/email/Log_model.php
  *
- * This model provides ability to view and update email tempaltes
+ * This model log emails sent to users
+ * 
  * @package       Skearch
  * @author        Iftikhar Ejaz <iftikhar@skearch.com>
- * @copyright     Copyright (c) 2019
+ * @copyright     Copyright (c) 2021
  * @version       2.0
  */
 class Log_model extends CI_Model
 {
 
   /**
-   * Creates an email log
+   * Create an email log
    *
-   * @param array $data Array contains: log type, user email, timestamp
+   * @param array $data data[user id, email type, subject, body, attachment, timestamp]
    * @return void
    */
   public function create($data)
@@ -33,13 +34,14 @@ class Log_model extends CI_Model
   }
 
   /**
-   * Clear all email logs
+   * Delete all email logs assocaited to the user
    *
    * @return void
    */
-  public function delete()
+  public function delete($user_id)
   {
-    $this->db->empty_table('skearch_email_logs');
+    $this->db->where('user_id', $user_id);
+    $this->db->delete('skearch_email_logs');
 
     if ($this->db->affected_rows()) {
       return true;
@@ -49,18 +51,40 @@ class Log_model extends CI_Model
   }
 
   /**
-   * Get all email logs
-   *  
+   * Get all emails sent to the user
+   *
+   * @param int $user_id User ID
    * @return object
    */
-  public function get()
+  public function get($user_id)
   {
-    $this->db->select('type, skearch_users.email, DATE_FORMAT(timestamp, "%m-%d-%Y") as date_sent');
-    $this->db->join('skearch_users', 'skearch_users.id = skearch_email_logs.user_id', 'left');
+    $this->db->select('id, type, subject, body, attachment as attachments, DATE_FORMAT(timestamp, "%m-%d-%Y") as date_sent');
     $this->db->from('skearch_email_logs');
+    $this->db->where('user_id', $user_id);
 
     $query = $this->db->get();
 
     return $query->result();
+  }
+
+  /**
+   * Get email snapshot
+   *
+   * @param int $user_id User ID
+   * @return object
+   */
+  public function get_email($id)
+  {
+    $this->db->select('id, type, subject, body, attachment as attachments, DATE_FORMAT(timestamp, "%m-%d-%Y") as date_sent');
+    $this->db->from('skearch_email_logs');
+    $this->db->where('id', $id);
+
+    $query = $this->db->get();
+
+    if ($query->num_rows()) {
+      return $query->row();
+    } else {
+      return false;
+    }
   }
 }
