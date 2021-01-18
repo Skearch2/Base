@@ -15,6 +15,8 @@ $iduration  = $this->config->item('imageserver_field_image_duration');
 $ifile    = $this->config->item('imageserver_field_image_filename');
 $ipriority  = $this->config->item('imageserver_field_image_priority');
 $istatus  = $this->config->item('imageserver_field_image_status');
+$idate_created  = $this->config->item('imageserver_field_image_date_created');
+$idate_modified  = $this->config->item('imageserver_field_image_date_modified');
 
 $alb_umbrella = $this->config->item('album_umbrella');
 $alb_field    = $this->config->item('album_field');
@@ -130,6 +132,9 @@ if ($albumtype === $alb_umbrella) {
               <?php else : ?>
                 <label class="switch"><input type="checkbox" onclick="toggleMediaStatus(<?= $mediaboxa_images[$iid] ?>)"><span class="slider round"></span></label>
               <?php endif;
+              echo  "<td>$images[$idate_modified]</td>" . PHP_EOL;
+              echo  "<td>$images[$idate_created]</td>" . PHP_EOL;
+              echo  '<td>' . PHP_EOL;
               echo  '<td>' . PHP_EOL;
               ?>
               <a href="#" onclick="viewMedia('<?= $mediaboxa_images[$ifile] ?>',<?= $is_video ?>);" title="View Media" class="fas fa-eye"></a>&nbsp;
@@ -179,6 +184,8 @@ if ($albumtype === $alb_umbrella) {
             <th>Impressions</th>
             <th>Time</th>
             <th>Active</th>
+            <th>Last Modified</th>
+            <th>Date Created</th>
             <th width="150px">Action</th>
           </tr>
         </thead>
@@ -255,6 +262,8 @@ if ($albumtype === $alb_umbrella) {
                 <?php else : ?>
                   <label class="switch"><input type="checkbox" onclick="toggleMediaStatus(<?= $mediaboxu_images[$iid] ?>)"><span class="slider round"></span></label>
                 <?php endif;
+                echo  "<td>$images[$idate_modified]</td>" . PHP_EOL;
+                echo  "<td>$images[$idate_created]</td>" . PHP_EOL;
                 echo  '</td>' . PHP_EOL;
                 echo  '<td>' . PHP_EOL;
                 ?>
@@ -409,6 +418,8 @@ if ($albumtype === $alb_umbrella) {
                 <?php else : ?>
                   <label class="switch"><input type="checkbox" onclick="toggleMediaStatus(<?= $mediaboxb_images[$iid] ?>)"><span class="slider round"></span></label>
                 <?php endif;
+                echo  "<td>$images[$idate_modified]</td>" . PHP_EOL;
+                echo  "<td>$images[$idate_created]</td>" . PHP_EOL;
                 echo  '</td>' . PHP_EOL;
                 echo  '<td>' . PHP_EOL;
                 ?>
