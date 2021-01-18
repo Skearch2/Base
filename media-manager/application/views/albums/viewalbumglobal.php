@@ -20,6 +20,8 @@ $iduration  = $this->config->item('imageserver_field_image_duration');
 $ifile  = $this->config->item('imageserver_field_image_filename');
 $ipriority  = $this->config->item('imageserver_field_image_priority');
 $istatus  = $this->config->item('imageserver_field_image_status');
+$idate_created  = $this->config->item('imageserver_field_image_date_created');
+$idate_modified  = $this->config->item('imageserver_field_image_date_modified');
 
 $title  = $this->config->item('data_title');
 $desc   = $this->config->item('data_description');
@@ -69,6 +71,8 @@ $desc   = $this->config->item('data_description');
           <th>Impressions</th>
           <th>Time</th>
           <th>Active</th>
+          <th>Last Modified</th>
+          <th>Date Created</th>
           <th width="150px">Action</th>
         </tr>
       </thead>
@@ -145,6 +149,8 @@ $desc   = $this->config->item('data_description');
               <?php else : ?>
                 <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $images[$iid] ?>)" <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
               <?php endif;
+              echo  "<td>$images[$idate_modified]</td>" . PHP_EOL;
+              echo  "<td>$images[$idate_created]</td>" . PHP_EOL;
               echo  '</td>' . PHP_EOL;
               echo  '<td>' . PHP_EOL;
               ?>

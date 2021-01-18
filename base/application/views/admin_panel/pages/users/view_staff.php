@@ -315,7 +315,7 @@ $this->load->view('admin_panel/templates/close_html');
 				serverSide: !1,
 				ajax: "<?= site_url("admin/users/get/group/id/$group"); ?>",
 				order: [
-					[5, 'asc']
+					[0, 'asc']
 				],
 				columns: [{
 					data: "username"
