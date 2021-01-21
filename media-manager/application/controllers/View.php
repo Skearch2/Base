@@ -465,7 +465,7 @@ class View extends Common_Controller
    *
    * @goto ../main/viewalbum
    */
-  public function viewalbum($pAlbumType, $pAlbumTypeId)
+  public function viewalbum($pAlbumType, $pAlbumTypeId, $pArchived = 0)
   {
 
     if ($pAlbumType !== $this->umbrella && $pAlbumType !== $this->field) {
@@ -509,9 +509,9 @@ class View extends Common_Controller
 
       $this->details['data'] = array(
         'mediaboxa_albumid' => $mediaboxa_albumid,
-        'mediaboxa_images' => $this->curler->getAlbum($mediaboxa_albumid),
+        'mediaboxa_images' => $this->curler->getAlbum($mediaboxa_albumid, $pArchived),
         'mediaboxu_albumid' => $mediaboxu_albumid,
-        'mediaboxu_images' => $this->curler->getAlbum($mediaboxu_albumid)
+        'mediaboxu_images' => $this->curler->getAlbum($mediaboxu_albumid, $pArchived)
       );
     }
 
@@ -520,9 +520,9 @@ class View extends Common_Controller
 
       $this->details['data'] = array(
         'mediaboxa_albumid' => $mediaboxa_albumid,
-        'mediaboxa_images' => $this->curler->getAlbum($mediaboxa_albumid),
+        'mediaboxa_images' => $this->curler->getAlbum($mediaboxa_albumid, $pArchived),
         'mediaboxb_albumid' => $mediaboxb_albumid,
-        'mediaboxb_images' => $this->curler->getAlbum($mediaboxb_albumid)
+        'mediaboxb_images' => $this->curler->getAlbum($mediaboxb_albumid, $pArchived)
       );
     }
 
@@ -561,6 +561,11 @@ class View extends Common_Controller
     }
 
     $this->details['data']['albumtypeid'] = $pAlbumTypeId;
+    $this->details['data']['archived'] = $pArchived;
+
+    // echo "<pre>";
+    // print_r($this->details['data']);
+    // die();
 
     $this->go();
   }

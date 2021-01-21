@@ -204,11 +204,11 @@ $this->load->view('admin_panel/templates/subheader');
 									<div class="col-3">
 										<span id="change-group-button" class="m-badge m-badge--warning m-badge--wide" style="cursor:pointer" title="Change user group" onclick="changeGroup()">Change Group</span>
 										<select class="form-control m-input" id="group-list" name="group" style="display:none">
-											<option value="<?= $this->config->item('admin', 'ion_auth') ?>" <?= set_select('group', $this->config->item('admin', 'ion_auth')) ?> <?= ($group->id == $this->config->item('admin', 'ion_auth')) ? "disabled" : "" ?>>Admin</option>
-											<option value="<?= $this->config->item('editor', 'ion_auth') ?>" <?= set_select('group', $this->config->item('editor', 'ion_auth')) ?> <?= ($group->id == $this->config->item('editor', 'ion_auth')) ? "disabled" : "" ?>>Editor</option>
-											<option value="<?= $this->config->item('brand', 'ion_auth') ?>" <?= set_select('group', $this->config->item('brand', 'ion_auth')) ?> <?= ($group->id == $this->config->item('brand', 'ion_auth')) ? "disabled" : "" ?>>Brand</option>
-											<option value="<?= $this->config->item('premium', 'ion_auth') ?>" <?= set_select('group', $this->config->item('premium', 'ion_auth')) ?> <?= ($group->id == $this->config->item('premium', 'ion_auth')) ? "disabled" : "" ?>>Premium</option>
-											<option value="<?= $this->config->item('regular', 'ion_auth') ?>" <?= set_select('group', $this->config->item('regular', 'ion_auth')) ?> <?= ($group->id == $this->config->item('regular', 'ion_auth')) ? "disabled" : "" ?>>Regular</option>
+											<option value="<?= $this->config->item('admin', 'ion_auth') ?>" <?= set_select('group', $this->config->item('admin', 'ion_auth')) ?> <?= ($group->id == $this->config->item('admin', 'ion_auth')) ? "selected" : "" ?>>Admin</option>
+											<option value="<?= $this->config->item('editor', 'ion_auth') ?>" <?= set_select('group', $this->config->item('editor', 'ion_auth')) ?> <?= ($group->id == $this->config->item('editor', 'ion_auth')) ? "selected" : "" ?>>Editor</option>
+											<option value="<?= $this->config->item('brand', 'ion_auth') ?>" <?= set_select('group', $this->config->item('brand', 'ion_auth')) ?> <?= ($group->id == $this->config->item('brand', 'ion_auth')) ? "selected" : "" ?>>Brand</option>
+											<option value="<?= $this->config->item('premium', 'ion_auth') ?>" <?= set_select('group', $this->config->item('premium', 'ion_auth')) ?> <?= ($group->id == $this->config->item('premium', 'ion_auth')) ? "selected" : "" ?>>Premium</option>
+											<option value="<?= $this->config->item('regular', 'ion_auth') ?>" <?= set_select('group', $this->config->item('regular', 'ion_auth')) ?> <?= ($group->id == $this->config->item('regular', 'ion_auth')) ? "selected" : "" ?>>Regular</option>
 										</select>
 									</div>
 								</div>

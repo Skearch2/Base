@@ -74,7 +74,6 @@ class Curler extends Common_Model
   {
     // albumtypeid = 0
     $curl = $this->get("albums/$pAlbumId/0/$pArchived");
-
     return $this->parse_xml_into_array($curl['xml']);
   }
 
