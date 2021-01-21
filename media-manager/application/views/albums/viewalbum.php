@@ -27,13 +27,18 @@ if ($albumtype === $alb_umbrella) {
   $keyword = $field;
 }
 
+// echo "<pre>";
+// print_r(sizeof($mediaboxa_images['vals']));
+// die();
+
+
 ?>
 
 <div class="page-header">
   <?php if ($albumtype === $alb_umbrella) : ?>
-    <h1><?= ucwords($albumtype); ?> Media for <?= ucwords($umbrella); ?></h1>
+    <h1><?= ucwords($albumtype); ?>: <?= ucwords($umbrella); ?></h1>
   <?php elseif ($albumtype === $alb_field) : ?>
-    <h1><?= ucwords($albumtype); ?> Media for <?= ucwords($field); ?></h1>
+    <h1><?= ucwords($albumtype); ?>: <?= ucwords($field); ?></h1>
   <?php endif; ?>
 </div>
 
@@ -42,6 +47,7 @@ if ($albumtype === $alb_umbrella) {
 <div class="page-header">
   <h2>Media Box A</h2>
 </div>
+
 
 <div class="row">
   <div class="col-md-12">
@@ -52,23 +58,27 @@ if ($albumtype === $alb_umbrella) {
           <th>Priority</th>
           <th>Name</th>
           <th>Description</th>
-          <th>Thumbnail</th>
+          <th width="120px">Thumbnail</th>
           <th>Clicks</th>
           <th>Impressions</th>
           <th>Time</th>
           <th>Active</th>
-          <th width="150px">Action</th>
+          <th>Last Modified</th>
+          <th>Date Created</th>
+          <th width="150px">Actions</th>
         </tr>
       </thead>
       <tbody>
         <?php
-        if (sizeof($mediaboxa_images['vals']) <= 10) {
-          echo '<tr>';
+        if (sizeof($mediaboxa_images['vals']) <= 11) {
+          echo  '<tr>';
+          echo  '<td></td>';
           echo  '<td></td>';
           echo  '<td></td>';
           echo  '<td></td>';
           echo  '<td></td>';
           echo  '<td style=\'text-align:right\'>No Media</td>';
+          echo  '<td></td>';
           echo  '<td></td>';
           echo  '<td></td>';
           echo  '<td></td>';
@@ -97,17 +107,22 @@ if ($albumtype === $alb_umbrella) {
 
             // Add the element to the data array if the right element
             if ($val['type'] == 'complete' && $val['level'] == $level + 1) {
+              print_r($value);
               $value = (isset($val['value']) ? $val['value'] : 'unknown');
               $mediaboxa_images[strtolower($val['tag'])] = $value;
             }
+
+            // echo "<pre>";
+            // print_r($mediaboxa_images);
+            // die();
 
             // On the </item>, build the html
             if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
 
               // check if the media is a video (only mp4 format)
-              $is_video = substr(strtolower($images[$ifile]), -3) == 'mp4' ? 1 : 0;
+              $is_video = substr(strtolower($mediaboxa_images[$ifile]), -3) == 'mp4' ? 1 : 0;
 
-              echo  "<tr style='cursor: grab;'>" . PHP_EOL;
+              echo ($archived == 0 ? "<tr style='cursor: grab;'>" : "<tr>") . PHP_EOL;
               echo  "<td style='display: none'>$mediaboxa_images[$iid]</td>" . PHP_EOL;
               echo  "<td>$mediaboxa_images[$ipriority]</td>" . PHP_EOL;
               echo  "<td>$mediaboxa_images[$ititle]</td>" . PHP_EOL;
@@ -132,8 +147,8 @@ if ($albumtype === $alb_umbrella) {
               <?php else : ?>
                 <label class="switch"><input type="checkbox" onclick="toggleMediaStatus(<?= $mediaboxa_images[$iid] ?>)"><span class="slider round"></span></label>
               <?php endif;
-              echo  "<td>$images[$idate_modified]</td>" . PHP_EOL;
-              echo  "<td>$images[$idate_created]</td>" . PHP_EOL;
+              echo  "<td>$mediaboxa_images[$idate_modified]</td>" . PHP_EOL;
+              echo  "<td>$mediaboxa_images[$idate_created]</td>" . PHP_EOL;
               echo  '<td>' . PHP_EOL;
               echo  '<td>' . PHP_EOL;
               ?>
@@ -153,7 +168,8 @@ if ($albumtype === $alb_umbrella) {
         ?>
       </tbody>
     </table>
-  </div><!-- /.col-md-6 -->
+  </div>
+  <!-- /.col-md-6 -->
 </div>
 
 <div class="row">
@@ -179,14 +195,14 @@ if ($albumtype === $alb_umbrella) {
             <th>Priority</th>
             <th>Name</th>
             <th>Description</th>
-            <th>Thumbnail</th>
+            <th width="120px">Thumbnail</th>
             <th>Clicks</th>
             <th>Impressions</th>
             <th>Time</th>
             <th>Active</th>
             <th>Last Modified</th>
             <th>Date Created</th>
-            <th width="150px">Action</th>
+            <th width="150px">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -233,11 +249,12 @@ if ($albumtype === $alb_umbrella) {
               // On the </item>, build the html
               if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
 
+
                 // check if the media is a video (only mp4 format)
-                $is_video = substr(strtolower($images[$ifile]), -3) == 'mp4' ? 1 : 0;
+                $is_video = substr(strtolower($mediaboxu_images[$ifile]), -3) == 'mp4' ? 1 : 0;
 
                 echo '<tr>' . PHP_EOL;
-                echo  "<tr style='cursor: grab;'>" . PHP_EOL;
+                echo ($archived == 0 ? "<tr style='cursor: grab;'>" : "<tr>") . PHP_EOL;
                 echo  "<td style='display: none'>$mediaboxu_images[$iid]</td>" . PHP_EOL;
                 echo  "<td>$mediaboxu_images[$ipriority]</td>" . PHP_EOL;
                 echo  "<td>$mediaboxu_images[$ititle]</td>" . PHP_EOL;
@@ -262,8 +279,8 @@ if ($albumtype === $alb_umbrella) {
                 <?php else : ?>
                   <label class="switch"><input type="checkbox" onclick="toggleMediaStatus(<?= $mediaboxu_images[$iid] ?>)"><span class="slider round"></span></label>
                 <?php endif;
-                echo  "<td>$images[$idate_modified]</td>" . PHP_EOL;
-                echo  "<td>$images[$idate_created]</td>" . PHP_EOL;
+                echo  "<td>$mediaboxu_images[$idate_modified]</td>" . PHP_EOL;
+                echo  "<td>$mediaboxu_images[$idate_created]</td>" . PHP_EOL;
                 echo  '</td>' . PHP_EOL;
                 echo  '<td>' . PHP_EOL;
                 ?>
@@ -337,12 +354,14 @@ if ($albumtype === $alb_umbrella) {
             <th>Priority</th>
             <th>Name</th>
             <th>Description</th>
-            <th>Thumbnail</th>
+            <th width="120px">Thumbnail</th>
             <th>Clicks</th>
             <th>Impressions</th>
             <th>Time</th>
             <th>Active</th>
-            <th width="150px">Action</th>
+            <th>Last Modified</th>
+            <th>Date Created</th>
+            <th width="150px">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -390,10 +409,10 @@ if ($albumtype === $alb_umbrella) {
               if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
 
                 // check if the media is a video (only mp4 format)
-                $is_video = substr(strtolower($images[$ifile]), -3) == 'mp4' ? 1 : 0;
+                $is_video = substr(strtolower($mediaboxb_images[$ifile]), -3) == 'mp4' ? 1 : 0;
 
                 echo '<tr>' . PHP_EOL;
-                echo  "<tr style='cursor: grab;'>" . PHP_EOL;
+                echo ($archived == 0 ? "<tr style='cursor: grab;'>" : "<tr>") . PHP_EOL;
                 echo  "<td style='display: none'>$mediaboxb_images[$iid]</td>" . PHP_EOL;
                 echo  "<td>$mediaboxb_images[$ipriority]</td>" . PHP_EOL;
                 echo  "<td>$mediaboxb_images[$ititle]</td>" . PHP_EOL;
@@ -418,8 +437,8 @@ if ($albumtype === $alb_umbrella) {
                 <?php else : ?>
                   <label class="switch"><input type="checkbox" onclick="toggleMediaStatus(<?= $mediaboxb_images[$iid] ?>)"><span class="slider round"></span></label>
                 <?php endif;
-                echo  "<td>$images[$idate_modified]</td>" . PHP_EOL;
-                echo  "<td>$images[$idate_created]</td>" . PHP_EOL;
+                echo  "<td>$mediaboxb_images[$idate_modified]</td>" . PHP_EOL;
+                echo  "<td>$mediaboxb_images[$idate_created]</td>" . PHP_EOL;
                 echo  '</td>' . PHP_EOL;
                 echo  '<td>' . PHP_EOL;
                 ?>

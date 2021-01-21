@@ -66,7 +66,7 @@ $desc   = $this->config->item('data_description');
           <th>Name</th>
           <th>Description</th>
           <!-- <th>Brand ID</th> -->
-          <th>Thumbnail</th>
+          <th width="120px">Thumbnail</th>
           <th>Clicks</th>
           <th>Impressions</th>
           <th>Time</th>
