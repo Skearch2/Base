@@ -129,7 +129,7 @@ class Category_model extends CI_Model
      */
     public function get_homepage_results()
     {
-        $this->db->select('title');
+        $this->db->select("coalesce(nullif(home_display,''), title)");
         $this->db->from('skearch_categories');
         $this->db->where('skearch_categories.id = skearch_homepage_fields.result_id');
         $sub_query1 = $this->db->get_compiled_select();
@@ -139,7 +139,7 @@ class Category_model extends CI_Model
         $this->db->where('is_result_umbrella', 1);
         $query1 = $this->db->get_compiled_select();
 
-        $this->db->select('skearch_subcategories.title');
+        $this->db->select("coalesce(nullif(skearch_subcategories.home_display,''), skearch_subcategories.title)");
         $this->db->from('skearch_subcategories');
         $this->db->where('skearch_subcategories.id = skearch_homepage_fields.result_id');
         $sub_query2 = $this->db->get_compiled_select();
@@ -157,11 +157,7 @@ class Category_model extends CI_Model
 
         $query = $this->db->query($query1 . " UNION " . $query2 . " ORDER BY id");
 
-        if ($query) {
-            return $query->result();
-        } else {
-            return FALSE;
-        }
+        return $query->result();
     }
 
     /**
@@ -250,11 +246,7 @@ class Category_model extends CI_Model
 
         $query = $this->db->query($query1 . " UNION " . $query2 . " ORDER BY id");
 
-        if ($query) {
-            return $query->result();
-        } else {
-            return FALSE;
-        }
+        return $query->result();
     }
 
     /**
@@ -295,11 +287,7 @@ class Category_model extends CI_Model
 
         $query = $this->db->query($query1 . " UNION " . $query2 . " ORDER BY id");
 
-        if ($query) {
-            return $query->result();
-        } else {
-            return FALSE;
-        }
+        return $query->result();
     }
 
     /**
