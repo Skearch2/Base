@@ -44,9 +44,8 @@ class Ads extends MY_Controller
      */
     public function index($id = null)
     {
-        // brand wont access brand page due to this condition - fix needed
         // id is required to view as brand by admin
-        if ($this->ion_auth->admin() && !$id) {
+        if ($this->ion_auth->is_admin() && !$id) {
             redirect('myskearch', 'refresh');
         }
 

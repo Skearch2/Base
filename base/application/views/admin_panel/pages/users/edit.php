@@ -116,7 +116,7 @@ $this->load->view('admin_panel/templates/subheader');
 									<div class="form-group m-form__group row">
 										<label for="phone" class="col-2 col-form-label">Phone No.</label>
 										<div class="col-7">
-											<input class="form-control m-input" type="text" name="phone" value="<?= set_value('phone', $phone); ?>">
+											<input class="form-control m-input" type="text" name="phone" id="phone" value="<?= set_value('phone', $phone); ?>">
 										</div>
 									</div>
 									<div class="form-group m-form__group row">
@@ -371,6 +371,11 @@ $this->load->view('admin_panel/templates/close_html');
 
 		// initialize brand search
 		$("#brand-search").easyAutocomplete(options);
+
+		// Mask phone field to US number format
+		$("#phone").inputmask("mask", {
+			mask: "(999) 999-9999"
+		});
 
 	<?php endif ?>
 </script>

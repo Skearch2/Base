@@ -18,8 +18,8 @@ class User_model extends CI_Model
     /**
      * Creates user
      *
-     * @param String $username User name
-     * @param String $password User Password
+     * @param String $username Username
+     * @param String $password Random generated password
      * @param String $email User email
      * @param Array $additional_data Additional user data
      * @param int $group User group
@@ -27,7 +27,10 @@ class User_model extends CI_Model
      */
     public function create($username, $password, $email, $additional_data, $group)
     {
-        $query = $this->ion_auth->register($username, $password, $email, $additional_data, $group);
+        // whether the user registering account themself
+        $self_registration = 0;
+
+        $query = $this->ion_auth->register($self_registration, $username, $password, $email, $additional_data, $group);
 
         return $query;
     }

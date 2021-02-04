@@ -40,6 +40,7 @@ $this->load->view('admin_panel/templates/subheader');
                                     <div class="m-portlet__head-title">
                                         <h3 class="m-portlet__head-text">
                                             <?= $email->subject ?>
+                                            <small><?= $email->date_sent ?></small>
                                         </h3>
                                     </div>
                                 </div>

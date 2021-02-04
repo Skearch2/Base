@@ -77,108 +77,120 @@ $desc   = $this->config->item('data_description');
         </tr>
       </thead>
       <tbody>
-        <?php
-        if (sizeof($images['vals']) <= 10) {
-          echo '<tr>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          // echo  '<td></td>';
-          echo  '<td style=\'text-align:right\'>No Media</td>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          echo '</tr>';
-        } else {
-          $arr = $images;
-
-          // initialize the HTML storage variable and the images storage array
-          $images = array();
-
-          if (sizeof($arr['index']['ITEM']) == 2) {
-            $word = 'IMAGE';
-            $level = 4;
-          } else {
-            $word = 'ITEM';
-            $level = 5;
-          }
-
-          foreach ($arr['vals'] as $val) {
-
-            // Initialize the data array if on a <item> element
-            if ($val['tag'] == $word && $val['type'] == 'open' && $val['level'] == $level) {
-              $images = array();
-            }
-
-            // Add the element to the data array if the right element
-            if ($val['type'] == 'complete' && $val['level'] == $level + 1) {
-              $value = (isset($val['value']) ? $val['value'] : 'unknown');
-              $images[strtolower($val['tag'])] = $value;
-            }
-
-            // On the </item>, build the html
-            if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
-              // check if the media is a video (only mp4 format)
-              $is_video = substr(strtolower($images[$ifile]), -3) == 'mp4' ? 1 : 0;
-
-              echo ($archived == 0 ? "<tr style='cursor: grab;'>" : "<tr>") . PHP_EOL;
-              echo  "<td style='display: none'>$images[$iid]</td>" . PHP_EOL;
-              echo  "<td>$images[$ipriority]</td>" . PHP_EOL;
-              echo  "<td>$images[$ititle]</td>" . PHP_EOL;
-              echo  "<td>$images[$idesc]</td>" . PHP_EOL;
-              // echo  "<td>$images[$ibrandid]</td>" . PHP_EOL;
-              echo  '<td>' . PHP_EOL;
-              if ($is_video) {
-                echo '<i title="Video" class="fas fa-video"></i>';
-              } else {
-                echo '<img src="' . $images[$ifile] . '" alt="No Media" id="image_' . $images[$iid] . '" class="' . $css . '">' . PHP_EOL;
-              }
-              echo  '</td>' . PHP_EOL;
-              echo  "<td>$images[$iclicks]</td>" . PHP_EOL;
-              echo  "<td>$images[$iimp]</td>" . PHP_EOL;
-              echo  '<td>' . PHP_EOL;
-        ?>
-              <input type="number" onchange="updateMediaDuration(<?= $images[$iid] ?>,$(this).val())" value=<?= $images[$iduration] ?> style="width:60%">
+        <?php if (!(array) $images) : ?>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style='text-align:right'>No Media</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        <?php else : ?>
+          <?php if (isset($images->item->item)) : ?>
+            <?php foreach ($images->item->item as $image) : ?>
               <?php
-              echo  '</td>' . PHP_EOL;
-              echo  '<td>' . PHP_EOL;
-              if ($images[$istatus] == 1) : ?>
-                <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $images[$iid] ?>)" checked <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
-              <?php else : ?>
-                <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $images[$iid] ?>)" <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
-              <?php endif;
-              echo  "<td>$images[$idate_modified]</td>" . PHP_EOL;
-              echo  "<td>$images[$idate_created]</td>" . PHP_EOL;
-              echo  '</td>' . PHP_EOL;
-              echo  '<td>' . PHP_EOL;
+              // check if the media is a video (only mp4 format)
+              $is_video = substr(strtolower($image->$ifile), -3) == 'mp4' ? 1 : 0;
               ?>
-              <a href="#" onclick="viewMedia('<?= $images[$ifile] ?>',<?= $is_video ?>)" title="View Media" class="fas fa-eye"></a>&nbsp;
-
-        <?php
-              echo '&nbsp;';
-              echo '&nbsp;';
-              echo   '<a href="' . base_url("$main/editimageglobal") . '/' . $images[$iid] . '" title="Edit Media Details" class="fas fa-edit"></a>&nbsp;' . PHP_EOL;
-              echo '&nbsp;';
-              echo '&nbsp;';
-              if ($archived == 0) {
-                echo   '<a href="' . base_url("$main/archiveimageglobal") . '/' . $images[$iid] . '" title="Archive Media" class="fas fa-archive"></a>&nbsp;' . PHP_EOL;
-              } else {
-                echo '<a href="' . base_url("$main/archiveimageglobal") . '/' . $images[$iid] . '" title="Restore Media" class="fas fa-undo-alt"></a>&nbsp;' . PHP_EOL;
-                echo '&nbsp;';
-                echo '&nbsp;';
-                echo '<a href="' . base_url("$main/deleteimageglobal") . '/' . $images[$iid] . '" title="Delete Media" class="fas fa-trash"></a>&nbsp;' . PHP_EOL;
-              }
-              echo  '</td>' . PHP_EOL;
-              echo '</tr>' . PHP_EOL;
-            }
-          }
-        }
-        ?>
+              <?php if ($archived == 0) : ?>
+                <tr style='cursor: grab;'>
+                <?php else : ?>
+                <tr>
+                <?php endif ?>
+                <td style='display: none'><?= $image->$iid ?></td>
+                <td><?= $image->$ipriority ?></td>
+                <td><?= $image->$ititle ?></td>
+                <td><?= $image->$idesc ?></td>
+                <!-- <td><?= $image->$ibrandid ?></td> -->
+                <td>
+                  <?php if ($is_video) : ?>
+                    <i title="Video" class="fas fa-video"></i>
+                  <?php else : ?>
+                    <img src=<?= $image->$ifile ?> alt="No Media" id="image_<?= $image->$iid ?>" class="<?= $css ?>">
+                  <?php endif ?>
+                </td>
+                <td><?= $image->$iclicks ?></td>
+                <td><?= $image->$iimp ?></td>
+                <td><input type="number" onchange="updateMediaDuration(<?= $image->$iid ?>,$(this).val())" value=<?= $image->$iduration ?> style="width:60%"></td>
+                <td>
+                  <?php if ($image->$istatus) : ?>
+                    <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" checked <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                  <?php else : ?>
+                    <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                  <?php endif ?>
+                <td><?= $image->$idate_modified ?></td>
+                <td><?= $image->$idate_created ?> </td>
+                </td>
+                <td>
+                  <a href="#" onclick="viewMedia('<?= $image->$ifile ?>',<?= $is_video ?>)" title="View Media" class="fas fa-eye"></a>&nbsp;
+                  <a href="<?= base_url("$main/editimageglobal") . '/' . $image->$iid ?>" title="Edit Media Details" class="fas fa-edit"></a>&nbsp;
+                  <?php if ($archived == 0) : ?>
+                    <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Archive Media" class="fas fa-archive"></a>&nbsp;
+                  <?php else : ?>
+                    <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Restore Media" class="fas fa-undo-alt"></a>
+                    <a href="<?= base_url("$main/deleteimageglobal") . '/' . $image->$iid ?>" title="Delete Media" class="fas fa-trash"></a>
+                  <?php endif ?>
+                </td>
+                </tr>
+              <?php endforeach ?>
+            <?php else : ?>
+              <?php
+              // reassigning for easier use
+              $image = $images->item;
+              // check if the media is a video (only mp4 format)
+              $is_video = substr(strtolower($image->$ifile), -3) == 'mp4' ? 1 : 0;
+              ?>
+              <?php if ($archived == 0) : ?>
+                <tr style='cursor: grab;'>
+                <?php else : ?>
+                <tr>
+                <?php endif ?>
+                <td style='display: none'><?= $image->$iid ?></td>
+                <td><?= $image->$ipriority ?></td>
+                <td><?= $image->$ititle ?></td>
+                <td><?= $image->$idesc ?></td>
+                <!-- <td><?= $image->$ibrandid ?></td> -->
+                <td>
+                  <?php if ($is_video) : ?>
+                    <i title="Video" class="fas fa-video"></i>
+                  <?php else : ?>
+                    <img src=<?= $image->$ifile ?> alt="No Media" id="image_<?= $image->$iid ?>" class="<?= $css ?>">
+                  <?php endif ?>
+                </td>
+                <td><?= $image->$iclicks ?></td>
+                <td><?= $image->$iimp ?></td>
+                <td><input type="number" onchange="updateMediaDuration(<?= $image->$iid ?>,$(this).val())" value=<?= $image->$iduration ?> style="width:60%"></td>
+                <td>
+                  <?php if ($image->$istatus) : ?>
+                    <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" checked <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                  <?php else : ?>
+                    <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                  <?php endif ?>
+                <td><?= $image->$idate_modified ?></td>
+                <td><?= $image->$idate_created ?> </td>
+                </td>
+                <td>
+                  <a href="#" onclick="viewMedia('<?= $image->$ifile ?>',<?= $is_video ?>)" title="View Media" class="fas fa-eye"></a>&nbsp;
+                  <a href="<?= base_url("$main/editimageglobal") . '/' . $image->$iid ?>" title="Edit Media Details" class="fas fa-edit"></a>&nbsp;
+                  <?php if ($archived == 0) : ?>
+                    <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Archive Media" class="fas fa-archive"></a>&nbsp;
+                  <?php else : ?>
+                    <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Restore Media" class="fas fa-undo-alt"></a>
+                    <a href="<?= base_url("$main/deleteimageglobal") . '/' . $image->$iid ?>" title="Delete Media" class="fas fa-trash"></a>
+                  <?php endif ?>
+                </td>
+                </tr>
+              <?php endif ?>
+            <?php endif ?>
       </tbody>
     </table>
-  </div><!-- /.col-md-6 -->
+  </div><!-- /.col-md-12 -->
 </div>
 
 <div class="row">
@@ -223,6 +235,16 @@ $desc   = $this->config->item('data_description');
 </div>
 
 <script>
+  const Toast = Swal.mixin({
+    toast: true,
+    showConfirmButton: false,
+    timer: 3000,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
+
   function updateAlbum() {
     document.getElementById("updatebutton").innerHTML = "Updating...";
   }
@@ -231,17 +253,22 @@ $desc   = $this->config->item('data_description');
 
     // Toggle media active status
     function setMediaActiveStatus(imageId) {
-
       $.ajax({
         url: "<?= site_url("main/setimageactivestatus/"); ?>" + imageId,
         type: 'GET',
         success: function(status) {
-          console.log("Success toggling media view");
+          Toast.fire({
+            icon: 'success',
+            title: 'Saved'
+          })
         },
         contentType: "application/text",
         dataType: "text",
         error: function() {
-          console.log("Unable to toggle media view.");
+          Toast.fire({
+            icon: 'error',
+            title: 'Error'
+          })
         }
       });
     }
@@ -270,28 +297,42 @@ $desc   = $this->config->item('data_description');
             // get the id and prioriy of the current row
             data[$(this).find('td').eq(0).html()] = $(this).find('td').eq(1).html();
           })
-          updateMediaPriorities(data);
+          updateMediaPriorities(data)
         }
-      }).disableSelection();
+      })
     });
 
     // update media priorities
     function updateMediaPriorities(data) {
-      $.ajax({
-        type: 'POST',
-        url: "<?= site_url("main/updatemediapriorities"); ?>",
-        data: {
-          "mediapriorities": data
-        },
-        contentType: "application/x-www-form-urlencoded",
-        datatype: 'json',
-        success: function(status) {
-          console.log("Success updating priorities")
-        },
-        error: function(xhr, ajaxOptions, thrownError) {
-          console.log("Unable to update priorities");
+      Swal.fire({
+        toast: true,
+        title: 'Do you want to save the changes?',
+        confirmButtonText: 'Save',
+        showCancelButton: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            type: 'POST',
+            url: "<?= site_url("main/updatemediapriorities"); ?>",
+            data: {
+              "mediapriorities": data
+            },
+            contentType: "application/x-www-form-urlencoded",
+            datatype: 'json',
+            success: function(status) {
+              Toast.fire({
+                icon: 'success',
+                title: 'Saved'
+              })
+            },
+            error: function() {
+              Swal.fire('Unable to make changes!', '', 'error')
+            }
+          });
+        } else if (result.isDismissed) {
+          Swal.fire('Changes are not saved', '', 'info')
         }
-      });
+      })
     }
 
   <?php endif; ?>
@@ -316,16 +357,28 @@ $desc   = $this->config->item('data_description');
   function updateMediaDuration(mediaId, duration) {
     // duration must be within 1 to 300 range
     if (duration >= 1 && duration <= 300) {
-      $.ajax({
-        url: "<?= site_url("main/updatemediaduration/"); ?>" + mediaId + "/" + duration,
-        type: 'GET',
-        success: function(status) {},
-        error: function() {
-          console.log("Unable to updating media duration.");
+      Swal.fire({
+        title: 'Do you want to save the changes?',
+        confirmButtonText: 'Save',
+        showCancelButton: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: "<?= site_url("main/updatemediaduration/"); ?>" + mediaId + "/" + duration,
+            type: 'GET',
+            success: function(status) {
+              Swal.fire('Saved!', '', 'success')
+            },
+            error: function() {
+              Swal.fire('Unable to make changes!', '', 'error')
+            }
+          });
+        } else if (result.isDismissed) {
+          Swal.fire('Changes are not saved', '', 'info')
         }
-      });
+      })
     } else {
-      alert("Duration must be between 1 to 300 seconds");
+      Swal.fire('Duration must be between 1 to 300 seconds!', '', 'info')
     }
   }
 </script>

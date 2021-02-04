@@ -450,10 +450,14 @@ class View extends Common_Controller
     );
     $this->details['file'] = 'albums/viewalbumglobal';
     $this->details['data'] = array(
-      'images'  => $this->curler->getAlbum($pAlbumId, $pArchived),
+      'images'  => $this->curler->getAlbum($pAlbumId, $pArchived)->images,
       'album' => $this->curler->getAlbumOnly($pAlbumId, $pArchived),
       'archived' => $pArchived
     );
+
+    // echo "<pre>";
+    // print_r($this->curler->getAlbum($pAlbumId, $pArchived));
+    // die();
 
     $this->go();
   }
@@ -509,9 +513,9 @@ class View extends Common_Controller
 
       $this->details['data'] = array(
         'mediaboxa_albumid' => $mediaboxa_albumid,
-        'mediaboxa_images' => $this->curler->getAlbum($mediaboxa_albumid, $pArchived),
+        'mediaboxa_images' => $this->curler->getAlbum($mediaboxa_albumid, $pArchived)->images,
         'mediaboxu_albumid' => $mediaboxu_albumid,
-        'mediaboxu_images' => $this->curler->getAlbum($mediaboxu_albumid, $pArchived)
+        'mediaboxu_images' => $this->curler->getAlbum($mediaboxu_albumid, $pArchived)->images
       );
     }
 
@@ -520,9 +524,9 @@ class View extends Common_Controller
 
       $this->details['data'] = array(
         'mediaboxa_albumid' => $mediaboxa_albumid,
-        'mediaboxa_images' => $this->curler->getAlbum($mediaboxa_albumid, $pArchived),
+        'mediaboxa_images' => $this->curler->getAlbum($mediaboxa_albumid, $pArchived)->images,
         'mediaboxb_albumid' => $mediaboxb_albumid,
-        'mediaboxb_images' => $this->curler->getAlbum($mediaboxb_albumid, $pArchived)
+        'mediaboxb_images' => $this->curler->getAlbum($mediaboxb_albumid, $pArchived)->images
       );
     }
 

@@ -72,9 +72,8 @@ class Curler extends Common_Model
    */
   public function getAlbum($pAlbumId, $pArchived = 0)
   {
-    // albumtypeid = 0
     $curl = $this->get("albums/$pAlbumId/0/$pArchived");
-    return $this->parse_xml_into_array($curl['xml']);
+    return $this->decode($curl['xml']);
   }
 
   /**
@@ -102,12 +101,7 @@ class Curler extends Common_Model
    */
   public function getAlbumIdByMediaInfo($pAlbumType, $pAlbumTypeId)
   {
-
-    // $albumtypeas      = $this -> config -> item('imageserver_data_albumtype');
-    // $albumtypeidas    = $this -> config -> item('imageserver_data_albumtypeid');
-
     $curl = $this->get("albums/$pAlbumType/$pAlbumTypeId");
-
     return $this->decode($curl['xml']);
   }
 
@@ -122,6 +116,9 @@ class Curler extends Common_Model
   public function getAlbumOnly($pAlbumId, $pArchived = 0)
   {
     $curl = $this->get("albums/$pAlbumId/$pArchived");
+    // echo "<pre>";
+    // print_r($this->decode($curl['xml']));
+    // die();
     return $this->decode($curl['xml']);
   }
 
