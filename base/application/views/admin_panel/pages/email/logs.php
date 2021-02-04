@@ -136,6 +136,9 @@ $this->load->view('admin_panel/templates/close_html');
 				processing: !0,
 				serverSide: !1,
 				ajax: "<?= site_url('admin/email/logs/get/user/id/') . $user_id ?>",
+				order: [
+					[2, 'desc']
+				],
 				columns: [{
 					data: "type"
 				}, {

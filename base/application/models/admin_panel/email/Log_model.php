@@ -58,7 +58,7 @@ class Log_model extends CI_Model
    */
   public function get($user_id)
   {
-    $this->db->select('id, type, subject, body, attachment as attachments, DATE_FORMAT(timestamp, "%m-%d-%Y") as date_sent');
+    $this->db->select('id, type, subject, body, attachment as attachments, DATE_FORMAT(timestamp, "%m-%d-%Y %r") as date_sent');
     $this->db->from('skearch_email_logs');
     $this->db->where('user_id', $user_id);
 
@@ -75,7 +75,7 @@ class Log_model extends CI_Model
    */
   public function get_email($id)
   {
-    $this->db->select('id, type, subject, body, attachment as attachments, DATE_FORMAT(timestamp, "%m-%d-%Y") as date_sent');
+    $this->db->select('id, type, subject, body, attachment as attachments, DATE_FORMAT(timestamp, "%m-%d-%Y %r") as date_sent');
     $this->db->from('skearch_email_logs');
     $this->db->where('id', $id);
 

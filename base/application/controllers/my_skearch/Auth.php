@@ -15,7 +15,7 @@ if (!defined('BASEPATH')) {
  *
  * @version      2.0
  * @author       Iftikhar Ejaz <ejaziftikhar@gmail.com>
- * @copyright    Copyright (c) 2018 Skearch LLC
+ * @copyright    Copyright (c) 20z1 Skearch LLC
  */
 
 class Auth extends MY_Controller
@@ -95,6 +95,109 @@ class Auth extends MY_Controller
             // redirect them to the forgot password page
             $this->session->set_flashdata('error', $this->ion_auth->errors());
             redirect("myskearch/auth/forgot_password");
+        }
+    }
+
+    /**
+     * Let user set account password to activate their account
+     * 
+     * (Note: The account would have already been made for the user by the staff)
+     *
+     * @param int         $id   The user ID
+     * @param string|bool $code The activation code
+     */
+    public function set_password_activate($id, $code)
+    {
+        $user = $this->ion_auth->get_user_by_activation_code($code);
+
+        // invalid code
+        if (!$user or $id !== $user->id) {
+            show_404();
+            return;
+        }
+
+        // echo "<pre>";
+        // print_r($user);
+        // die();
+
+        // // if the user is already active redirect to login page
+        // elseif ($user->active == 1) {
+        //     // redirect to the login page
+        //     $this->session->set_flashdata('message', $this->ion_auth->errors());
+        //     redirect("myskearch/auth/login");
+        //     return;
+        // }
+
+        $this->form_validation->set_rules('password', 'New Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
+        $this->form_validation->set_rules('password2', 'Confirm New Password', 'required|matches[password]');
+
+        $user = $this->ion_auth->user($id)->row();
+
+        if ($this->form_validation->run() === false) {
+
+            $data['user_id'] = $user->id;
+
+            $data['title'] = ucwords("my skearch | set password");
+            $this->load->view('auth/pages/set_password', $data);
+        } else {
+            $id = $user->id;
+            $identity = $user->username;
+
+            $set = $this->ion_auth->reset_password($identity, $this->input->post('password'));
+            // once the account password is set
+            if ($set) {
+                // activate user account
+                if ($this->ion_auth->activate($id, $code)) {
+
+                    // generate default user settings
+                    $this->_create_settings($id);
+
+                    // select welcome email based on type of account
+                    if ($this->ion_auth->in_group($this->config->item('regular', 'ion_auth'), $id)) {
+                        $data = array(
+                            'username' => $user->username
+                        );
+                        $template = $this->Template_model->get_template('welcome_regular');
+                    } else if ($this->ion_auth->in_group($this->config->item('premium', 'ion_auth'), $id)) {
+                        $data = array(
+                            'username' => $user->username
+                        );
+                        $template = $this->Template_model->get_template('welcome_premium');
+                    } else {
+                        $data = array(
+                            'firstname' => $user->firstname,
+                            'lastname' => $user->lastname
+                        );
+                        $template = $this->Template_model->get_template('welcome_brand');
+                    }
+
+                    $message = $this->parser->parse_string($template->body, $data);
+
+                    $this->email->clear();
+                    $this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+                    $this->email->to($user->email);
+                    $this->email->subject($template->subject);
+                    $this->email->message($message);
+
+                    // log email if sent
+                    if ($this->email->send()) {
+                        log_email($id, "Welcome", $template->subject, $message);
+                    } else {
+                        log_message('error', 'Unable to send email');
+                    }
+
+                    // redirect them to the login page
+                    $this->session->set_flashdata('success', $this->ion_auth->messages());
+                    redirect("myskearch/auth/login");
+                } else {
+                    // redirect them to the login page
+                    $this->session->set_flashdata('error', $this->ion_auth->errors());
+                    redirect("myskearch/auth/login");
+                }
+            } else {
+                $this->session->set_flashdata('error', $this->ion_auth->errors());
+                redirect("myskearch/auth/activate/action/delegate/id/$id/code/$code");
+            }
         }
     }
 

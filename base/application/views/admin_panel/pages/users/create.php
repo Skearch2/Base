@@ -62,15 +62,6 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="password" data-toggle="m-popover" data-content="Password should be alphanumeric and range from 8 to 15." class="col-2 col-form-label"><mark>Password</mark>
-										<font color="red"><sup>*</sup></font>
-									</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="password" value="">
-										<span class="m-form__help">Note: Password is Visible</span>
-									</div>
-								</div>
-								<div class="form-group m-form__group row">
 									<label for="email" class="col-2 col-form-label">Email<font color="red"><sup>*</sup></font></label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="email" value="<?= set_value('email') ?>">
@@ -129,7 +120,7 @@ $this->load->view('admin_panel/templates/subheader');
 									<div class="form-group m-form__group row">
 										<label for="phone" class="col-2 col-form-label">Phone No.</label>
 										<div class="col-7">
-											<input class="form-control m-input" type="text" name="phone" value="<?= set_value('phone') ?>">
+											<input class="form-control m-input" type="text" name="phone" id="phone" value="<?= set_value('phone') ?>">
 										</div>
 									</div>
 									<div class="form-group m-form__group row">
@@ -271,6 +262,11 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
+	// Mask phone field to US number format
+	$("#phone").inputmask("mask", {
+		mask: "(999) 999-9999"
+	});
+
 	// settings for brand search
 	var options = {
 

@@ -364,12 +364,9 @@ $this->load->view('admin_panel/templates/close_html');
 		}
 	}
 
-	;
 	jQuery(document).ready(function() {
-			DatatablesDataSourceAjaxServer.init()
-		}
-
-	);
+		DatatablesDataSourceAjaxServer.init()
+	});
 </script>
 
 <!-- Sidemenu class -->

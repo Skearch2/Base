@@ -46,4 +46,9 @@ $bs   = $this->config->item('bootstrap_theme');
   <script src="<?= base_url('assets/js/easyautocomplete/jquery.easy-autocomplete.min.js') ?>"></script>
   <script src="<?= base_url('assets/js/bootstrap-fileinput/fileinput.js') ?>"></script>
   <script src="<?= base_url('assets/js/bootstrap-fileinput/theme.js') ?>"></script>
+
+
+  <!-- Sweet Alert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </head>

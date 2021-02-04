@@ -83,7 +83,6 @@ class Users extends MY_Controller
         } else {
 
             $this->form_validation->set_rules('username', 'Username', 'required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']|trim');
-            $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email|trim');
 
             if (in_array($group, array(1, 2, 3))) {
@@ -104,7 +103,7 @@ class Users extends MY_Controller
                     $this->form_validation->set_rules('key_member', 'Key Member', 'required');
                 }
                 if (strlen($this->input->post('phone'))) {
-                    $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
+                    $this->form_validation->set_rules('phone', 'Phone', 'trim|required|callback_validate_phone');
                 }
                 $this->form_validation->set_rules('address1', 'Address 1', 'trim');
                 $this->form_validation->set_rules('address2', 'Address 2', 'trim');
@@ -133,7 +132,7 @@ class Users extends MY_Controller
             } else {
 
                 $username = $this->input->post('username');
-                $password = $this->input->post('password');
+                $password = base64_encode(random_bytes(10)); // random 14 characters
                 $email = $this->input->post('email');
 
                 // only show to admin, editor, and brand member groups
@@ -147,7 +146,7 @@ class Users extends MY_Controller
                 // only show to admin, editor, and brand member groups
                 if (in_array($group, array(1, 2, 3))) {
                     // $additional_data['organization'] = $this->input->post('organization');
-                    $additional_data['phone'] = $this->input->post('phone');
+                    $additional_data['phone'] = preg_replace("/[^0-9]/", "", $this->input->post('phone'));
                     $additional_data['address1'] = $this->input->post('address1');
                     $additional_data['address2'] = $this->input->post('address2');
                     $additional_data['city'] = $this->input->post('city');
@@ -510,7 +509,7 @@ class Users extends MY_Controller
                     $this->form_validation->set_rules('key_member', 'Key Member', 'required');
                 }
                 if (strlen($this->input->post('phone'))) {
-                    $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
+                    $this->form_validation->set_rules('phone', 'Phone', 'trim|required|callback_validate_phone');
                 }
                 $this->form_validation->set_rules('address1', 'Address 1', 'trim');
                 $this->form_validation->set_rules('address2', 'Address 2', 'trim');
@@ -580,7 +579,7 @@ class Users extends MY_Controller
                 // only show to admin, editor, and brand member groups
                 if (in_array($group, array(1, 2, 3))) {
                     // $user_data['organization'] = $this->input->post('organization');
-                    $user_data['phone'] = $this->input->post('phone');
+                    $user_data['phone'] = preg_replace("/[^0-9]/", "", $this->input->post('phone'));
                     $user_data['address1'] = $this->input->post('address1');
                     $user_data['address2'] = $this->input->post('address2');
                     $user_data['city'] = $this->input->post('city');
@@ -674,5 +673,21 @@ class Users extends MY_Controller
         }
 
         return TRUE;
+    }
+
+    /**
+     * Validates US phone numnber
+     *
+     * @return bool
+     */
+    public function validate_phone()
+    {
+        $phone = preg_replace("/[^0-9]/", "", $this->input->post('phone'));
+        if (strlen($phone) != 10) {
+            $this->form_validation->set_message('validate_phone', 'You have entered invalid Phone number.');
+            return false;
+        } else {
+            return true;
+        }
     }
 }
