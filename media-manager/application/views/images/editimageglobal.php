@@ -50,8 +50,7 @@ $basedomain = $this->config->item('base_domain');
   <?php if (strcasecmp($image->{$imediaurl}, '#')) : ?>
     <iframe width="590" height="300" src="https://www.youtube.com/embed/<?= $image->{$imediaurl} ?>?&rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="<?= $css; ?>"></iframe>
   <?php else : ?>
-    <?php $is_video = substr(strtolower($image->{$ifile}), -3) == 'mp4' ? 1 : 0 ?>
-    <?php if ($is_video) : ?>
+    <?php if (substr(strtolower($image->{$ifile}), -3) == 'mp4') : ?>
       <video class="<?= $css; ?>" controls>
         <source src="<?= $image->{$ifile} ?>" type="video/mp4">
         Unable to play video, incompatible browser.

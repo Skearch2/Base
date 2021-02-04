@@ -214,6 +214,7 @@ class Ion_auth
     /**
      * register
      *
+     * @param boolean $self     1 = register account for user by user themself, 0 = register account for the user by staff  
      * @param string $identity
      * @param string $password
      * @param string $email
@@ -225,7 +226,7 @@ class Ion_auth
      *                        if the operation failed.
      * @author Mathew
      */
-    public function register($identity, $password, $email, $additional_data = [], $group_ids = [])
+    public function register($self_register, $identity, $password, $email, $additional_data = [], $group_ids = [])
     {
         $this->ion_auth_model->trigger_events('pre_account_creation');
 
@@ -265,10 +266,17 @@ class Ion_auth
             $identity = $this->config->item('identity', 'ion_auth');
             $user = $this->ion_auth_model->user($id)->row();
 
+            if ($self_register) {
+                $activation_link = site_url() . "myskearch/auth/activate/id/$user->id/code/$activation_code";
+            } else {
+                $activation_link = site_url() . "myskearch/auth/activate/action/delegate/id/$user->id/code/$activation_code";
+            }
+
             $data = [
                 'email' => $user->email,
-                'activation_link' => site_url() . "myskearch/auth/activate/$user->id/$activation_code",
+                'activation_link' => $activation_link
             ];
+
             if (!$this->config->item('use_ci_email', 'ion_auth')) {
                 $this->ion_auth_model->trigger_events(['post_account_creation', 'post_account_creation_successful', 'activation_email_successful']);
                 $this->set_message('activation_email_successful');

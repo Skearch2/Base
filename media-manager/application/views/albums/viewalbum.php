@@ -69,103 +69,117 @@ if ($albumtype === $alb_umbrella) {
         </tr>
       </thead>
       <tbody>
-        <?php
-        if (sizeof($mediaboxa_images['vals']) <= 11) {
-          echo  '<tr>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          echo  '<td style=\'text-align:right\'>No Media</td>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          echo  '<td></td>';
-          echo '</tr>';
-        } else {
-          $arr = $mediaboxa_images;
-
-          // initialize the HTML storage variable and the images storage array
-          $mediaboxa_images = array();
-
-          if (sizeof($arr['index']['ITEM']) == 2) {
-            $word = 'IMAGE';
-            $level = 4;
-          } else {
-            $word = 'ITEM';
-            $level = 5;
-          }
-
-          foreach ($arr['vals'] as $val) {
-
-            // Initialize the data array if on a <item> element
-            if ($val['tag'] == $word && $val['type'] == 'open' && $val['level'] == $level) {
-              $mediaboxa_images = array();
-            }
-
-            // Add the element to the data array if the right element
-            if ($val['type'] == 'complete' && $val['level'] == $level + 1) {
-              print_r($value);
-              $value = (isset($val['value']) ? $val['value'] : 'unknown');
-              $mediaboxa_images[strtolower($val['tag'])] = $value;
-            }
-
-            // echo "<pre>";
-            // print_r($mediaboxa_images);
-            // die();
-
-            // On the </item>, build the html
-            if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
-
-              // check if the media is a video (only mp4 format)
-              $is_video = substr(strtolower($mediaboxa_images[$ifile]), -3) == 'mp4' ? 1 : 0;
-
-              echo ($archived == 0 ? "<tr style='cursor: grab;'>" : "<tr>") . PHP_EOL;
-              echo  "<td style='display: none'>$mediaboxa_images[$iid]</td>" . PHP_EOL;
-              echo  "<td>$mediaboxa_images[$ipriority]</td>" . PHP_EOL;
-              echo  "<td>$mediaboxa_images[$ititle]</td>" . PHP_EOL;
-              echo  "<td>$mediaboxa_images[$idesc]</td>" . PHP_EOL;
-              echo  '<td>' . PHP_EOL;
-              if ($is_video) {
-                echo '<i title="Video" class="fas fa-video"></i>';
-              } else {
-                echo '<img src="' . $mediaboxa_images[$ifile] . '" alt="No Media" id="image_' . $mediaboxa_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
-              }
-              echo  '</td>' . PHP_EOL;
-              echo  "<td>$mediaboxa_images[$iclicks]</td>" . PHP_EOL;
-              echo  "<td>$mediaboxa_images[$iimp]</td>" . PHP_EOL;
-              echo  '<td>' . PHP_EOL;
-        ?>
-              <input type="number" onchange="updateMediaDuration(<?= $mediaboxa_images[$iid] ?>,$(this).val())" value=<?= $mediaboxa_images[$iduration] ?> style="width:60%">
+        <?php if (!(array) $mediaboxa_images) : ?>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style='text-align:right'>No Media</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        <?php else : ?>
+          <?php if (isset($mediaboxa_images->item->item)) : ?>
+            <?php foreach ($mediaboxa_images->item->item as $image) : ?>
               <?php
-              echo  '</td>' . PHP_EOL;
-              echo  '<td>' . PHP_EOL;
-              if ($mediaboxa_images[$istatus] == 1) : ?>
-                <label class="switch"><input type="checkbox" onclick="toggleMediaStatus(<?= $mediaboxa_images[$iid] ?>)" checked><span class="slider round"></span></label>
-              <?php else : ?>
-                <label class="switch"><input type="checkbox" onclick="toggleMediaStatus(<?= $mediaboxa_images[$iid] ?>)"><span class="slider round"></span></label>
-              <?php endif;
-              echo  "<td>$mediaboxa_images[$idate_modified]</td>" . PHP_EOL;
-              echo  "<td>$mediaboxa_images[$idate_created]</td>" . PHP_EOL;
-              echo  '<td>' . PHP_EOL;
-              echo  '<td>' . PHP_EOL;
+              // check if the media is a video (only mp4 format)
+              $is_video = substr(strtolower($image->$ifile), -3) == 'mp4' ? 1 : 0;
               ?>
-              <a href="#" onclick="viewMedia('<?= $mediaboxa_images[$ifile] ?>',<?= $is_video ?>);" title="View Media" class="fas fa-eye"></a>&nbsp;
-        <?php
-              echo '&nbsp;';
-              echo '&nbsp;';
-              echo   '<a href="' . base_url("$main/editimageglobal") . '/' . $mediaboxa_images[$iid] . '" title="Edit Media Details" class="fas fa-edit"></a>&nbsp;' . PHP_EOL;
-              echo '&nbsp;';
-              echo '&nbsp;';
-              echo   '<a href="' . base_url("$main/deleteimageglobal") . '/' . $mediaboxa_images[$iid] . '" title="Archive Media" class="fas fa-archive"></a>&nbsp;' . PHP_EOL;
-              echo  '</td>' . PHP_EOL;
-              echo '</tr>' . PHP_EOL;
-            }
-          }
-        }
-        ?>
+              <?php if ($archived == 0) : ?>
+                <tr style='cursor: grab;'>
+                <?php else : ?>
+                <tr>
+                <?php endif ?>
+                <td style='display: none'><?= $image->$iid ?></td>
+                <td><?= $image->$ipriority ?></td>
+                <td><?= $image->$ititle ?></td>
+                <td><?= $image->$idesc ?></td>
+                <!-- <td><?= $image->$ibrandid ?></td> -->
+                <td>
+                  <?php if ($is_video) : ?>
+                    <i title="Video" class="fas fa-video"></i>
+                  <?php else : ?>
+                    <img src=<?= $image->$ifile ?> alt="No Media" id="image_<?= $image->$iid ?>" class="<?= $css ?>">
+                  <?php endif ?>
+                </td>
+                <td><?= $image->$iclicks ?></td>
+                <td><?= $image->$iimp ?></td>
+                <td><input type="number" onchange="updateMediaDuration(<?= $image->$iid ?>,$(this).val())" value=<?= $image->$iduration ?> style="width:60%"></td>
+                <td>
+                  <?php if ($image->$istatus) : ?>
+                    <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" checked <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                  <?php else : ?>
+                    <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                  <?php endif ?>
+                <td><?= $image->$idate_modified ?></td>
+                <td><?= $image->$idate_created ?> </td>
+                </td>
+                <td>
+                  <a href="#" onclick="viewMedia('<?= $image->$ifile ?>',<?= $is_video ?>)" title="View Media" class="fas fa-eye"></a>&nbsp;
+                  <a href="<?= base_url("$main/editimageglobal") . '/' . $image->$iid ?>" title="Edit Media Details" class="fas fa-edit"></a>&nbsp;
+                  <?php if ($archived == 0) : ?>
+                    <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Archive Media" class="fas fa-archive"></a>&nbsp;
+                  <?php else : ?>
+                    <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Restore Media" class="fas fa-undo-alt"></a>
+                    <a href="<?= base_url("$main/deleteimageglobal") . '/' . $image->$iid ?>" title="Delete Media" class="fas fa-trash"></a>
+                  <?php endif ?>
+                </td>
+                </tr>
+              <?php endforeach ?>
+            <?php else : ?>
+              <?php
+              // reassigning for easier use
+              $image = $mediaboxa_images->item;
+              // check if the media is a video (only mp4 format)
+              $is_video = substr(strtolower($image->$ifile), -3) == 'mp4' ? 1 : 0;
+              ?>
+              <?php if ($archived == 0) : ?>
+                <tr style='cursor: grab;'>
+                <?php else : ?>
+                <tr>
+                <?php endif ?>
+                <td style='display: none'><?= $image->$iid ?></td>
+                <td><?= $image->$ipriority ?></td>
+                <td><?= $image->$ititle ?></td>
+                <td><?= $image->$idesc ?></td>
+                <!-- <td><?= $image->$ibrandid ?></td> -->
+                <td>
+                  <?php if ($is_video) : ?>
+                    <i title="Video" class="fas fa-video"></i>
+                  <?php else : ?>
+                    <img src=<?= $image->$ifile ?> alt="No Media" id="image_<?= $image->$iid ?>" class="<?= $css ?>">
+                  <?php endif ?>
+                </td>
+                <td><?= $image->$iclicks ?></td>
+                <td><?= $image->$iimp ?></td>
+                <td><input type="number" onchange="updateMediaDuration(<?= $image->$iid ?>,$(this).val())" value=<?= $image->$iduration ?> style="width:60%"></td>
+                <td>
+                  <?php if ($image->$istatus) : ?>
+                    <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" checked <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                  <?php else : ?>
+                    <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                  <?php endif ?>
+                <td><?= $image->$idate_modified ?></td>
+                <td><?= $image->$idate_created ?> </td>
+                </td>
+                <td>
+                  <a href="#" onclick="viewMedia('<?= $image->$ifile ?>',<?= $is_video ?>)" title="View Media" class="fas fa-eye"></a>&nbsp;
+                  <a href="<?= base_url("$main/editimageglobal") . '/' . $image->$iid ?>" title="Edit Media Details" class="fas fa-edit"></a>&nbsp;
+                  <?php if ($archived == 0) : ?>
+                    <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Archive Media" class="fas fa-archive"></a>&nbsp;
+                  <?php else : ?>
+                    <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Restore Media" class="fas fa-undo-alt"></a>
+                    <a href="<?= base_url("$main/deleteimageglobal") . '/' . $image->$iid ?>" title="Delete Media" class="fas fa-trash"></a>
+                  <?php endif ?>
+                </td>
+                </tr>
+              <?php endif ?>
+            <?php endif ?>
       </tbody>
     </table>
   </div>
@@ -206,98 +220,117 @@ if ($albumtype === $alb_umbrella) {
           </tr>
         </thead>
         <tbody>
-          <?php
-          if (sizeof($mediaboxu_images['vals']) <= 10) {
-            echo '<tr>';
-            echo  '<td></td>';
-            echo  '<td></td>';
-            echo  '<td></td>';
-            echo  '<td></td>';
-            echo  '<td style=\'text-align:right\'>No Media</td>';
-            echo  '<td></td>';
-            echo  '<td></td>';
-            echo  '<td></td>';
-            echo  '<td></td>';
-            echo '</tr>';
-          } else {
-            $arr = $mediaboxu_images;
-
-            // initialize the HTML storage variable and the images storage array
-            $mediaboxu_images = array();
-
-            if (sizeof($arr['index']['ITEM']) == 2) {
-              $word = 'IMAGE';
-              $level = 4;
-            } else {
-              $word = 'ITEM';
-              $level = 5;
-            }
-
-            foreach ($arr['vals'] as $val) {
-
-              // Initialize the data array if on a <item> element
-              if ($val['tag'] == $word && $val['type'] == 'open' && $val['level'] == $level) {
-                $mediaboxu_images = array();
-              }
-
-              // Add the element to the data array if the right element
-              if ($val['type'] == 'complete' && $val['level'] == $level + 1) {
-                $value = (isset($val['value']) ? $val['value'] : 'unknown');
-                $mediaboxu_images[strtolower($val['tag'])] = $value;
-              }
-
-              // On the </item>, build the html
-              if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
-
-
-                // check if the media is a video (only mp4 format)
-                $is_video = substr(strtolower($mediaboxu_images[$ifile]), -3) == 'mp4' ? 1 : 0;
-
-                echo '<tr>' . PHP_EOL;
-                echo ($archived == 0 ? "<tr style='cursor: grab;'>" : "<tr>") . PHP_EOL;
-                echo  "<td style='display: none'>$mediaboxu_images[$iid]</td>" . PHP_EOL;
-                echo  "<td>$mediaboxu_images[$ipriority]</td>" . PHP_EOL;
-                echo  "<td>$mediaboxu_images[$ititle]</td>" . PHP_EOL;
-                echo  "<td>$mediaboxu_images[$idesc]</td>" . PHP_EOL;
-                echo  '<td>' . PHP_EOL;
-                if ($is_video) {
-                  echo '<i title="Video" class="fas fa-video"></i>';
-                } else {
-                  echo '<img src="' . $mediaboxu_images[$ifile] . '" alt="No Media" id="image_' . $mediaboxu_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
-                }
-                echo  '</td>' . PHP_EOL;
-                echo  "<td>$mediaboxu_images[$iclicks]</td>" . PHP_EOL;
-                echo  "<td>$mediaboxu_images[$iimp]</td>" . PHP_EOL;
-                echo  '<td>' . PHP_EOL;
-          ?>
-                <input type="number" onchange="updateMediaDuration(<?= $mediaboxu_images[$iid] ?>,$(this).val())" value=<?= $mediaboxu_images[$iduration] ?> style="width:60%">
+          <?php if (!(array) $mediaboxu_images) : ?>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td style='text-align:right'>No Media</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          <?php else : ?>
+            <?php if (isset($mediaboxu_images->item->item)) : ?>
+              <?php foreach ($mediaboxu_images->item->item as $image) : ?>
                 <?php
-                echo  '</td>' . PHP_EOL;
-                echo  '<td>' . PHP_EOL;
-                if ($mediaboxu_images[$istatus] == 1) : ?>
-                  <label class="switch"><input type="checkbox" onclick="toggleMediaStatus(<?= $mediaboxu_images[$iid] ?>)" checked><span class="slider round"></span></label>
-                <?php else : ?>
-                  <label class="switch"><input type="checkbox" onclick="toggleMediaStatus(<?= $mediaboxu_images[$iid] ?>)"><span class="slider round"></span></label>
-                <?php endif;
-                echo  "<td>$mediaboxu_images[$idate_modified]</td>" . PHP_EOL;
-                echo  "<td>$mediaboxu_images[$idate_created]</td>" . PHP_EOL;
-                echo  '</td>' . PHP_EOL;
-                echo  '<td>' . PHP_EOL;
+                // check if the media is a video (only mp4 format)
+                $is_video = substr(strtolower($image->$ifile), -3) == 'mp4' ? 1 : 0;
                 ?>
-                <a href="#" onclick="viewMedia('<?= $mediaboxu_images[$ifile] ?>',<?= $is_video ?>);" title="View Media" class="fas fa-eye"></a>&nbsp;
-          <?php
-                echo '&nbsp;';
-                echo '&nbsp;';
-                echo   '<a href="' . base_url("$main/editimageglobal") . '/' . $mediaboxu_images[$iid] . '" title="Edit Media Details" class="fas fa-edit"></a>&nbsp;' . PHP_EOL;
-                echo '&nbsp;';
-                echo '&nbsp;';
-                echo   '<a href="' . base_url("$main/deleteimageglobal") . '/' . $mediaboxu_images[$iid] . '" title="Delete Media" class="fas fa-trash-alt"></a>&nbsp;' . PHP_EOL;
-                echo  '</td>' . PHP_EOL;
-                echo '</tr>' . PHP_EOL;
-              }
-            }
-          }
-          ?>
+                <?php if ($archived == 0) : ?>
+                  <tr style='cursor: grab;'>
+                  <?php else : ?>
+                  <tr>
+                  <?php endif ?>
+                  <td style='display: none'><?= $image->$iid ?></td>
+                  <td><?= $image->$ipriority ?></td>
+                  <td><?= $image->$ititle ?></td>
+                  <td><?= $image->$idesc ?></td>
+                  <!-- <td><?= $image->$ibrandid ?></td> -->
+                  <td>
+                    <?php if ($is_video) : ?>
+                      <i title="Video" class="fas fa-video"></i>
+                    <?php else : ?>
+                      <img src=<?= $image->$ifile ?> alt="No Media" id="image_<?= $image->$iid ?>" class="<?= $css ?>">
+                    <?php endif ?>
+                  </td>
+                  <td><?= $image->$iclicks ?></td>
+                  <td><?= $image->$iimp ?></td>
+                  <td><input type="number" onchange="updateMediaDuration(<?= $image->$iid ?>,$(this).val())" value=<?= $image->$iduration ?> style="width:60%"></td>
+                  <td>
+                    <?php if ($image->$istatus) : ?>
+                      <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" checked <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                    <?php else : ?>
+                      <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                    <?php endif ?>
+                  <td><?= $image->$idate_modified ?></td>
+                  <td><?= $image->$idate_created ?> </td>
+                  </td>
+                  <td>
+                    <a href="#" onclick="viewMedia('<?= $image->$ifile ?>',<?= $is_video ?>)" title="View Media" class="fas fa-eye"></a>&nbsp;
+                    <a href="<?= base_url("$main/editimageglobal") . '/' . $image->$iid ?>" title="Edit Media Details" class="fas fa-edit"></a>&nbsp;
+                    <?php if ($archived == 0) : ?>
+                      <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Archive Media" class="fas fa-archive"></a>&nbsp;
+                    <?php else : ?>
+                      <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Restore Media" class="fas fa-undo-alt"></a>
+                      <a href="<?= base_url("$main/deleteimageglobal") . '/' . $image->$iid ?>" title="Delete Media" class="fas fa-trash"></a>
+                    <?php endif ?>
+                  </td>
+                  </tr>
+                <?php endforeach ?>
+              <?php else : ?>
+                <?php
+                // reassigning for easier use
+                $image = $mediaboxu_images->item;
+                // check if the media is a video (only mp4 format)
+                $is_video = substr(strtolower($image->$ifile), -3) == 'mp4' ? 1 : 0;
+                ?>
+                <?php if ($archived == 0) : ?>
+                  <tr style='cursor: grab;'>
+                  <?php else : ?>
+                  <tr>
+                  <?php endif ?>
+                  <td style='display: none'><?= $image->$iid ?></td>
+                  <td><?= $image->$ipriority ?></td>
+                  <td><?= $image->$ititle ?></td>
+                  <td><?= $image->$idesc ?></td>
+                  <!-- <td><?= $image->$ibrandid ?></td> -->
+                  <td>
+                    <?php if ($is_video) : ?>
+                      <i title="Video" class="fas fa-video"></i>
+                    <?php else : ?>
+                      <img src=<?= $image->$ifile ?> alt="No Media" id="image_<?= $image->$iid ?>" class="<?= $css ?>">
+                    <?php endif ?>
+                  </td>
+                  <td><?= $image->$iclicks ?></td>
+                  <td><?= $image->$iimp ?></td>
+                  <td><input type="number" onchange="updateMediaDuration(<?= $image->$iid ?>,$(this).val())" value=<?= $image->$iduration ?> style="width:60%"></td>
+                  <td>
+                    <?php if ($image->$istatus) : ?>
+                      <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" checked <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                    <?php else : ?>
+                      <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                    <?php endif ?>
+                  <td><?= $image->$idate_modified ?></td>
+                  <td><?= $image->$idate_created ?> </td>
+                  </td>
+                  <td>
+                    <a href="#" onclick="viewMedia('<?= $image->$ifile ?>',<?= $is_video ?>)" title="View Media" class="fas fa-eye"></a>&nbsp;
+                    <a href="<?= base_url("$main/editimageglobal") . '/' . $image->$iid ?>" title="Edit Media Details" class="fas fa-edit"></a>&nbsp;
+                    <?php if ($archived == 0) : ?>
+                      <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Archive Media" class="fas fa-archive"></a>&nbsp;
+                    <?php else : ?>
+                      <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Restore Media" class="fas fa-undo-alt"></a>
+                      <a href="<?= base_url("$main/deleteimageglobal") . '/' . $image->$iid ?>" title="Delete Media" class="fas fa-trash"></a>
+                    <?php endif ?>
+                  </td>
+                  </tr>
+                <?php endif ?>
+              <?php endif ?>
         </tbody>
       </table>
     </div><!-- /.col-md-6 -->
@@ -365,97 +398,117 @@ if ($albumtype === $alb_umbrella) {
           </tr>
         </thead>
         <tbody>
-          <?php
-          if (sizeof($mediaboxb_images['vals']) <= 10) {
-            echo '<tr>';
-            echo  '<td></td>';
-            echo  '<td></td>';
-            echo  '<td></td>';
-            echo  '<td></td>';
-            echo  '<td style=\'text-align:right\'>No Media</td>';
-            echo  '<td></td>';
-            echo  '<td></td>';
-            echo  '<td></td>';
-            echo  '<td></td>';
-            echo '</tr>';
-          } else {
-            $arr = $mediaboxb_images;
-
-            // initialize the HTML storage variable and the images storage array
-            $mediaboxu_images = array();
-
-            if (sizeof($arr['index']['ITEM']) == 2) {
-              $word = 'IMAGE';
-              $level = 4;
-            } else {
-              $word = 'ITEM';
-              $level = 5;
-            }
-
-            foreach ($arr['vals'] as $val) {
-
-              // Initialize the data array if on a <item> element
-              if ($val['tag'] == $word && $val['type'] == 'open' && $val['level'] == $level) {
-                $mediaboxb_images = array();
-              }
-
-              // Add the element to the data array if the right element
-              if ($val['type'] == 'complete' && $val['level'] == $level + 1) {
-                $value = (isset($val['value']) ? $val['value'] : 'unknown');
-                $mediaboxb_images[strtolower($val['tag'])] = $value;
-              }
-
-              // On the </item>, build the html
-              if ($val['tag'] == $word && $val['type'] == 'close' && $val['level'] == $level) {
-
-                // check if the media is a video (only mp4 format)
-                $is_video = substr(strtolower($mediaboxb_images[$ifile]), -3) == 'mp4' ? 1 : 0;
-
-                echo '<tr>' . PHP_EOL;
-                echo ($archived == 0 ? "<tr style='cursor: grab;'>" : "<tr>") . PHP_EOL;
-                echo  "<td style='display: none'>$mediaboxb_images[$iid]</td>" . PHP_EOL;
-                echo  "<td>$mediaboxb_images[$ipriority]</td>" . PHP_EOL;
-                echo  "<td>$mediaboxb_images[$ititle]</td>" . PHP_EOL;
-                echo  "<td>$mediaboxb_images[$idesc]</td>" . PHP_EOL;
-                echo  '<td>' . PHP_EOL;
-                if ($is_video) {
-                  echo '<i title="Video" class="fas fa-video"></i>';
-                } else {
-                  echo '<img src="' . $mediaboxb_images[$ifile] . '" alt="No Media" id="image_' . $mediaboxb_images[$iid] . '" class="' . $css . '">' . PHP_EOL;
-                }
-                echo  '</td>' . PHP_EOL;
-                echo  "<td>$mediaboxb_images[$iclicks]</td>" . PHP_EOL;
-                echo  "<td>$mediaboxb_images[$iimp]</td>" . PHP_EOL;
-                echo  '<td>' . PHP_EOL;
-          ?>
-                <input type="number" onchange="updateMediaDuration(<?= $mediaboxb_images[$iid] ?>,$(this).val())" value=<?= $mediaboxb_images[$iduration] ?> style="width:60%">
+          <?php if (!(array) $mediaboxb_images) : ?>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td style='text-align:right'>No Media</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          <?php else : ?>
+            <?php if (isset($mediaboxb_images->item->item)) : ?>
+              <?php foreach ($mediaboxb_images->item->item as $image) : ?>
                 <?php
-                echo  '</td>' . PHP_EOL;
-                echo  '<td>' . PHP_EOL;
-                if ($mediaboxb_images[$istatus] == 1) : ?>
-                  <label class="switch"><input type="checkbox" onclick="toggleMediaStatus(<?= $mediaboxb_images[$iid] ?>)" checked><span class="slider round"></span></label>
-                <?php else : ?>
-                  <label class="switch"><input type="checkbox" onclick="toggleMediaStatus(<?= $mediaboxb_images[$iid] ?>)"><span class="slider round"></span></label>
-                <?php endif;
-                echo  "<td>$mediaboxb_images[$idate_modified]</td>" . PHP_EOL;
-                echo  "<td>$mediaboxb_images[$idate_created]</td>" . PHP_EOL;
-                echo  '</td>' . PHP_EOL;
-                echo  '<td>' . PHP_EOL;
+                // check if the media is a video (only mp4 format)
+                $is_video = substr(strtolower($image->$ifile), -3) == 'mp4' ? 1 : 0;
                 ?>
-                <a href="#" onclick="viewMedia('<?= $mediaboxb_images[$ifile] ?>',<?= $is_video ?>);" title="View Media" class="fas fa-eye"></a>&nbsp;
-          <?php
-                echo '&nbsp;';
-                echo '&nbsp;';
-                echo   '<a href="' . base_url("$main/editimageglobal") . '/' . $mediaboxb_images[$iid] . '" title="Edit Media Details" class="fas fa-edit"></a>&nbsp;' . PHP_EOL;
-                echo '&nbsp;';
-                echo '&nbsp;';
-                echo   '<a href="' . base_url("$main/deleteimageglobal") . '/' . $mediaboxb_images[$iid] . '" title="Delete Media" class="fas fa-trash-alt"></a>&nbsp;' . PHP_EOL;
-                echo  '</td>' . PHP_EOL;
-                echo '</tr>' . PHP_EOL;
-              }
-            }
-          }
-          ?>
+                <?php if ($archived == 0) : ?>
+                  <tr style='cursor: grab;'>
+                  <?php else : ?>
+                  <tr>
+                  <?php endif ?>
+                  <td style='display: none'><?= $image->$iid ?></td>
+                  <td><?= $image->$ipriority ?></td>
+                  <td><?= $image->$ititle ?></td>
+                  <td><?= $image->$idesc ?></td>
+                  <!-- <td><?= $image->$ibrandid ?></td> -->
+                  <td>
+                    <?php if ($is_video) : ?>
+                      <i title="Video" class="fas fa-video"></i>
+                    <?php else : ?>
+                      <img src=<?= $image->$ifile ?> alt="No Media" id="image_<?= $image->$iid ?>" class="<?= $css ?>">
+                    <?php endif ?>
+                  </td>
+                  <td><?= $image->$iclicks ?></td>
+                  <td><?= $image->$iimp ?></td>
+                  <td><input type="number" onchange="updateMediaDuration(<?= $image->$iid ?>,$(this).val())" value=<?= $image->$iduration ?> style="width:60%"></td>
+                  <td>
+                    <?php if ($image->$istatus) : ?>
+                      <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" checked <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                    <?php else : ?>
+                      <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                    <?php endif ?>
+                  <td><?= $image->$idate_modified ?></td>
+                  <td><?= $image->$idate_created ?> </td>
+                  </td>
+                  <td>
+                    <a href="#" onclick="viewMedia('<?= $image->$ifile ?>',<?= $is_video ?>)" title="View Media" class="fas fa-eye"></a>&nbsp;
+                    <a href="<?= base_url("$main/editimageglobal") . '/' . $image->$iid ?>" title="Edit Media Details" class="fas fa-edit"></a>&nbsp;
+                    <?php if ($archived == 0) : ?>
+                      <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Archive Media" class="fas fa-archive"></a>&nbsp;
+                    <?php else : ?>
+                      <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Restore Media" class="fas fa-undo-alt"></a>
+                      <a href="<?= base_url("$main/deleteimageglobal") . '/' . $image->$iid ?>" title="Delete Media" class="fas fa-trash"></a>
+                    <?php endif ?>
+                  </td>
+                  </tr>
+                <?php endforeach ?>
+              <?php else : ?>
+                <?php
+                // reassigning for easier use
+                $image = $mediaboxb_images->item;
+                // check if the media is a video (only mp4 format)
+                $is_video = substr(strtolower($image->$ifile), -3) == 'mp4' ? 1 : 0;
+                ?>
+                <?php if ($archived == 0) : ?>
+                  <tr style='cursor: grab;'>
+                  <?php else : ?>
+                  <tr>
+                  <?php endif ?>
+                  <td style='display: none'><?= $image->$iid ?></td>
+                  <td><?= $image->$ipriority ?></td>
+                  <td><?= $image->$ititle ?></td>
+                  <td><?= $image->$idesc ?></td>
+                  <!-- <td><?= $image->$ibrandid ?></td> -->
+                  <td>
+                    <?php if ($is_video) : ?>
+                      <i title="Video" class="fas fa-video"></i>
+                    <?php else : ?>
+                      <img src=<?= $image->$ifile ?> alt="No Media" id="image_<?= $image->$iid ?>" class="<?= $css ?>">
+                    <?php endif ?>
+                  </td>
+                  <td><?= $image->$iclicks ?></td>
+                  <td><?= $image->$iimp ?></td>
+                  <td><input type="number" onchange="updateMediaDuration(<?= $image->$iid ?>,$(this).val())" value=<?= $image->$iduration ?> style="width:60%"></td>
+                  <td>
+                    <?php if ($image->$istatus) : ?>
+                      <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" checked <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                    <?php else : ?>
+                      <label class="switch"><input type="checkbox" onclick="setMediaActiveStatus(<?= $image->$iid ?>)" <?= ($archived == 0 ?: 'disabled'); ?>><span class="slider round"></span></label>
+                    <?php endif ?>
+                  <td><?= $image->$idate_modified ?></td>
+                  <td><?= $image->$idate_created ?> </td>
+                  </td>
+                  <td>
+                    <a href="#" onclick="viewMedia('<?= $image->$ifile ?>',<?= $is_video ?>)" title="View Media" class="fas fa-eye"></a>&nbsp;
+                    <a href="<?= base_url("$main/editimageglobal") . '/' . $image->$iid ?>" title="Edit Media Details" class="fas fa-edit"></a>&nbsp;
+                    <?php if ($archived == 0) : ?>
+                      <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Archive Media" class="fas fa-archive"></a>&nbsp;
+                    <?php else : ?>
+                      <a href="<?= base_url("$main/archiveimageglobal") . '/' . $image->$iid ?>" title="Restore Media" class="fas fa-undo-alt"></a>
+                      <a href="<?= base_url("$main/deleteimageglobal") . '/' . $image->$iid ?>" title="Delete Media" class="fas fa-trash"></a>
+                    <?php endif ?>
+                  </td>
+                  </tr>
+                <?php endif ?>
+              <?php endif ?>
         </tbody>
       </table>
     </div><!-- /.col-md-6 -->
