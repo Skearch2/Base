@@ -142,14 +142,12 @@ class Research extends MY_Controller
                 $this->form_validation->set_rules('display_url', 'Home Display', 'trim');
                 $this->form_validation->set_rules('url', 'URL', 'required|valid_url');
             } else if ($this->input->post('action') == 'submit') {
-                $this->form_validation->set_rules('title', 'Title', 'required|trim');
-                $this->form_validation->set_rules('description_short', 'Short Description', 'required|trim|max_length[85]');
-                $this->form_validation->set_rules('field_id', 'Field', 'required');
-                $this->form_validation->set_rules('priority', 'Priority', 'required');
+                $this->form_validation->set_rules('title', 'Title', 'trim|required');
+                $this->form_validation->set_rules('description_short', 'Short Description', 'trim|required|max_length[85]');
                 $this->form_validation->set_rules('display_url', 'Home Display', 'trim');
                 $this->form_validation->set_rules('url', 'URL', 'required|valid_url');
-                $this->form_validation->set_rules('enabled', 'Enabled', 'required');
-                $this->form_validation->set_rules('redirect', 'Redirect', 'required');
+                $this->form_validation->set_rules('field_id', 'Field', 'required');
+                $this->form_validation->set_rules('priority', 'Priority', 'required');
             }
 
             if ($this->form_validation->run() == true) {

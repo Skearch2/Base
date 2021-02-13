@@ -42,8 +42,7 @@ class Profile extends MY_Controller
     public function index()
     {
         $group = $this->ion_auth->get_users_groups()->row()->id;
-
-        $this->form_validation->set_rules('username', 'Username', 'trim|required|callback_username_check|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']');
+        $this->form_validation->set_rules('username', 'Username', 'trim|required|callback_validate_username|callback_username_check|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']');
         // only show to admin, editor, and brand member groups
         if (in_array($group, array(1, 2, 3))) {
             $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|alpha');
@@ -55,13 +54,18 @@ class Profile extends MY_Controller
         }
         // only show to admin, editor, and brand member groups
         if (in_array($group, array(1, 2, 3))) {
+            if (strlen($this->input->post('phone'))) {
+                $this->form_validation->set_rules('phone', 'Phone', 'trim|required|callback_validate_phone');
+            }
             $this->form_validation->set_rules('address1', 'Address Line 1', 'trim');
             $this->form_validation->set_rules('address2', 'Address Line 2', 'trim');
-            $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
             $this->form_validation->set_rules('city', 'City', 'trim');
-            $this->form_validation->set_rules('state', 'State', 'required');
-            $this->form_validation->set_rules('country', 'Country', 'required');
-            $this->form_validation->set_rules('zipcode', 'Zipcode', 'required|numeric|exact_length[5]');
+            if (strlen($this->input->post('state_other'))) {
+                $this->form_validation->set_rules('state_other', 'State/Province', 'trim|regex_match[/^([a-z ])+$/i]');
+            }
+            if (strlen($this->input->post('zipcode'))) {
+                $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
+            }
         }
 
         if ($this->form_validation->run() === false) {
@@ -102,17 +106,15 @@ class Profile extends MY_Controller
                 $data['address1'] = $this->input->post('address1');
                 $data['address2'] = $this->input->post('address2');
                 $data['city'] = $this->input->post('city');
-                $data['state'] = $this->input->post('state');
+                $data['state'] = empty($this->input->post('state_us')) ? $this->input->post('state_other') : $this->input->post('state_us');
                 $data['country'] = $this->input->post('country');
                 $data['zipcode'] = $this->input->post('zipcode');
             }
 
-            if ($this->ion_auth->update($this->user_id, $data)) {
-
+            if ($this->User->update($this->user_id, $data)) {
                 $this->session->set_flashdata('success', $this->ion_auth->messages());
                 redirect('myskearch/profile');
             } else {
-
                 $this->session->set_flashdata('error', $this->ion_auth->errors());
                 redirect('myskearch/profile');
             }
@@ -137,5 +139,52 @@ class Profile extends MY_Controller
         }
 
         return TRUE;
+    }
+
+    /**
+     * Validates address
+     *
+     * @return void
+     */
+    // function validate_address()
+    // {
+    //     if ($this->input->post('country') || $this->input->post('state') || $this->input->post('city') || $this->input->post('address1')) {
+    //         return TRUE;
+    //     } else {
+    //         $this->form_validation->set_message('validate_either', 'Please enter atleast one of City , State or Country');
+    //         return FALSE;
+    //     }
+    // }
+
+    /**
+     * Validates US phone numnber
+     *
+     * @return bool
+     */
+    public function validate_phone()
+    {
+        $phone = preg_replace("/[^0-9]/", "", $this->input->post('phone'));
+        if (strlen($phone) != 10) {
+            $this->form_validation->set_message('validate_phone', 'The %s number entered is invalid.');
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Validates username
+     *
+     * @return bool
+     */
+    public function validate_username($username)
+    {
+        $result = preg_match('/ /', $username);
+        if ($result) {
+            $this->form_validation->set_message('validate_username', 'The %s cannot contain any space.');
+            return false;
+        } else {
+            return true;
+        }
     }
 }

@@ -175,8 +175,8 @@ $route['admin/users/get/lastname/(:any)']           = 'admin_panel/users/users/g
 $route['admin/users/group/id/(:num)']               = 'admin_panel/users/users/index/$1';
 
 // Groups
-$route['admin/users/group/create']             = 'admin_panel/users/groups/create';
-$route['admin/users/group/delete/id/(:num)']   = 'admin_panel/users/groups/delete/$1';
+// $route['admin/users/group/create']             = 'admin_panel/users/groups/create';
+// $route['admin/users/group/delete/id/(:num)']   = 'admin_panel/users/groups/delete/$1';
 $route['admin/users/group/update/id/(:num)']   = 'admin_panel/users/groups/update/$1';
 $route['admin/users/groups']                   = 'admin_panel/users/groups';
 $route['admin/users/groups/get']               = 'admin_panel/users/groups/get';
@@ -261,16 +261,19 @@ $route['admin/results/research/make_link/(:num)'] = 'admin_panel/results/researc
 */
 
 // Leads
-$route['admin/brands/leads']                      = 'admin_panel/brands/leads';
-$route['admin/brands/leads/create_user/(:num)']   = 'admin_panel/brands/leads/create_user/$1';
-$route['admin/brands/leads/get']                  = 'admin_panel/brands/leads/get';
-$route['admin/brands/leads/delete/(:num)']        = 'admin_panel/brands/leads/delete/$1';
+$route['admin/brands/leads']                                = 'admin_panel/brands/leads';
+$route['admin/brands/leads/id/(:num)/action/create/brand']  = 'admin_panel/brands/leads/create_brand/$1';
+$route['admin/brands/leads/id/(:num)/action/create/user']   = 'admin_panel/brands/leads/create_user/$1';
+$route['admin/brands/leads/get']                            = 'admin_panel/brands/leads/get';
+$route['admin/brands/leads/delete/id/(:num)']                  = 'admin_panel/brands/leads/delete/$1';
 
 // Brands
 $route['admin/brand/create']                    = 'admin_panel/brands/brands/create';
 $route['admin/brand/delete/id/(:num)']          = 'admin_panel/brands/brands/delete/$1';
 $route['admin/brand/get/id/(:num)']             = 'admin_panel/brands/brands/get/$1';
 $route['admin/brand/update/id/(:num)']          = 'admin_panel/brands/brands/update/$1';
+$route['admin/brand/members/id/(:num)']         = 'admin_panel/brands/brands/members/$1';
+$route['admin/brand/get/members/id/(:num)']     = 'admin_panel/brands/brands/get_members/$1';
 $route['admin/brands']                          = 'admin_panel/brands/brands';
 $route['admin/brands/get']                      = 'admin_panel/brands/brands/get';
 $route['admin/brands/search/(:any)']            = 'admin_panel/brands/brands/search/$1';

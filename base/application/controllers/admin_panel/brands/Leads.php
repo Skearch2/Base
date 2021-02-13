@@ -41,6 +41,66 @@ class Leads extends MY_Controller
     }
 
     /**
+     * Create brand from the lead
+     *  
+     * @param int $id Lead id
+     * @return void
+     */
+    public function create_brand($id)
+    {
+
+        if (!$this->ion_auth_acl->has_permission('brands_create') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+            $this->form_validation->set_rules('brand', 'Brand', 'trim|required|is_unique[skearch_brands.brand]');
+            $this->form_validation->set_rules('organization', 'Organization', 'trim|required');
+            $this->form_validation->set_rules('address1', 'Address Line 1', 'trim|required');
+            $this->form_validation->set_rules('address2', 'Address Line 2', 'trim');
+            $this->form_validation->set_rules('city', 'City', 'trim|required');
+            $this->form_validation->set_rules('state', 'State', 'trim|required');
+            $this->form_validation->set_rules('country', 'Country', 'trim|required');
+            $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]|required');
+
+            if ($this->form_validation->run() == false) {
+                $lead = $this->Leads->get($id);
+
+                if (!$lead) {
+                    error_404('admin');
+                    return;
+                }
+
+                $data['brand'] = $lead->brandname;
+
+                $data['states'] = $this->Util_model->get_state_list();
+                $data['countries'] = $this->Util_model->get_country_list();
+
+                $data['title'] = ucwords("create brand");
+                $this->load->view('admin_panel/pages/brands/leads/create_brand', $data);
+            } else {
+                $brand_data['brand'] = $this->input->post('brand');
+                $brand_data['organization'] = $this->input->post('organization');
+                $brand_data['address1'] = $this->input->post('address1');
+                $brand_data['address2'] = $this->input->post('address2');
+                $brand_data['city'] = $this->input->post('city');
+                $brand_data['state'] = $this->input->post('state');
+                $brand_data['country'] = $this->input->post('country');
+                $brand_data['zipcode'] = $this->input->post('zipcode');
+
+                $create = $this->Brand->create($brand_data);
+
+                if ($create) {
+                    $this->session->set_flashdata('brand_create_success', 1);
+                } else {
+                    $this->session->set_flashdata('brand_create_success', 0);
+                }
+                redirect("admin/brands/leads");
+            }
+        }
+    }
+
+    /**
      * Create brand user from the lead
      *  
      * @param int $id Lead id
@@ -84,6 +144,7 @@ class Leads extends MY_Controller
                 $data['lastname'] = ltrim($lead->name, $name[0] . ' ');
                 $data['email'] = $lead->email;
                 $data['phone'] = $lead->phone;
+                $data['brands'] = $this->Brand->get();
 
                 $data['states'] = $this->Util_model->get_state_list();
                 $data['countries'] = $this->Util_model->get_country_list();
@@ -113,14 +174,14 @@ class Leads extends MY_Controller
                 $create = $user_id = $this->User->create($username, $password, $email, $additional_data, array(3));
 
                 // link user to brand
-                $brand_id = $this->input->post('brand_id');
+                $brand = $this->input->post('brand');
                 $is_key_member = $this->input->post('key_member');
-                $this->Brand->link_user($user_id, $brand_id, $is_key_member);
+                $link = $this->Brand->link_user($user_id, $brand, $is_key_member);
 
-                if ($create) {
-                    $this->session->set_flashdata('create_success', 1);
+                if ($create && $link) {
+                    $this->session->set_flashdata('user_create_success', 1);
                 } else {
-                    $this->session->set_flashdata('create_success', 0);
+                    $this->session->set_flashdata('user_create_success', 0);
                 }
                 redirect("admin/brands/leads");
             }

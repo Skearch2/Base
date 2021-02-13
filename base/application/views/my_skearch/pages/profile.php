@@ -206,7 +206,9 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="username" class="col-2 col-form-label">Username</label>
+									<label for="username" data-toggle="m-popover" data-content="Username should not contain any space and be in range between 5 to 12." class="col-2 col-form-label m-label"><mark>Username</mark>
+										<font color="red"><sup>*</sup></font>
+									</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="username" value="<?= set_value('username', $this->session->userdata('username')) ?>">
 									</div>
@@ -251,7 +253,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									</div>
 								<?php endif ?>
 								<div class="form-group m-form__group row">
-									<label for="gender" class="col-2 col-form-label">Gender</label>
+									<label for="gender" class="col-2 col-form-label">Gender<font color="red"><sup>*</sup></font></label>
 									<div class="col-3">
 										<select class="form-control m-input" id="exampleSelect1" name="gender" disabled>
 											<option><?= $user->gender ?></option>
@@ -259,7 +261,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="age_group" class="col-2 col-form-label">Age Group</label>
+									<label for="age_group" class="col-2 col-form-label">Age Group<font color="red"><sup>*</sup></font></label>
 									<div class="col-3">
 										<select class="form-control m-input" id="exampleSelect1" name="age_group" disabled>
 											<option><?= $user->age_group ?></option>
@@ -276,7 +278,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									<div class="form-group m-form__group row">
 										<label for="phone" class="col-2 col-form-label">Phone No.</label>
 										<div class="col-7">
-											<input class="form-control m-input" type="text" name="phone" value="<?= set_value('phone', $user->phone) ?>">
+											<input class="form-control m-input" type="text" name="phone" id="phone" value="<?= set_value('phone', $user->phone) ?>">
 										</div>
 									</div>
 									<div class="form-group m-form__group row">
@@ -300,12 +302,15 @@ $this->load->view('my_skearch/templates/start_pagebody');
 										</div>
 									</div>
 									<div class="form-group m-form__group row">
-										<label for="state" class="col-2 col-form-label">State</label>
-										<div class="col-2">
-											<select class="form-control m-input" id="exampleSelect1" name="state">
-												<option value="<?= $user->state ?>" <?= set_select("state", $user->state, TRUE) ?>><?= $user->state ?></option>
+										<label for="state" class="col-2 col-form-label">State/Province</label>
+										<div class="col-7" id="field_state_other">
+											<input class="form-control m-input" type="text" name="state_other" value="<?= set_value('state', $user->state) ?>">
+										</div>
+										<div class="col-3" id="field_state_us">
+											<select class="form-control m-input" name="state_us">
+												<option value="" <?= set_select("state_us", "", TRUE) ?>>Select</option>
 												<?php foreach ($states as $state) : ?>
-													<option value="<?= $state->statecode; ?>" <?= set_select("state", $state->statecode) ?>><?= $state->statecode; ?></option>
+													<option value="<?= $state->statecode; ?>" <?= set_select("state_us", $state->statecode) ?>><?= $state->statecode; ?></option>
 												<?php endforeach; ?>
 											</select>
 										</div>
@@ -313,10 +318,10 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									<div class="form-group m-form__group row">
 										<label for="country" class="col-2 col-form-label">Country</label>
 										<div class="col-3">
-											<select class="form-control m-input" id="exampleSelect1" name="country">
-												<option value="<?= $user->country ?>" <?= set_select("country", $user->country, TRUE) ?>><?= $user->country ?></option>
+											<select class="form-control m-input" id="country" name="country">
+												<option value="" <?= set_select("country", "", TRUE) ?>>Select</option>
 												<?php foreach ($countries as $country) : ?>
-													<option value="<?= $country->country_name ?>" <?= set_select("country", $country->country_name) ?>><?= $country->country_name; ?></option>
+													<option value="<?= $country->country_name ?>" <?= set_select("country", $country->country_name) ?> <?= (strcmp($user->country, $country->country_name) == 0) ? "selected" : "" ?>><?= $country->country_name; ?></option>
 												<?php endforeach; ?>
 											</select>
 										</div>
@@ -370,6 +375,47 @@ $this->load->view('my_skearch/templates/scrolltop');
 
 // Load global JS files
 $this->load->view('my_skearch/templates/js_global');
+
+?>
+
+<script>
+	$(document).ready(function() {
+		// Mask phone field to US number format
+		$("#phone").inputmask("mask", {
+			mask: "(999) 999-9999"
+		});
+
+		// show US states dropdown for United States as country otherwise
+		// input field for states/province otherwise
+		if ($("#country").val().toLowerCase() == "united states") {
+			// $('input[name="state_other"]').val('');
+			$("#field_state_other").hide();
+			$('input[name="state_other"]').prop('disabled', true);
+			$("#field_state_us").show();
+		} else if ($("#country").val() == '') {
+			$("#field_state_other").hide();
+			$("#field_state_us").hide();
+		} else {
+			$("#field_state_us").hide();
+			$('input[name="state_us"]').prop('disabled', true);
+			$("#field_state_other").show();
+		}
+
+		$("#country").change(function() {
+			if ($(this).val().toLowerCase() == "united states") {
+				$("#field_state_other").hide();
+				$('input[name="state_other"]').prop('disabled', true);
+				$("#field_state_us").show();
+			} else {
+				$("#field_state_us").hide();
+				$('input[name="state_us"]').prop('disabled', true);
+				$("#field_state_other").show();
+			}
+		});
+	});
+</script>
+
+<?php
 
 // Close body and html
 $this->load->view('my_skearch/templates/close_html');

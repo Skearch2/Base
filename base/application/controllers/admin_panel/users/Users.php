@@ -81,14 +81,13 @@ class Users extends MY_Controller
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
-
-            $this->form_validation->set_rules('username', 'Username', 'required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']|trim');
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email|trim');
+            $this->form_validation->set_rules('username', 'Username', 'trim|required|is_unique[skearch_users.username]|callback_validate_username|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']', array('is_unique' => 'The %s is already taken'));
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
 
             if (in_array($group, array(1, 2, 3))) {
                 // only for admin, editor, and brand member groups
-                $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
-                $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
+                $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|alpha');
+                $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|alpha');
             }
 
             $this->form_validation->set_rules('gender', 'Gender', 'required');
@@ -96,20 +95,21 @@ class Users extends MY_Controller
 
             // only show to admin, editor, and brand member groups
             if (in_array($group, array(1, 2, 3))) {
-                // only show to brand member group
-                if (in_array($group, array(3))) {
-                    $this->form_validation->set_rules('brand', 'Brand', 'required');
-                    $this->form_validation->set_rules('brand_id', 'Brand ID', 'numeric');
-                    $this->form_validation->set_rules('key_member', 'Key Member', 'required');
-                }
                 if (strlen($this->input->post('phone'))) {
                     $this->form_validation->set_rules('phone', 'Phone', 'trim|required|callback_validate_phone');
                 }
                 $this->form_validation->set_rules('address1', 'Address 1', 'trim');
                 $this->form_validation->set_rules('address2', 'Address 2', 'trim');
                 $this->form_validation->set_rules('city', 'City', 'trim');
+                if (strlen($this->input->post('state_other'))) {
+                    $this->form_validation->set_rules('state_other', 'State/Province', 'trim|regex_match[/^([a-z ])+$/i]');
+                }
                 if (strlen($this->input->post('zipcode'))) {
                     $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
+                }
+                // only show to brand member group
+                if (in_array($group, array(3))) {
+                    $this->form_validation->set_rules('brand', 'Brand', 'required');
                 }
             }
             // only show to staff groups
@@ -118,6 +118,10 @@ class Users extends MY_Controller
             }
 
             if ($this->form_validation->run() == false) {
+
+                if (in_array($group, array(3))) {
+                    $data['brands'] = $this->Brand->get();
+                }
 
                 $data['group'] = $group;
 
@@ -150,7 +154,7 @@ class Users extends MY_Controller
                     $additional_data['address1'] = $this->input->post('address1');
                     $additional_data['address2'] = $this->input->post('address2');
                     $additional_data['city'] = $this->input->post('city');
-                    $additional_data['state'] = $this->input->post('state');
+                    $data['state'] = empty($this->input->post('state_us')) ? $this->input->post('state_other') : $this->input->post('state_us');
                     $additional_data['country'] = $this->input->post('country');
                     $additional_data['zipcode'] = $this->input->post('zipcode');
                 }
@@ -163,9 +167,9 @@ class Users extends MY_Controller
 
                 // link user to brand
                 if ($group == 3) {
-                    $brand_id = $this->input->post('brand_id');
+                    $brand = $this->input->post('brand');
                     $is_key_member = $this->input->post('key_member');
-                    $this->Brand->link_user($user_id, $brand_id, $is_key_member);
+                    $this->Brand->link_user($user_id, $brand, $is_key_member);
                 }
 
                 if ($create) {
@@ -489,12 +493,12 @@ class Users extends MY_Controller
             // get user group
             $group = $this->ion_auth->get_users_groups($id)->row()->id;
 
-            $this->form_validation->set_rules('username', 'Username', 'required|callback_username_check|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']|trim');
-            $this->form_validation->set_rules('email', 'Email', 'required|valid_email|callback_email_check|trim');
+            $this->form_validation->set_rules('username', 'Username', 'trim|required|callback_validate_username|callback_username_check|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']');
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_email_check');
             // only show to admin, editor, and brand member groups
             if (in_array($group, array(1, 2, 3))) {
-                $this->form_validation->set_rules('firstname', 'First Name', 'required|alpha|trim');
-                $this->form_validation->set_rules('lastname', 'Last Name', 'required|alpha|trim');
+                $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|alpha');
+                $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|alpha');
             }
             $this->form_validation->set_rules('gender', 'Gender', 'required');
             $this->form_validation->set_rules('age_group', 'Age group', 'required');
@@ -502,26 +506,26 @@ class Users extends MY_Controller
             // only show to admin, editor, and brand member groups
             if (in_array($group, array(1, 2, 3))) {
                 // $this->form_validation->set_rules('organization', 'Organization', 'trim');
-                // only show to brand member group
-                if (in_array($group, array(3))) {
-                    $this->form_validation->set_rules('brand', 'Brand', 'required');
-                    $this->form_validation->set_rules('brand_id', 'Brand ID', 'numeric');
-                    $this->form_validation->set_rules('key_member', 'Key Member', 'required');
-                }
                 if (strlen($this->input->post('phone'))) {
                     $this->form_validation->set_rules('phone', 'Phone', 'trim|required|callback_validate_phone');
                 }
-                $this->form_validation->set_rules('address1', 'Address 1', 'trim');
-                $this->form_validation->set_rules('address2', 'Address 2', 'trim');
+                $this->form_validation->set_rules('address1', 'Address Line 1', 'trim');
+                $this->form_validation->set_rules('address2', 'Address Line 2', 'trim');
                 $this->form_validation->set_rules('city', 'City', 'trim');
+                if (strlen($this->input->post('state_other'))) {
+                    $this->form_validation->set_rules('state_other', 'State/Province', 'trim|regex_match[/^([a-z ])+$/i]');
+                }
                 if (strlen($this->input->post('zipcode'))) {
                     $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
+                }
+                // only show to brand member group
+                if (in_array($group, array(3))) {
+                    $this->form_validation->set_rules('brand', 'Brand', 'required');
                 }
             }
             $this->form_validation->set_rules('group', 'Group', 'required');
 
             if ($this->form_validation->run() == false) {
-
                 $user = $this->User->get($id);
 
                 $data['id'] = $user->id;
@@ -553,10 +557,13 @@ class Users extends MY_Controller
                 $data['active'] = $user->active;
                 $data['group'] = $this->ion_auth->get_users_groups($id)->row();
 
+                if (in_array($group, array(3))) {
+                    $data['brand'] = $this->Brand->get_by_user($id);
+                    $data['brands'] = $this->Brand->get();
+                }
+
                 $data['states'] = $this->Util_model->get_state_list();
                 $data['countries'] = $this->Util_model->get_country_list();
-
-                $data['brand'] = $this->Brand->get_by_user($id);
 
                 $group_name =  $this->Group->get($group)->name;
                 $data['title'] = ucwords("edit {$group_name}");
@@ -583,7 +590,7 @@ class Users extends MY_Controller
                     $user_data['address1'] = $this->input->post('address1');
                     $user_data['address2'] = $this->input->post('address2');
                     $user_data['city'] = $this->input->post('city');
-                    $user_data['state'] = $this->input->post('state');
+                    $user_data['state'] = empty($this->input->post('state_us')) ? $this->input->post('state_other') : $this->input->post('state_us');
                     $user_data['country'] = $this->input->post('country');
                     $user_data['zipcode'] = $this->input->post('zipcode');
                 }
@@ -595,9 +602,9 @@ class Users extends MY_Controller
 
                 // link user to brand
                 if ($group == 3) {
-                    $brand_id = $this->input->post('brand_id');
+                    $brand = $this->input->post('brand');
                     $is_key_member = $this->input->post('key_member');
-                    $this->Brand->link_user($id, $brand_id, $is_key_member);
+                    $this->Brand->link_user($id, $brand, $is_key_member);
                 }
 
                 if ($update) {
@@ -635,7 +642,7 @@ class Users extends MY_Controller
                 $message = $this->parser->parse_string($template->body, $data);
 
                 $this->email->clear();
-                $this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+                $this->email->from($this->config->item('default_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
                 $this->email->to($user->email);
                 $this->email->subject($template->subject);
                 $this->email->message($message);
@@ -667,7 +674,7 @@ class Users extends MY_Controller
 
         if ($this->ion_auth->username_check($username)) {
             if ($this->User->get($id)->username !== $username) {
-                $this->form_validation->set_message('username_check', 'The username already exists.');
+                $this->form_validation->set_message('username_check', 'The %s already exists.');
                 return FALSE;
             }
         }
@@ -684,7 +691,23 @@ class Users extends MY_Controller
     {
         $phone = preg_replace("/[^0-9]/", "", $this->input->post('phone'));
         if (strlen($phone) != 10) {
-            $this->form_validation->set_message('validate_phone', 'You have entered invalid Phone number.');
+            $this->form_validation->set_message('validate_phone', 'The %s number entered is invalid.');
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Validates username
+     *
+     * @return bool
+     */
+    public function validate_username($username)
+    {
+        $result = preg_match('/ /', $username);
+        if ($result) {
+            $this->form_validation->set_message('validate_username', 'The %s cannot contain any space.');
             return false;
         } else {
             return true;

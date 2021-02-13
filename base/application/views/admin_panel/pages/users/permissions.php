@@ -52,7 +52,7 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<ul class="list-group col-9" style="margin:auto">
 										<?php foreach ($users_permissions as $acl) : ?>
-											<li class="list-group-item"><?php if ($this->ion_auth_acl->has_permission($acl['key'], $users_permissions)) : ?><i style="color:green" class="la la-check"></i><?php else : ?><i style="color:red" class="la la-close"></i><?php endif; ?>&emsp;<?= $acl['name']; ?><?php if ($acl['inherited']) : ?>&emsp;<i class="la la-group"></i><?php endif; ?></li>
+											<li class="list-group-item"><?php if ($this->ion_auth_acl->has_permission($acl['key'], $users_permissions)) : ?><i style="color:green" class="la la-check" title="Allow"></i><?php else : ?><i style="color:red" class="la la-close" title="Deny"></i><?php endif; ?>&emsp;<?= $acl['name']; ?><?php if ($acl['inherited']) : ?><i class="la la-group" style="float: right;" title="Inherited from Group"></i><?php endif; ?></li>
 										<?php endforeach; ?>
 									</ul>
 								</div>
@@ -64,7 +64,7 @@ $this->load->view('admin_panel/templates/subheader');
 													<th>Permission</th>
 													<th>Allow</th>
 													<th>Deny</th>
-													<th>Inherited From Group</th>
+													<th>Inherited from Group</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -78,7 +78,7 @@ $this->load->view('admin_panel/templates/subheader');
 														<?php endforeach; ?>
 													<?php else : ?>
 														<tr>
-															<td colspan="4">There are currently no permissions to manage, please add some permissions</td>
+															<td colspan="4">There are no permissions to manage.</td>
 														</tr>
 													<?php endif; ?>
 											</tbody>

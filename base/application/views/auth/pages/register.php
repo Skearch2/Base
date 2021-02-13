@@ -32,15 +32,15 @@ $this->load->view('auth/templates/head');
 						</div>
 						<?= form_open('', array('id' => 'form_signup', 'class' => 'm-login__form m-form m-form--fit')) ?>
 						<div class="form-group" id="btn_signup">
-							<button id="btn_signup_brand" type="button" onclick="showFormBrand()" class="btn m-btn--square <?= !$is_regular ? 'btn-success m-btn--wide active' : 'btn-secondary m-btn--wide' ?>">Brand</button>
+							<button id="btn_signup_brand" type="button" onclick="showFormBrand()" class="btn m-btn--square <?= $is_brand_signup ? 'btn-success m-btn--wide active' : 'btn-secondary m-btn--wide' ?>">Brand</button>
 							&nbsp;
-							<button id="btn_signup_user" type="button" onclick="showFormUser()" class="btn m-btn--square <?= $is_regular ? 'btn-success m-btn--wide active' : 'btn-secondary m-btn--wide' ?>">User</button>
+							<button id="btn_signup_user" type="button" onclick="showFormUser()" class="btn m-btn--square <?= !$is_brand_signup ? 'btn-success m-btn--wide active' : 'btn-secondary m-btn--wide' ?>">User</button>
 						</div>
 
 						<?php $this->load->view('auth/templates/notifications'); ?>
 
-						<input id="is_regular_signup" name="is_regular_signup" type="hidden" value="<?= $is_regular; ?>">
-						<div id="m-login__form m-form__user" style=<?= $is_regular ? 'display:block' : 'display:none' ?>>
+						<input id="is_brand_signup" name="is_brand_signup" type="hidden" value="<?= $is_brand_signup; ?>">
+						<div id="m-login__form m-form__user" style=<?= !$is_brand_signup ? 'display:block' : 'display:none' ?>>
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="text" placeholder="Skearch ID or username" name="skearch_id" value="<?= set_value('skearch_id'); ?>">
 							</div>
@@ -71,7 +71,7 @@ $this->load->view('auth/templates/head');
 							<div class="form-group m-form__group">
 								<div class="col m--align-left" style="padding-top: 20px;">
 									<label class="m-checkbox m-checkbox--secondary">
-										<input type="checkbox" name="is_premium" <?= ($this->input->post('is_premium')) ? "checked" : ""; ?>>Free upgrade to <a href="#" target="_blank" class="m-link m-link--primary"><b>Premium</b></a>
+										<input type="checkbox" name="is_premium_user_signup" <?= ($this->input->post('is_premium_user_signup')) ? "checked" : ""; ?>>Free upgrade to <a href="#" target="_blank" class="m-link m-link--primary"><b>Premium</b></a>
 										<span></span>
 									</label>
 									<span class="m-form__help">Promotional</span>
@@ -79,7 +79,7 @@ $this->load->view('auth/templates/head');
 							</div>
 							<br>
 						</div>
-						<div id="m-login__form m-form__brand" style=<?= !$is_regular ? 'display:block' : 'display:none' ?>>
+						<div id="m-login__form m-form__brand" style=<?= $is_brand_signup ? 'display:block' : 'display:none' ?>>
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="text" placeholder="Name" name="name" value="<?= set_value('name'); ?>">
 							</div>
@@ -147,7 +147,7 @@ $this->load->view('auth/templates/head');
 
 			$('form').trigger("reset");
 
-			$("#is_regular_signup").val(0);
+			$("#is_brand_signup").val(1);
 			$('#btn_signup_user').removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide');
 			$("#btn_signup_brand").removeClass().addClass('btn m-btn--square btn-success m-btn--wide active');
 			$("#m_login_payment").css('visibility', 'visible');
@@ -164,7 +164,7 @@ $this->load->view('auth/templates/head');
 
 			$('form').trigger("reset");
 
-			$("#is_regular_signup").val(1);
+			$("#is_brand_signup").val(0);
 			$('#btn_signup_user').removeClass().addClass('btn m-btn--square btn-success m-btn--wide active');
 			$("#btn_signup_brand").removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide');
 			$("#m_login_payment").css('visibility', 'hidden');
@@ -176,30 +176,31 @@ $this->load->view('auth/templates/head');
 			$("#phone").inputmask("mask", {
 				mask: "(999) 999-9999"
 			});
-			$("#m_login_payment").css('visibility', 'visible');
-		});
 
-		var captcha = sliderCaptcha({
-			id: 'captcha',
-			repeatIcon: 'fa fa-redo',
-			onSuccess: function() {
-				$.ajax({
-					url: 'captcha/generate',
-					async: false,
-					cache: false,
-					type: 'GET',
-					contentType: 'application/json',
-					dataType: 'json',
-					success: function(result) {
-						$('#form_signup').submit(function() {
-							$('<input />').attr('type', 'hidden')
-								.attr('name', 'captcha')
-								.attr('value', result)
-								.appendTo('#form_signup');
-						});
-					}
-				});
-			}
+			$("#m_login_payment").css('visibility', 'visible');
+
+			var captcha = sliderCaptcha({
+				id: 'captcha',
+				repeatIcon: 'fa fa-redo',
+				onSuccess: function() {
+					$.ajax({
+						url: 'captcha/generate',
+						async: false,
+						cache: false,
+						type: 'GET',
+						contentType: 'application/json',
+						dataType: 'json',
+						success: function(result) {
+							$('#form_signup').submit(function() {
+								$('<input />').attr('type', 'hidden')
+									.attr('name', 'captcha')
+									.attr('value', result)
+									.appendTo('#form_signup');
+							});
+						}
+					});
+				}
+			});
 		});
 	</script>
 
