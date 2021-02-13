@@ -35,28 +35,68 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet m-portlet--full-height m-portlet--tabs m-portlet--unair">
 				<div class="tab-content">
 					<div class="tab-pane active" id="m_user_profile_tab_1">
-						<form class="m-form m-form--fit m-form--label-align-right" role="form" method="POST" onsubmit="$('#btn-submit').attr('class', 'btn btn-accent m-btn m-btn--air m-btn--custom m-loader m-loader--light m-loader--right')">
+						<form class="m-form m-form--fit m-form--label-align-right" role="form" id="m_form" method="POST" onsubmit="$('#btn-submit').attr('class', 'btn btn-accent m-btn m-btn--air m-btn--custom m-loader m-loader--light m-loader--right')">
 							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 							<div class="m-portlet__body">
-								<div class="form-group m-form__group m--margin-top-10 m--show">
-									<?php if (validation_errors()) : ?>
-										<div class="alert alert-danger alert-dismissible fade show" role="alert">
-											<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-											<?= validation_errors(); ?>
+								<?php if ($this->session->flashdata('success') === 1) : ?>
+									<div class="m-form__content">
+										<div class="m-alert m-alert--icon alert alert-success m--show" role="alert">
+											<div class="m-alert__icon">
+												<i class="la la-check-circle"></i>
+											</div>
+											<div class="m-alert__text">
+												The email invite has been sent successfully.
+											</div>
+											<div class="m-alert__close">
+												<button type="button" class="close" data-close="alert" aria-label="Close">
+												</button>
+											</div>
 										</div>
-									<?php endif; ?>
-									<?php if ($this->session->flashdata('email_sent_success')) : ?>
-										<div class="alert alert-success alert-dismissible fade show" role="alert">
-											<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-											<?= $this->session->flashdata('email_sent_success'); ?>
+									</div>
+								<?php elseif ($this->session->flashdata('success') === 0) : ?>
+									<div class="m-form__content">
+										<div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+											<div class="m-alert__icon">
+												<i class="la la-times-circle"></i>
+											</div>
+											<div class="m-alert__text">
+												Unable to sent the email invite.
+											</div>
+											<div class="m-alert__close">
+												<button type="button" class="close" data-close="alert" aria-label="Close">
+												</button>
+											</div>
 										</div>
-									<?php endif; ?>
-									<?php if ($this->session->flashdata('email_sent_failed')) : ?>
-										<div class="alert alert-danger alert-dismissible fade show" role="alert">
-											<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-											<?= $this->session->flashdata('email_sent_failed'); ?>
+									</div>
+								<?php elseif (validation_errors()) : ?>
+									<div class="m-form__content">
+										<div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+											<div class="m-alert__icon">
+												<i class="la la-warning"></i>
+											</div>
+											<div class="m-alert__text">
+												<?= validation_errors() ?>
+											</div>
+											<div class="m-alert__close">
+												<button type="button" class="close" data-close="alert" aria-label="Close">
+												</button>
+											</div>
 										</div>
-									<?php endif; ?>
+									</div>
+								<?php endif ?>
+								<div class="m-form__content">
+									<div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_msg">
+										<div class="m-alert__icon">
+											<i class="la la-warning"></i>
+										</div>
+										<div class="m-alert__text">
+											There are some errors found in the form, please check and try submitting again!
+										</div>
+										<div class="m-alert__close">
+											<button type="button" class="close" data-close="alert" aria-label="Close">
+											</button>
+										</div>
+									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-lg-12 m-form__group-sub" id="recipents">
@@ -120,8 +160,36 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
+	var FormControls = {
+		init: function() {
+			$("#m_form").validate({
+				rules: {
+					recipents: {
+						required: 1, // TODO: validation does not work here, need a work around
+						email: 1
+					},
+					subject: {
+						required: 1
+					},
+					content: {
+						required: 1
+					}
+				},
+				invalidHandler: function(e, r) {
+					$("#m_form_msg").removeClass("m--hide").show(), mUtil.scrollTop();
+					$('#btn-submit').attr('class', 'btn btn-accent m-btn m-btn--air m-btn--custom');
+				},
+				submitHandler: function(e) {
+					form.submit();
+				},
+			});
+		}
+	};
+
 	// initialize html editor
 	$(document).ready(function() {
+		FormControls.init();
+
 		$('#html-editor').summernote({
 			toolbar: [
 				// [groupName, [list of button]]

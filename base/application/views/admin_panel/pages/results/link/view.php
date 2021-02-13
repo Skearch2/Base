@@ -44,7 +44,7 @@ $this->load->view('admin_panel/templates/subheader');
 					<li class="m-portlet__nav-item">
 						<a href="<?= site_url("admin/categories/create_result"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
-								<i class="la la-cart-plus"></i>
+								<i class="la la-plus-circle"></i>
 								<span>Add Link</span>
 							</span>
 						</a>

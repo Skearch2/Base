@@ -34,42 +34,68 @@ $this->load->view('admin_panel/templates/subheader');
       <div class="m-portlet m-portlet--full-height m-portlet--tabs m-portlet--unair">
         <div class="tab-content">
           <div class="tab-pane active" id="m_user_profile_tab_1">
-            <form class="m-form m-form--fit m-form--label-align-right" method="POST">
+            <form class="m-form m-form--state m-form--fit m-form--label-align-right" id="m_form" role="form" method="POST">
               <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
               <div class="m-portlet__body">
-                <div class="form-group m-form__group m--margin-top-10 m--show">
-                  <?php if ($this->session->flashdata('create_success') === 1) : ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                      <div class="alert-icon">
-                        <p class="flaticon-like"> Success:</p>
+                <?php if ($this->session->flashdata('create_success') === 1) : ?>
+                  <div class="m-form__content">
+                    <div class="m-alert m-alert--icon alert alert-success m--show" role="alert">
+                      <div class="m-alert__icon">
+                        <i class="la la-check-circle"></i>
+                      </div>
+                      <div class="m-alert__text">
                         The link has been added.
                       </div>
+                      <div class="m-alert__close">
+                        <button type="button" class="close" data-close="alert" aria-label="Close">
+                        </button>
+                      </div>
                     </div>
-                  <?php elseif ($this->session->flashdata('create_success') === 0) : ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                      <div class="alert-icon">
-                        <p class="flaticon-warning-sign "> Error:</p>
+                  </div>
+                <?php elseif ($this->session->flashdata('create_success') === 0) : ?>
+                  <div class="m-form__content">
+                    <div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+                      <div class="m-alert__icon">
+                        <i class="la la-times-circle"></i>
+                      </div>
+                      <div class="m-alert__text">
                         Unable to add link.
                       </div>
-                    </div>
-                  <?php endif; ?>
-                  <?php if (validation_errors()) : ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                      <div class="alert-icon">
-                        <p class="flaticon-warning"> Error:</p>
-                        <?= validation_errors(); ?>
+                      <div class="m-alert__close">
+                        <button type="button" class="close" data-close="alert" aria-label="Close">
+                        </button>
                       </div>
                     </div>
-                  <?php endif; ?>
+                  </div>
+                <?php elseif (validation_errors()) : ?>
+                  <div class="m-form__content">
+                    <div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+                      <div class="m-alert__icon">
+                        <i class="la la-warning"></i>
+                      </div>
+                      <div class="m-alert__text">
+                        <?= validation_errors() ?>
+                      </div>
+                      <div class="m-alert__close">
+                        <button type="button" class="close" data-close="alert" aria-label="Close">
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                <?php endif ?>
+                <div class="m-form__content">
+                  <div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_msg">
+                    <div class="m-alert__icon">
+                      <i class="la la-warning"></i>
+                    </div>
+                    <div class="m-alert__text">
+                      There are some errors found in the form, please check and try submitting again!
+                    </div>
+                    <div class="m-alert__close">
+                      <button type="button" class="close" data-close="alert" aria-label="Close">
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <div class="form-group m-form__group row">
                   <div class="col-10 ml-auto">
@@ -77,13 +103,13 @@ $this->load->view('admin_panel/templates/subheader');
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
-                  <label for="example-text-input" class="col-2 col-form-label">Title</label>
+                  <label for="example-text-input" class="col-2 col-form-label">Title *</label>
                   <div class="col-7">
                     <input class="form-control m-input" type="text" name="title" value="<?= set_value('title'); ?>">
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
-                  <label for="example-text-input" class="col-2 col-form-label">Short Description</label>
+                  <label for="example-text-input" class="col-2 col-form-label">Short Description *</label>
                   <div class="col-7">
                     <input class="form-control m-input" type="text" name="description_short" value="<?= set_value('description_short'); ?>">
                   </div>
@@ -95,15 +121,15 @@ $this->load->view('admin_panel/templates/subheader');
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
-                  <label for="example-text-input" class="col-2 col-form-label">URL</label>
+                  <label for="example-text-input" class="col-2 col-form-label">URL *</label>
                   <div class="col-7">
                     <input class="form-control m-input" type="text" name="www" value="<?= set_value('www'); ?>">
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
-                  <label for="example-text-input" class="col-2 col-form-label">Field</label>
+                  <label for="example-text-input" class="col-2 col-form-label">Field *</label>
                   <div class="col-7">
-                    <select class="form-control" name="field_id" onchange="getPriorities(this.value)">
+                    <select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="field_id" onchange="getPriorities(this.value)">
                       <option value="" <?= set_select('field_id', '', TRUE) ?>>Select</option>
                       <?php foreach ($fields as $field) : ?>
                         <option value="<?= $field->id ?>" <?= set_select("field_id", $field->id) ?>><?= $field->title ?></option>
@@ -112,12 +138,13 @@ $this->load->view('admin_panel/templates/subheader');
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
-                  <label for="example-text-input" class="col-2 col-form-label">Priority</label>
+                  <label for="example-text-input" class="col-2 col-form-label">Priority *</label>
                   <div class="col-7">
-                    <select class="form-control" id="priority" name="priority" disabled>
+                    <select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" id="priority" name="priority" disabled="">
+                      <option value="" <?= set_select('priority', '', TRUE) ?>>Select</option>
                     </select>
                   </div>
-                  <div id="priority-refresh" class="m-demo-icon__preview"><i class="flaticon-refresh" title="Refresh" onclick="getPriorities($('[name=field_id]').val())"></i></div>
+                  <!-- <div id="priority-refresh" class="m-demo-icon__preview" style="cursor:pointer;"><i class="flaticon-refresh" title="Refresh" onclick="getPriorities($('[name=field_id]').val())"></i></div> -->
                   <div id="priority-loader" class="m-loader m-loader--brand" style="width: 30px; display: none;"></div>
                 </div>
                 <div class="form-group m-form__group row">
@@ -151,17 +178,15 @@ $this->load->view('admin_panel/templates/subheader');
                     <div class="col-2">
                     </div>
                     <div class="col-7">
-                      <button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>&nbsp;&nbsp;
-                      <button type="reset" class="btn btn-secondary m-btn m-btn--air m-btn--custom">Reset</button>
+                      <button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>
+                    </div>
+                    <div class="col-3">
+                      <small>* Indicates required field</small>
                     </div>
                   </div>
                 </div>
               </div>
             </form>
-          </div>
-          <div class="tab-pane " id="m_user_profile_tab_2">
-          </div>
-          <div class="tab-pane " id="m_user_profile_tab_3">
           </div>
         </div>
       </div>
@@ -190,6 +215,44 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
+  var FormControls = {
+    init: function() {
+      $("#m_form").validate({
+        rules: {
+          title: {
+            required: 1
+          },
+          description_short: {
+            required: 1
+          },
+          www: {
+            required: 1,
+            url: 1
+          },
+          field_id: {
+            required: 1
+          },
+          priority: {
+            required: 1
+          }
+        },
+        invalidHandler: function(e, r) {
+          $("#m_form_msg").removeClass("m--hide").show(), mUtil.scrollTop();
+        },
+        submitHandler: function(e) {
+          form.submit();
+        },
+      });
+    }
+  };
+
+  // hide option which has no value
+  $('option[value=""]').hide().parent().selectpicker('refresh');
+
+  $(document).ready(function() {
+    FormControls.init();
+  });
+
   // get priorites of the links for the given field
   function getPriorities(fieldId) {
 
@@ -204,7 +267,7 @@ $this->load->view('admin_panel/templates/close_html');
       url: '<?= site_url('admin/results/links/priorities/field/id/'); ?>' + fieldId,
       type: 'GET',
       beforeSend: function(xhr, options) {
-        $("#priority-refresh").css("display", "none");
+        // $("#priority-refresh").css("display", "none");
         $("#priority-loader").css("display", "inline-block");
         setTimeout(function() {
           $.ajax($.extend(options, {
@@ -215,29 +278,23 @@ $this->load->view('admin_panel/templates/close_html');
       },
       success: function(data, status) {
         var obj = JSON.parse(data);
-        var option = document.createElement("option");
-        option.text = "Not Set";
-        option.value = 0;
-        selectElement.add(option);
-
         for (i = 1; i <= 255; i++) {
-          var option = document.createElement("option");
-          var array = searchArray(i, obj);
-          if (array) {
-            option.text = i + " - " + array.title;
-            option.value = i;
-            option.disabled = true;
+          // check if any link has taken the priority value (1-225)
+          var link = searchArray(i, obj);
+
+          if (link) {
+            $("#priority").append('<option value="' + i + '" disabled>' + i + ' - ' + link.title + '</option>');
           } else {
-            option.text = i;
-            option.value = i;
+            $("#priority").append('<option value="' + i + '">' + i + '</option>');
           }
-          selectElement.add(option);
-          selectElement.disabled = false;
         }
+        $('#priority').attr('disabled', false);
+        $("#priority").selectpicker('refresh');
       },
       complete: function() {
         $("#priority-loader").css("display", "none");
-        $("#priority-refresh").removeAttr('style');
+        // $("#priority-refresh").removeAttr('style');
+        // $("#priority-refresh").css("cursor", "pointer");
       },
       error: function(xhr, status, error) {
         toastr.error("Error getting priorities.");
@@ -245,6 +302,7 @@ $this->load->view('admin_panel/templates/close_html');
     });
   }
 
+  // helper method to search for a key in an array
   function searchArray(key, array) {
     for (var i = 0; i < array.length; i++) {
       if (array[i].priority == key) {

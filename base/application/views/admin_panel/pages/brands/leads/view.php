@@ -34,7 +34,7 @@ $this->load->view('admin_panel/templates/subheader');
 		<div class="m-portlet__body">
 
 			<!-- Notifications -->
-			<?php if ($this->session->flashdata('create_success') === 1) : ?>
+			<?php if ($this->session->flashdata('user_create_success') === 1) : ?>
 				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -43,13 +43,31 @@ $this->load->view('admin_panel/templates/subheader');
 						The brand user has been created.
 					</div>
 				</div>
-			<?php elseif ($this->session->flashdata('create_success') === 0) : ?>
+			<?php elseif ($this->session->flashdata('user_create_success') === 0) : ?>
 				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
 						Unable to create the brand user.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('brand_create_success') === 0) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The brand has been created successfuly.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('brand_create_success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to create the brand.
 					</div>
 				</div>
 			<?php endif ?>
@@ -101,10 +119,11 @@ $this->load->view('admin_panel/templates/close_html');
 </style>
 <script>
 	// delete the entry
-	function deleteEntry(id) {
+	function deleteEntry(id, brandname) {
+		var brandname = brandname.replace(/%20/g, ' ');
 		swal({
 			title: "Are you sure?",
-			text: "Are you sure you want delete the entry with ID: \"" + id + "\"?",
+			text: "Are you sure you want delete the entry with brand: \"" + brandname + "\"?",
 			type: "warning",
 			confirmButtonClass: "btn btn-danger",
 			confirmButtonText: "Yes, delete it!",
@@ -113,7 +132,7 @@ $this->load->view('admin_panel/templates/close_html');
 		}).then(function(e) {
 			if (!e.value) return;
 			$.ajax({
-				url: '<?= site_url('admin/brands/leads/delete/'); ?>' + id,
+				url: '<?= site_url('admin/brands/leads/delete/id/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
 					if (data == -1) {
@@ -160,8 +179,10 @@ $this->load->view('admin_panel/templates/close_html');
 						title: "Actions",
 						orderable: !1,
 						render: function(a, t, e, n) {
-							return '<a href="<?= site_url() . "admin/brands/leads/create_user/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Create Brand User"><i class="la la-user-plus"></i></a>' +
-								'<a onclick=deleteEntry("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+							var brandname = e['brandname'].replace(/ /g, '%20');
+							return '<a href="<?= site_url() ?>admin/brands/leads/id/' + e['id'] + '/action/create/brand" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Create Brand"><i class="la la-building"></i></a>' +
+								'<a href="<?= site_url() ?>admin/brands/leads/id/' + e['id'] + '/action/create/user" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Create Brand User"><i class="la la-user-plus"></i></a>' +
+								'<a onclick=deleteEntry("' + e['id'] + '","' + brandname + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 						}
 					}, {
 						targets: 5,

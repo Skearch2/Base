@@ -37,21 +37,14 @@ class Brands extends MY_Controller
     }
 
     /**
-     * Callback for brand validation
+     * Callback for brand duplicate check
      *
      * @param string $brand Brand name
      * @return void
      */
     public function brand_check($brand)
     {
-        $id =  $this->input->post('id');
-
-        if ($this->ion_auth->username_check($brand)) {
-            if ($this->User->get($id)->brand !== $brand) {
-                $this->form_validation->set_message('username_check', 'The brand already exists.');
-                return FALSE;
-            }
-        }
+        //TODO
 
         return TRUE;
     }
@@ -131,7 +124,7 @@ class Brands extends MY_Controller
 
     /**
      * Get brands
-     *
+     * @param int $id Brand ID
      * @return void
      */
     public function get($id = null)
@@ -155,7 +148,6 @@ class Brands extends MY_Controller
                     'aaData' => $brands,
                 );
 
-
                 for ($i = 0; $i < sizeof($result['aaData']); $i++) {
                     // add members associated to each brand
                     $members = $this->Brand->get_members($result['aaData'][$i]->id);
@@ -166,6 +158,43 @@ class Brands extends MY_Controller
                     $result['aaData'][$i]->payments = sizeof($payments);
                 }
             }
+
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($result));
+        }
+    }
+
+    /**
+     * Get brand members
+     * @param int $id Brand ID
+     * @return void
+     */
+    public function get_members($id)
+    {
+        if ($this->ion_auth_acl->has_permission('users_get') or $this->ion_auth->is_admin()) {
+
+            $members = $this->Brand->get_members($id);
+            $total_members = count($members);
+            $result = array(
+                'iTotalRecords' =>  $total_members,
+                'iTotalDisplayRecords' =>  $total_members,
+                'sEcho' => 0,
+                'sColumns' => "",
+                'aaData' => $members,
+            );
+
+
+            // for ($i = 0; $i < sizeof($result['aaData']); $i++) {
+            //     // add members associated to each brand
+            //     $members = $this->Brand->get_members($result['aaData'][$i]->id);
+            //     $result['aaData'][$i]->members = sizeof($members);
+
+            //     // add # of payments by each brand
+            //     $payments = $this->Payments->get($result['aaData'][$i]->id);
+            //     $result['aaData'][$i]->payments = sizeof($payments);
+            // }
+
 
             $this->output
                 ->set_content_type('application/json')
@@ -267,6 +296,25 @@ class Brands extends MY_Controller
                 }
                 redirect("admin/brands");
             }
+        }
+    }
+
+    /**
+     * Show brand members page associated to brand
+     * @param int $id Brand ID
+     * @return void
+     */
+    public function members($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('users_get') && !$this->ion_auth->is_admin()) {
+
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+            $data['brand'] = $this->Brand->get($id);;
+
+            $data['title'] = ucwords("Brand Members");
+            $this->load->view('admin_panel/pages/brands/members', $data);
         }
     }
 }

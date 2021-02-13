@@ -10,7 +10,7 @@ if (!defined('BASEPATH')) {
  * 
  * @package        Skearch
  * @author         Iftikhar Ejaz <ejaziftikhar@gmail.com>
- * @copyright      Copyright (c) 2020
+ * @copyright      Copyright (c) 2021
  * @version        2.0
  */
 class Brand_model extends CI_Model
@@ -112,24 +112,19 @@ class Brand_model extends CI_Model
      * Get brand users associated to the brand
      *
      * @param string $id Brand ID
-     * @param int $primary_member_only Wheter to get only primary member of the brand
+     * @param int $primary_member_only Whether to get only primary member of the brand
      * @return object
      */
     public function get_members($id, $primary_member_only = 0)
     {
-        $this->db->select('user_id');
-        $this->db->from('skearch_users_brands');
-        $this->db->where('brand_id', $id);
-        if ($primary_member_only) {
-            $this->db->where('primary_brand_user', 1);
-        }
-        $sub_query = $this->db->get_compiled_select();
-
-        $this->db->select('id');
+        $this->db->select('*');
         $this->db->from('skearch_users');
-        $this->db->where_in('id', $sub_query, false);
+        $this->db->join('skearch_users_brands', 'skearch_users_brands.user_id = skearch_users.id', 'left');
+        $this->db->where('skearch_users_brands.brand_id', $id);
+        if ($primary_member_only) {
+            $this->db->where('skearch_users_brands.primary_brand_user', 1);
+        }
         $query = $this->db->get();
-
         return $query->result();
     }
 

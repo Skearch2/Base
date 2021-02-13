@@ -35,20 +35,21 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-caption">
 				<div class="m-portlet__head-title">
 					<h3 class="m-portlet__head-text">
+						Brand: <?= $brand->brand ?>
 					</h3>
 				</div>
 			</div>
-			<div class="m-portlet__head-tools">
+			<!-- <div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
 					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/user/create/group/id/{$group}"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+						<a href="<?= site_url("admin/user/create/group/id/"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
 								<i class="la la-user-plus"></i>
-								<span>Add User</span>
+								<span>Add Member</span>
 							</span>
 						</a>
 				</ul>
-			</div>
+			</div> -->
 		</div>
 
 		<!--begin::Modal-->
@@ -141,7 +142,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>First Name</th>
 						<th>Email Address</th>
 						<th>Gender</th>
-						<th>Level</th>
+						<th>Lead Member</th>
 						<th>Status</th>
 						<th>Actions</th>
 					</tr>
@@ -149,8 +150,6 @@ $this->load->view('admin_panel/templates/subheader');
 			</table>
 		</div>
 	</div>
-
-	<!-- END EXAMPLE TABLE PORTLET-->
 </div>
 
 <?php
@@ -313,8 +312,7 @@ $this->load->view('admin_panel/templates/close_html');
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
-				ajax: "<?= site_url("admin/users/get/group/id/$group"); ?>",
-				orderFixed: [5, 'asc'],
+				ajax: "<?= site_url("admin/brand/get/members/id/$brand->id"); ?>",
 				columns: [{
 					data: "username"
 				}, {
@@ -326,45 +324,23 @@ $this->load->view('admin_panel/templates/close_html');
 				}, {
 					data: "gender"
 				}, {
-					data: "group_name"
+					data: "primary_brand_user"
 				}, {
 					data: "active"
 				}, {
 					data: "Actions"
 				}],
-				drawCallback: function(a) {
-					var e = this.api(),
-						t = e.rows({
-							page: "current"
-						}).nodes(),
-						n = null;
-					e.column(5, {
-							page: "current"
-						})
-						.data()
-						.each(function(a, e) {
-							n !== a &&
-								($(t)
-									.eq(e)
-									.before('<tr class="group"><td colspan="10">' + a + "</td></tr>"),
-									(n = a));
-						});
-				},
 				columnDefs: [{
-					targets: [5],
-					visible: !1
-				}, {
 					targets: -1,
 					title: "Actions",
 					orderable: !1,
 					render: function(a, t, e, n) {
 						return '<a onclick=showUserDetails("' + e['id'] + '") data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>' +
-							'<a href="<?= site_url() . "admin/email/logs/user/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Email Logs"><i class="la la-envelope"></i></a>' +
-							'<a href="<?= site_url() . "admin/user/get/permissions/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Permissions"><i class="la la-key"></i></a>' +
 							// '<a onclick=reset("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Reset Password"><i class="la la-gear"></i></a>' +
+							'<a href="<?= site_url() . "admin/email/logs/user/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Email Logs"><i class="la la-envelope"></i></a>' +
 							'<a href="<?= site_url() . "admin/user/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 							'<a onclick=deleteUser("' + e['id'] + '","' + e['username'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
-					}
+					},
 				}, {
 					targets: 6,
 					render: function(a, t, e, n) {
@@ -385,20 +361,33 @@ $this->load->view('admin_panel/templates/close_html');
 						if (e['activation_selector'] !== null) return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[2].class + ' m-badge--wide">' + s[2].title + '</span>'
 						else return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 					}
-				}]
+				}, {
+					targets: 5,
+					render: function(a, t, e, n) {
+						var s = {
+							0: {
+								title: "No",
+								state: "danger"
+							},
+							1: {
+								title: "Yes",
+								state: "accent"
+							}
+						};
+						return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
+					}
+				}],
 			})
 		}
 	}
 
 	jQuery(document).ready(function() {
-			DatatablesDataSourceAjaxServer.init()
-		}
-
-	);
+		DatatablesDataSourceAjaxServer.init()
+	});
 </script>
 
 <!-- Sidemenu class -->
 <script>
-	$("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-users-staff").addClass("m-menu__item  m-menu__item--active");
+	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-brands").addClass("m-menu__item  m-menu__item--active");
 </script>

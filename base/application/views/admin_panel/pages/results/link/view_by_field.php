@@ -44,7 +44,7 @@ $this->load->view('admin_panel/templates/subheader');
 					<li class="m-portlet__nav-item">
 						<a href="<?= site_url("admin/results/link/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
-								<i class="la la-cart-plus"></i>
+								<i class="la la-plus-circle"></i>
 								<span>Add Link</span>
 							</span>
 						</a>
@@ -69,8 +69,8 @@ $this->load->view('admin_panel/templates/subheader');
 							<div class="form-group m-form__group row">
 								<label for="field" class="col-2 col-form-label">Field</label>
 								<div class="col-7">
-									<select class="form-control" name="field_id" onchange="getPriorities(this.value)" required>
-										<option id="field" selected value="">Select</option>
+									<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="field_id" onchange="getPriorities(this.value)" required>
+										<option id="field" selected disabled value=""></option>
 										<?php foreach ($fields as $field) : ?>
 											<option value="<?= $field->id ?> <?= set_select("field", $field->id) ?>"><?= $field->title ?></option>
 										<?php endforeach ?>
@@ -80,7 +80,7 @@ $this->load->view('admin_panel/templates/subheader');
 							<div class="form-group m-form__group row">
 								<label for="priority" class="col-2 col-form-label">Priority</label>
 								<div class="col-7">
-									<select class="form-control" id="priority" name="priority" disabled>
+									<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" id="priority" name="priority" disabled>
 									</select>
 								</div>
 								<div id="priority-loader" class="m-loader m-loader--brand" style="width: 30px; display: none;"></div>
@@ -156,34 +156,6 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-	// shows priorities dropdown
-	// function showPriorities(id, priority) {
-	// 	var $select = $("<select onclick=event.stopPropagation() onchange= updatePriority(" + id + ",this.value)></select>");
-	// 	for (var i = 0; i <= 250; i++) {
-	// 		if (i == 0) {
-	// 			var $option = $("<option></option>", {
-	// 				"text": "Not Set",
-	// 				"value": i
-	// 			});
-	// 		} else {
-	// 			var $option = $("<option></option>", {
-	// 				"text": i,
-	// 				"value": i
-	// 			});
-	// 		}
-	// 		if (searchArray(i, obj)) {
-	// 			if (i != 0) {
-	// 				$option.attr('disabled', 'disabled');
-	// 			}
-	// 		}
-	// 		if (i == priority) {
-	// 			$option.attr("selected", "selected")
-	// 		}
-	// 		$select.append($option);
-	// 	}
-	// 	$("#priority-dropdown-" + id).html($select.prop("outerHTML"));
-	// }
-
 	// get priorites of the links for the given field
 	function getPriorities(fieldId = false) {
 		// get priorites of the links for the field page
@@ -221,27 +193,19 @@ $this->load->view('admin_panel/templates/close_html');
 					return false;
 				},
 				success: function(data, status) {
-					// build a dropdown of priorities of all links in a field
 					var obj = JSON.parse(data);
-					var option = document.createElement("option");
-					option.text = "Not Set";
-					option.value = "";
-					selectElement.add(option);
-
 					for (i = 1; i <= 255; i++) {
-						var option = document.createElement("option");
-						var array = searchArray(i, obj);
-						if (array) {
-							option.text = i;
-							option.value = i;
-							option.disabled = true;
+						// check if any field has taken the priority value (1-225)
+						var field = searchArray(i, obj);
+
+						if (field) {
+							$("#priority").append('<option value="' + i + '" disabled>' + i + ' - ' + field.title + '</option>');
 						} else {
-							option.text = i;
-							option.value = i;
+							$("#priority").append('<option value="' + i + '">' + i + '</option>');
 						}
-						selectElement.add(option);
-						selectElement.disabled = false;
 					}
+					$('#priority').attr('disabled', false);
+					$("#priority").selectpicker('refresh');
 				},
 				complete: function() {
 					$("#priority-loader").css("display", "none");
@@ -308,11 +272,11 @@ $this->load->view('admin_panel/templates/close_html');
 			contentType: 'json',
 			success: function(data, status) {
 				$("#link_id").val(data.id);
-				$("#field").val(data.field_id);
-				$("#field").html(data.field);
+				// $("#field").val(data.field_id);
+				// $("#field").html(data.field);
 				$("#btn-modal-submit").attr("class", "btn m-btn btn-success");
 				$("#btn-modal-submit").show();
-				getPriorities(data.field_id);
+				// getPriorities(data.field_id);
 			},
 			error: function(xhr, status, error) {
 				toastr.error("Unable to process request.");
@@ -372,7 +336,7 @@ $this->load->view('admin_panel/templates/close_html');
 		});
 	}
 
-	// helper method to search into priorities
+	// helper method to search for a key in an array
 	function searchArray(key, array) {
 		for (var i = 0; i < array.length; i++) {
 			if (array[i].priority == key) {

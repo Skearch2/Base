@@ -35,7 +35,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet m-portlet--full-height m-portlet--tabs m-portlet--unair">
 				<div class="tab-content">
 					<div class="tab-pane active" id="m_user_profile_tab_1">
-						<form class="m-form m-form--fit m-form--label-align-right" id="m_form" role="form" method="POST">
+						<form class="m-form m-form--state m-form--fit m-form--label-align-right" id="m_form" role="form" method="POST">
 							<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 							<div class="m-portlet__body">
 								<?php if (validation_errors()) : ?>
@@ -54,70 +54,80 @@ $this->load->view('admin_panel/templates/subheader');
 										</div>
 									</div>
 								<?php endif ?>
+								<div class="m-form__content">
+									<div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_msg">
+										<div class="m-alert__icon">
+											<i class="la la-warning"></i>
+										</div>
+										<div class="m-alert__text">
+											There are some errors found in the form, please check and try submitting again!
+										</div>
+										<div class="m-alert__close">
+											<button type="button" class="close" data-close="alert" aria-label="Close">
+											</button>
+										</div>
+									</div>
+								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">Umbrella Information</h3>
+										<h3 class="m-form__section">Brand Details</h3>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Title *</label>
+									<label for="brand" class="col-2 col-form-label">Brand *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title', $umbrella->title) ?>">
+										<input class="form-control m-input" type="text" name="brand" value="<?= set_value('brand', $brand); ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Description</label>
+									<label for="organization" class="col-2 col-form-label">Organization *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="description" value="<?= set_value('description', $umbrella->description) ?>">
+										<input class="form-control m-input" type="text" name="organization" value="<?= set_value('organization') ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Short Description *</label>
+									<label for="address1" class="col-2 col-form-label">Address Line 1 *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="description_short" value="<?= set_value('description_short', $umbrella->description_short) ?>">
+										<input class="form-control m-input" type="text" name="address1" value="<?= set_value('address1') ?>">
+										<span class="m-form__help">Street address, P.O box, company name, c/o</span>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Umbrella Name</label>
+									<label for="address2" class="col-2 col-form-label">Address Line 2</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="umbrella_name" value="<?= set_value('umbrella_name', $umbrella->umbrella_name) ?>">
+										<input class="form-control m-input" type="text" name="address2" value="<?= set_value('address2') ?>">
+										<span class="m-form__help">Apartment, suite, unit, buidling, floor, etc</span>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Home Display Name</label>
+									<label for="city" class="col-2 col-form-label">City *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="home_display" value="<?= set_value('home_display', $umbrella->home_display) ?>">
+										<input class="form-control m-input" type="text" name="city" value="<?= set_value('city') ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Keyword(s)</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="keywords" data-role="tagsinput" value="<?= set_value('keywords', $keywords) ?>">
-										<span class="m-form__help">Press Enter after each keyword to continue adding more.</span>
+									<label for="state" class="col-2 col-form-label">State *</label>
+									<div class="col-3">
+										<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="state">
+											<option value="" <?= set_select("state", "", TRUE) ?>>Select</option>
+											<?php foreach ($states as $state) : ?>
+												<option value="<?= $state->statecode; ?>" <?= set_select("state", $state->statecode) ?>><?= $state->statecode; ?></option>
+											<?php endforeach; ?>
+										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Featured</label>
-									<div class="col-7">
-										<input type="hidden" name="featured" value="0" <?= set_value('featured', $umbrella->featured) == 0 ? 'checked' : "" ?>>
-										<span class="m-switch m-switch--icon-check">
-											<label>
-												<input type="checkbox" name="featured" value="1" <?= set_value('featured', $umbrella->featured) == 1 ? 'checked' : "" ?>>
-												<span></span>
-											</label>
-										</span>
+									<label for="country" class="col-2 col-form-label">Country *</label>
+									<div class="col-3">
+										<select class="form-control m-bootstrap-select m_selectpicker" name="country">
+											<option value="United States" selected>United States</option>
+										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Enabled</label>
+									<label for="zipcode" class="col-2 col-form-label">Zipcode *</label>
 									<div class="col-7">
-										<input type="hidden" name="enabled" value="0" <?= set_value('enabled', $umbrella->enabled) == 0 ? 'checked' : "" ?>>
-										<span class="m-switch m-switch--icon-check">
-											<label>
-												<input type="checkbox" name="enabled" value="1" <?= set_value('enabled', $umbrella->enabled) == 1 ? 'checked' : "" ?>>
-												<span></span>
-											</label>
-										</span>
+										<input class="form-control m-input" type="text" name="zipcode" value="<?= set_value('zipcode') ?>">
 									</div>
 								</div>
 							</div>
@@ -142,7 +152,6 @@ $this->load->view('admin_panel/templates/subheader');
 		</div>
 	</div>
 </div>
-</div>
 
 <?php
 
@@ -166,16 +175,35 @@ $this->load->view('admin_panel/templates/close_html');
 
 ?>
 
+
 <script>
 	var FormControls = {
 		init: function() {
 			$("#m_form").validate({
+				onfocusout: true,
 				rules: {
-					title: {
+					brand: {
 						required: 1
 					},
-					description_short: {
+					organization: {
 						required: 1
+					},
+					address1: {
+						required: 1
+					},
+					city: {
+						required: 1
+					},
+					state: {
+						required: 1
+					},
+					country: {
+						required: 1
+					},
+					zipcode: {
+						required: 1,
+						number: true,
+						minlength: 5
 					}
 				},
 				invalidHandler: function(e, r) {
@@ -189,12 +217,16 @@ $this->load->view('admin_panel/templates/close_html');
 	};
 
 	$(document).ready(function() {
+
 		FormControls.init();
+
+		// hide option which has no value
+		$('option[value=""]').hide().parent().selectpicker('refresh');
 	});
 </script>
 
 <!-- Sidemenu class -->
 <script>
-	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-results-umbrellas").addClass("m-menu__item  m-menu__item--active");
+	$("#menu-sales").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#leads").addClass("m-menu__item  m-menu__item--active");
 </script>

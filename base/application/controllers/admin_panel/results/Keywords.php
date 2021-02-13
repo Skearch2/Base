@@ -44,19 +44,21 @@ class Keywords extends MY_Controller
      */
     public function get()
     {
-        $keywords = $this->Keywords->get();
-        $total_records = sizeof($keywords);
-        $result = array(
-            'iTotalRecords' => $total_records,
-            'iTotalDisplayRecords' => $total_records,
-            'sEcho' => 0,
-            'sColumns' => "",
-            'aaData' => $keywords
-        );
+        if ($this->ion_auth_acl->has_permission('search_keywords_get') or $this->ion_auth->is_admin()) {
+            $keywords = $this->Keywords->get();
+            $total_records = sizeof($keywords);
+            $result = array(
+                'iTotalRecords' => $total_records,
+                'iTotalDisplayRecords' => $total_records,
+                'sEcho' => 0,
+                'sColumns' => "",
+                'aaData' => $keywords
+            );
 
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($result));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($result));
+        }
     }
     /**
      * Show list of keywords
@@ -92,7 +94,7 @@ class Keywords extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $this->form_validation->set_rules('keywords', 'Keyword(s)', 'required|callback_validate_keywords');
+            $this->form_validation->set_rules('keywords', 'Keyword(s)', 'callback_validate_keywords');
             $this->form_validation->set_rules('link_type', 'Link to', 'required');
             if ($this->input->post("link_type") == 'umbrella') {
                 $this->form_validation->set_rules('umbrella_id', 'Umbrella', 'required|numeric');
@@ -262,11 +264,17 @@ class Keywords extends MY_Controller
      */
     public function validate_keyword($string, $link_id = null)
     {
+        if (empty($string)) {
+            $this->form_validation->set_message('validate_keyword', "The %s field is required");
+            return false;
+        }
+
         if (ctype_alpha(str_replace(array("\n", "\t", ' '), '', $string)) === false) {
             $this->form_validation->set_message('validate_keyword', "The Keyword can only contain alphabets and spaces.");
             return false;
         }
 
+        // TODO: duplicate check on edit
         // if ($this->Keywords->duplicate_check($string, $link_id)) {
         //     $this->form_validation->set_message('validate_keyword', "The keyword already exists.");
         //     return false;
@@ -283,6 +291,11 @@ class Keywords extends MY_Controller
      */
     public function validate_keywords($string, $link_id = null)
     {
+        if (empty($string)) {
+            $this->form_validation->set_message('validate_keywords', "The %s field is required");
+            return false;
+        }
+
         $keywords = explode(',', $string);
 
         $check =  true;
@@ -295,7 +308,6 @@ class Keywords extends MY_Controller
                 $check = false;
             }
             if ($this->Keywords->duplicate_check($keyword, $link_id)) {
-
                 array_push($duplicate_keywords, $keyword);
                 $duplicate_keywords_in_string = implode(' , ', $duplicate_keywords);
                 $this->form_validation->set_message('validate_keywords', "Keyword(s) already taken: $duplicate_keywords_in_string");

@@ -121,9 +121,9 @@ class Email extends MY_Controller
                 $this->email->message($content);
 
                 if ($this->email->send()) {
-                    $this->session->set_flashdata('email_sent_success', 'The Email has been sent.');
+                    $this->session->set_flashdata('success', 1);
                 } else {
-                    $this->session->set_flashdata('email_sent_failed', 'Unable to send email.');
+                    $this->session->set_flashdata('success', 0);
                 }
                 $this->email->clear();
                 redirect('admin/email/invite');
@@ -236,9 +236,9 @@ class Email extends MY_Controller
                             log_email($user->id, "Custom Message", $subject, $content);
                         }
                     }
-                    $this->session->set_flashdata('email_sent_success', 'The Email has been sent.');
+                    $this->session->set_flashdata('success', 1);
                 } else {
-                    $this->session->set_flashdata('email_sent_failed', 'Unable to send email.');
+                    $this->session->set_flashdata('success', 1);
                 }
                 $this->email->clear();
                 redirect('admin/email/message');
@@ -261,6 +261,7 @@ class Email extends MY_Controller
         } else {
 
             $this->form_validation->set_rules('subject', 'Subject', 'required|trim');
+            $this->form_validation->set_rules('body', 'Body', 'required|min_length[5]');
 
             if ($this->form_validation->run() === FALSE) {
                 $query = $this->Template_model->get_template($type);
@@ -280,10 +281,10 @@ class Email extends MY_Controller
                 }
             } else {
                 if ($this->Template_model->update_template($type)) {
-                    $this->session->set_flashdata('template_update_success', 'Template saved.');
+                    $this->session->set_flashdata('success', 1);
                     redirect("admin/email/templates/$type");
                 } else {
-                    $this->session->set_flashdata('template_update_fail', 'Unable to save template.');
+                    $this->session->set_flashdata('success', 0);
                     redirect("admin/email/templates/$type");
                 }
             }

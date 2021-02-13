@@ -20,17 +20,13 @@ if (!defined('BASEPATH')) {
 
 class Auth extends MY_Controller
 {
-
-    /**
-     * Loads the User model needed for the class function
-     */
     public function __construct()
     {
         parent::__construct();
 
         $this->load->model('my_skearch/User_model', 'User');
         $this->load->model('Util_model', 'Util');
-        $this->load->model('admin_panel/email/Template_model', 'Template_model');
+        $this->load->model('admin_panel/email/Template_model', 'Email_templates');
     }
 
     /**
@@ -60,24 +56,24 @@ class Auth extends MY_Controller
                 $data = array(
                     'username' => $user->username
                 );
-                $template = $this->Template_model->get_template('welcome_regular');
+                $template = $this->Email_templates->get_template('welcome_regular');
             } else if ($this->ion_auth->in_group($this->config->item('premium', 'ion_auth'), $id)) {
                 $data = array(
                     'username' => $user->username
                 );
-                $template = $this->Template_model->get_template('welcome_premium');
+                $template = $this->Email_templates->get_template('welcome_premium');
             } else {
                 $data = array(
                     'firstname' => $user->firstname,
                     'lastname' => $user->lastname
                 );
-                $template = $this->Template_model->get_template('welcome_brand');
+                $template = $this->Email_templates->get_template('welcome_brand');
             }
 
             $message = $this->parser->parse_string($template->body, $data);
 
             $this->email->clear();
-            $this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+            $this->email->from($this->config->item('default_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
             $this->email->to($user->email);
             $this->email->subject($template->subject);
             $this->email->message($message);
@@ -157,18 +153,18 @@ class Auth extends MY_Controller
                         $data = array(
                             'username' => $user->username
                         );
-                        $template = $this->Template_model->get_template('welcome_regular');
+                        $template = $this->Email_templates->get_template('welcome_regular');
                     } else if ($this->ion_auth->in_group($this->config->item('premium', 'ion_auth'), $id)) {
                         $data = array(
                             'username' => $user->username
                         );
-                        $template = $this->Template_model->get_template('welcome_premium');
+                        $template = $this->Email_templates->get_template('welcome_premium');
                     } else {
                         $data = array(
                             'firstname' => $user->firstname,
                             'lastname' => $user->lastname
                         );
-                        $template = $this->Template_model->get_template('welcome_brand');
+                        $template = $this->Email_templates->get_template('welcome_brand');
                     }
 
                     $message = $this->parser->parse_string($template->body, $data);
@@ -465,7 +461,7 @@ class Auth extends MY_Controller
             // $user = $this->ion_auth->user($id)->row();
 
             // email template
-            $template = $this->Template_model->get_template('brand_payment_confirmation');
+            $template = $this->Email_templates->get_template('brand_payment_confirmation');
 
             // data used in email body
             $data = array(
@@ -526,12 +522,13 @@ class Auth extends MY_Controller
     /**
      * Set new password for My Skearch member
      *
-     * @param string|null $code The resset code
+     * @param string|null $code The reset code
      */
     public function reset_password($code = null)
     {
         if (!$code) {
             show_404();
+            return;
         }
 
         $user = $this->ion_auth->forgotten_password_check($code);
@@ -577,7 +574,7 @@ class Auth extends MY_Controller
     }
 
     /**
-     * Allow user to signup to My Skearch
+     * Allow user or brand to signup
      */
     public function signup()
     {
@@ -585,21 +582,24 @@ class Auth extends MY_Controller
             redirect('myskearch/dashboard', 'refresh');
         }
 
-        // check if user is signing up as regular user
-        $is_regular = (null !== $this->input->post("is_regular_signup")) ? $this->input->post("is_regular_signup") : 0;
+        // check if it is a brand signup
+        $is_brand_signup = (null !== $this->input->post("is_brand_signup")) ? $this->input->post("is_brand_signup") : 1;
 
-        if (!empty($is_regular) && $is_regular == 1) {
-            $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'trim|required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']', array('is_unique' => 'The Skearch ID or username already exists.'));
+        // check if the user is signing up for the premium user
+        $is_premium_user_signup = (null !== $this->input->post("is_premium_user_signup")) ? $this->input->post("is_premium_user_signup") : 0;
+
+        if (!empty($is_brand_signup) && $is_brand_signup == 1) {
+            $this->form_validation->set_rules('name', 'Name', 'trim|required');
+            $this->form_validation->set_rules('brandname', 'Brand Name', 'trim|required|is_unique[skearch_brand_leads.brandname]');
+            $this->form_validation->set_rules('email_b', 'Email', 'trim|required|valid_email');
+            $this->form_validation->set_rules('phone', 'Phone', 'trim|required|callback_validate_phone');
+        } else {
+            $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'trim|required|callback_validate_username|is_unique[skearch_users.username]|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']', array('is_unique' => 'The Skearch ID or username already exists.'));
             $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
             $this->form_validation->set_rules('gender', 'Gender', 'required');
             $this->form_validation->set_rules('age_group', 'Age group', 'required');
             $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
             $this->form_validation->set_rules('password2', 'Confirm Password', 'required|matches[password]');
-        } else {
-            $this->form_validation->set_rules('name', 'Name', 'trim|required');
-            $this->form_validation->set_rules('brandname', 'Brand Name', 'trim|required|is_unique[skearch_brand_leads.brandname]');
-            $this->form_validation->set_rules('email_b', 'Email', 'trim|required|valid_email');
-            $this->form_validation->set_rules('phone', 'Phone', 'trim|required|callback_validate_phone');
         }
         $this->form_validation->set_rules(
             'agree',
@@ -611,14 +611,13 @@ class Auth extends MY_Controller
 
         if ($this->form_validation->run() === false) {
 
-            $data['is_regular'] = $is_regular;
+            $data['is_brand_signup'] = $is_brand_signup;
             $data['states'] = $this->Util->get_state_list();
             $data['countries'] = $this->Util->get_country_list();
 
             $data['title'] = ucwords('my skearch  | sign up');
             $this->load->view('auth/pages/register', $data);
         } else {
-
             // verify captcha
             $expiration = time() - $this->config->item('captcha_expiration');
             $this->db->where('captcha_time < ', $expiration)
@@ -630,28 +629,67 @@ class Auth extends MY_Controller
             $row = $query->row();
 
             if ($row->count > 0) {
+                if ($is_brand_signup) {
+                    $data = array(
+                        'name'      => $this->input->post('name'),
+                        'brandname' => $this->input->post('brandname'),
+                        'email'     => $this->input->post('email_b'),
+                        'phone'     => preg_replace("/[^0-9]/", "", $this->input->post('phone'))
+                    );
+                    $lead = $this->User->create_lead($data);
 
-                $user = $this->User->create($is_regular);
+                    if ($lead) {
+                        $data = array(
+                            'name' => $this->input->post('name'),
+                        );
+                        $template = $this->Email_templates->get_template('brand_signup_confirmation');
 
-                if ($user) {
-                    if ($this->input->post('is_premium')) {
-                        // add user to premium user group
-                        $this->ion_auth->remove_from_group(NULL, $user);
-                        $this->ion_auth->add_to_group($this->config->item('premium', 'ion_auth'), $user);
-                    }
+                        $message = $this->parser->parse_string($template->body, $data);
 
-                    $this->session->set_flashdata('signup_success', true);
+                        $this->email->clear();
+                        $this->email->from($this->config->item('default_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+                        $this->email->to($this->input->post('email_b'));
+                        $this->email->subject($template->subject);
+                        $this->email->message($message);
 
-                    if ($is_regular) {
-                        $this->session->set_flashdata('success', 'An email has been sent to you for account activation.');
+                        // log email if sent
+                        if ($this->email->send()) {
+                            // TODO: need to make a log for brand signup which does not correspond to any user id
+                            //log_email(3, "Brand Signup", $template->subject, $message);
+                        } else {
+                            $this->email->print_debugger();
+                            log_message('error', 'Unable to send email');
+                        }
+
+                        $this->session->set_flashdata('signup_success', true);
+                        $this->session->set_flashdata('success', 'Thank You for your inquiry! Someone from Skearch will be contacting you soon.');
                         redirect('myskearch/auth/signup');
                     } else {
-                        $this->session->set_flashdata('success', 'Thank You for your inquiry! Someone from Skearch will be contacting you soon.');
+                        $this->session->set_flashdata('error', 'Unable to signup for the brand, please try again!');
                         redirect('myskearch/auth/signup');
                     }
                 } else {
-                    $this->session->set_flashdata('error', $this->ion_auth->errors());
-                    redirect('myskearch/auth/signup');
+                    // user data
+                    $username = $this->input->post('skearch_id');
+                    $password = $this->input->post('password');
+                    $email = $this->input->post('email');
+                    $additional_data = array(
+                        'gender'    => $this->input->post('gender'),
+                        'age_group' => $this->input->post('age_group')
+                    );
+                    $group = ($is_premium_user_signup) ? $this->config->item('premium', 'ion_auth') : $this->config->item('regular', 'ion_auth');
+
+                    // create user
+                    $user = $this->User->create($username, $password, $email, $additional_data, array($group));
+
+                    if ($user) {
+                        $this->session->set_flashdata('signup_success', true);
+                        $this->session->set_flashdata('success', 'An email has been sent to you for your new account activation.');
+                        redirect('myskearch/auth/signup');
+                    } else {
+                        $this->session->set_flashdata('error', $this->ion_auth->errors());
+                        redirect('myskearch/auth/signup');
+                    }
                 }
             } else {
                 $this->session->set_flashdata('error', "Unable to complete security validation. Please try again!");
@@ -665,9 +703,9 @@ class Auth extends MY_Controller
      *
      * @return bool
      */
-    public function validate_captcha()
+    public function validate_captcha($captcha)
     {
-        if (null !== $this->input->post('captcha')) {
+        if (null !== $captcha) {
             return true;
         } else {
             $this->form_validation->set_message('validate_captcha', 'Security verification is required.');
@@ -680,11 +718,27 @@ class Auth extends MY_Controller
      *
      * @return bool
      */
-    public function validate_phone()
+    public function validate_phone($phone)
     {
-        $phone = preg_replace("/[^0-9]/", "", $this->input->post('phone'));
+        $phone = preg_replace("/[^0-9]/", "", $phone);
         if (strlen($phone) != 10) {
-            $this->form_validation->set_message('validate_phone', 'You have entered invalid Phone number.');
+            $this->form_validation->set_message('validate_phone', 'The %s number entered is invalid.');
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Validates username
+     *
+     * @return bool
+     */
+    public function validate_username($username)
+    {
+        $result = preg_match('/ /', $username);
+        if ($result) {
+            $this->form_validation->set_message('validate_username', 'The %s cannot contain any space.');
             return false;
         } else {
             return true;
