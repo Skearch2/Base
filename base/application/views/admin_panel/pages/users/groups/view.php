@@ -41,12 +41,12 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
 					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/users/group/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+						<!-- <a href="<?= site_url("admin/users/group/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
 								<i class="la la-plus-circle"></i>
 								<span>Add Group</span>
 							</span>
-						</a>
+						</a> -->
 				</ul>
 			</div>
 		</div>

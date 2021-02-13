@@ -57,29 +57,52 @@ $this->load->view('admin_panel/templates/subheader');
 
 <div class="m-content">
   <div class="m-portlet__body">
-    <div class="form-group m-form__group m--margin-top-10 m--show">
-      <?php if ($this->session->flashdata('success') === 1) : ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <div class="alert-icon">
-            <p class="flaticon-like"> Success:</p>
-            Homepage results has been updated.
+    <?php if ($this->session->flashdata('success') === 1) : ?>
+      <div class="m-form__content">
+        <div class="m-alert m-alert--icon alert alert-success m--show" role="alert">
+          <div class="m-alert__icon">
+            <i class="la la-check-circle"></i>
+          </div>
+          <div class="m-alert__text">
+            The Field suggestion(s) has been updated.
+          </div>
+          <div class="m-alert__close">
+            <button type="button" class="close" data-close="alert" aria-label="Close">
+            </button>
           </div>
         </div>
-      <?php elseif ($this->session->flashdata('success') === 0) : ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <div class="alert-icon">
-            <p class="flaticon-like"> Success:</p>
-            Unable to update homepage results.
+      </div>
+    <?php elseif ($this->session->flashdata('success') === 0) : ?>
+      <div class="m-form__content">
+        <div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+          <div class="m-alert__icon">
+            <i class="la la-times-circle"></i>
+          </div>
+          <div class="m-alert__text">
+            Unable to update Field suggestion(s).
+          </div>
+          <div class="m-alert__close">
+            <button type="button" class="close" data-close="alert" aria-label="Close">
+            </button>
           </div>
         </div>
-      <?php endif ?>
-    </div>
+      </div>
+    <?php elseif (validation_errors()) : ?>
+      <div class="m-form__content">
+        <div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+          <div class="m-alert__icon">
+            <i class="la la-warning"></i>
+          </div>
+          <div class="m-alert__text">
+            <?= validation_errors() ?>
+          </div>
+          <div class="m-alert__close">
+            <button type="button" class="close" data-close="alert" aria-label="Close">
+            </button>
+          </div>
+        </div>
+      </div>
+    <?php endif ?>
   </div>
   <div class="row">
     <div class="col-xl-3">
@@ -106,7 +129,7 @@ $this->load->view('admin_panel/templates/subheader');
                       <?php if ($f_result->id == $h_result->result_id && $f_result->is_umbrella == $h_result->is_result_umbrella) $flag = false; ?>
                     <?php endforeach ?>
                     <?php if ($flag) : ?>
-                      <li ondblclick="moveToHomepageList($(this))" class="<?= ($f_result->is_umbrella) ? 'btn btn-outline-brand m-btn m-btn--air m-btn--custom' : 'btn btn-secondary m-btn m-btn--air m-btn--custom' ?>"><?= $f_result->title ?>
+                      <li ondblclick="moveToHomepageList($(this))" class="<?= ($f_result->is_umbrella) ? 'btn btn-outline-brand m-btn m-btn--air m-btn--custom' : 'btn btn-secondary m-btn m-btn--air m-btn--custom' ?>" title="Double-click to move"><?= $f_result->title ?>
                         <input type="hidden" name=item[<?= $index ?>][result_id] value="<?= $f_result->id ?>">
                         <input type="hidden" name=item[<?= $index ?>][is_result_umbrella] value="<?= $f_result->is_umbrella ?>">
                       </li>
@@ -143,9 +166,9 @@ $this->load->view('admin_panel/templates/subheader');
                   <ul id="homepageList">
                     <?php foreach ($homepage_results as $h_result) : ?>
                       <?php if ($h_result->result_id == 0) : ?>
-                        <li class='btn btn-metal m-btn m-btn--air m-btn--custom' ondblclick='$(this).remove();' title='Double click to remove'>
+                        <li class='btn btn-metal m-btn m-btn--air m-btn--custom' ondblclick='$(this).remove();' title='Double-click to remove'>
                         <?php else : ?>
-                        <li ondblclick="moveToFeaturedList($(this))" class="<?= ($h_result->is_result_umbrella) ? 'btn btn-outline-brand m-btn m-btn--air m-btn--custom' : 'btn btn-secondary m-btn m-btn--air m-btn--custom' ?>"><?= $h_result->title ?>
+                        <li class="<?= ($h_result->is_result_umbrella) ? 'btn btn-outline-brand m-btn m-btn--air m-btn--custom' : 'btn btn-secondary m-btn m-btn--air m-btn--custom' ?>" ondblclick='moveToFeaturedList($(this))' title='Double-click to move'><?= $h_result->title ?>
                         <?php endif ?>
                         <input type="hidden" name=item[<?= $index ?>][result_id] value='<?= $h_result->result_id ?>'>
                         <input type="hidden" name=item[<?= $index ?>][is_result_umbrella] value='<?= $h_result->is_result_umbrella ?>'>
@@ -231,7 +254,7 @@ $this->load->view('admin_panel/templates/close_html');
   function addBlank(val) {
     if ($("#homepageList li").length < limit) {
       $("#homepageList").append(
-        "<li class='btn btn-metal m-btn m-btn--air m-btn--custom' ondblclick='$(this).remove();'>\
+        "<li class='btn btn-metal m-btn m-btn--air m-btn--custom' ondblclick='$(this).remove();' title='Double-click to remove'>\
        <input type='hidden' name='item[" + val + "][result_id]' value='0'> \
        <input type='hidden' name='item[" + val + "][is_result_umbrella]' value='0'></li>"
       );

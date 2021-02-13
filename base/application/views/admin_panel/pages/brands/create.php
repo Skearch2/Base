@@ -35,18 +35,38 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet m-portlet--full-height m-portlet--tabs m-portlet--unair">
 				<div class="tab-content">
 					<div class="tab-pane active" id="m_user_profile_tab_1">
-						<form class="m-form m-form--fit m-form--label-align-right" role="form" method="POST">
+						<form class="m-form m-form--state m-form--fit m-form--label-align-right" id="m_form" role="form" method="POST">
 							<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 							<div class="m-portlet__body">
-								<div class="form-group m-form__group m--margin-top-10 m--show">
-									<?php if (validation_errors()) : ?>
-										<div class="alert alert-danger" role="alert">
-											<div class="alert-icon">
-												<p class="flaticon-danger"> Error:</p>
+								<?php if (validation_errors()) : ?>
+									<div class="m-form__content">
+										<div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+											<div class="m-alert__icon">
+												<i class="la la-warning"></i>
+											</div>
+											<div class="m-alert__text">
 												<?= validation_errors() ?>
 											</div>
+											<div class="m-alert__close">
+												<button type="button" class="close" data-close="alert" aria-label="Close">
+												</button>
+											</div>
 										</div>
-									<?php endif ?>
+									</div>
+								<?php endif ?>
+								<div class="m-form__content">
+									<div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_msg">
+										<div class="m-alert__icon">
+											<i class="la la-warning"></i>
+										</div>
+										<div class="m-alert__text">
+											There are some errors found in the form, please check and try submitting again!
+										</div>
+										<div class="m-alert__close">
+											<button type="button" class="close" data-close="alert" aria-label="Close">
+											</button>
+										</div>
+									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
@@ -54,41 +74,41 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="brand" class="col-2 col-form-label">Brand<font color="red"><sup>*</sup></font></label>
+									<label for="brand" class="col-2 col-form-label">Brand *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="brand" value="<?= set_value('brand') ?>">
+										<input class="form-control m-input" type="text" name="brand" value="<?= set_value('brand'); ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="organization" class="col-2 col-form-label">Organization<font color="red"><sup>*</sup></font></label>
+									<label for="organization" class="col-2 col-form-label">Organization *</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="organization" value="<?= set_value('organization') ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="address1" class="col-2 col-form-label">Address Line 1<font color="red"><sup>*</sup></font></label>
+									<label for="address1" class="col-2 col-form-label">Address Line 1 *</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="address1" value="<?= set_value('address1') ?>">
 										<span class="m-form__help">Street address, P.O box, company name, c/o</span>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="address2" class="col-2 col-form-label">Address Line 2<font color="red"><sup>*</sup></font></label>
+									<label for="address2" class="col-2 col-form-label">Address Line 2</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="address2" value="<?= set_value('address2') ?>">
 										<span class="m-form__help">Apartment, suite, unit, buidling, floor, etc</span>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="city" class="col-2 col-form-label">City<font color="red"><sup>*</sup></font></label>
+									<label for="city" class="col-2 col-form-label">City *</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="city" value="<?= set_value('city') ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="state" class="col-2 col-form-label">State<font color="red"><sup>*</sup></font></label>
-									<div class="col-2">
-										<select class="form-control m-input" id="exampleSelect1" name="state">
+									<label for="state" class="col-2 col-form-label">State *</label>
+									<div class="col-3">
+										<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="state">
 											<option value="" <?= set_select("state", "", TRUE) ?>>Select</option>
 											<?php foreach ($states as $state) : ?>
 												<option value="<?= $state->statecode; ?>" <?= set_select("state", $state->statecode) ?>><?= $state->statecode; ?></option>
@@ -97,18 +117,15 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="country" class="col-2 col-form-label">Country<font color="red"><sup>*</sup></font></label>
+									<label for="country" class="col-2 col-form-label">Country *</label>
 									<div class="col-3">
-										<select class="form-control m-input" id="exampleSelect1" name="country">
-											<option value="" <?= set_select("country", "", TRUE) ?>>Select</option>
-											<?php foreach ($countries as $country) : ?>
-												<option value="<?= $country->country_name ?>" <?= set_select("country", $country->country_name) ?>><?= $country->country_name; ?></option>
-											<?php endforeach; ?>
+										<select class="form-control m-bootstrap-select m_selectpicker" name="country">
+											<option value="United States" selected>United States</option>
 										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="zipcode" class="col-2 col-form-label">Zipcode<font color="red"><sup>*</sup></font></label>
+									<label for="zipcode" class="col-2 col-form-label">Zipcode *</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="zipcode" value="<?= set_value('zipcode') ?>">
 									</div>
@@ -120,7 +137,10 @@ $this->load->view('admin_panel/templates/subheader');
 										<div class="col-2">
 										</div>
 										<div class="col-7">
-											<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Add</button>&nbsp;&nbsp;
+											<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>
+										</div>
+										<div class="col-3">
+											<small>* Indicates required field</small>
 										</div>
 									</div>
 								</div>
@@ -154,6 +174,56 @@ $this->load->view('admin_panel/templates/scrolltop');
 $this->load->view('admin_panel/templates/close_html');
 
 ?>
+
+
+<script>
+	var FormControls = {
+		init: function() {
+			$("#m_form").validate({
+				onfocusout: true,
+				rules: {
+					brand: {
+						required: 1
+					},
+					organization: {
+						required: 1
+					},
+					address1: {
+						required: 1
+					},
+					city: {
+						required: 1
+					},
+					state: {
+						required: 1
+					},
+					country: {
+						required: 1
+					},
+					zipcode: {
+						required: 1,
+						number: true,
+						minlength: 5
+					}
+				},
+				invalidHandler: function(e, r) {
+					$("#m_form_msg").removeClass("m--hide").show(), mUtil.scrollTop();
+				},
+				submitHandler: function(e) {
+					form.submit();
+				},
+			});
+		}
+	};
+
+	$(document).ready(function() {
+
+		FormControls.init();
+
+		// hide option which has no value
+		$('option[value=""]').hide().parent().selectpicker('refresh');
+	});
+</script>
 
 <!-- Sidemenu class -->
 <script>

@@ -76,13 +76,11 @@ class Links extends MY_Controller
         } else {
 
             $this->form_validation->set_rules('title', 'Title', 'required');
-            $this->form_validation->set_rules('description_short', 'Description', 'required|max_length[82]');
-            $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
-            $this->form_validation->set_rules('priority', 'Priority', 'required|numeric');
+            $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[82]');
             $this->form_validation->set_rules('display_url', 'Home Display');
             $this->form_validation->set_rules('www', 'URL', 'required|valid_url');
-            $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
-            $this->form_validation->set_rules('redirect', 'Redirect', 'required|numeric');
+            $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
+            $this->form_validation->set_rules('priority', 'Priority', 'required|numeric');
 
             if ($this->form_validation->run() === true) {
 
@@ -455,12 +453,10 @@ class Links extends MY_Controller
 
             $this->form_validation->set_rules('title', 'Title', 'required');
             $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]');
-            $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
-            $this->form_validation->set_rules('priority', 'Priority', 'required|numeric');
             $this->form_validation->set_rules('display_url', 'Home Display');
             $this->form_validation->set_rules('www', 'URL', 'required|valid_url');
-            $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
-            $this->form_validation->set_rules('redirect', 'Redirect', 'required|numeric');
+            $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
+            $this->form_validation->set_rules('priority', 'Priority', 'required|numeric');
 
             if ($this->form_validation->run() === false) {
 

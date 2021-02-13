@@ -1,6 +1,7 @@
 		<!--begin::Global Theme Bundle -->
 		<script src="<?= site_url(ASSETS); ?>/admin_panel/vendors/base/vendors.bundle.js" type="text/javascript"></script>
 		<script src="<?= site_url(ASSETS); ?>/admin_panel/demo/demo12/base/scripts.bundle.js" type="text/javascript"></script>
+		<script src="<?= site_url(ASSETS) ?>/admin_panel/demo/demo12/custom/crud/forms/widgets/bootstrap-select.js" type="text/javascript"></script>
 		<!--end::Global Theme Bundle -->
 
 		<!--begin::Page Vendors -->

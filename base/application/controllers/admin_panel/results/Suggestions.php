@@ -169,7 +169,6 @@ class Suggestions extends MY_Controller
             // If request method is POST
             if ($this->input->server('REQUEST_METHOD') == 'POST') {
                 $data = $this->input->post(NULL, TRUE);
-
                 if (empty($data['item'])) {
                     $update = $this->Frontend->update_umbrella_suggestions($data['umbrellaId'], null);
                 } else {

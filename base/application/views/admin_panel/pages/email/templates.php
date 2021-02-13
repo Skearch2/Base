@@ -37,28 +37,70 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet m-portlet--full-height m-portlet--tabs m-portlet--unair">
 				<div class="tab-content">
 					<div class="tab-pane active" id="m_user_profile_tab_1">
-						<form class="m-form m-form--fit m-form--label-align-right" id="postForm" role="form" method="POST" action="">
+						<form class="m-form m-form--fit m-form--label-align-right" id="m_form" role="form" method="POST" action="">
 							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" />
 							<div class="m-portlet__body">
+								<?php if ($this->session->flashdata('success') === 1) : ?>
+									<div class="m-form__content">
+										<div class="m-alert m-alert--icon alert alert-success m--show" role="alert">
+											<div class="m-alert__icon">
+												<i class="la la-check-circle"></i>
+											</div>
+											<div class="m-alert__text">
+												The email template has been updated.
+											</div>
+											<div class="m-alert__close">
+												<button type="button" class="close" data-close="alert" aria-label="Close">
+												</button>
+											</div>
+										</div>
+									</div>
+								<?php elseif ($this->session->flashdata('success') === 0) : ?>
+									<div class="m-form__content">
+										<div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+											<div class="m-alert__icon">
+												<i class="la la-times-circle"></i>
+											</div>
+											<div class="m-alert__text">
+												Unable to update the email template.
+											</div>
+											<div class="m-alert__close">
+												<button type="button" class="close" data-close="alert" aria-label="Close">
+												</button>
+											</div>
+										</div>
+									</div>
+								<?php elseif (validation_errors()) : ?>
+									<div class="m-form__content">
+										<div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+											<div class="m-alert__icon">
+												<i class="la la-warning"></i>
+											</div>
+											<div class="m-alert__text">
+												<?= validation_errors() ?>
+											</div>
+											<div class="m-alert__close">
+												<button type="button" class="close" data-close="alert" aria-label="Close">
+												</button>
+											</div>
+										</div>
+									</div>
+								<?php endif ?>
+								<div class="m-form__content">
+									<div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_msg">
+										<div class="m-alert__icon">
+											<i class="la la-warning"></i>
+										</div>
+										<div class="m-alert__text">
+											There are some errors found in the form, please check and try submitting again!
+										</div>
+										<div class="m-alert__close">
+											<button type="button" class="close" data-close="alert" aria-label="Close">
+											</button>
+										</div>
+									</div>
+								</div>
 								<div class="form-group m-form__group m--margin-top-10 m--show">
-									<?php if (validation_errors()) : ?>
-										<div class="alert alert-danger" role="alert">
-											<?= validation_errors(); ?>
-										</div>
-									<?php endif; ?>
-									<?php if ($this->session->flashdata('template_update_success')) : ?>
-										<div class="alert alert-success alert-dismissible fade show" role="alert">
-											<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-											<?= $this->session->flashdata('template_update_success'); ?>
-										</div>
-									<?php endif; ?>
-									<?php if ($this->session->flashdata('template_update_fail')) : ?>
-										<div class="alert alert-danger alert-dismissible fade show" role="alert">
-											<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-											<?= $this->session->flashdata('template_update_fail'); ?>
-										</div>
-									<?php endif; ?>
-
 									<!-- <div class="m-section">
 										<span class="m-section__sub">
 											<b>Information on how to use variables:</b>
@@ -84,7 +126,6 @@ $this->load->view('admin_panel/templates/subheader');
 											</table>
 										</div>
 									</div> -->
-
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-lg-12 m-form__group-sub">
@@ -93,24 +134,22 @@ $this->load->view('admin_panel/templates/subheader');
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-lg-12 col-md-12 col-sm-12">
-										<textarea name="body" id="summernote" size="40"><?= $body; ?></textarea>
+										<textarea name="body" id="html-editor" size="40"><?= $body; ?></textarea>
 									</div>
 								</div>
 							</div>
 							<div class="m-portlet__foot m-portlet__foot--fit">
 								<div class="m-form__actions">
 									<div class="row">
-										<div class="col-12">
-											<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Save</button>&nbsp;&nbsp;
+										<div class="col-2">
+										</div>
+										<div class="col-7">
+											<button type="submit" id="btn-submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>
 										</div>
 									</div>
 								</div>
 							</div>
 						</form>
-					</div>
-					<div class="tab-pane " id="m_user_profile_tab_2">
-					</div>
-					<div class="tab-pane " id="m_user_profile_tab_3">
 					</div>
 				</div>
 			</div>
@@ -141,8 +180,40 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
+	var FormControls = {
+		init: function() {
+			$("#m_form").validate({
+				rules: {
+					subject: {
+						required: 1
+					},
+					content: {
+						required: 1
+					}
+				},
+				invalidHandler: function(e, r) {
+					$("#m_form_msg").removeClass("m--hide").show(), mUtil.scrollTop();
+					$('#btn-submit').attr('class', 'btn btn-accent m-btn m-btn--air m-btn--custom');
+				},
+				submitHandler: function(e) {
+					form.submit();
+				},
+			});
+		}
+	};
 	$(document).ready(function() {
-		$('#summernote').summernote({
+		FormControls.init();
+		$('#html-editor').summernote({
+			toolbar: [
+				// [groupName, [list of button]]
+				['clear', ['clear']],
+				['fontsize', ['style', 'fontname', 'fontsize']],
+				['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript']],
+				['color', ['color']],
+				['para', ['ul', 'ol', 'paragraph']],
+				['insert', ['table', 'link', 'picture', 'video']],
+				['other', ['fullscreen', 'code', 'help']]
+			],
 			height: 300
 		});
 	});
