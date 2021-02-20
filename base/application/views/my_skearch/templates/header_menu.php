@@ -245,12 +245,22 @@
 															<span class="m-nav__section-text">Section</span>
 														</li>
 														<li class="m-nav__item">
+															<a href="<?= base_url("admin"); ?>" class="m-nav__link">
+																<i class="m-nav__link-icon flaticon-app"></i>
+																<span class="m-nav__link-title">
+																	<span class="m-nav__link-wrap">
+																		<span class="m-nav__link-text">Admin Panel</span>
+																		<span class="m-nav__link-badge"><span class="m-badge m-badge--success">7</span></span>
+																	</span>
+																</span>
+															</a>
+														</li>
+														<li class="m-nav__item">
 															<a href="<?= base_url("myskearch/profile"); ?>" class="m-nav__link">
 																<i class="m-nav__link-icon flaticon-profile-1"></i>
 																<span class="m-nav__link-title">
 																	<span class="m-nav__link-wrap">
 																		<span class="m-nav__link-text">My Profile</span>
-																		<span class="m-nav__link-badge"><span class="m-badge m-badge--success">2</span></span>
 																	</span>
 																</span>
 															</a>
@@ -322,10 +332,7 @@
 							<?php if (!$this->ion_auth->in_group($this->config->item('regular', 'ion_auth'))) : ?>
 								<li class="m-menu__item <?= (isset($section) && $section == 'digital assets') ? 'm-menu__item--active  m-menu__item--active-tab' : 'm-menu__item--submenu  m-menu__item--tab'; ?> m-menu__item--submenu m-menu__item--tabs" m-menu-submenu-toggle="" aria-haspopup="true"><a href="<?= base_url("myskearch/digital_assets"); ?>" class="m-menu__link" title="Digital Assets"><span class="m-menu__link-text">Digital Assets</span><i class="m-menu__hor-arrow la la-angle-down"></i><i class="m-menu__ver-arrow la la-angle-right"></i></a>
 									<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
-										<ul class="m-menu__subnav">
-											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-graphic-2"></i><span class="m-menu__link-text">Revenue</span></a></li>
-											<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="builder.html" class="m-menu__link "><i class="m-menu__link-icon flaticon-analytics"></i><span class="m-menu__link-text">Bills</span></a></li>
-										</ul>
+										<div class="livecoinwatch-widget-5" lcw-base="USD" lcw-color-tx="#0693e3" lcw-marquee-1="coins" lcw-marquee-2="movers" lcw-marquee-items="30"></div>
 									</div>
 								</li>
 							<?php endif; ?>

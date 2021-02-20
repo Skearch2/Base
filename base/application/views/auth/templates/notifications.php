@@ -1,22 +1,47 @@
 <?php if ($this->session->flashdata('error')) : ?>
-    <div align="center" class="alert alert-danger alert-dismissible fade show m-alert m-alert--air m-alert--outline">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        </button>
-        <?= $this->session->flashdata('error') ?>
+    <div class="m-form__content">
+        <div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+            <div class="m-alert__icon">
+                <i class="la la-warning"></i>
+            </div>
+            <div class="m-alert__text">
+                <?= $this->session->flashdata('error') ?>
+            </div>
+            <div class="m-alert__close">
+                <button type="button" class="close" data-close="alert" aria-label="Close">
+                </button>
+            </div>
+        </div>
     </div>
-<?php endif; ?>
-<?php if (validation_errors() or $this->session->flashdata('alert')) : ?>
-    <div align="center" class="alert alert-warning alert-dismissible fade show m-alert m-alert--air m-alert--outline">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        </button>
-        <?= validation_errors() ?>
-        <?= $this->session->flashdata('alert') ?>
+<?php elseif (validation_errors() or $this->session->flashdata('alert')) : ?>
+    <div class="m-form__content">
+        <div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+            <div class="m-alert__icon">
+                <i class="la la-warning"></i>
+            </div>
+            <div class="m-alert__text">
+                <?= validation_errors() ?>
+                <?= $this->session->flashdata('alert') ?>
+            </div>
+            <div class="m-alert__close">
+                <button type="button" class="close" data-close="alert" aria-label="Close">
+                </button>
+            </div>
+        </div>
     </div>
-<?php endif; ?>
-<?php if ($this->session->flashdata('success')) : ?>
-    <div align="center" class="alert alert-success alert-dismissible fade show m-alert m-alert--air m-alert--outline">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        </button>
-        <?= $this->session->flashdata('success') ?>
+<?php elseif ($this->session->flashdata('success')) : ?>
+    <div class="m-form__content">
+        <div class="m-alert m-alert--icon alert alert-success m--show" role="alert">
+            <div class="m-alert__icon">
+                <i class="la la-check"></i>
+            </div>
+            <div class="m-alert__text">
+                <?= $this->session->flashdata('success') ?>
+            </div>
+            <div class="m-alert__close">
+                <button type="button" class="close" data-close="alert" aria-label="Close">
+                </button>
+            </div>
+        </div>
     </div>
 <?php endif; ?>

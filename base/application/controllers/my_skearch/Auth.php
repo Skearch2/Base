@@ -406,10 +406,6 @@ class Auth extends MY_Controller
 
             if ($this->ion_auth->login($this->input->post('skearch_id'), $this->input->post('password'), $remember)) {
 
-                // add user group in the user information
-                // $user['groupid'] =  $this->ion_auth->get_users_groups($user_id)->row()->id;
-                // $user['group'] =  $this->ion_auth->get_users_groups($user_id)->row()->name;
-
                 // user personalized settings
                 $user['settings'] = $this->User->get_settings($this->session->userdata('user_id'));
 
