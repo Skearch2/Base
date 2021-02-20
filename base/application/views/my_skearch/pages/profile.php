@@ -194,11 +194,68 @@ $this->load->view('my_skearch/templates/start_pagebody');
 				</div>
 				<div class="tab-content">
 					<div class="tab-pane active" id="profile">
-						<?= form_open('myskearch/profile/', 'id="login_form"'); ?>
+						<?= form_open('myskearch/profile/', 'id="m_form"'); ?>
 						<fieldset class="m-form m-form--fit m-form--label-align-right">
 							<div class="m-portlet__body">
-								<div class="form-group m-form__group m--margin-top-10">
-									<?php $this->load->view('my_skearch/templates/notifications'); ?>
+								<?php if ($this->session->flashdata('success') === 1) : ?>
+									<div class="m-form__content">
+										<div class="m-alert m-alert--icon alert alert-success m--show" role="alert">
+											<div class="m-alert__icon">
+												<i class="la la-check"></i>
+											</div>
+											<div class="m-alert__text">
+												Your profile has been updated.
+											</div>
+											<div class="m-alert__close">
+												<button type="button" class="close" data-close="alert" aria-label="Close">
+												</button>
+											</div>
+										</div>
+									</div>
+								<?php elseif ($this->session->flashdata('success') === 0) : ?>
+									<div class="m-form__content">
+										<div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+											<div class="m-alert__icon">
+												<i class="la la-warning"></i>
+											</div>
+											<div class="m-alert__text">
+												Unable to update your profile.
+											</div>
+											<div class="m-alert__close">
+												<button type="button" class="close" data-close="alert" aria-label="Close">
+												</button>
+											</div>
+										</div>
+									</div>
+								<?php elseif (validation_errors()) : ?>
+									<div class="m-form__content">
+										<div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+											<div class="m-alert__icon">
+												<i class="la la-warning"></i>
+											</div>
+											<div class="m-alert__text">
+												<?= validation_errors() ?>
+											</div>
+											<div class="m-alert__close">
+												<button type="button" class="close" data-close="alert" aria-label="Close">
+												</button>
+											</div>
+										</div>
+									</div>
+								<?php endif ?>
+								<div class="m-form__content">
+									<div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_msg">
+										<div class="m-alert__icon">
+											<i class="la la-warning"></i>
+										</div>
+										<div class="m-alert__text">
+											There are some errors found in the form, please check and try submitting again!
+										</div>
+										<div class="m-alert__close">
+											<button type="button" class="close" data-close="alert" aria-label="Close">
+											</button>
+										</div>
+									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
@@ -206,11 +263,10 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="username" data-toggle="m-popover" data-content="Username should not contain any space and be in range between 5 to 12." class="col-2 col-form-label m-label"><mark>Username</mark>
-										<font color="red"><sup>*</sup></font>
-									</label>
+									<label for="username" class="col-2 col-form-label">Username *</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="username" value="<?= set_value('username', $this->session->userdata('username')) ?>">
+										<span class="m-form__help">Username should not contain any space and be in range between 5 to 12.</span>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -253,18 +309,18 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									</div>
 								<?php endif ?>
 								<div class="form-group m-form__group row">
-									<label for="gender" class="col-2 col-form-label">Gender<font color="red"><sup>*</sup></font></label>
+									<label for="gender" class="col-2 col-form-label">Gender *</label>
 									<div class="col-3">
-										<select class="form-control m-input" id="exampleSelect1" name="gender" disabled>
-											<option><?= $user->gender ?></option>
+										<select class="form-control m-bootstrap-select m_selectpicker" name="gender" disabled>
+											<option value=""><?= $user->gender ?></option>
 										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="age_group" class="col-2 col-form-label">Age Group<font color="red"><sup>*</sup></font></label>
+									<label for="age_group" class="col-2 col-form-label">Age Group *</label>
 									<div class="col-3">
-										<select class="form-control m-input" id="exampleSelect1" name="age_group" disabled>
-											<option><?= $user->age_group ?></option>
+										<select class="form-control m-bootstrap-select m_selectpicker" name="age_group" disabled>
+											<option value=""><?= $user->age_group ?></option>
 										</select>
 									</div>
 								</div>
@@ -307,7 +363,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 											<input class="form-control m-input" type="text" name="state_other" value="<?= set_value('state', $user->state) ?>">
 										</div>
 										<div class="col-3" id="field_state_us">
-											<select class="form-control m-input" name="state_us">
+											<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="state_us">
 												<option value="" <?= set_select("state_us", "", TRUE) ?>>Select</option>
 												<?php foreach ($states as $state) : ?>
 													<option value="<?= $state->statecode; ?>" <?= set_select("state_us", $state->statecode) ?>><?= $state->statecode; ?></option>
@@ -318,7 +374,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									<div class="form-group m-form__group row">
 										<label for="country" class="col-2 col-form-label">Country</label>
 										<div class="col-3">
-											<select class="form-control m-input" id="country" name="country">
+											<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" id="country" name="country">
 												<option value="" <?= set_select("country", "", TRUE) ?>>Select</option>
 												<?php foreach ($countries as $country) : ?>
 													<option value="<?= $country->country_name ?>" <?= set_select("country", $country->country_name) ?> <?= (strcmp($user->country, $country->country_name) == 0) ? "selected" : "" ?>><?= $country->country_name; ?></option>
@@ -340,7 +396,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 												<div class="col-2">
 												</div>
 												<div class="col-7">
-													<button type="submit" name="update_profile" class="btn btn-accent m-btn m-btn--air m-btn--custom">Update</button>
+													<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Update</button>
 												</div>
 											</div>
 										</div>
@@ -379,7 +435,38 @@ $this->load->view('my_skearch/templates/js_global');
 ?>
 
 <script>
+	var FormControls = {
+		init: function() {
+			$("#m_form").validate({
+				rules: {
+					username: {
+						required: 1,
+						minlength: <?= $this->config->item('min_username_length', 'ion_auth') ?>,
+						maxlength: <?= $this->config->item('max_username_length', 'ion_auth') ?>,
+						nowhitespace: true
+					},
+					phone: {
+						phoneUS: 1
+					},
+				},
+				invalidHandler: function(e, r) {
+					$("#m_form_msg").removeClass("m--hide").show(), mUtil.scrollTop();
+				},
+				submitHandler: function(e) {
+					$("#phone").unmask();
+					form.submit();
+				},
+			});
+		}
+	};
+
 	$(document).ready(function() {
+
+		FormControls.init();
+
+		// hide option which has no value
+		$('option[value=""]').hide().parent().selectpicker('refresh');
+
 		// Mask phone field to US number format
 		$("#phone").inputmask("mask", {
 			mask: "(999) 999-9999"

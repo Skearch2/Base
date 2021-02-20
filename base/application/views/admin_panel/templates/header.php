@@ -422,17 +422,6 @@
 														<span class="m-nav__section-text">Section</span>
 													</li>
 													<li class="m-nav__item">
-														<a href="<?= base_url("myskearch/profile"); ?>" class="m-nav__link">
-															<i class="m-nav__link-icon flaticon-profile-1"></i>
-															<span class="m-nav__link-title">
-																<span class="m-nav__link-wrap">
-																	<span class="m-nav__link-text">My Profile</span>
-																	<span class="m-nav__link-badge"><span class="m-badge m-badge--success">2</span></span>
-																</span>
-															</span>
-														</a>
-													</li>
-													<li class="m-nav__item">
 														<a href="profile.html" class="m-nav__link">
 															<i class="m-nav__link-icon flaticon-share"></i>
 															<span class="m-nav__link-text">Activity</span>
