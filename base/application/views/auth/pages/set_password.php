@@ -25,10 +25,10 @@ $this->load->view('auth/templates/head');
 							<h3 class="m-login__title">Set Password</h3>
 							<div class="m-login__desc">To activate your account, set a password for your account.</div>
 						</div>
-						<?= form_open('', array('class' => 'm-login__form m-form')) ?>
+						<?= form_open('', array('id' => 'm_form', 'class' => 'm-login__form m-form')) ?>
 						<?php $this->load->view('auth/templates/notifications') ?>
 						<div class="form-group m-form__group">
-							<input class="form-control m-input" name="password" type="password" placeholder="New Password">
+							<input class="form-control m-input" id="password" name="password" type="password" placeholder="New Password">
 						</div>
 						<div class="form-group m-form__group">
 							<input class="form-control m-input" name="password2" type="password" placeholder="Confirm New Password">
@@ -50,6 +50,38 @@ $this->load->view('auth/templates/head');
 	<?php
 	// Contains global javascripts
 	$this->load->view('auth/templates/js_global');
+	?>
+
+	<script>
+		$(document).ready(function() {
+			FormControls.init();
+		});
+
+		var FormControls = {
+			init: function() {
+				$("#m_form").validate({
+					rules: {
+						password: {
+							required: 1,
+							minlength: <?= $this->config->item('min_password_length', 'ion_auth') ?>,
+							maxlength: <?= $this->config->item('max_password_length', 'ion_auth') ?>,
+							nowhitespace: true
+						},
+						password2: {
+							required: 1,
+							equalTo: "#password"
+						}
+					},
+					invalidHandler: function(e, r) {},
+					submitHandler: function(e) {
+						form.submit();
+					},
+				});
+			}
+		};
+	</script>
+
+	<?php
 	// Close body and html
 	$this->load->view('auth/templates/end_html');
 	?>

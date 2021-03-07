@@ -24,14 +24,14 @@ $this->load->view('auth/templates/head');
 						<div class="m-login__head">
 							<h3 class="m-login__title">New Skearch password</h3>
 						</div>
-						<?= form_open('', array('class' => 'm-login__form m-form')) ?>
+						<?= form_open('', array('id' => 'm_form', 'class' => 'm-login__form m-form')) ?>
 						<?php $this->load->view('auth/templates/notifications') ?>
 						<input type="hidden" id="skearch_id" name="skearch_id" value=<?= $skearch_id; ?>>
 						<div class="form-group m-form__group">
 							<input class="form-control m-input" name="old_password" type="password" placeholder="Old Password">
 						</div>
 						<div class="form-group m-form__group">
-							<input class="form-control m-input" name="new_password" type="password" placeholder="New Password">
+							<input class="form-control m-input" name="new_password" id="new_password" type="password" placeholder="New Password">
 						</div>
 						<div class="form-group m-form__group">
 							<input class="form-control m-input" name="new_password2" type="password" placeholder="Confirm New Password">
@@ -53,6 +53,42 @@ $this->load->view('auth/templates/head');
 	<?php
 	// Contains global javascripts
 	$this->load->view('auth/templates/js_global');
+	?>
+
+	<script>
+		$(document).ready(function() {
+			FormControls.init();
+		});
+
+		var FormControls = {
+			init: function() {
+				$("#m_form").validate({
+					rules: {
+						old_password: {
+							required: 1
+						},
+						new_password: {
+							required: 1,
+							minlength: <?= $this->config->item('min_password_length', 'ion_auth') ?>,
+							maxlength: <?= $this->config->item('max_password_length', 'ion_auth') ?>,
+							nowhitespace: true
+						},
+						new_password2: {
+							required: 1,
+							equalTo: "#new_password"
+						},
+
+					},
+					invalidHandler: function(e, r) {},
+					submitHandler: function(e) {
+						form.submit();
+					},
+				});
+			}
+		};
+	</script>
+
+	<?php
 	// Close body and html
 	$this->load->view('auth/templates/end_html');
 	?>

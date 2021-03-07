@@ -41,7 +41,7 @@ class Profile extends MY_Controller
      */
     public function index()
     {
-        // get current logged-in user
+        // get current logged-in user details
         $user =  $this->ion_auth->user()->row();
 
         // determine current logged-in user group
@@ -117,6 +117,21 @@ class Profile extends MY_Controller
             }
 
             if ($this->User->update($user->id, $data)) {
+
+                // updated user details
+                $user = $this->ion_auth->user()->row();
+
+                $user_session_data = [
+                    'identity' => $user->username,
+                    'username' => $user->username,
+                    'email' => $user->email,
+                    'firstname' => $user->firstname,
+                    'lastname' => $user->lastname
+                ];
+
+                // update user session
+                $this->session->set_userdata($user_session_data);
+
                 $this->session->set_flashdata('success', 1);
                 redirect('myskearch/profile');
             } else {

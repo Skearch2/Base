@@ -91,17 +91,8 @@ $basedomain = $this->config->item('base_domain');
 
   <br>
 
-  <?php if (strcasecmp($image->$imediaurl, '#') == 0) : ?>
-    <label for="<?= $media; ?>" class="control-label">Media</label>
-    <input id="mediaupload" name="<?= $media; ?>" type="file" data-show-preview="true" data-msg-placeholder="Upload Media" data-allowed-file-extensions='["mp4", "gif", "jpeg", "jpg", "png"]'>
-    <input type="hidden" name="<?= $mediaurl; ?>" value="<?= $image->{$imediaurl}; ?>">
-  <?php else : ?>
-    <label for="<?= $media; ?>" class="control-label">Youtube Link</label>
-    <input type="url" name="<?= $mediaurl; ?>" id="mediaurl" class="form-control" value=<?= $image->{$imediaurl}; ?>>
-    <input type="hidden" name="<?= $media; ?>">
-    <br>
-  <?php endif; ?>
-
+  <label for="<?= $media; ?>" class="control-label">Media</label>
+  <input id="mediaupload" name="<?= $media; ?>" type="file" data-show-preview="true" data-msg-placeholder="Upload Media" data-allowed-file-extensions='["mp4", "gif", "jpeg", "jpg", "png"]'>
   <br>
 
   <label for="<?= $sign; ?>" class="control-label">Show Ad Sign</label>

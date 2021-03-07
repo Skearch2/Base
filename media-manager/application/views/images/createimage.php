@@ -64,11 +64,6 @@ $basedomain = $this->config->item('base_domain');
   <input id="mediaupload" name="<?= $media; ?>" type="file" class="file" data-show-preview="true" data-msg-placeholder="Upload Media" data-allowed-file-extensions='["mp4", "gif", "jpeg", "jpg", "png"]'>
   <input type="url" name="<?= $mediaurl; ?>" id="mediaurl" class="form-control" placeholder="https://www.youtube.com/watch?v=abcxyz">
 
-  <?php if (strcasecmp($album->$amediabox, $mediaboxu) == 0) : ?>
-    <button type="button" class="btn btn-link" id="mediaurl_button">or Add Youtube Link</button>
-    <br>
-  <?php endif; ?>
-
   <br>
 
   <label for="<?= $sign; ?>" class="control-label">Show Ad Sign</label>

@@ -53,7 +53,6 @@ class Dashboard extends MY_Controller
 	 */
 	public function index()
 	{
-		// user settings
 		$data['search_engine'] = $this->session->userdata('settings')->search_engine;
 
 		//fields history

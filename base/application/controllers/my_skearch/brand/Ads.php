@@ -49,18 +49,8 @@ class Ads extends MY_Controller
             redirect('myskearch', 'refresh');
         }
 
+        // if the brand id not given then get the brand id from the brand user
         $brand_id = !is_null($id) ? $id : $this->User->get_brand_details($this->user_id)->brand_id;
-
-        // curl request for media box
-        $this->curl->create("https://media.skearch.com/api/npm/activity/{$brand_id}");
-        $this->curl->{'get'}();
-        $this->curl->http_header('X-API-KEY', '374986acc824c8621fa528d04740f308');
-        $this->curl->http_header('X-I-USER', 1);
-
-        $xml = $this->curl->execute();
-
-        // parse xml to array
-        $data['stats'] = new SimpleXMLElement($xml);
 
         if ($id) {
             $data['viewas'] = 1;
@@ -73,5 +63,45 @@ class Ads extends MY_Controller
 
         // Load page content
         $this->load->view('my_skearch/pages/brand/ads', $data);
+    }
+
+    /**
+     * Get stats for brand ads
+     *
+     * @param int $id Brand Id
+     * @return void
+     */
+    public function get($id = null)
+    {
+        // id is required to view as brand by admin
+        if ($this->ion_auth->is_admin() && !$id) {
+            redirect('myskearch', 'refresh');
+        }
+
+        $brand_id = !is_null($id) ? $id : $this->User->get_brand_details($this->user_id)->brand_id;
+
+        // curl request for media box
+        $this->curl->create("https://media.skearch.com/api/npm/activity/{$brand_id}");
+        $this->curl->{'get'}();
+        $this->curl->http_header('X-API-KEY', '374986acc824c8621fa528d04740f308');
+        $this->curl->http_header('X-I-USER', 1);
+
+        $xml = $this->curl->execute();
+        // convert simplexml to array
+        $xml_array = json_decode(json_encode(new SimpleXMLElement($xml)), TRUE);
+
+        $stats = isset($xml_array['item']) ? $xml_array['item'] : array();
+        $total_ads = count($stats);
+        $result = array(
+            'iTotalRecords' => $total_ads,
+            'iTotalDisplayRecords' => $total_ads,
+            'sEcho' => 0,
+            'sColumns' => "",
+            'aaData' => $stats,
+        );
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
     }
 }

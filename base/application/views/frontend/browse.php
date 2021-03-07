@@ -22,14 +22,12 @@ $this->load->view('frontend/templates/header');
                 <p>Ad</p>
             </div>
             <div class="carousel-inner">
-                <?php $media_box_va_index = 0; ?>
                 <?php foreach ($media_box_va as $banner) : ?>
-                    <div class="<?= ($media_box_va_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>" data-ad-sign="<?= $banner['adsign'] ?>">
+                    <div class="carousel-item" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>" data-ad-sign="<?= $banner['adsign'] ?>">
                         <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
                             <img class="responsive" width="1000" height="110" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
                         </a>
                     </div>
-                    <?php $media_box_va_index++; ?>
                 <?php endforeach ?>
             </div>
         </div>
@@ -82,6 +80,15 @@ $this->load->view('frontend/templates/footer');
 
 <!-- Page Scripts -->
 <script>
+    // activate the carousel for media box VA
+    $('#mediabox-va').find('.carousel-item').first().addClass('active');
+
+    // update impressions on the banner in media box (for single media)
+    if ($('#mediabox-va').find('.carousel-item').first().hasClass('active')) {
+        imageid = $('#mediabox-va').find('.carousel-item').first().attr('data-imageid')
+        $.get("<?= site_url("impression/image/id/"); ?>" + imageid, function() {});
+    }
+
     // show ad sign on sponsered banner
     var isAd = $('.carousel-item.active').data("ad-sign");
     if (isAd) {

@@ -80,14 +80,12 @@ $this->load->view('frontend/templates/header');
                 <p>Ad</p>
             </div>
             <div class="carousel-inner">
-                <?php $media_box_a_index = 0; ?>
                 <?php foreach ($media_box_a as $banner) : ?>
-                    <div class="<?= ($media_box_a_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>" data-ad-sign="<?= $banner['adsign'] ?>">
+                    <div class="carousel-item" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>" data-ad-sign="<?= $banner['adsign'] ?>">
                         <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
-                            <img class="responsive" width="1000" height="110" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" width="728" height="120" />
+                            <img class="responsive" width="1000" height="110" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>">
                         </a>
                     </div>
-                    <?php $media_box_a_index++; ?>
                 <?php endforeach ?>
             </div>
         </div>
@@ -162,9 +160,8 @@ $this->load->view('frontend/templates/header');
                         <p>Ad</p>
                     </div>
                     <div class="carousel-inner">
-                        <?php $media_box_b_index = 0; ?>
                         <?php foreach ($media_box_b as $banner) : ?>
-                            <div class="<?= ($media_box_b_index == 0 ?  "carousel-item active" : "carousel-item") ?>" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>" data-ad-sign="<?= $banner['adsign'] ?>">
+                            <div class="carousel-item" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>" data-ad-sign="<?= $banner['adsign'] ?>">
                                 <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
                                     <?php $is_video = substr(strtolower($banner['image']), -3) == 'mp4' ? 1 : 0 ?>
                                     <?php if ($is_video) : ?>
@@ -173,11 +170,10 @@ $this->load->view('frontend/templates/header');
                                             Unable to play video, incompatible browser.
                                         </video>
                                     <?php else : ?>
-                                        <img class="responsive" width="300" height="600" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" />
+                                        <img class="responsive" width="300" height="600" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>">
                                     <?php endif ?>
                                 </a>
                             </div>
-                            <?php $media_box_b_index++; ?>
                         <?php endforeach ?>
                     </div>
                 </div>
@@ -193,61 +189,78 @@ $this->load->view('frontend/templates/footer');
 
 <!-- Page Scripts -->
 <script>
-    // show ad sign on sponsered banner
-    var isAd = $('#myCarouselA .carousel-item.active').data("ad-sign");
-    if (isAd) {
-        $('#media-box-a-sign').css('visibility', 'visible');
-    } else {
-        $('#media-box-a-sign').css('visibility', 'hidden');
-    }
+    $(document).ready(function() {
 
-    var isAd = $('#myCarouselB .carousel-item.active').data("ad-sign");
-    if (isAd) {
-        $('#media-box-b-sign').css('visibility', 'visible');
-    } else {
-        $('#media-box-b-sign').css('visibility', 'hidden');
-    }
+        // activate the carousel for media box A and B
+        $('#myCarouselA').find('.carousel-item').first().addClass('active');
+        $('#myCarouselB').find('.carousel-item').first().addClass('active');
 
-    $('#myCarouselA').on('slid.bs.carousel', function() {
-        $(this).find('.carousel-item.active').each(function() {
-            var isAd = $(this).data("ad-sign");
-            if (isAd) {
-                $('#media-box-a-sign').css('visibility', 'visible');
-            } else {
-                $('#media-box-a-sign').css('visibility', 'hidden');
-            }
+        // update impressions on the banner in media box (for single media)
+        if ($('#myCarouselA').find('.carousel-item').first().hasClass('active')) {
+            imageid = $('#myCarouselA').find('.carousel-item').first().attr('data-imageid')
+            $.get("<?= site_url("impression/image/id/"); ?>" + imageid, function() {});
+        }
+
+        if ($('#myCarouselB').find('.carousel-item').first().hasClass('active')) {
+            imageid = $('#myCarouselB').find('.carousel-item').first().attr('data-imageid')
+            $.get("<?= site_url("impression/image/id/"); ?>" + imageid, function() {});
+        }
+
+        // show ad sign on sponsered banner
+        var isAd = $('#myCarouselA .carousel-item.active').data("ad-sign");
+        if (isAd) {
+            $('#media-box-a-sign').css('visibility', 'visible');
+        } else {
+            $('#media-box-a-sign').css('visibility', 'hidden');
+        }
+
+        var isAd = $('#myCarouselB .carousel-item.active').data("ad-sign");
+        if (isAd) {
+            $('#media-box-b-sign').css('visibility', 'visible');
+        } else {
+            $('#media-box-b-sign').css('visibility', 'hidden');
+        }
+
+        $('#myCarouselA').on('slid.bs.carousel', function() {
+            $(this).find('.carousel-item.active').each(function() {
+                var isAd = $(this).data("ad-sign");
+                if (isAd) {
+                    $('#media-box-a-sign').css('visibility', 'visible');
+                } else {
+                    $('#media-box-a-sign').css('visibility', 'hidden');
+                }
+            });
         });
+
+        $('#myCarouselB').on('slid.bs.carousel', function() {
+            $(this).find('.carousel-item.active').each(function() {
+                var isAd = $(this).data("ad-sign");
+                if (isAd) {
+                    $('#media-box-b-sign').css('visibility', 'visible');
+                } else {
+                    $('#media-box-b-sign').css('visibility', 'hidden');
+                }
+            });
+        });
+
+        // Video playback settings for media box b
+        $('#myCarouselB').on('slid.bs.carousel', function() {
+            $(this).find('.carousel-item.active video').each(function() {
+                $('#speaker').show();
+                this.play();
+            });
+        });
+
+        $('#myCarouselB').on('slide.bs.carousel', function() {
+            $(this).find('.carousel-item.active video').each(function() {
+                $("#speaker").hide();
+                this.pause();
+                this.currentTime = 0;
+            });
+        });
+
     });
 
-    $('#myCarouselB').on('slid.bs.carousel', function() {
-        $(this).find('.carousel-item.active').each(function() {
-            var isAd = $(this).data("ad-sign");
-            if (isAd) {
-                $('#media-box-b-sign').css('visibility', 'visible');
-            } else {
-                $('#media-box-b-sign').css('visibility', 'hidden');
-            }
-        });
-    });
-
-    // Video playback settings for carousel
-    // $(document).ready(function() {
-    //     var video = $('#myCarouselB').find('.carousel-item.active video');
-    //     video[0].play()
-    // });
-    $('#myCarouselB').on('slid.bs.carousel', function() {
-        $(this).find('.carousel-item.active video').each(function() {
-            $('#speaker').show();
-            this.play();
-        });
-    });
-    $('#myCarouselB').on('slide.bs.carousel', function() {
-        $(this).find('.carousel-item.active video').each(function() {
-            $("#speaker").hide();
-            this.pause();
-            this.currentTime = 0;
-        });
-    });
 
     // Mute or unmute html video
     function toggleMute() {

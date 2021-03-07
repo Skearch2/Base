@@ -15,18 +15,19 @@ class Linkcheck_model_admin extends CI_Model
 {
 
     /**
-     * Get all links which has HTTP status code between 200 and 400
+     * Get all links
      *
      * @return void
      */
     public function get()
     {
-
-        $query = $this->db->select('id, title, enabled, http_status_code, last_status_check, www');
-        $query = $this->db->from('skearch_listings');
-        $query = $this->db->where('http_status_code <', 200);
-        $query = $this->db->or_where('http_status_code >=', 400);
+        $this->db->select('skearch_listings.id, skearch_listings.title, skearch_listings.enabled, skearch_listings.http_status_code, skearch_listings.last_status_check, skearch_listings.www, skearch_subcategories.title as field, skearch_categories.title as umbrella');
+        $this->db->from('skearch_listings');
+        $this->db->join('skearch_subcategories', 'skearch_subcategories.id = skearch_listings.sub_id');
+        $this->db->join('skearch_categories', 'skearch_categories.id = skearch_subcategories.parent_id');
+        // $this->db->not_like('http_status_code', '2', 'after');
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -36,10 +37,11 @@ class Linkcheck_model_admin extends CI_Model
 
     public function get_urls()
     {
-        $query = $this->db->select('id, www');
-        $query = $this->db->from('skearch_listings');
-        $query = $this->db->where('enabled', 1);
+        $this->db->select('id, www');
+        $this->db->from('skearch_listings');
+        $this->db->where('enabled', 1);
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -53,9 +55,9 @@ class Linkcheck_model_admin extends CI_Model
     {
         $this->db->set('http_status_code', 200);
         $this->db->where('id', $id);
-        $query = $this->db->update('skearch_listings');
+        $this->db->update('skearch_listings');
 
-        if ($query) {
+        if ($this->db->affected_rows()) {
             return true;
         } else {
             return false;
@@ -71,5 +73,11 @@ class Linkcheck_model_admin extends CI_Model
 
         $this->db->where('id', $id);
         $this->db->update('skearch_listings', $data);
+
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

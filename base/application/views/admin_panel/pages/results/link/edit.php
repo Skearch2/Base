@@ -100,7 +100,7 @@ $this->load->view('admin_panel/templates/subheader');
                 <div class="form-group m-form__group row">
                   <label for="example-text-input" class="col-2 col-form-label">Field *</label>
                   <div class="col-7">
-                    <select class="form-control" name="field_id" onchange="getPriorities(this.value)">
+                    <select class="form-control  m-bootstrap-select m_selectpicker" name="field_id" onchange="getPriorities(this.value)">
                       <option value="<?= $link->field_id ?>" <?= set_select("field_id", $link->field_id, TRUE) ?>><?= $link->field ?></option>
                       <?php foreach ($fields as $f) : ?>
                         <?php if ($link->field_id == $f->id) continue; ?>

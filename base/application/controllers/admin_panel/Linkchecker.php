@@ -92,34 +92,6 @@ class Linkchecker extends MY_Controller
 	}
 
 	/**
-	 * Check an individual link status
-	 *
-	 * @param String $url URL of the link
-	 * @return void
-	 */
-	private function run_curl_check($url)
-	{
-		$ch = curl_init($url);
-
-		$options = array(
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_FOLLOWLOCATION => true,
-			CURLOPT_HEADER         => false,
-			CURLOPT_USERAGENT	   => 'Mozilla/5.0 (compatible; phpservermon/3.2.0; +http://www.phpservermonitor.org)',
-			CURLOPT_NOBODY         => true,
-			CURLOPT_CONNECTTIMEOUT => 5,
-			CURLOPT_TIMEOUT        => 5
-		);
-		curl_setopt_array($ch, $options);
-
-		curl_exec($ch);
-		$httpinfo = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
-
-		return $httpinfo;
-	}
-
-	/**
 	 * Run a link checker and check all the links status
 	 *
 	 * @return void
@@ -129,14 +101,64 @@ class Linkchecker extends MY_Controller
 		if (!$this->ion_auth_acl->has_permission('linkchecker') && !$this->ion_auth->is_admin()) {
 			echo json_encode(-1);
 		} else {
-			$urls = $this->linkcheck_model->get_urls();
-			$totalUrls =  count($urls);
-			foreach ($urls as $url) {
-				$_SESSION["remainingUrls"] = $totalUrls--;
-				$status_code = $this->run_curl_check($url->www);
-				$this->linkcheck_model->update_http_status($url->id, $status_code);
-				// if ($totalUrls <= 4670) break;
+
+			$php_execution_limit = ini_get('max_execution_time');
+
+			// set php execution limit for this process
+			set_time_limit(60);
+
+			$links = $this->linkcheck_model->get_urls();
+
+			// curl multi handle
+			$mh = curl_multi_init();
+
+			// array of curl handles
+			$multi_curl = array();
+
+			foreach ($links as $link) {
+				$multi_curl[$link->id] = curl_init();
+				curl_setopt($multi_curl[$link->id], CURLOPT_URL, $link->www);
+				curl_setopt($multi_curl[$link->id], CURLOPT_HEADER, 0);
+				curl_setopt($multi_curl[$link->id], CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($multi_curl[$link->id], CURLOPT_USERAGENT, "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)");
+				curl_setopt($multi_curl[$link->id], CURLOPT_CONNECTTIMEOUT, 5);
+				curl_setopt($multi_curl[$link->id], CURLOPT_TIMEOUT, ini_get('max_execution_time'));
+				curl_setopt($multi_curl[$link->id], CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+				curl_multi_add_handle($mh, $multi_curl[$link->id]);
 			}
+
+			// execute curl multi
+			$active = null;
+			do {
+				$mrc = curl_multi_exec($mh, $active);
+			} while ($mrc == CURLM_CALL_MULTI_PERFORM);
+
+			while ($active && $mrc == CURLM_OK) {
+				if (curl_multi_select($mh) == -1) {
+					usleep(1);
+				}
+
+				do {
+					$mrc = curl_multi_exec($mh, $active);
+				} while ($mrc == CURLM_CALL_MULTI_PERFORM);
+			}
+
+			// restore php execution limit
+			set_time_limit($php_execution_limit);
+
+			if ($mrc != CURLM_OK) {
+				echo 0;
+			} else {
+				// update url status and remove handles
+				foreach ($multi_curl as $id => $ch) {
+					$this->linkcheck_model->update_http_status($id, curl_getinfo($ch, CURLINFO_HTTP_CODE));
+					curl_multi_remove_handle($mh, $ch);
+				}
+				echo 1;
+			}
+
+			// curl multi handle close
+			curl_multi_close($mh);
 		}
 	}
 }

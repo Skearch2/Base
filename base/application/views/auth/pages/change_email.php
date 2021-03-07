@@ -24,7 +24,7 @@ $this->load->view('auth/templates/head');
 						<div class="m-login__head">
 							<h3 class="m-login__title">Set new Skearch Email</h3>
 						</div>
-						<?= form_open('', array('class' => 'm-login__form m-form')) ?>
+						<?= form_open('', array('id' => 'm_form', 'class' => 'm-login__form m-form')) ?>
 						<?php $this->load->view('auth/templates/notifications') ?>
 						<input type="hidden" id="skearch_id" name="skearch_id" value=<?= $skearch_id; ?>>
 						<div class="form-group m-form__group">
@@ -37,7 +37,7 @@ $this->load->view('auth/templates/head');
 							<input class="form-control m-input m-login__form-input--last" id="password" name="current_password" type="password" placeholder="Current Password">
 						</div>
 						<div class="m-login__form-action">
-							<button id="login_submit" class="btn btn-outline-info m-btn m-btn--custom m-login__btn">Change</button>
+							<button id="login_submit" class="btn btn-outline-info m-btn m-btn--custom m-login__btn">Submit</button>
 							&nbsp;&nbsp;
 							<a href="<?= base_url("/myskearch/profile"); ?>">
 								<button type="button" id="m_login_signup_cancel" class="btn btn-outline-danger m-btn m-btn--custom m-login__btn">Cancel</button>
@@ -53,6 +53,41 @@ $this->load->view('auth/templates/head');
 	<?php
 	// Contains global javascripts
 	$this->load->view('auth/templates/js_global');
+	?>
+
+	<script>
+		$(document).ready(function() {
+			FormControls.init();
+		});
+
+		var FormControls = {
+			init: function() {
+				$("#m_form").validate({
+					rules: {
+						new_email: {
+							required: 1,
+							email: 1
+						},
+						new_email2: {
+							required: 1,
+							email: 1,
+							equalTo: "#new_email"
+						},
+						current_password: {
+							required: 1
+						},
+
+					},
+					invalidHandler: function(e, r) {},
+					submitHandler: function(e) {
+						form.submit();
+					},
+				});
+			}
+		};
+	</script>
+
+	<?php
 	// Close body and html
 	$this->load->view('auth/templates/end_html');
 	?>

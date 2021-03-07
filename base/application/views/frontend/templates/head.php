@@ -124,7 +124,7 @@
             });
         }
 
-        // Update media impressions shown on media box
+        // Update media impressions on slide change shown in media box
         $(function() {
             $('.carousel').on('slide.bs.carousel', function(event) {
                 imageid = $(event.relatedTarget).attr('data-imageid');
