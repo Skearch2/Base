@@ -522,70 +522,134 @@ if ($albumtype === $alb_umbrella) {
 
 <?php endif; ?>
 
+<!-- bootstrap modal where the image will appear -->
+<div class="modal fade" id="mediamodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      </div>
+      <div class="modal-body">
+        <img id="mediapreview">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- bootstrap modal where the video will appear -->
+<div class="modal fade" id="videomodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      </div>
+      <div class="modal-body">
+        <video controls autoplay id="videopreview">
+          Unable to play video, incompatible browser.
+        </video>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-  // Toggle media active status
-  function toggleMediaStatus(imageId) {
-    $.ajax({
-      url: "<?= site_url("main/toggleimagestatus/"); ?>" + imageId,
-      type: 'GET',
-      success: function(status) {
-        console.log("Success toggling media view");
-      },
-      contentType: "application/text",
-      dataType: "text",
-      error: function() {
-        console.log("Unable to toggle media view.");
-      }
-    });
-  }
+  const Toast = Swal.mixin({
+    toast: true,
+    showConfirmButton: false,
+    timer: 3000,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
 
-  // get media priorities from the album
-  $(function() {
-    var data = {};
-    $("table tbody").sortable({
-      refreshPositions: true,
-      cursor: "row-resize",
-      scroll: false,
-      containment: 'parent',
-      axis: "y",
-      // prevent table from shrinking
-      'start': function(event, ui) {
-        ui.placeholder.html("")
-      },
-      update: function(event, ui) {
-        $(this).children().each(function(index) {
-          // update priorites
-          $(this).find('td').eq(1).html(index + 1)
-        });
-      },
-      stop: function() {
-        $(this).children().each(function() {
-          // get the id and prioriy of the current row
-          data[$(this).find('td').eq(0).html()] = $(this).find('td').eq(1).html();
-        })
-        updateMediaPriorities(data);
-      }
-    }).disableSelection();
-  });
+  <?php if ($archived == 0) : ?>
 
-  // update media priorities
-  function updateMediaPriorities(data) {
-    $.ajax({
-      type: 'POST',
-      url: "<?= site_url("main/updatemediapriorities"); ?>",
-      data: {
-        "mediapriorities": data
-      },
-      contentType: "application/x-www-form-urlencoded",
-      datatype: 'json',
-      success: function(status) {
-        console.log("Success updating priorities");
-      },
-      error: function(xhr, ajaxOptions, thrownError) {
-        console.log("Unable to update priorities");
-      }
+    // Toggle media active status
+    function setMediaActiveStatus(imageId) {
+      $.ajax({
+        url: "<?= site_url("main/setimageactivestatus/"); ?>" + imageId,
+        type: 'GET',
+        success: function(status) {
+          Toast.fire({
+            icon: 'success',
+            title: 'Saved'
+          })
+        },
+        contentType: "application/text",
+        dataType: "text",
+        error: function() {
+          Toast.fire({
+            icon: 'error',
+            title: 'Error'
+          })
+        }
+      });
+    }
+
+    // get media priorities from the album
+    $(function() {
+      var data = {};
+      $("table tbody").sortable({
+        refreshPositions: true,
+        cursor: "row-resize",
+        scroll: false,
+        containment: 'parent',
+        axis: "y",
+        // prevent table from shrinking
+        'start': function(event, ui) {
+          ui.placeholder.html("")
+        },
+        update: function(event, ui) {
+          $(this).children().each(function(index) {
+            // update priorites
+            $(this).find('td').eq(1).html(index + 1)
+          });
+        },
+        stop: function() {
+          $(this).children().each(function() {
+            // get the id and prioriy of the current row
+            data[$(this).find('td').eq(0).html()] = $(this).find('td').eq(1).html();
+          })
+          updateMediaPriorities(data)
+        }
+      })
     });
-  }
+
+    // update media priorities
+    function updateMediaPriorities(data) {
+      Swal.fire({
+        toast: true,
+        title: 'Do you want to save the changes?',
+        confirmButtonText: 'Save',
+        showCancelButton: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            type: 'POST',
+            url: "<?= site_url("main/updatemediapriorities"); ?>",
+            data: {
+              "mediapriorities": data
+            },
+            contentType: "application/x-www-form-urlencoded",
+            datatype: 'json',
+            success: function(status) {
+              Toast.fire({
+                icon: 'success',
+                title: 'Saved'
+              })
+            },
+            error: function() {
+              Swal.fire('Unable to make changes!', '', 'error')
+            }
+          });
+        } else if (result.isDismissed) {
+          Swal.fire('Changes are not saved', '', 'info')
+        }
+      })
+    }
+
+  <?php endif; ?>
 
   // Show modal dialog to preview media
   function viewMedia(src, isVideo = 0) {
@@ -607,16 +671,28 @@ if ($albumtype === $alb_umbrella) {
   function updateMediaDuration(mediaId, duration) {
     // duration must be within 1 to 300 range
     if (duration >= 1 && duration <= 300) {
-      $.ajax({
-        url: "<?= site_url("main/updatemediaduration/"); ?>" + mediaId + "/" + duration,
-        type: 'GET',
-        success: function(status) {},
-        error: function() {
-          console.log("Unable to updating media duration.");
+      Swal.fire({
+        title: 'Do you want to save the changes?',
+        confirmButtonText: 'Save',
+        showCancelButton: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: "<?= site_url("main/updatemediaduration/"); ?>" + mediaId + "/" + duration,
+            type: 'GET',
+            success: function(status) {
+              Swal.fire('Saved!', '', 'success')
+            },
+            error: function() {
+              Swal.fire('Unable to make changes!', '', 'error')
+            }
+          });
+        } else if (result.isDismissed) {
+          Swal.fire('Changes are not saved', '', 'info')
         }
-      });
+      })
     } else {
-      alert("Duration must be between 1 to 300 seconds");
+      Swal.fire('Duration must be between 1 to 300 seconds!', '', 'info')
     }
   }
 </script>

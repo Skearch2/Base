@@ -1,5 +1,5 @@
-</body>
+	</body>
 
-<!-- end::Body -->
+	<!-- end::Body -->
 
-</html>
+	</html>

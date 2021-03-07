@@ -28,6 +28,18 @@ $this->load->view('admin_panel/templates/start_innerbody');
 $this->load->view('admin_panel/templates/subheader');
 ?>
 
+<!-- begin::Page loader -->
+<div class="m-page-loader m-page-loader--base">
+	<div class="m-blockui">
+		<span>Please wait...</span>
+		<span>
+			<div class="m-loader m-loader--brand"></div>
+		</span>
+	</div>
+</div>
+
+<!-- end::Page Loader -->
+
 <div class="m-content">
 
 	<!--Begin::Section-->
@@ -114,7 +126,7 @@ $this->load->view('admin_panel/templates/subheader');
 		<div class="col-xl-4">
 
 			<!--begin:: Packages-->
-			<div class="m-portlet m-portlet--full-height m-portlet--fit m-portlet--unair">
+			<div class="m-portlet m-portlet--semi-height m-portlet--fit m-portlet--unair">
 				<div class="m-portlet__head">
 					<div class="m-portlet__head-caption">
 						<div class="m-portlet__head-title">
@@ -151,7 +163,7 @@ $this->load->view('admin_panel/templates/subheader');
 		<div class="col-xl-4">
 
 			<!--begin:: Widgets/Top Products-->
-			<div class="m-portlet m-portlet--half-height m-portlet--fit m-portlet--unair">
+			<!-- <div class="m-portlet m-portlet--half-height m-portlet--fit m-portlet--unair">
 				<div class="m-portlet__head">
 					<div class="m-portlet__head-caption">
 						<div class="m-portlet__head-title">
@@ -166,10 +178,10 @@ $this->load->view('admin_panel/templates/subheader');
 					</div>
 				</div>
 
-				<div class="m-portlet__body">
+				<div class="m-portlet__body"> -->
 
-					<!--begin::Widget5-->
-					<div class="m-widget4 m-widget4--chart-bottom" style="min-height: 480px">
+			<!--begin::Widget5-->
+			<!-- <div class="m-widget4 m-widget4--chart-bottom" style="min-height: 480px">
 						<div class="m-section m-section--last">
 							<div class="m-section__content">
 								<div class="m--space-10"></div>
@@ -180,14 +192,14 @@ $this->load->view('admin_panel/templates/subheader');
 								<button type="button" class="m-btn btn btn-success">View Links<i class="la la-external-link"></i></button>
 							</div>
 						</div>
-					</div>
-					<!--end::Widget 5-->
-				</div>
-			</div>
-			<!--end:: Widgets/Top Products-->
+					</div> -->
+			<!--end::Widget 5-->
 		</div>
 	</div>
-	<!--End::Section-->
+	<!--end:: Widgets/Top Products-->
+</div>
+</div>
+<!--End::Section-->
 </div>
 
 
@@ -212,7 +224,6 @@ $this->load->view('admin_panel/templates/scrolltop');
 $this->load->view('admin_panel/templates/close_html');
 
 ?>
-
 <!-- Sidemenu class -->
 <script>
 	$("#menu-dashboard").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");

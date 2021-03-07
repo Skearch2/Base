@@ -49,7 +49,7 @@ $this->load->view('admin_panel/templates/subheader');
                         <div id="priority-loader" class="m-loader m-loader--brand" style="width: 30px; display:none"></div>
                     </li>
                     <li class="m-portlet__nav-item">
-                        <button onclick="runLinkChecker()" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+                        <button onclick="runLinkChecker()" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air" id="btn_linkchecker">
                             Run Linkchecker
                         </button>
                     </li>
@@ -62,12 +62,12 @@ $this->load->view('admin_panel/templates/subheader');
             <table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
                 <thead>
                     <tr>
-                        <th>Link ID</th>
-                        <th width="20%">Title</th>
-                        <th width="5%">HTTP Status</th>
-                        <th>Status Defination</th>
-                        <th width="15%">Last Checked</th>
-                        <th width="5%">Enabled</th>
+                        <th width="20%">Link</th>
+                        <th>HTTP Status Code</th>
+                        <th>Status Type</th>
+                        <th>Last Checked</th>
+                        <th>Field</th>
+                        <th>Enabled</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -104,11 +104,22 @@ $this->load->view('admin_panel/templates/close_html');
 <script>
     function runLinkChecker() {
         $.ajax({
-            url: '<?= site_url(); ?>admin/linkchecker/update_urls_status/',
+            url: '<?= site_url('admin/linkchecker/update_urls_status'); ?>',
             type: 'GET',
+            async: true,
+            beforeSend: function(data, status) {
+                $("#btn_linkchecker").removeClass().addClass("btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air m-loader m-loader--light m-loader--left").prop("disabled", true);
+            },
             success: function(data, status) {
                 if (data == -1) {
                     toastr.warning("", "You have no permission.")
+                } else if (data == 1) {
+                    toastr.success("", "Scan completed.")
+                    $("#btn_linkchecker").removeClass().addClass("btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air").prop("disabled", false);
+                    $('#m_table_1').DataTable().ajax.reload(null, false);
+                } else {
+                    toastr.error("", "Some error occured!.")
+                    $("#btn_linkchecker").removeClass().addClass("btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air").prop("disabled", false);
                 }
             },
             error: function(xhr, status, error) {
@@ -119,14 +130,13 @@ $this->load->view('admin_panel/templates/close_html');
 
     /* Removes link from the link checker list */
     function removeFromList(id, link) {
-
         var link = link.replace(/%20/g, ' ');
         swal({
             title: "Are you sure?",
             text: "Are you sure you want remove the link: \"" + link + "\"?",
             type: "info",
             confirmButtonClass: "btn btn-danger",
-            confirmButtonText: "Yes, remove it!",
+            confirmButtonText: "Remove",
             showCancelButton: true,
             timer: 5000
         }).then(function(e) {
@@ -158,7 +168,7 @@ $this->load->view('admin_panel/templates/close_html');
             text: "Are you sure you want delete the link: \"" + link + "\"?",
             type: "warning",
             confirmButtonClass: "btn btn-danger",
-            confirmButtonText: "Yes, delete it!",
+            confirmButtonText: "Delete",
             showCancelButton: true,
             timer: 5000
         }).then(function(e) {
@@ -212,19 +222,13 @@ $this->load->view('admin_panel/templates/close_html');
                 dom: '<"top"lfp>rt<"bottom"ip><"clear">',
                 rowId: "id",
                 order: [
-                    [1, 'asc']
+                    [0, 'asc']
                 ],
                 searchDelay: 500,
-                lengthMenu: [
-                    [50, 100, -1],
-                    [50, 100, "ALL"]
-                ],
                 processing: 0,
                 serverSide: !1,
                 ajax: "<?= site_url(); ?>admin/linkchecker/get",
                 columns: [{
-                    data: "id"
-                }, {
                     data: "title"
                 }, {
                     data: "http_status_code"
@@ -232,6 +236,8 @@ $this->load->view('admin_panel/templates/close_html');
                     data: "code_defination"
                 }, {
                     data: "last_status_check"
+                }, {
+                    data: "field"
                 }, {
                     data: "enabled"
                 }, {
@@ -250,29 +256,36 @@ $this->load->view('admin_panel/templates/close_html');
                         }
                     },
                     {
-                        targets: 1,
+                        targets: 0,
                         render: function(a, t, e, n) {
-                            return '<a href="' + e.www + '" target="_blank" >' + e.title + '</a></a>';
+                            return '<a href="' + e.www + '" target="_blank" >' + e.title + '</a>';
 
                         }
                     },
                     {
-                        targets: 3,
+                        targets: 2,
                         render: function(a, t, e, n) {
                             if (e['http_status_code'] == 0)
                                 return "Bad link or request timeout";
                             else if (e['http_status_code'] < 200)
-                                return "Informational response";
+                                return "Informational";
                             else if (e['http_status_code'] < 300)
-                                return "Successful";
+                                return "Success";
                             else if (e['http_status_code'] < 400)
                                 return "Redirection";
                             else if (e['http_status_code'] < 500)
-                                return "Client error";
+                                return "Client Error";
                             else if (e['http_status_code'] >= 500)
-                                return "Server error";
+                                return "Server Error";
                             else
                                 return "Unable to get status";
+                        }
+                    }, {
+                        targets: 4,
+                        render: function(a, t, e, n) {
+                            url = "<?= site_url('browse') ?>/" + e.umbrella + "/" + e.field
+                            return '<a href="' + url + '" target="_blank" >' + e.field + '</a>';
+
                         }
                     },
                     {
@@ -301,7 +314,6 @@ $this->load->view('admin_panel/templates/close_html');
         }
     }
 
-    ;
     jQuery(document).ready(function() {
         DatatablesDataSourceAjaxServer.init();
     });

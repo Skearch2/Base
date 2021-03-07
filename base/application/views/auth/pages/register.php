@@ -63,7 +63,7 @@ $this->load->view('auth/templates/head');
 								</select>
 							</div>
 							<div class="form-group m-form__group">
-								<input class="form-control m-input" type="password" placeholder="Password" name="password">
+								<input class="form-control m-input" type="password" placeholder="Password" name="password" id="password">
 							</div>
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="password" placeholder="Confirm Password" name="password2">
@@ -137,6 +137,74 @@ $this->load->view('auth/templates/head');
 	<!--begin::Page Scripts -->
 	<script src="<?= site_url(ASSETS) ?>/auth/vendors/custom/slidercaptcha/slidercaptcha.js"></script>
 	<script>
+		// <?php if ($is_brand_signup) : ?>
+		// 	var FormControls = {
+		// 		init: function() {
+		// 			$("#m_form").validate({
+
+		// 				rules: {
+		// 					name: {
+		// 						required: 1
+		// 					},
+		// 					brandname: {
+		// 						required: 1
+		// 					},
+		// 					email_b: {
+		// 						required: 1,
+		// 						email: 1
+		// 					},
+		// 					phone: {
+		// 						required: 1,
+		// 						phoneUS: 1
+		// 					},
+		// 					agree: {
+		// 						required: 1
+		// 					}
+		// 				},
+		// 				invalidHandler: function(e, r) {},
+		// 				submitHandler: function(e) {
+		// 					form.submit();
+		// 				},
+		// 			});
+		// 		}
+		// 	};
+		// <?php else : ?>
+		// 	var FormControls = {
+		// 		init: function() {
+		// 			$("#m_form").validate({
+
+		// 				rules: {
+		// 					skearch_id: {
+		// 						required: 1,
+		// 						nowhitespace: true
+		// 					},
+		// 					email: {
+		// 						required: 1,
+		// 						email: 1
+		// 					},
+		// 					gender: {
+		// 						required: 1
+		// 					},
+		// 					age_group: {
+		// 						required: 1
+		// 					},
+		// 					password: {
+		// 						required: 1
+		// 					},
+		// 					password2: {
+		// 						required: 1,
+		// 						equalTo: "#password"
+		// 					}
+		// 				},
+		// 				invalidHandler: function(e, r) {},
+		// 				submitHandler: function(e) {
+		// 					form.submit();
+		// 				},
+		// 			});
+		// 		}
+		// 	};
+		// <?php endif ?>
+
 		// Show sign up form for brand user
 		function showFormBrand() {
 			var formUser = document.getElementById("m-login__form m-form__user");
@@ -172,6 +240,8 @@ $this->load->view('auth/templates/head');
 		}
 
 		$(document).ready(function() {
+			// FormControls.init();
+
 			// Mask phone field to US number format
 			$("#phone").inputmask("mask", {
 				mask: "(999) 999-9999"

@@ -28,14 +28,14 @@ $this->load->view('auth/templates/head');
 								<?php $this->load->view('auth/templates/notifications'); ?>
 							</div>
 						</div>
-						<?= form_open('', array('class' => 'm-login__form m-form')) ?>
+						<?= form_open('', array('id' => 'm_form', 'class' => 'm-login__form m-form')) ?>
 						<input type="hidden" id="skearch_id" name="skearch_id" value=<?= $skearch_id; ?>>
-						<?php echo form_hidden($csrf); ?>
+						<?= form_hidden($csrf); ?>
 						<div class="form-group m-form__group">
 							<input class="form-control m-input m-login__form-input--last" id="password" name="password" type="password" placeholder="Password">
 						</div>
 						<div class="form-group m-form__group">
-							<input class="form-control m-input m-login__form-input--last" id="password" name="password2" type="password" placeholder="Confirm Password">
+							<input class="form-control m-input m-login__form-input--last" id="password2" name="password2" type="password" placeholder="Confirm Password">
 						</div>
 						<div class="m-login__form-action">
 							<button id="login_submit" class="btn btn-outline-info m-btn m-btn--custom m-login__btn">Submit</button>
@@ -50,6 +50,39 @@ $this->load->view('auth/templates/head');
 	<?php
 	// Contains global javascripts
 	$this->load->view('auth/templates/js_global');
+
+	?>
+
+	<script>
+		$(document).ready(function() {
+			FormControls.init();
+		});
+
+		var FormControls = {
+			init: function() {
+				$("#m_form").validate({
+					rules: {
+						password: {
+							required: 1,
+							minlength: <?= $this->config->item('min_password_length', 'ion_auth') ?>,
+							maxlength: <?= $this->config->item('max_password_length', 'ion_auth') ?>,
+							nowhitespace: true
+						},
+						password2: {
+							required: 1,
+							equalTo: "#password"
+						}
+					},
+					invalidHandler: function(e, r) {},
+					submitHandler: function(e) {
+						form.submit();
+					},
+				});
+			}
+		};
+	</script>
+
+	<?php
 	// Close body and html
 	$this->load->view('auth/templates/end_html');
 	?>
