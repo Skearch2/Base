@@ -130,6 +130,12 @@ $this->load->view('admin_panel/templates/subheader');
 										<input class="form-control m-input" type="text" name="zipcode" value="<?= set_value('zipcode') ?>">
 									</div>
 								</div>
+								<div class="form-group m-form__group row">
+									<label for="note" class="col-2 col-form-label">Note</label>
+									<div class="col-lg-7 col-md-9 col-sm-12">
+										<textarea class="form-control" name="note" id="note" rows="5"><?= set_value('note') ?></textarea>
+									</div>
+								</div>
 							</div>
 							<div class="m-portlet__foot m-portlet__foot--fit">
 								<div class="m-form__actions">
@@ -177,6 +183,13 @@ $this->load->view('admin_panel/templates/close_html');
 
 
 <script>
+	var Autosize = {
+		init: function() {
+			var t;
+			t = $("#note"), autosize(t), autosize.update(t)
+		}
+	};
+
 	var FormControls = {
 		init: function() {
 			$("#m_form").validate({
@@ -204,6 +217,9 @@ $this->load->view('admin_panel/templates/close_html');
 						required: 1,
 						number: true,
 						minlength: 5
+					},
+					note: {
+						maxlength: 5000
 					}
 				},
 				invalidHandler: function(e, r) {
@@ -218,7 +234,8 @@ $this->load->view('admin_panel/templates/close_html');
 
 	$(document).ready(function() {
 
-		FormControls.init();
+		FormControls.init()
+		Autosize.init()
 
 		// hide option which has no value
 		$('option[value=""]').hide().parent().selectpicker('refresh');

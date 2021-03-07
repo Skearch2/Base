@@ -24,7 +24,7 @@ $this->load->view('auth/templates/head');
 						<div class="m-login__head">
 							<h3 class="m-login__title">Login to Skearch</h3>
 						</div>
-						<?= form_open('', array('class' => 'm-login__form m-form')) ?>
+						<?= form_open('', array('id' => 'm_form', 'class' => 'm-login__form m-form')) ?>
 						<?php $this->load->view('auth/templates/notifications') ?>
 						<div class="form-group m-form__group">
 							<input class="form-control m-input" type="text" placeholder="Skearch ID" name="skearch_id" value="<?= set_value('skearch_id') ?>" autocomplete="off">
@@ -62,6 +62,34 @@ $this->load->view('auth/templates/head');
 	<?php
 	// Contains global javascripts
 	$this->load->view('auth/templates/js_global');
+	?>
+
+	<script>
+		$(document).ready(function() {
+			FormControls.init();
+		});
+
+		var FormControls = {
+			init: function() {
+				$("#m_form").validate({
+					rules: {
+						skearch_id: {
+							required: 1
+						},
+						password: {
+							required: 1
+						}
+					},
+					invalidHandler: function(e, r) {},
+					submitHandler: function(e) {
+						form.submit();
+					},
+				});
+			}
+		};
+	</script>
+
+	<?php
 	// Close body and html
 	$this->load->view('auth/templates/end_html');
 	?>

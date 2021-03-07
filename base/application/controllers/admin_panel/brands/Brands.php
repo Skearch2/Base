@@ -69,6 +69,7 @@ class Brands extends MY_Controller
             $this->form_validation->set_rules('state', 'State', 'trim|required');
             $this->form_validation->set_rules('country', 'Country', 'trim|required');
             $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]|required');
+            $this->form_validation->set_rules('note', 'Note', 'trim|max_length[5000]');
 
             if ($this->form_validation->run() == false) {
                 $data['states'] = $this->Util_model->get_state_list();
@@ -87,6 +88,7 @@ class Brands extends MY_Controller
                 $brand_data['city'] = $this->input->post('city');
                 $brand_data['state'] = $this->input->post('state');
                 $brand_data['country'] = $this->input->post('country');
+                $brand_data['note'] = $this->input->post('note');
                 $brand_data['zipcode'] = $this->input->post('zipcode');
 
                 $create = $this->Brand->create($brand_data);
@@ -258,6 +260,7 @@ class Brands extends MY_Controller
             $this->form_validation->set_rules('state', 'State', 'trim|required');
             $this->form_validation->set_rules('country', 'Country', 'trim|required');
             $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]|required');
+            $this->form_validation->set_rules('note', 'Note', 'trim|max_length[5000]');
 
             if ($this->form_validation->run() == false) {
                 $brand = $this->Brand->get($id);
@@ -271,6 +274,7 @@ class Brands extends MY_Controller
                 $data['state'] = $brand->state;
                 $data['country'] = $brand->country;
                 $data['zipcode'] = $brand->zipcode;
+                $data['note'] = $brand->note;
 
                 $data['states'] = $this->Util_model->get_state_list();
                 $data['countries'] = $this->Util_model->get_country_list();
@@ -286,6 +290,7 @@ class Brands extends MY_Controller
                 $brand_data['state'] = $this->input->post('state');
                 $brand_data['country'] = $this->input->post('country');
                 $brand_data['zipcode'] = $this->input->post('zipcode');
+                $brand_data['note'] = $this->input->post('note');
 
                 $update = $this->Brand->update($id, $brand_data);
 

@@ -224,7 +224,9 @@ class Pages extends MY_Controller
         $data['suggest_fields'] = $this->Category_model->get_field_suggestions($data['field_id']);
 
         // get media for media box a
-        $album_id = $this->get_album("field", $umbrella_id, "A");
+        $album_id = $this->get_album("field", $field_id, "A");
+        // print_r($album_id);
+        // die();
         if ($album_id != NULL) {
           // get the appropriate media for field
           $data['media_box_a'] = $this->get_media_contents($album_id);
@@ -266,7 +268,7 @@ class Pages extends MY_Controller
         }
 
         // get media for media box b
-        $album_id = $this->get_album("field", $umbrella_id, "B");
+        $album_id = $this->get_album("field", $field_id, "B");
         if ($album_id != NULL) {
           // get the appropriate media for field
           $data['media_box_b'] = $this->get_media_contents($album_id);
@@ -306,6 +308,9 @@ class Pages extends MY_Controller
         $data['results'] = $this->Category_model->get_field_suggestions($field_id);
         $data['umbrella_name'] = ucwords(urldecode($umbrella_name));
         $data['field_name'] = urldecode($field_name);
+
+        // print_r($data['media_box_b']);
+        // die();
 
         // save the field in the field history
         if ($this->ion_auth->logged_in()) {
