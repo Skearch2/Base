@@ -37,7 +37,6 @@ $this->load->view('admin_panel/templates/subheader');
 		</span>
 	</div>
 </div>
-
 <!-- end::Page Loader -->
 
 <div class="m-content">
@@ -198,10 +197,6 @@ $this->load->view('admin_panel/templates/subheader');
 	</div>
 	<!--end:: Widgets/Top Products-->
 </div>
-</div>
-<!--End::Section-->
-</div>
-
 
 <?php
 

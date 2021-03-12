@@ -104,7 +104,7 @@ $this->load->view('admin_panel/templates/close_html');
 <script>
     function runLinkChecker() {
         $.ajax({
-            url: '<?= site_url('admin/linkchecker/update_urls_status'); ?>',
+            url: '<?= site_url('admin/linkchecker/run'); ?>',
             type: 'GET',
             async: true,
             beforeSend: function(data, status) {
@@ -116,14 +116,19 @@ $this->load->view('admin_panel/templates/close_html');
                 } else if (data == 1) {
                     toastr.success("", "Scan completed.")
                     $("#btn_linkchecker").removeClass().addClass("btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air").prop("disabled", false);
+                    $('#m_table_1').fadeOut("slow");
                     $('#m_table_1').DataTable().ajax.reload(null, false);
-                } else {
+                    $('#m_table_1').fadeIn("fast");
+                } else if (data == 0) {
                     toastr.error("", "Some error occured!.")
                     $("#btn_linkchecker").removeClass().addClass("btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air").prop("disabled", false);
                 }
             },
             error: function(xhr, status, error) {
-                toastr.error("", "Unable to run linkchecker.")
+                if (xhr.status == 500) {
+                    toastr.error("", "Unable to run linkchecker.")
+                    $("#btn_linkchecker").removeClass().addClass("btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air").prop("disabled", false);
+                }
             }
         });
     }
@@ -221,13 +226,10 @@ $this->load->view('admin_panel/templates/close_html');
                 responsive: !0,
                 dom: '<"top"lfp>rt<"bottom"ip><"clear">',
                 rowId: "id",
-                order: [
-                    [0, 'asc']
-                ],
                 searchDelay: 500,
-                processing: 0,
+                processing: !0,
                 serverSide: !1,
-                ajax: "<?= site_url(); ?>admin/linkchecker/get",
+                ajax: "<?= site_url(); ?>admin/linkchecker/get/links",
                 columns: [{
                     data: "title"
                 }, {

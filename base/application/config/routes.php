@@ -296,14 +296,13 @@ $route['admin/viewas/brand/id/(:num)/show/ads']              = 'my_skearch/brand
 $route['admin/viewas/brand/id/(:num)/show/keywords']         = 'my_skearch/brand/keywords/index/$1';
 $route['admin/viewas/brand/id/(:num)/show/ads/action/get']   = 'my_skearch/brand/ads/get/$1';
 
-
-
 /* Link Checker */
 $route['admin/linkchecker']                         = 'admin_panel/linkchecker';
-$route['admin/linkchecker/get']                     = 'admin_panel/linkchecker/get';
-$route['admin/linkchecker/get_status_info']         = 'admin_panel/option/get_status_info';
+$route['admin/linkchecker/get/links']               = 'admin_panel/linkchecker/get';
 $route['admin/linkchecker/remove/id/(:num)']        = 'admin_panel/linkchecker/remove/$1';
-$route['admin/linkchecker/update_urls_status']      = 'admin_panel/linkchecker/update_urls_status';
+$route['admin/linkchecker/run']                     = 'admin_panel/linkchecker/run';
+$route['admin/linkchecker/run/get/progress']        = 'admin_panel/linkchecker/get_curl_progress';
+$route['admin/linkchecker/get_status_info']         = 'admin_panel/option/get_status_info';
 
 /* Email */
 $route['admin/email/invite']                        = 'admin_panel/email/invite';
@@ -319,7 +318,13 @@ $route['admin/option']                       = 'admin_panel/option';
 $route['admin/option/update_option']         = 'admin_panel/option/update_option';
 $route['admin/option/brandlinks_status_all'] = 'admin_panel/option/brandlinks_status_all';
 
-
+/* Ads Manager Routes */
+$route['admin/ads/manager']                                                   = 'admin_panel/ads_manager';
+$route['admin/ads/manager/dashboard']                                         = 'admin_panel/ads_manager';
+$route['admin/ads/manager/view/default/banner/(a|b|u|va)']                    = 'admin_panel/ads_manager/default/$1';
+$route['admin/ads/manager/view/default/banner/(a|b|u|va)/action/get']         = 'admin_panel/ads_manager/default/$1/get';
+$route['admin/ads/manager/view/global/banner/(a|b|u|va)']                     = 'admin_panel/ads_manager/global/$1';
+$route['admin/ads/manager/view/global/banner/(a|b|u|va)/action/get']          = 'admin_panel/ads_manager/global/$1/$2/get';
 
 /**********************************************  Media Server API Routes *************************************************/
 
