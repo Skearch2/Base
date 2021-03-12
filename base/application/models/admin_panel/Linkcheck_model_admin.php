@@ -46,6 +46,34 @@ class Linkcheck_model_admin extends CI_Model
     }
 
     /**
+     * Get linkchecker progress information
+     *
+     * @param boolean $status Status of Linkchecker execution
+     * @param int $progress Progress of Linkchecker execution
+     * @return object|boolean
+     */
+    public function progress($status = null, $progress = null)
+    {
+        if ($status === null && $progress === null) {
+            $this->db->select('*');
+            $this->db->from('skearch_linkchecker_progress');
+            $query = $this->db->get();
+
+            return $query->row();
+        } else {
+            $this->db->set('is_linkchecker_running', $status);
+            $this->db->set('linkchecker_progress', $progress);
+            $this->db->update('skearch_linkchecker_progress');
+
+            if ($this->db->affected_rows()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    /**
      * Remove link from link checker
      *
      * @param int $id
@@ -64,15 +92,9 @@ class Linkcheck_model_admin extends CI_Model
         }
     }
 
-    public function update_http_status($id, $code)
+    public function update($data)
     {
-        $data = array(
-            'http_status_code' => $code,
-            'last_status_check ' => date("Y-m-d H:i:s")
-        );
-
-        $this->db->where('id', $id);
-        $this->db->update('skearch_listings', $data);
+        $this->db->update_batch('skearch_listings', $data, 'id');
 
         if ($this->db->affected_rows()) {
             return true;
