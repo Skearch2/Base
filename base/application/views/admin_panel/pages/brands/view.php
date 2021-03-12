@@ -292,5 +292,5 @@ $this->load->view('admin_panel/templates/close_html');
 <!-- Sidemenu class -->
 <script>
 	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-brands").addClass("m-menu__item  m-menu__item--active");
+	$("#submenu-brands-brands").addClass("m-menu__item  m-menu__item--active");
 </script>
