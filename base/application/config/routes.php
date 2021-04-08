@@ -67,11 +67,16 @@ $route['browse/(:any)']                          = 'frontend/pages/browse_umbrel
 $route['browse/(:any)/(:any)']                   = 'frontend/pages/browse_field/$1/$2';
 $route['browse/get_field_results/(:any)/(:any)'] = 'frontend/pages/get_field_results/$1/$2';
 
+/* Ads */
+$route['redirect/ad/id/(:num)']                  = 'frontend/ads/redirect/$1';
+$route['update/impression/ad/id/(:num)']         = 'frontend/ads/update_impression/$1';
+
 /* Search */
 $route['search'] = 'frontend/search';
 
 /* Theme */
 $route['theme/change'] = 'frontend/pages/change_theme';
+
 
 
 /**********************************************  My Skearch Routes  ***************************************************/
@@ -319,15 +324,23 @@ $route['admin/option/update_option']         = 'admin_panel/option/update_option
 $route['admin/option/brandlinks_status_all'] = 'admin_panel/option/brandlinks_status_all';
 
 /* Ads Manager Routes */
-$route['admin/ads/manager']                                                   = 'admin_panel/ads_manager';
-$route['admin/ads/manager/dashboard']                                         = 'admin_panel/ads_manager';
-$route['admin/ads/manager/view/default/banner/(a|b|u|va)']                    = 'admin_panel/ads_manager/default/$1';
-$route['admin/ads/manager/view/default/banner/(a|b|u|va)/action/get']         = 'admin_panel/ads_manager/default/$1/get';
-$route['admin/ads/manager/view/global/banner/(a|b|u|va)']                     = 'admin_panel/ads_manager/global/$1';
-$route['admin/ads/manager/view/global/banner/(a|b|u|va)/action/get']          = 'admin_panel/ads_manager/global/$1/$2/get';
+$route['admin/ads/manager']                                                                             = 'admin_panel/ads_manager';
+$route['admin/ads/manager/dashboard']                                                                   = 'admin_panel/ads_manager';
+$route['admin/ads/manager/create/(default|global)/banner/(a|b|u|va)']                                   = 'admin_panel/ads_manager/create/$1/0/$2';
+$route['admin/ads/manager/create/(umbrella|field)/id/(:num)/banner/(a|b|u)']                            = 'admin_panel/ads_manager/create/$1/$2/$3';
+$route['admin/ads/manager/view/(default|global)/banner/(a|b|u|va)/show/(library|archived)']             = 'admin_panel/ads_manager/view/$1/$2/$3';
+$route['admin/ads/manager/view/(umbrella|field)/id/(:num)/banner/(a|b|u)/show/(library|archived)']      = 'admin_panel/ads_manager/view_by_page/$1/$2/$3/$4';
+$route['admin/ads/manager/view/activity/ad/id/(:num)']                                                  = 'admin_panel/ads_manager/view_activity/$1';
+$route['admin/ads/manager/get/(default|global)/banner/(a|b|u|va)/archived/(0|1)']                       = 'admin_panel/ads_manager/get/$1/0/$2/$3';
+$route['admin/ads/manager/get/(umbrella|field)/id/(:num)/banner/(a|b|u)/archived/(0|1)']                = 'admin_panel/ads_manager/get/$1/$2/$3/$4';
+$route['admin/ads/manager/get/activity/ad/id/(:num)']                                                   = 'admin_panel/ads_manager/get_activity/$1';
+$route['admin/ads/manager/update/ad/id/(:num)/(default|global)/banner/(a|b|u|va)']                      = 'admin_panel/ads_manager/update/$1/$2/0/$3';
+$route['admin/ads/manager/update/ad/id/(:num)/(umbrella|field)/id/(:num)/banner/(a|b|u)']               = 'admin_panel/ads_manager/update/$1/$2/$3/$4';
+$route['admin/ads/manager/archive/ad/id/(:num)']                                                        = 'admin_panel/ads_manager/toggle_archive/$1';
+$route['admin/ads/manager/restore/ad/id/(:num)']                                                        = 'admin_panel/ads_manager/toggle_archive/$1';
+$route['admin/ads/manager/toggle/status/ad/id/(:num)']                                                  = 'admin_panel/ads_manager/toggle/$1';
+$route['admin/ads/manager/upload/media']                                                                = 'admin_panel/ads_manager/upload_media';
 
 /**********************************************  Media Server API Routes *************************************************/
 
 $route['media/api/stats/brand/id/(:num)']      = 'frontend/media/get_brand_ads_stats/$1';
-$route['redirect/link/id/(:num)']              = 'frontend/media/media_redirect/$1';
-$route['impression/image/id/(:num)']           = 'frontend/media/update_image_impression/$1';

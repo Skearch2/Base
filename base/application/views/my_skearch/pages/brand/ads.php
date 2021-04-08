@@ -61,9 +61,8 @@ $this->load->view('my_skearch/templates/start_pagebody');
 				<thead>
 					<tr>
 						<th>ID</th>
-						<th>Title</th>
-						<th width="30%">Description</th>
-						<th width="50%">Media</th>
+						<th width="20%">Title</th>
+						<th width="30%">Thumbnail</th>
 						<th>Duration</th>
 						<th width="20%">Redirects to</th>
 						<th>Total Clicks</th>
@@ -102,13 +101,13 @@ $this->load->view('my_skearch/templates/js_global');
 		$('video').trigger('pause');
 	});
 
-	// Show modal dialog to preview media
-	function viewMedia(src, isVideo = 0) {
+	// Show modal dialog to preview ads
+	function view(src, isVideo = 0) {
 		if (isVideo == 1) {
-			$('#videopreview').attr('src', 'https://media.skearch.com/data/' + src);
+			$('#videopreview').attr('src', src);
 			$('#videomodal').modal('show');
 		} else {
-			$('#imagepreview').attr('src', 'https://media.skearch.com/data/' + src);
+			$('#imagepreview').attr('src', src);
 			$('#imagemodal').modal('show');
 		}
 	}
@@ -134,8 +133,6 @@ $this->load->view('my_skearch/templates/js_global');
 				}, {
 					data: "title"
 				}, {
-					data: "description"
-				}, {
 					data: "media"
 				}, {
 					data: "duration"
@@ -144,7 +141,7 @@ $this->load->view('my_skearch/templates/js_global');
 				}, {
 					data: "clicks"
 				}, {
-					data: "impression"
+					data: "impressions"
 				}, {
 					data: "is_active"
 				}],
@@ -152,23 +149,23 @@ $this->load->view('my_skearch/templates/js_global');
 					targets: 0,
 					orderable: !1
 				}, {
-					targets: 3,
+					targets: 2,
 					orderable: !1,
 					render: function(a, t, e, n) {
 						// check if the media is a video (only mp4 format)
 						var isVideo = e['media'].substr(e['media'].length - 3) == 'mp4' ? 1 : 0;
 						if (isVideo)
-							return '<td><i title="View video" class="fas fa-video" style="cursor:pointer" onclick="viewMedia(\'' + e['media'] + '\',1)"></i></td>'
+							return '<td><i title="View video" class="fas fa-video" style="cursor:pointer" onclick="view(\'<?= site_url('base/media') ?>/' + e['media'] + '\',1)"></i></td>'
 						else
-							return '<td><img src="https://media.skearch.com/data/' + e['media'] + '" alt="No Media" style="display:block; max-width:200px; max-height:100px; cursor:pointer;" onclick="viewMedia(\'' + e['media'] + '\',0)"></td>'
+							return '<td><img src="<?= site_url('base/media') ?>/' + e['media'] + '" alt="No Media" style="display:block; max-width:200px; max-height:100px; cursor:pointer;" onclick="view(\'<?= site_url('base/media') ?>/' + e['media'] + '\',0)"></td>'
 					}
 				}, {
-					targets: 5,
+					targets: 4,
 					render: function(a, t, e, n) {
 						return '<a href="' + e['url'] + '" target="_blank">' + e['url'] + '</a>'
 					}
 				}, {
-					targets: 8,
+					targets: 7,
 					render: function(a, t, e, n) {
 						var s = {
 							1: {
@@ -195,5 +192,4 @@ $this->load->view('my_skearch/templates/js_global');
 <?php
 // Close body and html
 $this->load->view('my_skearch/templates/close_html');
-
 ?>

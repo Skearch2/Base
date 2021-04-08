@@ -31,6 +31,7 @@ class Pages extends MY_Controller
     $this->load->model('Category_model', 'Category_model');
     $this->load->model('Fields_History_model', 'Fields_History');
     $this->load->model('admin_panel/Option_model_admin', 'Option_model');
+    $this->load->model('frontend/ads_model', 'Ads');
     $this->load->model('my_skearch/User_model', 'User');
 
     $this->user_id = $this->session->userdata('user_id');
@@ -78,19 +79,15 @@ class Pages extends MY_Controller
       $data['umbrellas'][$umbrella->title] = $this->Category_model->get_subcategories($umbrella->id);
     }
 
-    // get media for media box va
-    $album_id = $this->get_album("global", 0, "VA");
-    if ($album_id != NULL) {
-      $data['media_box_va'] = $this->get_media_contents($album_id);
-      if ($data['media_box_va'] == NULL) {
-        // get the default media
-        $album_id = $this->get_album("default", 0, "VA");
-        $data['media_box_va'] = $this->get_media_contents($album_id);
-      }
-    } else {
-      $album_id = $this->get_album("default", 0, "VA");
-      $data['media_box_va'] = $this->get_media_contents($album_id);
+    // get global ads for banner va
+    $banner_va_ads = $this->Ads->get_ads('VA', 'global', 0);
+
+    // if no global ads found get default ads for banner va
+    if (!$banner_va_ads) {
+      $banner_va_ads = $this->Ads->get_ads('VA', 'default', 0);
     }
+
+    $data['banner_va_ads'] = $banner_va_ads;
 
     // page title
     $data['title'] = ucfirst('browse all fields');
@@ -115,85 +112,34 @@ class Pages extends MY_Controller
 
       $umbrella_id = $this->Category_model->get_category_id($umbrella_name)->id;
 
-      // get media for media box a
-      $album_id = $this->get_album("umbrella", $umbrella_id, "A");
-      if ($album_id != NULL) {
-        // get the appropriate media for umbrella
-        $data['media_box_a'] = $this->get_media_contents($album_id);
-        if ($data['media_box_a'] == NULL) {
-          $album_id = $this->get_album("global", 0, "A");
-          if ($album_id != NULL) {
-            // get the global media for umbrella
-            $data['media_box_a'] = $this->get_media_contents($album_id);
-            if ($data['media_box_a'] == NULL) {
-              $album_id = $this->get_album("default", 0, "A");
-              // get the default media for umbrella
-              $data['media_box_a'] = $this->get_media_contents($album_id);
-            }
-          } else {
-            $album_id = $this->get_album("default", 0, "A");
-            // get the default media for umbrella
-            $data['media_box_a'] = $this->get_media_contents($album_id);
-          }
-        }
-      } else {
-        $album_id = $this->get_album("global", 0, "A");
-        if ($album_id != NULL) {
-          // get the global media for umbrella
-          $data['media_box_a'] = $this->get_media_contents($album_id);
-          if ($data['media_box_a'] == NULL) {
-            $album_id = $this->get_album("default", 0, "A");
-            // get the default media for umbrella
-            $data['media_box_a'] = $this->get_media_contents($album_id);
-          }
-        } else {
-          $album_id = $this->get_album("default", 0, "A");
-          // get the default media for umbrella
-          $data['media_box_a'] = $this->get_media_contents($album_id);
+      // get ads for banner a
+      $banner_a_ads = $this->Ads->get_ads('A', 'umbrella', $umbrella_id);
+      // get ads for banner u
+      $banner_u_ads = $this->Ads->get_ads('U', 'umbrella', $umbrella_id);
+
+      // if no ads found get global ads for banner a
+      if (!$banner_a_ads) {
+        $banner_a_ads = $this->Ads->get_ads('A', 'global', 0);
+        if (!$banner_a_ads) {
+          // if no global ads found get default ads for banner a
+          $banner_a_ads = $this->Ads->get_ads('A', 'default', 0);
         }
       }
 
-      // get media for media box u
-      $album_id = $this->get_album("umbrella", $umbrella_id, "U");
-      if ($album_id != NULL) {
-        // get the appropriate media for umbrella
-        $data['media_box_u'] = $this->get_media_contents($album_id);
-        if ($data['media_box_u'] == NULL) {
-          $album_id = $this->get_album("global", 0, "U");
-          if ($album_id != NULL) {
-            // get the global media for umbrella
-            $data['media_box_u'] = $this->get_media_contents($album_id);
-            if ($data['media_box_u'] == NULL) {
-              $album_id = $this->get_album("default", 0, "U");
-              // get the default media for umbrella
-              $data['media_box_u'] = $this->get_media_contents($album_id);
-            }
-          } else {
-            $album_id = $this->get_album("default", 0, "U");
-            // get the default media for umbrella
-            $data['media_box_u'] = $this->get_media_contents($album_id);
-          }
-        }
-      } else {
-        $album_id = $this->get_album("global", 0, "U");
-        if ($album_id != NULL) {
-          // get the global media for umbrella
-          $data['media_box_u'] = $this->get_media_contents($album_id);
-          if ($data['media_box_u'] == NULL) {
-            $album_id = $this->get_album("default", 0, "U");
-            // get the default media for umbrella
-            $data['media_box_u'] = $this->get_media_contents($album_id);
-          }
-        } else {
-          $album_id = $this->get_album("default", 0, "U");
-          // get the default media for umbrella
-          $data['media_box_u'] = $this->get_media_contents($album_id);
+      // if no ads found get global ads for banner u
+      if (!$banner_u_ads) {
+        $banner_u_ads = $this->Ads->get_ads('U', 'global', 0);
+        if (!$banner_u_ads) {
+          // if no global ads found get default ads for banner u
+          $banner_u_ads = $this->Ads->get_ads('U', 'default', 0);
         }
       }
 
       $data['results'] = $this->Category_model->get_umbrella_suggestions($umbrella_id);
       $data['fields'] = $this->Category_model->get_subcategories($umbrella_id);
       $data['umbrella_name'] = urldecode($umbrella_name);
+      $data['banner_a_ads'] = $banner_a_ads;
+      $data['banner_u_ads'] = $banner_u_ads;
 
       // set page title
       $data['title'] = ucfirst(urldecode($umbrella_name));
@@ -214,103 +160,43 @@ class Pages extends MY_Controller
     if (!$this->Category_model->get_category_id($umbrella_name)) {
       redirect(site_url() . '/browse', 'refresh');
     } else {
-      $umbrella_id = $this->Category_model->get_category_id($umbrella_name)->id;
+      //$umbrella_id = $this->Category_model->get_category_id($umbrella_name)->id;
 
       if (!$this->Category_model->get_subcategory_id($field_name)) {
         redirect(site_url() . '/browse/' . $umbrella_name, 'refresh');
       } else {
         $field_id = $this->Category_model->get_subcategory_id($field_name)->id;
+
+        // get ads for banner a
+        $banner_a_ads = $this->Ads->get_ads('A', 'field', $field_id);
+        // get ads for banner b
+        $banner_b_ads = $this->Ads->get_ads('B', 'field', $field_id);
+
+        // if no ads found get global ads for banner a
+        if (!$banner_a_ads) {
+          $banner_a_ads = $this->Ads->get_ads('A', 'global', 0);
+          if (!$banner_a_ads) {
+            // if no global ads found get default ads for banner a
+            $banner_a_ads = $this->Ads->get_ads('A', 'default', 0);
+          }
+        }
+
+        // if no ads found get global ads for banner b
+        if (!$banner_b_ads) {
+          $banner_b_ads = $this->Ads->get_ads('B', 'global', 0);
+          if (!$banner_b_ads) {
+            // if no global ads found get default ads for banner b
+            $banner_b_ads = $this->Ads->get_ads('B', 'default', 0);
+          }
+        }
+
         $data['field_id'] = $field_id;
         $data['suggest_fields'] = $this->Category_model->get_field_suggestions($data['field_id']);
-
-        // get media for media box a
-        $album_id = $this->get_album("field", $field_id, "A");
-        // print_r($album_id);
-        // die();
-        if ($album_id != NULL) {
-          // get the appropriate media for field
-          $data['media_box_a'] = $this->get_media_contents($album_id);
-          if ($data['media_box_a'] == NULL) {
-            $album_id = $this->get_album("global", 0, "A");
-            if ($album_id != NULL) {
-              // get the global media for field
-              $data['media_box_a'] = $this->get_media_contents($album_id);
-              if ($data['media_box_a'] == NULL) {
-                $album_id = $this->get_album("default", 0, "A");
-                // get the default media for field
-                $data['media_box_a'] = $this->get_media_contents($album_id);
-              }
-            } else {
-              $album_id = $this->get_album("default", 0, "A");
-              // get the default media for field
-              $data['media_box_a'] = $this->get_media_contents($album_id);
-            }
-          }
-        } else {
-          $album_id = $this->get_album("global", 0, "A");
-          if ($album_id != NULL) {
-            // get the global media for field
-            $data['media_box_a'] = $this->get_media_contents($album_id);
-
-            if ($data['media_box_a'] == NULL) {
-              // var_dump($data['media_box_a']);
-              // //var_dump($album_id);
-              // die();
-              $album_id = $this->get_album("default", 0, "A");
-              // get the default media for field
-              $data['media_box_a'] = $this->get_media_contents($album_id);
-            }
-          } else {
-            $album_id = $this->get_album("default", 0, "A");
-            // get the default media for field
-            $data['media_box_a'] = $this->get_media_contents($album_id);
-          }
-        }
-
-        // get media for media box b
-        $album_id = $this->get_album("field", $field_id, "B");
-        if ($album_id != NULL) {
-          // get the appropriate media for field
-          $data['media_box_b'] = $this->get_media_contents($album_id);
-          if ($data['media_box_b'] == NULL) {
-            $album_id = $this->get_album("global", 0, "B");
-            if ($album_id != NULL) {
-              // get the global media for field
-              $data['media_box_b'] = $this->get_media_contents($album_id);
-              if ($data['media_box_b'] == NULL) {
-                $album_id = $this->get_album("default", 0, "B");
-                // get the default media for field
-                $data['media_box_b'] = $this->get_media_contents($album_id);
-              }
-            } else {
-              $album_id = $this->get_album("default", 0, "B");
-              // get the default media for field
-              $data['media_box_b'] = $this->get_media_contents($album_id);
-            }
-          }
-        } else {
-          $album_id = $this->get_album("global", 0, "B");
-          if ($album_id != NULL) {
-            // get the global media for field
-            $data['media_box_b'] = $this->get_media_contents($album_id);
-            if ($data['media_box_b'] == NULL) {
-              $album_id = $this->get_album("default", 0, "B");
-              // get the default media for field
-              $data['media_box_b'] = $this->get_media_contents($album_id);
-            }
-          } else {
-            $album_id = $this->get_album("default", 0, "B");
-            // get the default media for field
-            $data['media_box_b'] = $this->get_media_contents($album_id);
-          }
-        }
-
         $data['results'] = $this->Category_model->get_field_suggestions($field_id);
         $data['umbrella_name'] = ucwords(urldecode($umbrella_name));
         $data['field_name'] = urldecode($field_name);
-
-        // print_r($data['media_box_b']);
-        // die();
+        $data['banner_a_ads'] = $banner_a_ads;
+        $data['banner_b_ads'] = $banner_b_ads;
 
         // save the field in the field history
         if ($this->ion_auth->logged_in()) {
