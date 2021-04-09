@@ -124,11 +124,11 @@
             });
         }
 
-        // Update media impressions on slide change shown in media box
+        // Update ad impression on slide change shown in banner
         $(function() {
             $('.carousel').on('slide.bs.carousel', function(event) {
-                imageid = $(event.relatedTarget).attr('data-imageid');
-                $.get("<?= site_url("impression/image/id/"); ?>" + imageid, function() {});
+                adId = $(event.relatedTarget).attr('data-adid');
+                $.get("<?= site_url("update/impression/ad/id/"); ?>" + adId, function() {});
             })
         });
 

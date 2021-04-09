@@ -34,6 +34,7 @@ class Ads extends MY_Controller
         $this->section = 'brand';
 
         $this->load->model('my_skearch/User_model', 'User');
+        $this->load->model('frontend/ads_model', 'Ads');
     }
 
     /**
@@ -80,17 +81,7 @@ class Ads extends MY_Controller
 
         $brand_id = !is_null($id) ? $id : $this->User->get_brand_details($this->user_id)->brand_id;
 
-        // curl request for media box
-        $this->curl->create("https://media.skearch.com/api/npm/activity/{$brand_id}");
-        $this->curl->{'get'}();
-        $this->curl->http_header('X-API-KEY', '374986acc824c8621fa528d04740f308');
-        $this->curl->http_header('X-I-USER', 1);
-
-        $xml = $this->curl->execute();
-        // convert simplexml to array
-        $xml_array = json_decode(json_encode(new SimpleXMLElement($xml)), TRUE);
-
-        $stats = isset($xml_array['item']) ? $xml_array['item'] : array();
+        $stats =  $this->Ads->get_ads_by_brand($brand_id);
         $total_ads = count($stats);
         $result = array(
             'iTotalRecords' => $total_ads,
