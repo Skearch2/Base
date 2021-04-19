@@ -85,10 +85,10 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 								</div> -->
 								<div class="form-group m-form__group row">
-									<label for="media" class="col-2 col-form-label"></label>
+									<label for="media-upload" class="col-2 col-form-label"></label>
 									<div class="col-7 custom-file">
 										<input type="file" class="custom-file-input" id="customFile" name="media">
-										<label class="custom-file-label" for="media">Choose File</label>
+										<label class="custom-file-label" for="media">Add Media</label>
 									</div>
 								</div>
 								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
@@ -141,10 +141,10 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Enabled</label>
 									<div class="col-7">
-										<input type="hidden" name="is_active" value="0" <?= set_value('enabled', 1) == 0 ? 'checked' : "" ?>>
+										<input type="hidden" name="is_active" value="0" <?= set_value('is_active', 1) == 0 ? 'checked' : "" ?>>
 										<span class="m-switch m-switch--icon-check">
 											<label>
-												<input type="checkbox" name="is_active" value="1" <?= set_value('enabled', 1) == 1 ? 'checked' : "" ?>>
+												<input type="checkbox" name="is_active" value="1" <?= set_value('is_active', 1) == 1 ? 'checked' : "" ?>>
 												<span></span>
 											</label>
 										</span>
@@ -262,7 +262,7 @@ $this->load->view('admin_panel/templates/close_html');
 
 		// pre-populate http protocol in the url field
 		$("#url").inputmask({
-			regex: "http://.*"
+			regex: "https://.*"
 		});
 	});
 
