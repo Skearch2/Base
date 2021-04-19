@@ -73,35 +73,17 @@ $this->load->view('admin_panel/templates/subheader');
 										<h3 class="m-form__section">Media</h3>
 									</div>
 								</div>
-								<!-- <div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label"></label>
-									<div class="col-lg-4 col-md-9 col-sm-12">
-										<div class="m-dropzone dropzone" id="m-dropzone-one" name="media">
-											<div class="m-dropzone__msg dz-message needsclick">
-												<h3 class="m-dropzone__msg-title">Drop files here or click to upload.</h3>
-												<span class="m-dropzone__msg-desc">This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.</span>
-											</div>
-										</div>
-									</div>
-								</div> -->
 								<div class="form-group m-form__group row">
 									<label for="media-preview" class="col-2 col-form-label"></label>
 									<div class="col-7">
-										<?php $is_video = (substr($ad->media, -3) == "mp4") ? 1 : 0 ?>
+										<?php $is_video = (substr($media->media, -3) == "mp4") ? 1 : 0 ?>
 										<?php if ($is_video) : ?>
-											<video controls src="<?= site_url("base/media/$ad->media") ?>" style="display:block; width:auto; height:auto; max-width:600px; max-height:600px;">
+											<video controls src="<?= site_url("base/media/vault/brand_$brand->id/$media->media") ?>" style="display:block; width:auto; height:auto; max-width:600px; max-height:600px;">
 												Unable to play video, incompatible browser.
 											</video>
 										<?php else : ?>
-											<img src="<?= site_url("base/media/$ad->media") ?>" style="display:block; width:auto; height:auto; max-width:600px; max-height:600px;">
+											<img src="<?= site_url("base/media/vault/brand_$brand->id/$media->media") ?>" style="display:block; width:auto; height:auto; max-width:600px; max-height:600px;">
 										<?php endif ?>
-									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="media-upload" class="col-2 col-form-label"></label>
-									<div class="col-7 custom-file">
-										<input type="file" class="custom-file-input" id="customFile" name="media">
-										<label class="custom-file-label" for="media">Replace Media</label>
 									</div>
 								</div>
 								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
@@ -113,38 +95,36 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<label for="brand" class="col-2 col-form-label">Brand *</label>
 									<div class="col-7">
-										<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="brand">
-											<?php foreach ($brands as $b) : ?>
-												<option value="<?= $b->id ?>" <?= set_select("brand", $b->brand) ?> <?= ($b->id == $ad->brand_id) ? "selected" : "" ?> data-subtext="<?= $b->organization; ?>"><?= $b->brand; ?></option>
-											<?php endforeach; ?>
+										<select class="form-control m-bootstrap-select m_selectpicker" name="brand">
+											<option value="<?= $brand->id ?>" selected data-subtext="<?= $brand->organization; ?>"><?= $brand->brand; ?></option>
 										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Title *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title', $ad->title) ?>">
+										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title', $media->title) ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Link Reference *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="url" id="url" value="<?= set_value('url', $ad->url) ?>">
+										<input class="form-control m-input" type="text" name="url" id="url" value="<?= set_value('url', $media->url) ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Duration *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="duration" value="<?= set_value('duration', $ad->duration) ?>">
+										<input class="form-control m-input" type="text" name="duration" value="<?= set_value('duration') ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Sponsored</label>
 									<div class="col-7">
-										<input type="hidden" name="has_sign" value="0" <?= set_value('has_sign', $ad->has_sign) == 0 ? 'checked' : "" ?>>
+										<input type="hidden" name="has_sign" value="0" <?= set_value('has_sign', 1) == 0 ? 'checked' : "" ?>>
 										<span class="m-switch m-switch--icon-check">
 											<label>
-												<input type="checkbox" name="has_sign" value="1" <?= set_value('has_sign', $ad->has_sign) == 1 ? 'checked' : "" ?>>
+												<input type="checkbox" name="has_sign" value="1" <?= set_value('has_sign', 1) == 1 ? 'checked' : "" ?>>
 												<span></span>
 											</label>
 										</span>
@@ -153,14 +133,61 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Enabled</label>
 									<div class="col-7">
-										<input type="hidden" name="is_active" value="0" <?= set_value('is_active', $ad->is_active) == 0 ? 'checked' : "" ?>>
+										<input type="hidden" name="is_active" value="0" <?= set_value('is_active', 1) == 0 ? 'checked' : "" ?>>
 										<span class="m-switch m-switch--icon-check">
 											<label>
-												<input type="checkbox" name="is_active" value="1" <?= set_value('is_active', $ad->is_active) == 1 ? 'checked' : "" ?>>
+												<input type="checkbox" name="is_active" value="1" <?= set_value('is_active', 1) == 1 ? 'checked' : "" ?>>
 												<span></span>
 											</label>
 										</span>
 									</div>
+								</div>
+							</div>
+							<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+							<div class="form-group m-form__group row">
+								<div class="col-10 ml-auto">
+									<h3 class="m-form__section">Banner</h3>
+								</div>
+							</div>
+							<div class="form-group m-form__group row">
+								<label for="age_group" class="col-2 col-form-label">Scope *</label>
+								<div class="col-3">
+									<select class="form-control m-bootstrap-select m_selectpicker" name="scope" onchange="listBanners(this.value)">
+										<option value="">Select</option>
+										<option value="global" <?= set_select('scope', 'global') ?>>Global</option>
+										<option value="umbrella" <?= set_select('scope', 'umbrella') ?>>Umbrella</option>
+										<option value="field" <?= set_select('scope', 'field') ?>>Field</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group m-form__group row" id="umbrella">
+								<label for="example-text-input" class="col-2 col-form-label">Umbrella *</label>
+								<div class="col-7">
+									<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="scope_id">
+										<option value="" <?= set_select('scope_id', '', TRUE) ?>>Select</option>
+										<?php foreach ($umbrellas as $umbrella) : ?>
+											<option value="<?= $umbrella->id ?>" <?= set_select("scope_id", $umbrella->id) ?>><?= $umbrella->title ?></option>
+										<?php endforeach ?>
+									</select>
+								</div>
+							</div>
+							<div class="form-group m-form__group row" id="field">
+								<label for="example-text-input" class="col-2 col-form-label">Field *</label>
+								<div class="col-7">
+									<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="scope_id">
+										<option value="" <?= set_select('scope_id', '', TRUE) ?>>Select</option>
+										<?php foreach ($fields as $field) : ?>
+											<option value="<?= $field->id ?>" <?= set_select("scope_id", $field->id) ?>><?= $field->title ?></option>
+										<?php endforeach ?>
+									</select>
+								</div>
+							</div>
+							<div class="form-group m-form__group row">
+								<label for="age_group" class="col-2 col-form-label">Banner *</label>
+								<div class="col-3">
+									<select class="form-control m-bootstrap-select m_selectpicker" id="banner" name="banner">
+										<option value="">Select</option>
+									</select>
 								</div>
 							</div>
 							<div class="m-portlet__foot m-portlet__foot--fit">
@@ -239,46 +266,53 @@ $this->load->view('admin_panel/templates/close_html');
 		}
 	};
 
+	function listBanners(scope) {
+		if (scope == "umbrella") {
+			$("#banner").empty();
+			$("#banner").append('<option value="">Select</option>');
+			$("#banner").append('<option value="A">A</option>');
+			$("#banner").append('<option value="U">U</option>');
+			$("#umbrella").show();
+			$("#field").hide();
+		} else if (scope == "field") {
+			$("#banner").empty();
+			$("#banner").append('<option value="">Select</option>');
+			$("#banner").append('<option value="A">A</option>');
+			$("#banner").append('<option value="B">B</option>');
+			$("#field").show();
+			$("#umbrella").hide();
+		} else {
+			$("#banner").empty();
+			$("#banner").append('<option value="">Select</option>');
+			$("#banner").append('<option value="A">A</option>');
+			$("#banner").append('<option value="B">B</option>');
+			$("#banner").append('<option value="U">U</option>');
+			$("#banner").append('<option value="VA">VA</option>');
+			$("#umbrella").hide();
+			$("#field").hide();
+		}
+		$('option[value=""]').hide().parent().selectpicker('refresh');
+	}
+
 	$(document).ready(function() {
 		FormControls.init();
-
-		// var myDropzone = new Dropzone("#m-dropzone-one", {
-		// 	method: 'GET',
-		// 	url: '<?= site_url("admin/ads/manager/upload/media") ?>',
-		// 	paramName: 'media',
-		// 	clickable: true,
-		// 	autoProcessQueue: true,
-		// 	addRemoveLinks: true,
-		// 	maxFiles: 1,
-		// 	maxFilesize: <?= ($this->config->item('upload_file_size') / 1024) ?>, // in MBs
-		// 	acceptedFiles: ".jpeg,.jpg,.png,.gif,.mp4"
-		// });
-
-		// myDropzone.on("sending", function(file, xhr, formData) {
-		// 	var formData = new FormData();
-		// 	// var media = $('#m-dropzone-one').prop('files')[0];   
-		// 	formData.append('media', file)
-		// });
-
-		// myDropzone.on("error", function(file, xhr, formData) {
-		// 	console.log("Error")
-		// });
-
-		// myDropzone.on("success", function(file, xhr, formData) {
-		// 	console.log("Success")
-		// });
 
 		// pre-populate http protocol in the url field
 		$("#url").inputmask({
 			regex: "https://.*"
 		});
-	});
 
-	Dropzone.autoDiscover = false;
+		// hide option which has no value
+		$('option[value=""]').hide().parent().selectpicker('refresh');
+
+		$("#umbrella").hide();
+		$("#field").hide();
+		$("#banner").hide();
+	});
 </script>
 
 <!-- Sidemenu class -->
 <script>
 	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-brands-ads-manager").addClass("m-menu__item  m-menu__item--active");
+	$("#submenu-brands-brands").addClass("m-menu__item  m-menu__item--active");
 </script>

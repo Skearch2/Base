@@ -17,6 +17,7 @@ $this->load->view('frontend/templates/header');
 <!-- Media Box A -->
 <section class="ad">
   <div class="container">
+    <i id="speaker" class="fas fa-volume-mute" title="Unmute" onclick="toggleMute()"></i>
     <div id="myCarouselA" class="carousel slide carousel-fade" data-ride="carousel">
       <div class="ads" id="media-box-a-sign" style="visibility:hidden">
         <p>Ad</p>
@@ -25,7 +26,15 @@ $this->load->view('frontend/templates/header');
         <?php foreach ($banner_a_ads as $ad) : ?>
           <div class="carousel-item" data-adid="<?= $ad->id ?>" data-interval="<?= $ad->duration ?>" data-ad-sign="<?= $ad->has_sign ?>">
             <a href='<?= site_url("redirect/ad/id/" . $ad->id) ?>' target='_blank' title='<?= $ad->title ?>'>
-              <img class="responsive" width="1000" height="110" src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" />
+              <?php $is_video = substr(strtolower($ad->media), -3) == 'mp4' ? 1 : 0 ?>
+              <?php if ($is_video) : ?>
+                <video class="responsive" width="1000" height="110" loop muted>
+                  <source src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" type="video/mp4">
+                  Unable to play video, incompatible browser.
+                </video>
+              <?php else : ?>
+                <img class="responsive" width="1000" height="110" src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" />
+              <?php endif ?>
             </a>
           </div>
         <?php endforeach ?>
@@ -151,6 +160,25 @@ $this->load->view('frontend/templates/footer');
   });
 
   // Video settings for carousel
+  $('#myCarouselA').find('.carousel-item').first().find('video').each(function() {
+    $('#speaker').show();
+    this.play();
+  });
+  $('#myCarouselA').on('slid.bs.carousel', function() {
+    $(this).find('.carousel-item.active video').each(function() {
+      $('#speaker').show();
+      this.play();
+    });
+  });
+  $('#myCarouselA').on('slide.bs.carousel', function() {
+    $(this).find('.carousel-item.active video').each(function() {
+      $("#speaker").hide();
+      this.pause();
+      this.currentTime = 0;
+    });
+  });
+
+
   $('#myCarouselU').on('slid.bs.carousel', function() {
     $(this).find('.carousel-item.active video').each(function() {
       $('#speaker').show();

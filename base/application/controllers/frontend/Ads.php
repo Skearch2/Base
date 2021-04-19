@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File: ~/application/controller/Media_api.php
+ * File: ~/application/controller/frontend/Ads.php
  */
 
 if (!defined('BASEPATH')) {
@@ -9,7 +9,7 @@ if (!defined('BASEPATH')) {
 }
 
 /**
- * API calls to Media Server
+ * Manage ads redirections and interactions on frontend
  *
  * @version      2.0
  * @author       Iftikhar Ejaz <ejaziftikhar@gmail.com>

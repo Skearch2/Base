@@ -47,14 +47,14 @@ $this->load->view('frontend/templates/nav');
         <a href="browse">
             <h1>Browse all<span>Fields</span></h1>
         </a>
-        <?php foreach ($results as $results) : ?>
-            <?php if ($results->result_id == 0) : ?>
+        <?php foreach ($results as $result) : ?>
+            <?php if ($result->result_id == 0) : ?>
                 <button style="visibility: hidden;" class="btn btn-link"></button>
             <?php else : ?>
-                <?php if ($results->is_result_umbrella != 1) : ?>
-                    <a href="browse/<?= strtolower($results->umbrella) ?>/<?= strtolower($results->title) ?>" class="btn btn-link" role="button"><?= $results->title ?></a>
+                <?php if ($result->is_result_umbrella != 1) : ?>
+                    <a href="browse/<?= strtolower($result->umbrella) ?>/<?= strtolower($result->title) ?>" class="btn btn-link" role="button"><?= empty($result->home_display) ? $result->title : $result->home_display ?></a>
                 <?php else : ?>
-                    <a href="browse/<?= strtolower($results->title) ?>" class="btn btn-link" role="button"><?= $results->title ?></a>
+                    <a href="browse/<?= strtolower($result->title) ?>" class="btn btn-link" role="button"><?= empty($result->home_display) ? $result->title : $result->home_display ?></a>
                 <?php endif ?>
             <?php endif ?>
         <?php endforeach ?>

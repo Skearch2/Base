@@ -24,7 +24,7 @@
 			<div class="col-sm-12 login-bar" style="padding: 0;">
 				<?php if ($this->ion_auth->logged_in()) : ?>
 					<?php if ($this->ion_auth->is_admin()) : ?>
-						<a href="admin" class="btn btn-danger" role="button">Admin Panel</a>
+						<a href="<?= site_url('admin') ?>" class="btn btn-danger" role="button">Admin Panel</a>
 					<?php endif ?>
 					<a href="<?= site_url() ?>myskearch" class="btn btn-danger" role="button">My Skearch</a>
 					<a href="<?= site_url() ?>myskearch/auth/logout" class="btn btn-danger" role="button">Logout</a>

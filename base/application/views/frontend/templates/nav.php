@@ -5,7 +5,7 @@
                 <?php if ($this->ion_auth->logged_in()) : ?>
                     <span class="member-welcome">Hello <?= ucfirst($this->session->userdata('username')) ?></span>
                     <?php if ($this->ion_auth->is_admin()) : ?>
-                        <a href="admin" class="btn btn-danger" role="button">Admin Panel</a>
+                        <a href="<?= site_url('admin') ?>" class="btn btn-danger" role="button">Admin Panel</a>
                     <?php endif ?>
                     <a href="myskearch" class="btn btn-danger" role="button">My Skearch</a>
                     <a href="myskearch/auth/logout" class="btn btn-danger" role="button">Logout</a>
