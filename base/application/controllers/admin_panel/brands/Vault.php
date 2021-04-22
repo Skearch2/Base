@@ -99,7 +99,6 @@ class Vault extends MY_Controller
             $this->form_validation->set_rules('has_sign', 'Sponsored', 'required|numeric');
             $this->form_validation->set_rules('is_active', 'Enabled', 'required|numeric');
             $this->form_validation->set_rules('scope', 'Scope', 'required');
-            $this->form_validation->set_rules('scope_id', 'Scope Id', 'required|numeric');
             $this->form_validation->set_rules('banner', 'Banner', 'required');
 
             if ($this->form_validation->run() === false) {
@@ -115,28 +114,54 @@ class Vault extends MY_Controller
                 $this->load->view('admin_panel/pages/brands/vault/create_ad', $data);
             } else {
 
+                // print_r($_POST);
+                // die();
+
                 $media = $this->Vault->get_media($media_id);
                 $scope = $this->input->post('scope');
-                $scope_id = $this->input->post('scope_id');
+                if ($scope == 'umbrella') {
+                    $scope_id = $this->input->post('umbrella');
+                } elseif ($scope == 'field') {
+                    $scope_id = $this->input->post('field');
+                } else {
+                    $scope_id = 0;
+                }
                 $banner = $this->input->post('banner');
-
                 $folder = strtolower("$scope/$scope_id");
 
-                $target = '.base/media/vault/brand_' . $this->brand_id  . "/";
-                $destination = './base/media/' . $folder . "/";
+                $target = ".base/media/vault/brand_{$brand_id}/";
+                if ($scope_id == 0) {
+                    $destination = './base/media/global/';
+                } else {
+                    $destination = "./base/media/{$folder}/";
+                }
 
-                if (isset($scope_id) && $scope_id != 0) {
+                $banner_id = null;
+
+                if ($scope_id == 0) {
+                    $banner_id = $this->Ads_manager->get_banner($scope, $scope_id, $banner)->id;
+                    if (copy("$target{$media->media}", "$destination{$media->media}")) {
+                        show_error('Unable to copy media to target folder.', 500, 'Internal Server Error');
+                        return;
+                    }
+                } else {
                     if (!is_dir($destination)) {
                         if (mkdir($destination, 0755, TRUE)) {
-                            $this->ads_manager->create_banner($scope, $scope_id, $banner, $folder);
-                            copy("$target{$media->media}", "$destination{$media->media}");
+                            $banner_id = $this->Ads_manager->create_banner($scope, $scope_id, $banner, $folder);
+                            // copy media from vault to respective ad banner folder
+                            if (copy("$target{$media->media}", "$destination{$media->media}")) {
+                                show_error('Unable to copy media to target folder.', 500, 'Internal Server Error');
+                                return;
+                            }
                         } else {
                             show_error('Unable to create media folder.', 500, 'Internal Server Error');
+                            return;
                         }
                     }
                 }
 
                 $data = [
+                    'banner_id' => $banner_id,
                     'brand_id' => $this->input->post('brand'),
                     'title' => $this->input->post('title'),
                     'url' => $this->input->post('url'),
@@ -145,70 +170,26 @@ class Vault extends MY_Controller
                     'is_active' => $this->input->post('is_active'),
                 ];
 
-                $create = $this->ads_manager->create_ad($data);
+                $create = $this->Ads_manager->create_ad($data);
 
-                if ($update) {
+                if ($create) {
+                    if ($this->input->post('is_active')) {
+                        // set status to live
+                        $this->Vault->update_status($media_id, 2);
+                    } else {
+                        // set status to inactive
+                        $this->Vault->update_status($media_id, 0);
+                    }
+                }
+
+                if ($create) {
                     $this->session->set_flashdata('create_success', 1);
                 } else {
                     $this->session->set_flashdata('create_success', 0);
                 }
 
-                redirect("admin/brands/vault/brand/id/1");
+                redirect("admin/brands/vault/brand/id/$brand_id");
             }
-        }
-    }
-
-    /**
-     * Upload media
-     *
-     * @param string $scope          Scope: Default|Global|Umbrella|Field
-     * @param int $scope_id          Scope id
-     * @return string|false
-     */
-    private function upload_media($scope, $scope_id)
-    {
-        $tmp = $this->config->item('tmp_dir');
-
-        if (!file_exists("./$tmp/")) {
-            mkdir("./$tmp/", $this->config->item('tmp_permissions'));
-        }
-
-        $config['upload_path'] = "./$tmp/";
-        $config['max_size'] = $this->config->item('upload_file_size');
-        $config['allowed_types'] = $this->config->item('upload_file_types');
-        $config['encrypt_name'] = true;
-        // $config['max_width']            = 1024;
-        // $config['max_height']           = 768;
-
-        $this->load->library('upload', $config);
-
-        $upload = $this->upload->do_upload('media');
-
-        if ($upload) {
-
-            // $data = $this->upload->data();
-            // http_response_code(200);
-            // echo json_encode($data['media']);
-
-            $media = $this->upload->data();
-
-            if ($scope_id == 0) {
-                $folder_path = FCPATH . 'base/media/' . strtolower($scope)  . "/";
-            } else {
-                $folder_path = FCPATH . 'base/media/' . strtolower("{$scope}/{$scope_id}"  . "/");
-            }
-
-            if (move_uploaded_file($_FILES['media']['tmp_name'], $folder_path . $media['file_name'])) {
-                return $media['file_name'];
-            } else {
-                log_message('error', 'Unable to upload media.');
-                return false;
-            }
-        } else {
-            log_message('error', 'Unable to upload media.');
-            return false;
-            // http_response_code(500);
-            // echo json_encode($this->upload->display_errors());
         }
     }
 }

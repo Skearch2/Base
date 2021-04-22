@@ -36,18 +36,34 @@ $this->load->view('my_skearch/templates/start_pagebody');
 					</div>
 				</div>
 				<div class="tab-content">
-					<div class="tab-pane active" id="profile">
-						<?= form_open('', 'id="m_form"'); ?>
-						<fieldset class="m-form m-form--fit m-form--label-align-right">
-							<div class="m-portlet__body">
-								<?php if (validation_errors()) : ?>
+					<div class="tab-pane active">
+						<form class="m-form m-form--fit m-form--label-align-right" id="m_form" role="form" method="POST" enctype="multipart/form-data">
+							<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+							<fieldset class="m-form m-form--fit m-form--label-align-right">
+								<div class="m-portlet__body">
+									<?php if (validation_errors()) : ?>
+										<div class="m-form__content">
+											<div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+												<div class="m-alert__icon">
+													<i class="la la-warning"></i>
+												</div>
+												<div class="m-alert__text">
+													<?= validation_errors() ?>
+												</div>
+												<div class="m-alert__close">
+													<button type="button" class="close" data-close="alert" aria-label="Close">
+													</button>
+												</div>
+											</div>
+										</div>
+									<?php endif ?>
 									<div class="m-form__content">
-										<div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
+										<div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_msg">
 											<div class="m-alert__icon">
 												<i class="la la-warning"></i>
 											</div>
 											<div class="m-alert__text">
-												<?= validation_errors() ?>
+												There are some errors found in the form, please check and try submitting again!
 											</div>
 											<div class="m-alert__close">
 												<button type="button" class="close" data-close="alert" aria-label="Close">
@@ -55,71 +71,56 @@ $this->load->view('my_skearch/templates/start_pagebody');
 											</div>
 										</div>
 									</div>
-								<?php endif ?>
-								<div class="m-form__content">
-									<div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_msg">
-										<div class="m-alert__icon">
-											<i class="la la-warning"></i>
-										</div>
-										<div class="m-alert__text">
-											There are some errors found in the form, please check and try submitting again!
-										</div>
-										<div class="m-alert__close">
-											<button type="button" class="close" data-close="alert" aria-label="Close">
-											</button>
+									<div class="form-group m-form__group row">
+										<div class="col-10 ml-auto">
+											<h3 class="m-form__section">Media</h3>
 										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">Media</h3>
+									<div class="form-group m-form__group row">
+										<label for="media-upload" class="col-2 col-form-label"></label>
+										<div class="col-7 custom-file">
+											<input type="file" class="custom-file-input" name="media">
+											<label class="custom-file-label" for="media">Add Media</label>
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="media-upload" class="col-2 col-form-label"></label>
-									<div class="col-7 custom-file">
-										<input type="file" class="custom-file-input" name="media">
-										<label class="custom-file-label" for="media">Add Media</label>
+									<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+									<div class="form-group m-form__group row">
+										<div class="col-10 ml-auto">
+											<h3 class="m-form__section">Details</h3>
+										</div>
 									</div>
-								</div>
-								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
-								<div class="form-group m-form__group row">
-									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">Details</h3>
+									<div class="form-group m-form__group row">
+										<label for="title" class="col-2 col-form-label">Title *</label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="title" value="<?= set_value('title') ?>">
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="title" class="col-2 col-form-label">Title *</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title') ?>">
+									<div class="form-group m-form__group row">
+										<label for="link" class="col-2 col-form-label">Link *</label>
+										<div class="col-7">
+											<input class="form-control m-input" type="text" name="url" id="url" value="<?= set_value('url') ?>">
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="link" class="col-2 col-form-label">Link *</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="url" value="<?= set_value('url') ?>">
+									<div class="form-group m-form__group row">
+										<label for="note" class="col-2 col-form-label">Note</label>
+										<div class="col-lg-7 col-md-9 col-sm-12">
+											<textarea class="form-control" name="note" rows="5"><?= set_value('note') ?></textarea>
+										</div>
 									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="note" class="col-2 col-form-label">Note</label>
-									<div class="col-lg-7 col-md-9 col-sm-12">
-										<textarea class="form-control" name="note" rows="5"><?= set_value('note') ?></textarea>
-									</div>
-								</div>
-								<div>
-									<div class="m-portlet__foot m-portlet__foot--fit">
-										<div class="m-form__actions">
-											<div class="row">
-												<div class="col-2">
-												</div>
-												<div class="col-7">
-													<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>
+									<div>
+										<div class="m-portlet__foot m-portlet__foot--fit">
+											<div class="m-form__actions">
+												<div class="row">
+													<div class="col-2">
+													</div>
+													<div class="col-7">
+														<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-						</fieldset>
-						<?= form_close(); ?>
+							</fieldset>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -180,6 +181,11 @@ $this->load->view('my_skearch/templates/js_global');
 
 	$(document).ready(function() {
 		FormControls.init();
+
+		// pre-populate https protocol in the url field
+		$("#url").inputmask({
+			regex: "https://.*"
+		});
 	});
 </script>
 

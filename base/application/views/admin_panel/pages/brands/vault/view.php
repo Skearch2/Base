@@ -180,8 +180,7 @@ $this->load->view('admin_panel/templates/close_html');
 					orderable: !1,
 					render: function(a, t, e, n) {
 						var title = e['title'].replace(/ /g, '%20');
-						return ""
-						// return '<a href="<?= site_url("admin/brands/vault/brand/id/$brand->id/media/id/") ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Create Ad"><i class="la la-plus"></i></a>'
+						return '<a href="<?= site_url("admin/brands/vault/brand/id/$brand->id/media/id/") ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Create Ad"><i class="la la-plus"></i></a>'
 					}
 				}, {
 					targets: 2,
