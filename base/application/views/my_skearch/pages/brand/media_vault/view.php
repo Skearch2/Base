@@ -67,7 +67,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						The brand has been created.
+						The media has been created.
 					</div>
 				</div>
 			<?php elseif ($this->session->flashdata('create_success') === 0) : ?>
@@ -76,7 +76,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						Unable to create the brand.
+						Unable to create the media.
 					</div>
 				</div>
 			<?php endif ?>
@@ -104,11 +104,12 @@ $this->load->view('my_skearch/templates/start_pagebody');
 				<thead>
 					<tr>
 						<th>ID</th>
-						<th width="20%">Title</th>
-						<th width="30%">Thumbnail</th>
-						<th width="20%">Url</th>
-						<th>Status</th>
+						<th>Title</th>
+						<th>Thumbnail</th>
+						<th>Url</th>
 						<th>Date Submitted</th>
+						<th>Status</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 			</table>
@@ -207,9 +208,11 @@ $this->load->view('my_skearch/templates/js_global');
 				}, {
 					data: "url"
 				}, {
+					data: "date_submitted"
+				}, {
 					data: "status"
 				}, {
-					data: "date_created"
+					data: "Actions"
 				}],
 				columnDefs: [{
 					targets: -1,
@@ -234,9 +237,9 @@ $this->load->view('my_skearch/templates/js_global');
 						// check if the media is a video (only mp4 format)
 						var isVideo = e['media'].substr(e['media'].length - 3) == 'mp4' ? 1 : 0;
 						if (isVideo)
-							return '<td><i title="View video" class="fas fa-video" style="cursor:pointer" onclick="view(\'<?= site_url('base/media/vault/brand_$brand_id') ?>/' + e['media'] + '\',1)"></i></td>'
+							return '<td><i title="View video" class="fas fa-video" style="cursor:pointer" onclick="view(\'<?= site_url("base/media/vault/brand_{$brand_id}/") ?>' + e['media'] + '\',1)"></i></td>'
 						else
-							return '<td><img src="<?= site_url("base/media/vault/brand_$brand_id") ?>/' + e['media'] + '" alt="No Media" style="display:block; max-width:200px; max-height:100px; cursor:pointer;" onclick="view(\'<?= site_url('base/media') ?>/' + e['media'] + '\',0)"></td>'
+							return '<td><img src="<?= site_url("base/media/vault/brand_{$brand_id}/") ?>' + e['media'] + '" alt="No Media" style="display:block; max-width:200px; max-height:100px; cursor:pointer;" onclick="view(\'<?= site_url("base/media/vault/brand_{$brand_id}/") ?>/' + e['media'] + '\',0)"></td>'
 					}
 				}, {
 					targets: 3,
@@ -245,6 +248,11 @@ $this->load->view('my_skearch/templates/js_global');
 					}
 				}, {
 					targets: 4,
+					render: function(a, t, e, n) {
+						return new Date(e['date_submitted']).toLocaleDateString();
+					}
+				}, {
+					targets: 5,
 					render: function(a, t, e, n) {
 						var s = {
 							2: {
@@ -261,11 +269,6 @@ $this->load->view('my_skearch/templates/js_global');
 							}
 						};
 						return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
-					}
-				}, {
-					targets: 5,
-					render: function(a, t, e, n) {
-						return new Date(e['date_submitted']).toLocaleString();
 					}
 				}]
 			})

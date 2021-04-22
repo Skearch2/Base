@@ -163,7 +163,7 @@ $this->load->view('admin_panel/templates/subheader');
 							<div class="form-group m-form__group row" id="umbrella">
 								<label for="example-text-input" class="col-2 col-form-label">Umbrella *</label>
 								<div class="col-7">
-									<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="scope_id">
+									<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="umbrella">
 										<option value="" <?= set_select('scope_id', '', TRUE) ?>>Select</option>
 										<?php foreach ($umbrellas as $umbrella) : ?>
 											<option value="<?= $umbrella->id ?>" <?= set_select("scope_id", $umbrella->id) ?>><?= $umbrella->title ?></option>
@@ -174,7 +174,7 @@ $this->load->view('admin_panel/templates/subheader');
 							<div class="form-group m-form__group row" id="field">
 								<label for="example-text-input" class="col-2 col-form-label">Field *</label>
 								<div class="col-7">
-									<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="scope_id">
+									<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="field">
 										<option value="" <?= set_select('scope_id', '', TRUE) ?>>Select</option>
 										<?php foreach ($fields as $field) : ?>
 											<option value="<?= $field->id ?>" <?= set_select("scope_id", $field->id) ?>><?= $field->title ?></option>

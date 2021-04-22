@@ -311,7 +311,9 @@ $route['admin/brand/payments/get/id/(:num)']            = 'admin_panel/brands/pa
 $route['admin/viewas/brand/id/(:num)']                       = 'my_skearch/brand/ads/index/$1';
 $route['admin/viewas/brand/id/(:num)/show/ads']              = 'my_skearch/brand/ads/index/$1';
 $route['admin/viewas/brand/id/(:num)/show/keywords']         = 'my_skearch/brand/keywords/index/$1';
+$route['admin/viewas/brand/id/(:num)/show/vault']            = 'my_skearch/brand/media_vault/index/$1';
 $route['admin/viewas/brand/id/(:num)/show/ads/action/get']   = 'my_skearch/brand/ads/get/$1';
+$route['admin/viewas/brand/id/(:num)/show/vault/action/get'] = 'my_skearch/brand/media_vault/get/$1';
 
 // Ads Manager
 $route['admin/ads/manager']                                                                             = 'admin_panel/ads_manager';

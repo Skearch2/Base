@@ -52,4 +52,24 @@ class Vault_model extends CI_Model
             return FALSE;
         }
     }
+
+    /**
+     * Update media status
+     *
+     * @param int $id Media ID
+     * @param int $status Media status
+     * @return boolean
+     */
+    public function update_status($id, $status)
+    {
+        $this->db->set('status', $status);
+        $this->db->where('id', $id);
+        $this->db->update('brands_media_vault');
+
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

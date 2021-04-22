@@ -40,18 +40,18 @@ class Ads_manager_model extends CI_Model
     /**
      * Create ad activity record
      *
-     * @param int $id Ad ID
+     * @param int $ad_id Ad ID
      * @return boolean
      */
-    private function create_ad_activity($id)
+    private function create_ad_activity($ad_id)
     {
         $this->db->insert(
             'skearch_ads_activity',
-            array('ad_id' => $id, 'clicks' => 0, 'impressions' => 0, 'date' => date("Y-m-d"))
+            array('ad_id' => $ad_id, 'clicks' => 0, 'impressions' => 0, 'date' => date("Y-m-d"))
         );
 
         if ($this->db->affected_rows()) {
-            return true;
+            return $ad_id;
         } else {
             return false;
         }
@@ -78,7 +78,7 @@ class Ads_manager_model extends CI_Model
         $this->db->insert('skearch_banners', $data);
 
         if ($this->db->affected_rows()) {
-            return true;
+            $this->db->insert_id();
         } else {
             return false;
         }

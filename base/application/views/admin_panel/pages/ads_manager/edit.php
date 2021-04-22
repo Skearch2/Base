@@ -268,7 +268,7 @@ $this->load->view('admin_panel/templates/close_html');
 		// 	console.log("Success")
 		// });
 
-		// pre-populate http protocol in the url field
+		// pre-populate https protocol in the url field
 		$("#url").inputmask({
 			regex: "https://.*"
 		});

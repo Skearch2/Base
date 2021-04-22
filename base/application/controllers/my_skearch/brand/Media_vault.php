@@ -61,7 +61,6 @@ class Media_vault extends MY_Controller
             $data['title'] = ucwords('add media');
             $this->load->view('my_skearch/pages/brand/media_vault/create', $data);
         } else {
-
             $data = [
                 'brand_id'  => $this->brand_id,
                 'title'     => $this->input->post('title'),
@@ -230,6 +229,11 @@ class Media_vault extends MY_Controller
             $media = $this->upload->data();
 
             $folder_path = FCPATH . 'base/media/vault/brand_' . $this->brand_id  . "/";
+
+            // create folder with brand id
+            if (!file_exists($folder_path)) {
+                mkdir($folder_path, $this->config->item('tmp_permissions'));
+            }
 
             if (move_uploaded_file($_FILES['media']['tmp_name'], $folder_path . $media['file_name'])) {
                 return $media['file_name'];
