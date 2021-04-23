@@ -331,6 +331,7 @@ $route['admin/ads/manager/update/ad/id/(:num)/(umbrella|field)/id/(:num)/banner/
 $route['admin/ads/manager/archive/ad/id/(:num)']                                                        = 'admin_panel/ads_manager/toggle_archive/$1';
 $route['admin/ads/manager/restore/ad/id/(:num)']                                                        = 'admin_panel/ads_manager/toggle_archive/$1';
 $route['admin/ads/manager/toggle/status/ad/id/(:num)']                                                  = 'admin_panel/ads_manager/toggle/$1';
+$route['admin/ads/manager/delete/ad/id/(:num)']                                                         = 'admin_panel/ads_manager/delete/$1';
 $route['admin/ads/manager/upload/media']                                                                = 'admin_panel/ads_manager/upload_media';
 
 /* Link Checker */

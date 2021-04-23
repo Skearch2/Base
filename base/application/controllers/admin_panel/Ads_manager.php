@@ -39,39 +39,6 @@ class Ads_manager extends MY_Controller
     }
 
     /**
-     * Toggle ad's active status.
-     *
-     * @param int $id Ad ID
-     *
-     * @return void
-     */
-    public function toggle_archive($id)
-    {
-        if (!$this->ion_auth_acl->has_permission('users_update') && !$this->ion_auth->is_admin()) {
-            echo json_encode(-1);
-        } else {
-            $is_archived = $this->ads_manager->get_ad($id)->is_archived;
-
-            if ($is_archived == 0) {
-                $is_archived = 1;
-            } else {
-                $is_archived = 0;
-            }
-
-            $data = [
-                'priority' => 0,
-                'is_active' => 0,
-                'is_archived' => $is_archived
-
-            ];
-
-            $update = $this->ads_manager->update_ad($id, $data);
-
-            echo json_encode($update);
-        }
-    }
-
-    /**
      * Create ad
      *
      * @param string $scope  Ad visibilty scope - default|global|umbrella|field
@@ -82,7 +49,7 @@ class Ads_manager extends MY_Controller
      */
     public function create($scope, $scope_id, $banner)
     {
-        if (!$this->ion_auth_acl->has_permission('umbrellas_update') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('ads_create') && !$this->ion_auth->is_admin()) {
             // set page title
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
@@ -133,6 +100,27 @@ class Ads_manager extends MY_Controller
     }
 
     /**
+     * Delete brand
+     *
+     * @param int $id Brand ID
+     * @return void
+     */
+    public function delete($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('ads_delete') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $delete = $this->ads_manager->delete_ad($id);
+
+            if ($delete) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        }
+    }
+
+    /**
      * Ads manager dashboard
      * Shows type of ads to choose from.
      *
@@ -176,85 +164,6 @@ class Ads_manager extends MY_Controller
             ->set_output(json_encode($result));
     }
 
-    /**
-     * View page for default/global ads.
-     *
-     * @param string $scope    Scope: Default|Global
-     * @param string $banner   Banner: A|B|U|VA
-     * @param string $view     View: Library|Archived
-     * @return void
-     */
-    public function view($scope, $banner, $view)
-    {
-        // page data
-        $data['scope'] = $scope;
-        $data['banner'] = $banner;
-        if ($view == 'archived') {
-            $data['is_archived'] = 1;
-        } else {
-            $data['is_archived'] = 0;
-        }
-
-        // Load page content
-        $data['title'] = ucwords('ads manager');
-        $this->load->view('admin_panel/pages/ads_manager/view', $data);
-    }
-
-    /**
-     * View page for umbrella/field ads.
-     *
-     * @param string $scope    Scope: Umbrella|Field
-     * @param int    $scope_id Scope id (Umbrella or Field ID)
-     * @param string $banner   Banner: A|B|U
-     * @param string $view     View: Library|Archived
-     * @return void
-     */
-    public function view_by_page($scope, $scope_id, $banner, $view)
-    {
-        $folder_path = strtolower("{$scope}/{$scope_id}");
-
-        // structure example: base/media/umbrella/123/
-        $structure = './base/media/' . $folder_path . "/";
-
-        // create media folder for selected umbrella or field
-        if (!is_dir($structure)) {
-            if (mkdir($structure, 0755, TRUE)) {
-                $this->ads_manager->create_banner($scope, $scope_id, $banner, $folder_path);
-            } else {
-                show_error('Unable to create media folder.', 500, 'Internal Server Error');
-            }
-        }
-
-        if ($scope == 'umbrella') {
-            $umbrellas = $this->umbrellas->get_by_status();
-            foreach ($umbrellas as $umbrella) {
-                if ($umbrella->id == $scope_id) {
-                    $data['umbrella'] = $umbrella->title;
-                }
-            }
-        } elseif ($scope == 'field') {
-            $fields = $this->fields->get_by_status();
-            foreach ($fields as $field) {
-                if ($field->id == $scope_id) {
-                    $data['field'] = $field->title;
-                }
-            }
-        }
-
-        // page data
-        $data['scope'] = $scope;
-        $data['scope_id'] = $scope_id;
-        $data['banner'] = $banner;
-        if ($view == 'archived') {
-            $data['is_archived'] = 1;
-        } else {
-            $data['is_archived'] = 0;
-        }
-
-        // Load page content
-        $data['title'] = ucwords('ads manager');
-        $this->load->view('admin_panel/pages/ads_manager/view_by_page', $data);
-    }
 
     /**
      * Get ad click history
@@ -283,19 +192,36 @@ class Ads_manager extends MY_Controller
     }
 
     /**
-     * View page for Ad clicks history
+     * Toggle ad's active status.
      *
-     * @param int $id Ad id
+     * @param int $id Ad ID
+     *
      * @return void
      */
-    public function view_activity($id)
+    public function toggle_archive($id)
     {
-        // page data
-        $data['ad'] = $this->ads_manager->get_ad($id);
+        if (!$this->ion_auth_acl->has_permission('ads_update') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $is_archived = $this->ads_manager->get_ad($id)->is_archived;
 
-        // Load page content
-        $data['title'] = ucwords('ads manager');
-        $this->load->view('admin_panel/pages/ads_manager/activity', $data);
+            if ($is_archived == 0) {
+                $is_archived = 1;
+            } else {
+                $is_archived = 0;
+            }
+
+            $data = [
+                'priority' => 0,
+                'is_active' => 0,
+                'is_archived' => $is_archived
+
+            ];
+
+            $update = $this->ads_manager->update_ad($id, $data);
+
+            echo json_encode($update);
+        }
     }
 
     /**
@@ -307,7 +233,7 @@ class Ads_manager extends MY_Controller
      */
     public function toggle($id)
     {
-        if (!$this->ion_auth_acl->has_permission('users_update') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('ads_update') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
             $is_active = $this->ads_manager->get_ad($id)->is_active;
@@ -340,7 +266,7 @@ class Ads_manager extends MY_Controller
      */
     public function update($id, $scope, $scope_id, $banner)
     {
-        if (!$this->ion_auth_acl->has_permission('umbrellas_update') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('ads_update') && !$this->ion_auth->is_admin()) {
             // set page title
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
@@ -444,5 +370,101 @@ class Ads_manager extends MY_Controller
             // http_response_code(500);
             // echo json_encode($this->upload->display_errors());
         }
+    }
+
+    /**
+     * View page for default/global ads.
+     *
+     * @param string $scope    Scope: Default|Global
+     * @param string $banner   Banner: A|B|U|VA
+     * @param string $view     View: Library|Archived
+     * @return void
+     */
+    public function view($scope, $banner, $view)
+    {
+        // page data
+        $data['scope'] = $scope;
+        $data['banner'] = $banner;
+        if ($view == 'archived') {
+            $data['is_archived'] = 1;
+        } else {
+            $data['is_archived'] = 0;
+        }
+
+        // Load page content
+        $data['title'] = ucwords('ads manager');
+        $this->load->view('admin_panel/pages/ads_manager/view', $data);
+    }
+
+    /**
+     * View page for Ad clicks history
+     *
+     * @param int $id Ad id
+     * @return void
+     */
+    public function view_activity($id)
+    {
+        // page data
+        $data['ad'] = $this->ads_manager->get_ad($id);
+
+        // Load page content
+        $data['title'] = ucwords('ads manager');
+        $this->load->view('admin_panel/pages/ads_manager/activity', $data);
+    }
+
+    /**
+     * View page for umbrella/field ads.
+     *
+     * @param string $scope    Scope: Umbrella|Field
+     * @param int    $scope_id Scope id (Umbrella or Field ID)
+     * @param string $banner   Banner: A|B|U
+     * @param string $view     View: Library|Archived
+     * @return void
+     */
+    public function view_by_page($scope, $scope_id, $banner, $view)
+    {
+        $folder_path = strtolower("{$scope}/{$scope_id}");
+
+        // structure example: base/media/umbrella/123/
+        $structure = './base/media/' . $folder_path . "/";
+
+        // create media folder for selected umbrella or field
+        if (!is_dir($structure)) {
+            if (mkdir($structure, 0755, TRUE)) {
+                $this->ads_manager->create_banner($scope, $scope_id, $banner, $folder_path);
+            } else {
+                show_error('Unable to create media folder.', 500, 'Internal Server Error');
+            }
+        }
+
+        if ($scope == 'umbrella') {
+            $umbrellas = $this->umbrellas->get_by_status();
+            foreach ($umbrellas as $umbrella) {
+                if ($umbrella->id == $scope_id) {
+                    $data['umbrella'] = $umbrella->title;
+                }
+            }
+        } elseif ($scope == 'field') {
+            $fields = $this->fields->get_by_status();
+            foreach ($fields as $field) {
+                if ($field->id == $scope_id) {
+                    $data['field'] = $field->title;
+                }
+            }
+        }
+
+        // page data
+        $data['scope'] = $scope;
+        $data['scope_id'] = $scope_id;
+        $data['banner'] = $banner;
+        if ($view == 'archived') {
+            $data['is_archived'] = 1;
+        } else {
+            $data['is_archived'] = 0;
+        }
+
+        // Load page content
+        $data['title'] = ucwords('ads manager');
+        $this->load->view('admin_panel/pages/ads_manager/view_by_page', $data);
     }
 }
