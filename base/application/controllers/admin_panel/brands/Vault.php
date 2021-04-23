@@ -129,18 +129,18 @@ class Vault extends MY_Controller
                 $banner = $this->input->post('banner');
                 $folder = strtolower("$scope/$scope_id");
 
-                $target = ".base/media/vault/brand_{$brand_id}/";
+                $target = FCPATH . "base/media/vault/brand_{$brand_id}/";
                 if ($scope_id == 0) {
-                    $destination = './base/media/global/';
+                    $destination = FCPATH . "/base/media/global/";
                 } else {
-                    $destination = "./base/media/{$folder}/";
+                    $destination = FCPATH . "/base/media/{$folder}/";
                 }
 
                 $banner_id = null;
 
                 if ($scope_id == 0) {
                     $banner_id = $this->Ads_manager->get_banner($scope, $scope_id, $banner)->id;
-                    if (copy("$target{$media->media}", "$destination{$media->media}")) {
+                    if (!copy("$target{$media->media}", "$destination{$media->media}")) {
                         show_error('Unable to copy media to target folder.', 500, 'Internal Server Error');
                         return;
                     }
@@ -149,7 +149,7 @@ class Vault extends MY_Controller
                         if (mkdir($destination, 0755, TRUE)) {
                             $banner_id = $this->Ads_manager->create_banner($scope, $scope_id, $banner, $folder);
                             // copy media from vault to respective ad banner folder
-                            if (copy("$target{$media->media}", "$destination{$media->media}")) {
+                            if (!copy("$target{$media->media}", "$destination{$media->media}")) {
                                 show_error('Unable to copy media to target folder.', 500, 'Internal Server Error');
                                 return;
                             }
@@ -164,6 +164,7 @@ class Vault extends MY_Controller
                     'banner_id' => $banner_id,
                     'brand_id' => $this->input->post('brand'),
                     'title' => $this->input->post('title'),
+                    'media' =>  $media->media,
                     'url' => $this->input->post('url'),
                     'duration' => $this->input->post('duration'),
                     'has_sign' => $this->input->post('has_sign'),
