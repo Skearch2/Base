@@ -56,18 +56,60 @@ $this->load->view('my_skearch/templates/start_pagebody');
 			</div>
 		</div>
 
+		<div class="m-portlet__body" align="right">
+			<a href="<?= site_url('myskearch/brand/vault/add/media') ?>" type="button" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit Media</a>
+		</div>
+
 		<div class="m-portlet__body">
+			<?php if ($this->session->flashdata('create_success') === 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The media has been created.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('create_success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to create the media.
+					</div>
+				</div>
+			<?php endif ?>
+
+			<?php if ($this->session->flashdata('update_success') === 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The brand information has been updated.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('update_success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to update brand information.
+					</div>
+				</div>
+			<?php endif ?>
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
 						<th>ID</th>
-						<th width="20%">Title</th>
-						<th width="30%">Thumbnail</th>
-						<th>Duration</th>
-						<th width="20%">Redirects to</th>
-						<th>Total Clicks</th>
-						<th>Total Impressions</th>
+						<th>Title</th>
+						<th>Thumbnail</th>
+						<th>Url</th>
+						<th>Date Submitted</th>
 						<th>Status</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 			</table>
@@ -115,8 +157,37 @@ $this->load->view('my_skearch/templates/js_global');
 	<?php if (isset($viewas)) : ?>
 		var url = "<?= site_url("admin/viewas/brand/id/{$brand_id}/show/ads/action/get"); ?>"
 	<?php else : ?>
-		var url = "<?= site_url("myskearch/brand/ads/action/get"); ?>"
+		var url = "<?= site_url("myskearch/brand/vault/get"); ?>"
 	<?php endif ?>
+
+	// Deletes brand
+	function deleteMedia(id, media) {
+		var media = media.replace(/%20/g, ' ');
+		swal({
+			title: "Delete?",
+			text: "Are you sure you want delete the media: \"" + media + "\"?",
+			type: "warning",
+			confirmButtonClass: "btn btn-danger",
+			confirmButtonText: "Yes, delete it!",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
+			$.ajax({
+				url: '<?= site_url('myskearch/brand/vault/delete/media/id/'); ?>' + id,
+				type: 'DELETE',
+				success: function(data, status) {
+					if (data == 1) {
+						swal("Success!", "The media has been deleted.", "success")
+						$("#" + id).remove();
+					}
+				},
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to delete the media.", "error")
+				}
+			});
+		});
+	}
 
 	var datatable = {
 		init: function() {
@@ -135,17 +206,28 @@ $this->load->view('my_skearch/templates/js_global');
 				}, {
 					data: "media"
 				}, {
-					data: "duration"
-				}, {
 					data: "url"
 				}, {
-					data: "clicks"
+					data: "date_submitted"
 				}, {
-					data: "impressions"
+					data: "status"
 				}, {
-					data: "is_active"
+					data: "Actions"
 				}],
 				columnDefs: [{
+					targets: -1,
+					title: "Actions",
+					orderable: !1,
+					render: function(a, t, e, n) {
+						var media = e['title'].replace(/ /g, '%20');
+						<?php if ($is_primary_brand_user) : ?>
+							return '<a href="<?= site_url('myskearch/brand/vault/edit/media/id/') ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+								'<a onclick=deleteMedia("' + e['id'] + '","' + media + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+						<?php else : ?>
+							return "-"
+						<?php endif ?>
+					}
+				}, {
 					targets: 0,
 					orderable: !1
 				}, {
@@ -155,22 +237,31 @@ $this->load->view('my_skearch/templates/js_global');
 						// check if the media is a video (only mp4 format)
 						var isVideo = e['media'].substr(e['media'].length - 3) == 'mp4' ? 1 : 0;
 						if (isVideo)
-							return '<td><i title="View video" class="fas fa-video" style="cursor:pointer" onclick="view(\'<?= site_url('base/media') ?>/' + e['media'] + '\',1)"></i></td>'
+							return '<td><i title="View video" class="fas fa-video" style="cursor:pointer" onclick="view(\'<?= site_url("base/media/vault/brand_{$brand_id}/") ?>' + e['media'] + '\',1)"></i></td>'
 						else
-							return '<td><img src="<?= site_url('base/media') ?>/' + e['media'] + '" alt="No Media" style="display:block; max-width:200px; max-height:100px; cursor:pointer;" onclick="view(\'<?= site_url('base/media') ?>/' + e['media'] + '\',0)"></td>'
+							return '<td><img src="<?= site_url("base/media/vault/brand_{$brand_id}/") ?>' + e['media'] + '" alt="No Media" style="display:block; max-width:200px; max-height:100px; cursor:pointer;" onclick="view(\'<?= site_url("base/media/vault/brand_{$brand_id}/") ?>/' + e['media'] + '\',0)"></td>'
 					}
 				}, {
-					targets: 4,
+					targets: 3,
 					render: function(a, t, e, n) {
 						return '<a href="' + e['url'] + '" target="_blank">' + e['url'] + '</a>'
 					}
 				}, {
-					targets: 7,
+					targets: 4,
+					render: function(a, t, e, n) {
+						return new Date(e['date_submitted']).toLocaleDateString();
+					}
+				}, {
+					targets: 5,
 					render: function(a, t, e, n) {
 						var s = {
-							1: {
-								title: "Active",
+							2: {
+								title: "Live",
 								state: "accent"
+							},
+							1: {
+								title: "Pending",
+								state: "warning"
 							},
 							0: {
 								title: "Inactive",

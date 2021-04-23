@@ -519,3 +519,24 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| Temp Direcotry and Files for Uploads
+|--------------------------------------------------------------------------
+|
+| If your server is behind a reverse proxy, you must whitelist the proxy
+| IP addresses from which CodeIgniter should trust headers such as
+| HTTP_X_FORWARDED_FOR and HTTP_CLIENT_IP in order to properly identify
+| the visitor's IP address.
+|
+| You can use both an array or a comma-separated list of proxy addresses,
+| as well as specifying whole subnets. Here are a few examples:
+|
+| Comma-separated:	'10.0.1.200,192.168.5.0/24'
+| Array:		array('10.0.1.200', '192.168.5.0/24')
+*/
+$config['tmp_dir']               = 'tmp';
+$config['tmp_permissions']       = 0777;
+$config['upload_file_size']      = "2048"; // in KBs
+$config['upload_file_types']     = "jpeg|jpg|png|gif|mp4";

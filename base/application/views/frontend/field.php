@@ -80,10 +80,18 @@ $this->load->view('frontend/templates/header');
                 <p>Ad</p>
             </div>
             <div class="carousel-inner">
-                <?php foreach ($media_box_a as $banner) : ?>
-                    <div class="carousel-item" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>" data-ad-sign="<?= $banner['adsign'] ?>">
-                        <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
-                            <img class="responsive" width="1000" height="110" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>">
+                <?php foreach ($banner_u_ads as $ad) : ?>
+                    <div class="carousel-item" data-adid="<?= $ad->id ?>" data-interval="<?= $ad->duration ?>" data-ad-sign="<?= $ad->has_sign ?>">
+                        <a href='<?= site_url("redirect/ad/id/" . $ad->id) ?>' target='_blank' title='<?= $ad->title ?>'>
+                            <?php $is_video = substr(strtolower($ad->media), -3) == 'mp4' ? 1 : 0 ?>
+                            <?php if ($is_video) : ?>
+                                <video class="responsive" width="600" height="450" loop muted>
+                                    <source src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" type="video/mp4">
+                                    Unable to play video, incompatible browser.
+                                </video>
+                            <?php else : ?>
+                                <img class="responsive" width="600" height="450" src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" />
+                            <?php endif ?>
                         </a>
                     </div>
                 <?php endforeach ?>
@@ -160,17 +168,17 @@ $this->load->view('frontend/templates/header');
                         <p>Ad</p>
                     </div>
                     <div class="carousel-inner">
-                        <?php foreach ($media_box_b as $banner) : ?>
-                            <div class="carousel-item" data-imageid="<?= $banner['imageid'] ?>" data-interval="<?= $banner['duration'] ?>" data-ad-sign="<?= $banner['adsign'] ?>">
-                                <a href='<?= site_url("redirect/link/id/" . $banner['imageid']) ?>' target='_blank' title='<?= $banner['title'] ?>'>
-                                    <?php $is_video = substr(strtolower($banner['image']), -3) == 'mp4' ? 1 : 0 ?>
+                        <?php foreach ($banner_b_ads as $ad) : ?>
+                            <div class="carousel-item" data-adid="<?= $ad->id ?>" data-interval="<?= $ad->duration ?>" data-ad-sign="<?= $ad->has_sign ?>">
+                                <a href='<?= site_url("redirect/ad/id/" . $ad->id) ?>' target='_blank' title='<?= $ad->title ?>'>
+                                    <?php $is_video = substr(strtolower($ad->media), -3) == 'mp4' ? 1 : 0 ?>
                                     <?php if ($is_video) : ?>
                                         <video class="responsive" width="300" height="600" loop muted>
-                                            <source src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>" type="video/mp4">
+                                            <source src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" type="video/mp4">
                                             Unable to play video, incompatible browser.
                                         </video>
                                     <?php else : ?>
-                                        <img class="responsive" width="300" height="600" src="<?= $banner['image'] ?>" alt="<?= $banner['description'] ?>">
+                                        <img class="responsive" width="300" height="600" src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" />
                                     <?php endif ?>
                                 </a>
                             </div>
@@ -197,13 +205,13 @@ $this->load->view('frontend/templates/footer');
 
         // update impressions on the banner in media box (for single media)
         if ($('#myCarouselA').find('.carousel-item').first().hasClass('active')) {
-            imageid = $('#myCarouselA').find('.carousel-item').first().attr('data-imageid')
-            $.get("<?= site_url("impression/image/id/"); ?>" + imageid, function() {});
+            adId = $('#myCarouselA').find('.carousel-item').first().attr('data-adid')
+            $.get("<?= site_url("update/impression/ad/id/") ?>" + adId, function() {});
         }
 
         if ($('#myCarouselB').find('.carousel-item').first().hasClass('active')) {
-            imageid = $('#myCarouselB').find('.carousel-item').first().attr('data-imageid')
-            $.get("<?= site_url("impression/image/id/"); ?>" + imageid, function() {});
+            adId = $('#myCarouselB').find('.carousel-item').first().attr('data-adid')
+            $.get("<?= site_url("update/impression/ad/id/") ?>" + adId, function() {});
         }
 
         // show ad sign on sponsered banner
@@ -243,14 +251,32 @@ $this->load->view('frontend/templates/footer');
             });
         });
 
-        // Video playback settings for media box b
+        // Video settings for carousel
+        $('#myCarouselA').find('.carousel-item').first().find('video').each(function() {
+            $('#speaker').show();
+            this.play();
+        });
+        $('#myCarouselA').on('slid.bs.carousel', function() {
+            $(this).find('.carousel-item.active video').each(function() {
+                $('#speaker').show();
+                this.play();
+            });
+        });
+        $('#myCarouselA').on('slide.bs.carousel', function() {
+            $(this).find('.carousel-item.active video').each(function() {
+                $("#speaker").hide();
+                this.pause();
+                this.currentTime = 0;
+            });
+        });
+
+
         $('#myCarouselB').on('slid.bs.carousel', function() {
             $(this).find('.carousel-item.active video').each(function() {
                 $('#speaker').show();
                 this.play();
             });
         });
-
         $('#myCarouselB').on('slide.bs.carousel', function() {
             $(this).find('.carousel-item.active video').each(function() {
                 $("#speaker").hide();

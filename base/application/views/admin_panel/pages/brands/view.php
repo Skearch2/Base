@@ -251,6 +251,7 @@ $this->load->view('admin_panel/templates/close_html');
 							var brand = e['brand'].replace(/ /g, '%20');
 							return '<a onclick=showBrandDetails("' + e['id'] + '") data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View Details"><i class="la la-search-plus"></i></a>' +
 								'<a href="<?= site_url() . "admin/viewas/brand/id/" ?>' + e['id'] + '" target="_blank" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View as Brand"><i class="la la-eye"></i></a>' +
+								'<a href="<?= site_url() . "admin/brands/vault/brand/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View Media Vault"><i class="la la-bank"></i></a>' +
 								'<a href="<?= site_url() . "admin/brand/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 								'<a onclick=deleteBrand("' + e['id'] + '","' + brand + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 						}
