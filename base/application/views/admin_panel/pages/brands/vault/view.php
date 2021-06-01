@@ -43,7 +43,6 @@ $this->load->view('admin_panel/templates/subheader');
 			</div>
 		</div>
 		<div class="m-portlet__body">
-
 			<?php if ($this->session->flashdata('create_success') === 1) : ?>
 				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -149,6 +148,50 @@ $this->load->view('admin_panel/templates/close_html');
 		}
 	}
 
+	// Approve keywords
+	function approveMedia(id, media) {
+		var media = media.replace(/%20/g, ' ');
+
+		swal({
+			title: "Approval Needed",
+			text: "Choose approval status for the media: \"" + media + "\"?",
+			type: "info",
+			confirmButtonClass: "btn btn-success",
+			confirmButtonText: "Approve",
+			showCancelButton: true,
+			cancelButtonClass: "btn btn-danger",
+			cancelButtonText: "Reject",
+			timer: 5000
+		}).then(function(e) {
+			var status
+			if (e.value) {
+				status = 2
+			} else if (e.dismiss == 'cancel') {
+				status = 0
+			} else {
+				return
+			}
+			$.ajax({
+				url: '<?= site_url('admin/brands/vault/update/status/media/id/'); ?>' + id,
+				type: 'GET',
+				data: {
+					status: status
+				},
+				success: function(data, status) {
+					if (data == 0) {
+						swal("Error!", "Unable to change status.", "error")
+					} else {
+						swal("Success!", "The status has been changed.", "success")
+						$('#m_table').DataTable().ajax.reload(null, false);
+					}
+				},
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to process request.", "error")
+				}
+			});
+		});
+	}
+
 	var datatable = {
 		init: function() {
 			$("#m_table").DataTable({
@@ -207,19 +250,24 @@ $this->load->view('admin_panel/templates/close_html');
 					render: function(a, t, e, n) {
 						var s = {
 							2: {
-								title: "Live",
-								state: "accent"
+								title: "Accepted",
+								class: "m--font-bold m--font-success"
 							},
 							1: {
-								title: "Pending",
-								state: "warning"
+								title: "Approval Needed",
+								class: "m-badge--warning"
 							},
 							0: {
-								title: "Inactive",
-								state: "danger"
+								title: "Rejected",
+								class: "m--font-bold m--font-danger"
 							}
 						};
-						return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
+						if (e['status'] == 1) {
+							var media = e['title'].replace(/ /g, '%20');
+							return '<span id= tablerow' + n['row'] + ' title="Approval Needed" onclick=approveMedia("' + e['id'] + '","' + media + '") class="m-badge ' + s[1].class + ' m-badge--wide" style="cursor:pointer">' + s[1].title + '</span>'
+						} else {
+							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="' + s[a].title + '" class="' + s[a].class + '">' + s[a].title + '</span>'
+						}
 					}
 				}]
 			})

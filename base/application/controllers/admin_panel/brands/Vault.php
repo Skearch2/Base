@@ -88,7 +88,7 @@ class Vault extends MY_Controller
      */
     public function create_ad($brand_id, $media_id)
     {
-        if (!$this->ion_auth_acl->has_permission('umbrellas_update') && !$this->ion_auth->is_admin()) {
+        if (!$this->ion_auth_acl->has_permission('ads_create') && !$this->ion_auth->is_admin()) {
             // set page title
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
@@ -113,10 +113,6 @@ class Vault extends MY_Controller
                 $data['title'] = ucwords('create ad');
                 $this->load->view('admin_panel/pages/brands/vault/create_ad', $data);
             } else {
-
-                // print_r($_POST);
-                // die();
-
                 $media = $this->Vault->get_media($media_id);
                 $scope = $this->input->post('scope');
                 if ($scope == 'umbrella') {
@@ -136,61 +132,71 @@ class Vault extends MY_Controller
                     $destination = FCPATH . "/base/media/{$folder}/";
                 }
 
-                $banner_id = null;
-
-                if ($scope_id == 0) {
-                    $banner_id = $this->Ads_manager->get_banner($scope, $scope_id, $banner)->id;
-                    if (!copy("$target{$media->media}", "$destination{$media->media}")) {
-                        show_error('Unable to copy media to target folder.', 500, 'Internal Server Error');
+                // create the destination folder if not exists
+                if (!is_dir($destination)) {
+                    if (!mkdir($destination, 0755, TRUE)) {
+                        show_error('Unable to create media folder.', 500, 'Internal Server Error');
                         return;
                     }
-                } else {
-                    if (!is_dir($destination)) {
-                        if (mkdir($destination, 0755, TRUE)) {
-                            $banner_id = $this->Ads_manager->create_banner($scope, $scope_id, $banner, $folder);
-                            // copy media from vault to respective ad banner folder
-                            if (!copy("$target{$media->media}", "$destination{$media->media}")) {
-                                show_error('Unable to copy media to target folder.', 500, 'Internal Server Error');
-                                return;
-                            }
-                        } else {
-                            show_error('Unable to create media folder.', 500, 'Internal Server Error');
-                            return;
-                        }
-                    }
                 }
 
-                $data = [
-                    'banner_id' => $banner_id,
-                    'brand_id' => $this->input->post('brand'),
-                    'title' => $this->input->post('title'),
-                    'media' =>  $media->media,
-                    'url' => $this->input->post('url'),
-                    'duration' => $this->input->post('duration'),
-                    'has_sign' => $this->input->post('has_sign'),
-                    'is_active' => $this->input->post('is_active'),
-                ];
+                $current_banner = $this->Ads_manager->get_banner($scope, $scope_id, $banner);
 
-                $create = $this->Ads_manager->create_ad($data);
+                // initialiize variable
+                $banner_id = null;
 
-                if ($create) {
-                    if ($this->input->post('is_active')) {
-                        // set status to live
-                        $this->Vault->update_status($media_id, 2);
+                // get banner otherwise create new banner
+                if ($current_banner) {
+                    $banner_id = $current_banner->id;
+                } else {
+                    $banner_id = $this->Ads_manager->create_banner($scope, $scope_id, $banner, $folder);
+                }
+
+                // copy media from vault to respective ad banner folder
+                if (copy("$target{$media->media}", "$destination{$media->media}")) {
+
+                    $data = [
+                        'banner_id' => $banner_id,
+                        'brand_id' => $this->input->post('brand'),
+                        'title' => $this->input->post('title'),
+                        'media' =>  $media->media,
+                        'url' => $this->input->post('url'),
+                        'duration' => $this->input->post('duration'),
+                        'has_sign' => $this->input->post('has_sign'),
+                        'is_active' => $this->input->post('is_active'),
+                    ];
+
+                    $create = $this->Ads_manager->create_ad($data);
+
+                    if ($create) {
+                        $this->session->set_flashdata('create_success', 1);
                     } else {
-                        // set status to inactive
-                        $this->Vault->update_status($media_id, 0);
+                        $this->session->set_flashdata('create_success', 0);
                     }
-                }
 
-                if ($create) {
-                    $this->session->set_flashdata('create_success', 1);
+                    redirect("admin/brands/vault/brand/id/$brand_id");
                 } else {
-                    $this->session->set_flashdata('create_success', 0);
+                    show_error('Unable to copy media to target folder.', 500, 'Internal Server Error');
                 }
-
-                redirect("admin/brands/vault/brand/id/$brand_id");
             }
+        }
+    }
+
+    /**
+     * Update media status
+     *
+     * @param string $media_id  Media ID
+     * @return void
+     */
+    public function update_status($media_id)
+    {
+        if (!$this->ion_auth_acl->has_permission('vault_update') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+
+            $status = $this->Vault->update_status($media_id, $this->input->get('status'));
+
+            echo json_encode(intval($status));
         }
     }
 }

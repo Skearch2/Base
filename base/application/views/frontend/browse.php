@@ -22,7 +22,7 @@ $this->load->view('frontend/templates/header');
                 <p>Ad</p>
             </div>
             <div class="carousel-inner">
-                <?php foreach ($banner_a_ads as $ad) : ?>
+                <?php foreach ($banner_va_ads as $ad) : ?>
                     <div class="carousel-item" data-adid="<?= $ad->id ?>" data-interval="<?= $ad->duration ?>" data-ad-sign="<?= $ad->has_sign ?>">
                         <a href='<?= site_url("redirect/ad/id/" . $ad->id) ?>' target='_blank' title='<?= $ad->title ?>'>
                             <?php $is_video = substr(strtolower($ad->media), -3) == 'mp4' ? 1 : 0 ?>

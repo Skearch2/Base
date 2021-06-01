@@ -58,7 +58,7 @@ class Ads_manager_model extends CI_Model
     }
 
     /**
-     * Undocumented function
+     * Create ad banner
      *
      * @param string $scope     Scope of the banner
      * @param int    $scope_id  Scope ID
@@ -78,14 +78,32 @@ class Ads_manager_model extends CI_Model
         $this->db->insert('skearch_banners', $data);
 
         if ($this->db->affected_rows()) {
-            $this->db->insert_id();
+            return $this->db->insert_id();
         } else {
             return false;
         }
     }
 
     /**
-     * Deletes user
+     * Get number of ads in a banner
+     *
+     * @param int $banner_id anner ID
+     * @return int number of rows
+     */
+    public function count_ads_in_banner($banner_id)
+    {
+        $this->db->select('skearch_ads.priority');
+        $this->db->from('skearch_ads');
+        $this->db->where('skearch_ads.banner_id', $banner_id);
+        $this->db->where('skearch_ads.is_archived', 0);
+
+        $query = $this->db->get();
+
+        return $query->num_rows();
+    }
+
+    /**
+     * Delete ad
      *
      * @param int $id Ad id
      * @return boolean
@@ -133,6 +151,48 @@ class Ads_manager_model extends CI_Model
     }
 
     /**
+     * Get last priority in a banner
+     *
+     * @param int    $banner_id  Banner ID
+     * @return mixed object
+     */
+    public function get_last_priority($banner_id)
+    {
+        $this->db->select('skearch_ads.priority');
+        $this->db->from('skearch_ads');
+        $this->db->where('banner_id', $banner_id);
+        $this->db->where('is_archived', 0);
+        $this->db->order_by('priority', 'DESC');
+
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
+
+    /**
+     * Sequence ads priority after archiving an ad in the banner
+     *
+     * @param int    $banner_id  Banner ID
+     * @param int    $priority   Deleted ad's priority
+     * @return boolean
+     */
+    public function sequence_priority($banner_id, $priority)
+    {
+        $this->db->set('priority', 'priority-1', false);
+        $this->db->where('banner_id', $banner_id);
+        $this->db->where('priority >', $priority);
+        $this->db->update('skearch_ads');
+
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    /**
      * Get specific ad
      *
      * @param int $id Ad ID
@@ -140,7 +200,7 @@ class Ads_manager_model extends CI_Model
      */
     public function get_ad($id)
     {
-        $this->db->select('skearch_ads.id, skearch_ads.brand_id, skearch_ads.title, CONCAT(skearch_banners.folder,"/",skearch_ads.media) as media, skearch_ads.url, skearch_ads.duration, skearch_ads.is_active, skearch_ads.has_sign');
+        $this->db->select('skearch_ads.id, skearch_ads.banner_id, skearch_ads.brand_id, skearch_ads.title, CONCAT(skearch_banners.folder,"/",skearch_ads.media) as media, skearch_ads.url, skearch_ads.duration, skearch_ads.priority, skearch_ads.is_active, skearch_ads.has_sign, skearch_ads.is_archived');
         $this->db->from('skearch_ads');
         $this->db->join('skearch_banners', 'skearch_ads.banner_id = skearch_banners.id', 'left');
         $this->db->where('skearch_ads.id', $id);
@@ -208,6 +268,25 @@ class Ads_manager_model extends CI_Model
     {
         $this->db->where('id', $id);
         $this->db->update('skearch_ads', $data);
+
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Updates ad priorities in the banner
+     *
+     * @param int   $banner_id   Banner ID
+     * @param array $data Array of arrays containing id and its priority
+     * @return boolean
+     */
+    public function update_ad_priority($banner_id, $data)
+    {
+        $this->db->update_batch('skearch_ads', $data, 'id');
+        $this->db->where('banner_id', $banner_id);
 
         if ($this->db->affected_rows()) {
             return true;

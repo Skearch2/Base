@@ -295,6 +295,7 @@ $route['admin/brands/search/(:any)']            = 'admin_panel/brands/brands/sea
 $route['admin/brands/vault/brand/id/(:num)']                    = 'admin_panel/brands/vault/index/$1';
 $route['admin/brands/vault/get/brand/id/(:num)']                = 'admin_panel/brands/vault/get/$1';
 $route['admin/brands/vault/brand/id/(:num)/media/id/(:num)']    = 'admin_panel/brands/vault/create_ad/$1/$2';
+$route['admin/brands/vault/update/status/media/id/(:num)']      = 'admin_panel/brands/vault/update_status/$1';
 
 // Keywords
 $route['admin/brands/keywords']                         = 'admin_panel/brands/keywords';
@@ -328,6 +329,7 @@ $route['admin/ads/manager/get/(umbrella|field)/id/(:num)/banner/(a|b|u)/archived
 $route['admin/ads/manager/get/activity/ad/id/(:num)']                                                   = 'admin_panel/ads_manager/get_activity/$1';
 $route['admin/ads/manager/update/ad/id/(:num)/(default|global)/banner/(a|b|u|va)']                      = 'admin_panel/ads_manager/update/$1/$2/0/$3';
 $route['admin/ads/manager/update/ad/id/(:num)/(umbrella|field)/id/(:num)/banner/(a|b|u)']               = 'admin_panel/ads_manager/update/$1/$2/$3/$4';
+$route['admin/ads/manager/update/priority/banner/id/(:num)']                                            = 'admin_panel/ads_manager/update_priority/$1';
 $route['admin/ads/manager/archive/ad/id/(:num)']                                                        = 'admin_panel/ads_manager/toggle_archive/$1';
 $route['admin/ads/manager/restore/ad/id/(:num)']                                                        = 'admin_panel/ads_manager/toggle_archive/$1';
 $route['admin/ads/manager/toggle/status/ad/id/(:num)']                                                  = 'admin_panel/ads_manager/toggle/$1';

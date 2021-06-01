@@ -256,15 +256,15 @@ $this->load->view('my_skearch/templates/js_global');
 					render: function(a, t, e, n) {
 						var s = {
 							2: {
-								title: "Live",
+								title: "Accepted",
 								state: "accent"
 							},
 							1: {
-								title: "Pending",
+								title: "Pending Approval",
 								state: "warning"
 							},
 							0: {
-								title: "Inactive",
+								title: "Rejected",
 								state: "danger"
 							}
 						};
