@@ -36,6 +36,9 @@ class Ads_manager extends MY_Controller
         $this->load->model('admin_panel/brands/brand_model', 'Brand');
         $this->load->model('admin_panel/results/umbrella_model', 'umbrellas');
         $this->load->model('admin_panel/results/field_model', 'fields');
+
+        // maximum # of ads allowed in a banner
+        $this->maximum_ads = 10;
     }
 
     /**
@@ -54,6 +57,9 @@ class Ads_manager extends MY_Controller
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
+
+            //$ads = $this->ads_manager->get_ads($banner, $scope, $scope_id, $is_archived = 0);
+
             $this->form_validation->set_rules('brand', 'Brand', 'required|numeric');
             $this->form_validation->set_rules('title', 'Title', 'trim|required');
             $this->form_validation->set_rules('url', 'Link Reference', 'trim|required|valid_url');
@@ -70,6 +76,18 @@ class Ads_manager extends MY_Controller
 
                 $this->load->view('admin_panel/pages/ads_manager/create', $data);
             } else {
+
+                //$ads = $this->ads_manager->get_ads($banner, $scope, $scope_id, $is_archived = 0);
+
+                // make sure no more than 10 live ads in a banner
+                // $total_ads = $this->ads_manager->count_ads_in_banner($ad->banner_id);
+
+                // // make sure no more than 10 live ads in a banner
+                // if ($total_ads <= $this->maximum_ads) {
+                // } else {
+                //     echo json_encode(0);
+                //     return;
+                // }
 
                 $data = [
                     'banner_id' => $this->ads_manager->get_banner($scope, $scope_id, $banner)->id,
@@ -203,16 +221,29 @@ class Ads_manager extends MY_Controller
         if (!$this->ion_auth_acl->has_permission('ads_update') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
-            $is_archived = $this->ads_manager->get_ad($id)->is_archived;
+            $ad = $this->ads_manager->get_ad($id);
 
-            if ($is_archived == 0) {
+            if ($ad->is_archived == 0) {
                 $is_archived = 1;
+                $priority = 0;
             } else {
-                $is_archived = 0;
+                $total_ads = $this->ads_manager->count_ads_in_banner($ad->banner_id);
+
+                // make sure no more than 10 live ads in a banner
+                if ($total_ads <= $this->maximum_ads) {
+
+                    $is_archived = 0;
+                    // get last priority from the banner
+                    $last_priority = $this->ads_manager->get_last_priority($ad->banner_id)->priority;
+                    $priority = $last_priority + 1;
+                } else {
+                    echo json_encode(0);
+                    return;
+                }
             }
 
             $data = [
-                'priority' => 0,
+                'priority' => $priority,
                 'is_active' => 0,
                 'is_archived' => $is_archived
 
@@ -220,7 +251,12 @@ class Ads_manager extends MY_Controller
 
             $update = $this->ads_manager->update_ad($id, $data);
 
-            echo json_encode($update);
+            if ($ad->is_archived == 0 && $update) {
+                // update ads priority sequence order
+                $this->ads_manager->sequence_priority($ad->banner_id, $ad->priority);
+            }
+
+            echo json_encode(intval($update));
         }
     }
 
@@ -319,6 +355,26 @@ class Ads_manager extends MY_Controller
     }
 
     /**
+     * Update ads priority in the banner
+     *
+     * @param int $banner_id Banner ID
+     * @return void
+     */
+    public function update_priority($banner_id)
+    {
+        if (!$this->ion_auth_acl->has_permission('ads_update') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $priorities = $this->input->get('priority');
+
+            if (isset($priorities)) {
+                $update = $this->ads_manager->update_ad_priority($banner_id, $priorities);
+                echo json_encode(intval($update));
+            }
+        }
+    }
+
+    /**
      * Upload media
      *
      * @param string $scope          Scope: Default|Global|Umbrella|Field
@@ -390,6 +446,7 @@ class Ads_manager extends MY_Controller
         } else {
             $data['is_archived'] = 0;
         }
+        $data['banner_id'] = $this->ads_manager->get_banner($scope, $scope_id = 0, $banner)->id;
 
         // Load page content
         $data['title'] = ucwords('ads manager');
@@ -430,11 +487,14 @@ class Ads_manager extends MY_Controller
 
         // create media folder for selected umbrella or field
         if (!is_dir($structure)) {
-            if (mkdir($structure, 0755, TRUE)) {
-                $this->ads_manager->create_banner($scope, $scope_id, $banner, $folder_path);
-            } else {
+            if (!mkdir($structure, 0755, TRUE)) {
                 show_error('Unable to create media folder.', 500, 'Internal Server Error');
             }
+        }
+
+        // create banner if does not exist
+        if (!$this->ads_manager->get_banner($scope, $scope_id, $banner)) {
+            $this->ads_manager->create_banner($scope, $scope_id, $banner, $folder_path);
         }
 
         if ($scope == 'umbrella') {
@@ -457,6 +517,7 @@ class Ads_manager extends MY_Controller
         $data['scope'] = $scope;
         $data['scope_id'] = $scope_id;
         $data['banner'] = $banner;
+        $data['banner_id'] = $this->ads_manager->get_banner($scope, $scope_id, $banner)->id;
         if ($view == 'archived') {
             $data['is_archived'] = 1;
         } else {

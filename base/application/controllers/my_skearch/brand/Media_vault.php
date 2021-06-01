@@ -187,7 +187,8 @@ class Media_vault extends MY_Controller
             $data = [
                 'title'     => $this->input->post('title'),
                 'url'       => $this->input->post('url'),
-                'note'      => $this->input->post('note')
+                'note'      => $this->input->post('note'),
+                'status'    => "1"
             ];
 
             $create = $this->Media_vault->update($media_id, $data);

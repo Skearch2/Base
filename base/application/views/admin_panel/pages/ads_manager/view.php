@@ -232,8 +232,8 @@ $this->load->view('admin_panel/templates/close_html');
 					if (data == -1) {
 						swal("Not Allowed!", "You have no permission.", "warning")
 					} else {
-						swal("Success!", "The ad has been archived.", "success")
 						$("#" + id).remove();
+						swal("Success!", "The ad has been archived.", "success")
 					}
 				},
 				error: function(xhr, status, error) {
@@ -294,13 +294,15 @@ $this->load->view('admin_panel/templates/close_html');
 				success: function(data, status) {
 					if (data == -1) {
 						swal("Not Allowed!", "You have no permission.", "warning")
-					} else {
-						swal("Success!", "The ad has been restored.", "success")
+					} else if (data == 1) {
 						$("#" + id).remove();
+						swal("Success!", "The ad has been restored.", "success")
+					} else {
+						swal("Error!", "Unable to restore the ad.", "warning")
 					}
 				},
 				error: function(xhr, status, error) {
-					swal("Error!", "Unable to restore the ad.", "error")
+					swal("Error!", "Unable to process request.", "error")
 				}
 			});
 		});
@@ -342,20 +344,13 @@ $this->load->view('admin_panel/templates/close_html');
 		}
 	}
 
-	// Show modal dialog to preview ads
-	// function banner(banner) {
-	// 	$('#m_table_1').DataTable().ajax.url('<?= site_url(); ?>admin/ads/manager/view/global/banner/' + banner.toLowerCase() + '/action/get/');
-	// 	// $('#m_table_1').fadeOut("slow");
-	// 	$('#m_table_1').DataTable().ajax.reload(null, false);
-	// 	// $('#m_table_1').fadeIn("fast");
-	// }
-
 	<?php if ($is_archived) : ?>
 		var datatableArchived = {
 			init: function() {
 				$("#m_table_archived").DataTable({
 					responsive: !0,
 					dom: '<"top"lfp>rt<"bottom"ip><"clear">',
+					rowId: "id",
 					searchDelay: 500,
 					processing: !0,
 					serverSide: !1,
@@ -506,25 +501,42 @@ $this->load->view('admin_panel/templates/close_html');
 	<?php endif ?>
 
 
-	jQuery(document).ready(function() {
+	$(document).ready(function() {
 		<?php if ($is_archived) : ?>
 			datatableArchived.init();
 		<?php else : ?>
 			datatableLibrary.init();
 
-			$('#m_table_library').on('row-reordered.dt', function(e, diff, edit) {
-				var result
+			// on row reorder update ad priority
+			var dt = $("#m_table_library").DataTable()
+			dt.on('row-reorder', function(e, diff, edit) {
+				var result = {}
 
 				for (var i = 0, ien = diff.length; i < ien; i++) {
-					var rowData = $("#m_table_library").DataTable().row(diff[i].node).data()
-
-					result += rowData[1]
-
-					result += rowData[1] + ' updated to be in position ' +
-						diff[i].newData + ' (was ' + diff[i].oldData + ')<br>';
+					var rowData = dt.row(diff[i].node).data();
+					result[i] = {
+						id: rowData['id'],
+						priority: diff[i].newData
+					}
 				}
 
-				console.log(result);
+				$.ajax({
+					url: '<?= site_url("admin/ads/manager/update/priority/banner/id/{$banner_id}"); ?>',
+					type: 'GET',
+					data: {
+						priority: result
+					},
+					success: function(data, status) {
+						if (data == -1) {
+							swal("Not Allowed!", "You have no permission.", "warning")
+						} else if (data === 0) {
+							swal("Error!", "Unable to order priority.", "warning")
+						}
+					},
+					error: function(xhr, status, error) {
+						swal("Error!", "Unable to process request.", "error")
+					}
+				});
 			});
 		<?php endif ?>
 	});
