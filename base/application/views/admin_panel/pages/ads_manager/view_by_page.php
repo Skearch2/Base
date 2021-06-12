@@ -157,6 +157,7 @@ $this->load->view('admin_panel/templates/subheader');
 				<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_archived">
 					<thead>
 						<tr>
+							<th>Ad ID</th>
 							<th>Brand</th>
 							<th>Title</th>
 							<th width="20px">Thumbnail</th>
@@ -169,6 +170,7 @@ $this->load->view('admin_panel/templates/subheader');
 					<thead>
 						<tr>
 							<th>Priority</th>
+							<th>Ad ID</th>
 							<th>Brand</th>
 							<th>Title</th>
 							<th width="20px">Thumbnail</th>
@@ -358,6 +360,8 @@ $this->load->view('admin_panel/templates/close_html');
 					serverSide: !1,
 					ajax: "<?= site_url(); ?>admin/ads/manager/get/<?= $scope ?>/id/<?= $scope_id ?>/banner/<?= $banner ?>/archived/<?= $is_archived ?>",
 					columns: [{
+						data: "id"
+					}, {
 						data: "brand"
 					}, {
 						data: "title"
@@ -396,7 +400,7 @@ $this->load->view('admin_panel/templates/close_html');
 					dom: '<"top"lfp>rt<"bottom"ip><"clear">',
 					rowId: "id",
 					rowReorder: {
-						selector: 'td:nth-child(1)',
+						selector: 'td:nth-child(2)',
 						dataSrc: 'priority'
 					},
 					searchDelay: 500,
@@ -405,6 +409,8 @@ $this->load->view('admin_panel/templates/close_html');
 					ajax: "<?= site_url(); ?>admin/ads/manager/get/<?= $scope ?>/id/<?= $scope_id ?>/banner/<?= $banner ?>/archived/<?= $is_archived ?>",
 					columns: [{
 						data: "priority"
+					}, {
+						data: "id"
 					}, {
 						data: "brand"
 					}, {
@@ -437,7 +443,7 @@ $this->load->view('admin_panel/templates/close_html');
 								'<a onclick=archiveAd("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Archive"><i class="la la-archive"></i></a>'
 						}
 					}, {
-						targets: 3,
+						targets: 4,
 						render: function(a, t, e, n) {
 							// check if the media is a video (only mp4 format)
 							var isVideo = e['media'].substr(e['media'].length - 3) == 'mp4' ? 1 : 0;
@@ -447,17 +453,17 @@ $this->load->view('admin_panel/templates/close_html');
 								return '<td><img src="<?= site_url('base/media') ?>/' + e['media'] + '" title="View" alt="No Media" style="display:block; max-width:200px; max-height:100px; cursor:pointer;" onclick="view(\'<?= site_url('base/media') ?>/' + e['media'] + '\',0)"></td>'
 						}
 					}, {
-						targets: 5,
+						targets: 6,
 						render: function(a, t, e, n) {
 							return '<a href="#" title="View">' + e['clicks'] + '</a>'
 						}
 					}, {
-						targets: 6,
+						targets: 7,
 						render: function(a, t, e, n) {
 							return '<a href="#" title="View">' + e['impressions'] + '</a>'
 						}
 					}, {
-						targets: 7,
+						targets: 8,
 						render: function(a, t, e, n) {
 							var s = {
 								0: {
@@ -472,7 +478,7 @@ $this->load->view('admin_panel/templates/close_html');
 							return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
 						}
 					}, {
-						targets: 8,
+						targets: 9,
 						render: function(a, t, e, n) {
 							var s = {
 								1: {
@@ -487,12 +493,12 @@ $this->load->view('admin_panel/templates/close_html');
 							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 						}
 					}, {
-						targets: 9,
+						targets: 10,
 						render: function(a, t, e, n) {
 							return new Date(e['date_modified']).toLocaleString();
 						}
 					}, {
-						targets: 10,
+						targets: 11,
 						render: function(a, t, e, n) {
 							return new Date(e['date_created']).toLocaleString();
 						}

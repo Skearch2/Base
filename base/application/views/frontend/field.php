@@ -82,17 +82,21 @@ $this->load->view('frontend/templates/header');
             <div class="carousel-inner">
                 <?php foreach ($banner_a_ads as $ad) : ?>
                     <div class="carousel-item" data-adid="<?= $ad->id ?>" data-interval="<?= $ad->duration ?>" data-ad-sign="<?= $ad->has_sign ?>">
-                        <a href='<?= site_url("redirect/ad/id/" . $ad->id) ?>' target='_blank' title='<?= $ad->title ?>'>
-                            <?php $is_video = substr(strtolower($ad->media), -3) == 'mp4' ? 1 : 0 ?>
-                            <?php if ($is_video) : ?>
-                                <video class="responsive" width="1000" height="110" loop muted>
-                                    <source src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" type="video/mp4">
-                                    Unable to play video, incompatible browser.
-                                </video>
+                        <?php if (empty($ad->url)) : ?>
+                            <a href='javascript:void(0)' title='<?= $ad->title ?>'>
                             <?php else : ?>
-                                <img class="responsive" width="1000" height="110" src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" />
-                            <?php endif ?>
-                        </a>
+                                <a href='<?= site_url("redirect/ad/id/" . $ad->id) ?>' target='_blank' title='<?= $ad->title ?>'>
+                                <?php endif ?>
+                                <?php $is_video = substr(strtolower($ad->media), -3) == 'mp4' ? 1 : 0 ?>
+                                <?php if ($is_video) : ?>
+                                    <video class="responsive" width="1000" height="110" loop muted>
+                                        <source src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" type="video/mp4">
+                                        Unable to play video, incompatible browser.
+                                    </video>
+                                <?php else : ?>
+                                    <img class="responsive" width="1000" height="110" src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" />
+                                <?php endif ?>
+                                </a>
                     </div>
                 <?php endforeach ?>
             </div>
@@ -170,17 +174,21 @@ $this->load->view('frontend/templates/header');
                     <div class="carousel-inner">
                         <?php foreach ($banner_b_ads as $ad) : ?>
                             <div class="carousel-item" data-adid="<?= $ad->id ?>" data-interval="<?= $ad->duration ?>" data-ad-sign="<?= $ad->has_sign ?>">
-                                <a href='<?= site_url("redirect/ad/id/" . $ad->id) ?>' target='_blank' title='<?= $ad->title ?>'>
-                                    <?php $is_video = substr(strtolower($ad->media), -3) == 'mp4' ? 1 : 0 ?>
-                                    <?php if ($is_video) : ?>
-                                        <video class="responsive" width="300" height="600" loop muted>
-                                            <source src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" type="video/mp4">
-                                            Unable to play video, incompatible browser.
-                                        </video>
+                                <?php if (empty($ad->url)) : ?>
+                                    <a href='javascript:void(0)' title='<?= $ad->title ?>'>
                                     <?php else : ?>
-                                        <img class="responsive" width="300" height="600" src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" />
-                                    <?php endif ?>
-                                </a>
+                                        <a href='<?= site_url("redirect/ad/id/" . $ad->id) ?>' target='_blank' title='<?= $ad->title ?>'>
+                                        <?php endif ?>
+                                        <?php $is_video = substr(strtolower($ad->media), -3) == 'mp4' ? 1 : 0 ?>
+                                        <?php if ($is_video) : ?>
+                                            <video class="responsive" width="300" height="600" loop muted>
+                                                <source src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" type="video/mp4">
+                                                Unable to play video, incompatible browser.
+                                            </video>
+                                        <?php else : ?>
+                                            <img class="responsive" width="300" height="600" src="<?= site_url("base/media/$ad->media") ?>" alt="<?= $ad->title ?>" />
+                                        <?php endif ?>
+                                        </a>
                             </div>
                         <?php endforeach ?>
                     </div>

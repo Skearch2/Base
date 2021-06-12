@@ -35,16 +35,17 @@
 				<!-- end::Brand -->
 
 				<!--begin::Search-->
-				<div class="m-stack__item m-stack__item--middle m-dropdown m-dropdown--arrow m-dropdown--large m-dropdown--mobile-full-width m-dropdown--align-right m-dropdown--skin-light m-header-search m-header-search--expandable- m-header-search--skin-" id="m_quicksearch" m-quicksearch-mode="default">
+				<div class="m-stack__item m-stack__item--middle m-dropdown m-dropdown--arrow m-dropdown--large m-dropdown--mobile-full-width m-dropdown--align-right m-dropdown--skin-light m-header-search m-header-search--expandable- m-header-search--skin-" id="m_quicksearch_manual" m-quicksearch-mode="default">
 
 					<!--begin::Search Form -->
-					<form class="m-header-search__form">
+					<form class="m-header-search__form" onsubmit="ajaxSearch(document.getElementById('m_quicksearch_input').value)">
+						<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 						<div class="m-header-search__wrapper">
 							<span class="m-header-search__icon-search" id="m_quicksearch_search">
 								<i class="la la-search"></i>
 							</span>
 							<span class="m-header-search__input-wrapper">
-								<input autocomplete="off" type="text" name="q" class="m-header-search__input" value="" placeholder="Search..." id="m_quicksearch_input">
+								<input autocomplete="off" type="text" class="m-header-search__input" value="" placeholder="Search..." id="m_quicksearch_input">
 							</span>
 							<span class="m-header-search__icon-close" id="m_quicksearch_close">
 								<i class="la la-remove"></i>

@@ -62,7 +62,7 @@ class Ads_manager extends MY_Controller
 
             $this->form_validation->set_rules('brand', 'Brand', 'required|numeric');
             $this->form_validation->set_rules('title', 'Title', 'trim|required');
-            $this->form_validation->set_rules('url', 'Link Reference', 'trim|required|valid_url');
+            $this->form_validation->set_rules('url', 'Link Reference', 'trim|callback_url_check');
             $this->form_validation->set_rules('duration', 'Duration', 'required|numeric');
             $this->form_validation->set_rules('has_sign', 'Sponsored', 'required|numeric');
             $this->form_validation->set_rules('is_active', 'Enabled', 'required|numeric');
@@ -94,7 +94,7 @@ class Ads_manager extends MY_Controller
                     'brand_id'  => $this->input->post('brand'),
                     'title'     => $this->input->post('title'),
                     'media'     => $this->upload_media($scope, $scope_id),
-                    'url'       => $this->input->post('url'),
+                    'url'       => $this->input->post('has_no_url') == 1 ? '' : $this->input->post('url'),
                     'duration'  => $this->input->post('duration'),
                     'has_sign'  => $this->input->post('has_sign'),
                     'is_active' => $this->input->post('is_active'),
@@ -310,7 +310,7 @@ class Ads_manager extends MY_Controller
 
             $this->form_validation->set_rules('brand', 'Brand', 'required|numeric');
             $this->form_validation->set_rules('title', 'Title', 'trim|required');
-            $this->form_validation->set_rules('url', 'Link Reference', 'trim|required|valid_url');
+            $this->form_validation->set_rules('url', 'Link Reference', 'trim|callback_url_check');
             $this->form_validation->set_rules('duration', 'Duration', 'required|numeric');
             $this->form_validation->set_rules('has_sign', 'Sponsored', 'required|numeric');
             $this->form_validation->set_rules('is_active', 'Enabled', 'required|numeric');
@@ -325,11 +325,11 @@ class Ads_manager extends MY_Controller
                 $this->load->view('admin_panel/pages/ads_manager/edit', $data);
             } else {
                 $data = [
-                    'brand_id' => $this->input->post('brand'),
-                    'title' => $this->input->post('title'),
-                    'url' => $this->input->post('url'),
-                    'duration' => $this->input->post('duration'),
-                    'has_sign' => $this->input->post('has_sign'),
+                    'brand_id'  => $this->input->post('brand'),
+                    'title'     => $this->input->post('title'),
+                    'url'       => $this->input->post('has_no_url') == 1 ? '' : $this->input->post('url'),
+                    'duration'  => $this->input->post('duration'),
+                    'has_sign'  => $this->input->post('has_sign'),
                     'is_active' => $this->input->post('is_active'),
                 ];
 
@@ -527,5 +527,25 @@ class Ads_manager extends MY_Controller
         // Load page content
         $data['title'] = ucwords('ads manager');
         $this->load->view('admin_panel/pages/ads_manager/view_by_page', $data);
+    }
+
+    /**
+     * Custome validation for link reference
+     *
+     * @param string $str URL
+     * @return void
+     */
+    public function url_check($str)
+    {
+        $has_no_link_checked = $this->input->post('has_no_url');
+
+        if (!$has_no_link_checked) {
+            if ($str === '') {
+                $this->form_validation->set_message('url_check', 'The {field} field is required.');
+                return FALSE;
+            }
+        } else {
+            return TRUE;
+        }
     }
 }
