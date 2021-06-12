@@ -119,6 +119,12 @@ $this->load->view('admin_panel/templates/subheader');
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="url" id="url" value="<?= set_value('url') ?>">
 									</div>
+									<label class="m-checkbox">
+										No Link
+										<div class="col-3">
+											<input type="checkbox" name="has_no_url" id="no_url" value="1" <?= set_value('has_no_url', 0) == 1 ? 'checked' : "" ?>>
+										</div>
+									</label>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Duration *</label>
@@ -211,7 +217,7 @@ $this->load->view('admin_panel/templates/close_html');
 						required: 1
 					},
 					url: {
-						required: 1,
+						required: "#no_url:unchecked",
 						url: 1
 					},
 					duration: {
@@ -259,6 +265,15 @@ $this->load->view('admin_panel/templates/close_html');
 		// myDropzone.on("success", function(file, xhr, formData) {
 		// 	console.log("Success")
 		// });
+
+		// disbale url input if no url checkbox is checked
+		$('#no_url').change(function() {
+			if ($(this).is(':checked') == true) {
+				$('#url').prop('disabled', true);
+			} else {
+				$('#url').prop('disabled', false);
+			}
+		});
 
 		// pre-populate https protocol in the url field
 		$("#url").inputmask({
