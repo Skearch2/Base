@@ -291,6 +291,10 @@ $route['admin/brands']                          = 'admin_panel/brands/brands';
 $route['admin/brands/get']                      = 'admin_panel/brands/brands/get';
 $route['admin/brands/search/(:any)']            = 'admin_panel/brands/brands/search/$1';
 
+// Ads
+$route['admin/brands/ads/brand/id/(:num)/get/archived/(0|1)']        = 'admin_panel/brands/ads/get/$1/$2';
+$route['admin/brands/ads/brand/id/(:num)/show/(library|archived)']   = 'admin_panel/brands/ads/view/$1/$2';
+
 // Media Vault
 $route['admin/brands/vault/brand/id/(:num)']                    = 'admin_panel/brands/vault/index/$1';
 $route['admin/brands/vault/get/brand/id/(:num)']                = 'admin_panel/brands/vault/get/$1';
