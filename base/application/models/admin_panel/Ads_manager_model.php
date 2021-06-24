@@ -151,6 +151,31 @@ class Ads_manager_model extends CI_Model
     }
 
     /**
+     * Get all current ads that corresponds to brand
+     *
+     * @param int    $scope_id     Brand ID
+     * @return mixed object
+     */
+    public function get_ads_by_brand_id($brand_id, $is_archived = 0)
+    {
+        $this->db->select('skearch_ads.id, skearch_ads.title, CONCAT(skearch_banners.folder,"/",skearch_ads.media) as media, skearch_ads.url, skearch_ads.duration, skearch_ads.priority,
+        sum(skearch_ads_activity.clicks) as clicks, sum(skearch_ads_activity.impressions) as impressions, skearch_ads.is_active, skearch_ads.has_sign, skearch_ads.is_archived, skearch_ads.date_modified, skearch_ads.date_created,
+        skearch_ads.brand_id, skearch_brands.brand');
+        $this->db->from('skearch_ads');
+        $this->db->join('skearch_ads_activity', 'skearch_ads.id = skearch_ads_activity.ad_id', 'left');
+        $this->db->join('skearch_banners', 'skearch_ads.banner_id = skearch_banners.id', 'left');
+        $this->db->join('skearch_brands', 'skearch_ads.brand_id = skearch_brands.id', 'left');
+        $this->db->where('skearch_ads.brand_id', $brand_id);
+        $this->db->where('skearch_ads.is_archived', $is_archived);
+        $this->db->order_by('skearch_ads.date_modified', 'DESC');
+        $this->db->group_by('skearch_ads.id');
+
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    /**
      * Get last priority in a banner
      *
      * @param int    $banner_id  Banner ID
