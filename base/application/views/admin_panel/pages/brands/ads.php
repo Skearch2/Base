@@ -37,7 +37,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<i class="fa fa-globe m--font-brand"></i>
 					</span>
 					<h3 class="m-portlet__head-text m--font-brand">
-						<?= ucwords($scope) ?>
+						Brand: <?= ucwords("$brand->brand") ?>
 					</h3>
 				</div>
 			</div>
@@ -49,32 +49,10 @@ $this->load->view('admin_panel/templates/subheader');
 								<?= ucwords($is_archived == 0 ? 'library' : 'archived') ?>
 							</button>
 							<div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-								<a class="dropdown-item" href="<?= site_url(); ?>admin/ads/manager/view/<?= $scope ?>/banner/<?= $banner ?>/show/library">Library</a>
-								<a class="dropdown-item" href="<?= site_url(); ?>admin/ads/manager/view/<?= $scope ?>/banner/<?= $banner ?>/show/archived">Archived</a>
+								<a class="dropdown-item" href="<?= site_url(); ?>admin/brands/ads/brand/id/<?= $brand->id ?>/show/library">Library</a>
+								<a class="dropdown-item" href="<?= site_url(); ?>admin/brands/ads/brand/id/<?= $brand->id ?>/show/archived">Archived</a>
 							</div>
 						</div>
-					</li>
-					<li class="m-portlet__nav-item">
-						<div class="btn-group" role="group">
-							<button id="btnGroupDrop1" type="button" class="btn btn-outline-brand m-btn m-btn--wide m-btn--icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								Banner <?= strtoupper($banner) ?>
-							</button>
-							<div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-								<a class="dropdown-item" href="<?= site_url(); ?>admin/ads/manager/view/<?= $scope ?>/banner/a/show/library">Banner A</a>
-								<a class="dropdown-item" href="<?= site_url(); ?>admin/ads/manager/view/<?= $scope ?>/banner/b/show/library">Banner B</a>
-								<a class="dropdown-item" href="<?= site_url(); ?>admin/ads/manager/view/<?= $scope ?>/banner/u/show/library">Banner U</a>
-								<a class="dropdown-item" href="<?= site_url(); ?>admin/ads/manager/view/<?= $scope ?>/banner/va/show/library">Banner VA</a>
-
-							</div>
-						</div>
-					</li>
-					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/ads/manager/create/{$scope}/banner/{$banner}") ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
-							<span>
-								<i class="la la-plus-circle"></i>
-								<span>Create</span>
-							</span>
-						</a>
 					</li>
 				</ul>
 			</div>
@@ -167,9 +145,7 @@ $this->load->view('admin_panel/templates/subheader');
 				<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_library">
 					<thead>
 						<tr>
-							<th>Priority</th>
 							<th>Ad ID</th>
-							<th>Brand</th>
 							<th>Title</th>
 							<th width="20px">Thumbnail</th>
 							<th>Duration</th>
@@ -356,7 +332,7 @@ $this->load->view('admin_panel/templates/close_html');
 					searchDelay: 500,
 					processing: !0,
 					serverSide: !1,
-					ajax: "<?= site_url(); ?>admin/ads/manager/get/<?= $scope ?>/banner/<?= $banner ?>/archived/<?= $is_archived ?>",
+					ajax: "<?= site_url(); ?>admin/brands/ads/brand/id/<?= $brand->id ?>/get/archived/<?= $is_archived ?>",
 					columns: [{
 						data: "id"
 					}, {
@@ -397,20 +373,12 @@ $this->load->view('admin_panel/templates/close_html');
 					responsive: !0,
 					dom: '<"top"lfp>rt<"bottom"ip><"clear">',
 					rowId: "id",
-					rowReorder: {
-						selector: 'td:nth-child(2)',
-						dataSrc: 'priority'
-					},
 					searchDelay: 500,
 					processing: !0,
 					serverSide: !1,
-					ajax: "<?= site_url(); ?>admin/ads/manager/get/<?= $scope ?>/banner/<?= $banner ?>/archived/<?= $is_archived ?>",
+					ajax: "<?= site_url(); ?>admin/brands/ads/brand/id/<?= $brand->id ?>/get/archived/<?= $is_archived ?>",
 					columns: [{
-						data: "priority"
-					}, {
 						data: "id"
-					}, {
-						data: "brand"
 					}, {
 						data: "title"
 					}, {
@@ -437,11 +405,11 @@ $this->load->view('admin_panel/templates/close_html');
 						orderable: !1,
 						render: function(a, t, e, n) {
 							var title = e['title'].replace(/ /g, '%20');
-							return '<a href="<?= site_url() . "admin/ads/manager/update/ad/id/" ?>' + e['id'] + '/<?= $scope ?>/banner/<?= $banner ?>" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+							return '<a href="<?= site_url() . "admin/ads/manager/update/ad/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 								'<a onclick=archiveAd("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Archive"><i class="la la-archive"></i></a>'
 						}
 					}, {
-						targets: 4,
+						targets: 2,
 						render: function(a, t, e, n) {
 							// check if the media is a video (only mp4 format)
 							var isVideo = e['media'].substr(e['media'].length - 3) == 'mp4' ? 1 : 0;
@@ -451,17 +419,17 @@ $this->load->view('admin_panel/templates/close_html');
 								return '<td><img src="<?= site_url('base/media/') ?>' + e['media'] + '" title="View" alt="No Media" style="display:block; max-width:200px; max-height:100px; cursor:pointer;" onclick="view(\'<?= site_url('base/media') ?>/' + e['media'] + '\',0)"></td>'
 						}
 					}, {
-						targets: 6,
+						targets: 4,
 						render: function(a, t, e, n) {
 							return '<a href="<?= site_url('admin/ads/manager/view/activity/ad/id/') ?>' + e['id'] + '" title="View Details">' + e['clicks'] + '</a>'
 						}
 					}, {
-						targets: 7,
+						targets: 5,
 						render: function(a, t, e, n) {
 							return '<a href="<?= site_url('admin/ads/manager/view/activity/ad/id/') ?>' + e['id'] + '" title="View Details">' + e['impressions'] + '</a>'
 						}
 					}, {
-						targets: 8,
+						targets: 6,
 						render: function(a, t, e, n) {
 							var s = {
 								0: {
@@ -476,7 +444,7 @@ $this->load->view('admin_panel/templates/close_html');
 							return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
 						}
 					}, {
-						targets: 9,
+						targets: 7,
 						render: function(a, t, e, n) {
 							var s = {
 								1: {
@@ -491,12 +459,12 @@ $this->load->view('admin_panel/templates/close_html');
 							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 						}
 					}, {
-						targets: 10,
+						targets: 8,
 						render: function(a, t, e, n) {
 							return new Date(e['date_modified']).toLocaleString();
 						}
 					}, {
-						targets: 11,
+						targets: 9,
 						render: function(a, t, e, n) {
 							return new Date(e['date_created']).toLocaleString();
 						}
@@ -512,38 +480,6 @@ $this->load->view('admin_panel/templates/close_html');
 			datatableArchived.init();
 		<?php else : ?>
 			datatableLibrary.init();
-
-			// on row reorder update ad priority
-			var dt = $("#m_table_library").DataTable()
-			dt.on('row-reorder', function(e, diff, edit) {
-				var result = {}
-
-				for (var i = 0, ien = diff.length; i < ien; i++) {
-					var rowData = dt.row(diff[i].node).data();
-					result[i] = {
-						id: rowData['id'],
-						priority: diff[i].newData
-					}
-				}
-
-				$.ajax({
-					url: '<?= site_url("admin/ads/manager/update/priority/banner/id/{$banner_id}"); ?>',
-					type: 'GET',
-					data: {
-						priority: result
-					},
-					success: function(data, status) {
-						if (data == -1) {
-							swal("Not Allowed!", "You have no permission.", "warning")
-						} else if (data === 0) {
-							swal("Error!", "Unable to order priority.", "warning")
-						}
-					},
-					error: function(xhr, status, error) {
-						swal("Error!", "Unable to process request.", "error")
-					}
-				});
-			});
 		<?php endif ?>
 	});
 </script>
@@ -552,5 +488,5 @@ $this->load->view('admin_panel/templates/close_html');
 <!-- Sidemenu class -->
 <script>
 	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-brands-ads-manager").addClass("m-menu__item  m-menu__item--active");
+	$("#submenu-brands-brands").addClass("m-menu__item  m-menu__item--active");
 </script>
