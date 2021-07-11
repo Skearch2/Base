@@ -160,7 +160,7 @@ class Ads_manager_model extends CI_Model
     {
         $this->db->select('skearch_ads.id, skearch_ads.title, CONCAT(skearch_banners.folder,"/",skearch_ads.media) as media, skearch_ads.url, skearch_ads.duration, skearch_ads.priority,
         sum(skearch_ads_activity.clicks) as clicks, sum(skearch_ads_activity.impressions) as impressions, skearch_ads.is_active, skearch_ads.has_sign, skearch_ads.is_archived, skearch_ads.date_modified, skearch_ads.date_created,
-        skearch_ads.brand_id, skearch_brands.brand');
+        skearch_ads.brand_id, skearch_brands.brand, skearch_banners.scope, skearch_banners.scope_id');
         $this->db->from('skearch_ads');
         $this->db->join('skearch_ads_activity', 'skearch_ads.id = skearch_ads_activity.ad_id', 'left');
         $this->db->join('skearch_banners', 'skearch_ads.banner_id = skearch_banners.id', 'left');

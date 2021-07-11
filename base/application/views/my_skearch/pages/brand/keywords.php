@@ -29,7 +29,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 		<?php if ($is_primary_brand_user) : ?>
 			<div class="m-portlet__body">
 				<div class="form-group m-form__group row">
-					<label for="keyword" class="col-2 col-form-label">Keyword</label>
+					<label for="keyword" class="col-2 col-form-label">BrandLink Keyword</label>
 					<div class="col-7">
 						<input class="form-control m-input" type="text" id="keyword">
 					</div>
@@ -40,8 +40,8 @@ $this->load->view('my_skearch/templates/start_pagebody');
 						<input class="form-control m-input" type="text" id="url">
 					</div>
 				</div>
-				<button type="button" class="btn btn-accent m-btn m-btn--air m-btn--custom" onclick="addKeyword()">Add Keyword</button>
-				<span class="m-form__help">*You can only add max of 10 keywords</span>
+				<button type="button" class="btn btn-accent m-btn m-btn--air m-btn--custom" onclick="addKeyword()">Add</button>
+				<span class="m-form__help">*You can add upto 10 Branded Keywords in this account.</span>
 			</div>
 		<?php endif ?>
 		<div class="m-portlet__body">
@@ -109,6 +109,8 @@ $this->load->view('my_skearch/templates/js_global');
 						toastr.success("", "Keyword added.");
 					} else if (data == 0) {
 						toastr.error("", "Unable to add keyword.");
+					} else if (data == -1) {
+						toastr.error("", "Keyword already exists.");
 					}
 				},
 				error: function(xhr, status, error) {

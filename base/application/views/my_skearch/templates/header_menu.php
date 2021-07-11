@@ -334,7 +334,7 @@
 												<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left"><span class="m-menu__arrow m-menu__arrow--adjust"></span>
 													<ul class="m-menu__subnav">
 														<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="<?= base_url("myskearch/brand/ads"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--line"><span></span></i><span class="m-menu__link-text">Ads</span></a></li>
-														<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="<?= base_url("myskearch/brand/keywords"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--line"><span></span></i><span class="m-menu__link-text">Keywords</span></a></li>
+														<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="<?= base_url("myskearch/brand/keywords"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--line"><span></span></i><span class="m-menu__link-text">BrandLink</span></a></li>
 														<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="<?= base_url("myskearch/brand/vault"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--line"><span></span></i><span class="m-menu__link-text">Media Vault</span></a></li>
 													</ul>
 												</div>

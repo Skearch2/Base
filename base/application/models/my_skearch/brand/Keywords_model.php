@@ -44,6 +44,36 @@ class Keywords_model extends CI_Model
     }
 
     /**
+     * Check if the keyword already exists
+     *
+     * @param string $keyword Keyword
+     * @return boolean
+     */
+    public function check_exists($keyword)
+    {
+        $this->db->select('keywords');
+        $this->db->from('skearch_brands_keywords');
+        $this->db->where('keywords', $keyword);
+
+        $query1 = $this->db->get_compiled_select();
+
+        $this->db->select('keyword');
+        $this->db->from('search_keywords');
+        $this->db->where('keyword', $keyword);
+
+        $query2 = $this->db->get_compiled_select();
+
+
+        $query = $this->db->query($query1 . " UNION " . $query2);
+
+        if ($query->num_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Delete brand keywords
      *
      * @param array $id Keyword ID

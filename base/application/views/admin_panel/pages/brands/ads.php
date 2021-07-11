@@ -149,6 +149,8 @@ $this->load->view('admin_panel/templates/subheader');
 							<th>Title</th>
 							<th width="20px">Thumbnail</th>
 							<th>Duration</th>
+							<th>Umbrella</th>
+							<th>Field</th>
 							<th>Clicks</th>
 							<th>Impressions</th>
 							<th>Ad Sign</th>
@@ -386,6 +388,10 @@ $this->load->view('admin_panel/templates/close_html');
 					}, {
 						data: "duration"
 					}, {
+						data: "umbrella"
+					}, {
+						data: "field"
+					}, {
 						data: "clicks"
 					}, {
 						data: "impressions"
@@ -421,15 +427,25 @@ $this->load->view('admin_panel/templates/close_html');
 					}, {
 						targets: 4,
 						render: function(a, t, e, n) {
-							return '<a href="<?= site_url('admin/ads/manager/view/activity/ad/id/') ?>' + e['id'] + '" title="View Details">' + e['clicks'] + '</a>'
+							return (e['umbrella'] == null) ? '-' : '<a href="<?= site_url('browse/') ?>' + e['umbrella'] + '" title="Visit" target="_blank">' + e['umbrella'] + '</a>'
 						}
 					}, {
 						targets: 5,
 						render: function(a, t, e, n) {
-							return '<a href="<?= site_url('admin/ads/manager/view/activity/ad/id/') ?>' + e['id'] + '" title="View Details">' + e['impressions'] + '</a>'
+							return (e['field'] == null) ? '-' : '<a href="<?= site_url('browse/') ?>' + e['umbrella'] + "/" + e['field'] + '" title="Visit" target="_blank">' + e['field'] + '</a>'
 						}
 					}, {
 						targets: 6,
+						render: function(a, t, e, n) {
+							return '<a href="<?= site_url('admin/ads/manager/view/activity/ad/id/') ?>' + e['id'] + '" title="View Details">' + e['clicks'] + '</a>'
+						}
+					}, {
+						targets: 7,
+						render: function(a, t, e, n) {
+							return '<a href="<?= site_url('admin/ads/manager/view/activity/ad/id/') ?>' + e['id'] + '" title="View Details">' + e['impressions'] + '</a>'
+						}
+					}, {
+						targets: 8,
 						render: function(a, t, e, n) {
 							var s = {
 								0: {
@@ -444,7 +460,7 @@ $this->load->view('admin_panel/templates/close_html');
 							return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
 						}
 					}, {
-						targets: 7,
+						targets: 9,
 						render: function(a, t, e, n) {
 							var s = {
 								1: {
@@ -459,12 +475,12 @@ $this->load->view('admin_panel/templates/close_html');
 							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 						}
 					}, {
-						targets: 8,
+						targets: 10,
 						render: function(a, t, e, n) {
 							return new Date(e['date_modified']).toLocaleString();
 						}
 					}, {
-						targets: 9,
+						targets: 11,
 						render: function(a, t, e, n) {
 							return new Date(e['date_created']).toLocaleString();
 						}
