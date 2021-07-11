@@ -89,11 +89,11 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									Gala Games
 								</span><br>
 								<span class="m-widget4__sub">
-									https://gala.fan/C0KNBwVp9
+									https://gala.fan/mkK_yJn-T
 								</span>
 							</div>
 							<span class="m-widget4__ext">
-								<a href="https://gala.fan/C0KNBwVp9" target="_blank"><span class="m-widget4__number m--font-brand">Visit</span></a>
+								<a href="https://gala.fan/mkK_yJn-T" target="_blank"><span class="m-widget4__number m--font-brand">Visit</span></a>
 							</span>
 						</div>
 					</div>

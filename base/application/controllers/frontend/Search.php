@@ -39,8 +39,7 @@ class Search extends MY_Controller
         $links = $this->Category_model->get_results();
         $brands_keywords = $this->Category_model->get_brands_keywords();
 
-        /* If keyword matches with the title of umbrella page or keywords for umbrella page then
-           redirect to the umbrella page */
+        /* If keyword matches with the title of umbrella page then redirect to the umbrella page */
         foreach ($cat as $item) {
             if (strtolower($item->title) === strtolower($keyword)) {
                 echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $item->title)));
@@ -48,8 +47,7 @@ class Search extends MY_Controller
             }
         }
 
-        /* If keyword matches with the title of field page or keywords for field page then
-           redirect to the field  page */
+        /* If keyword matches with the title of field page then redirect to the field page */
         foreach ($sub_cat as $item) {
             $ptitle = $this->Category_model->get_category_title($item->parent_id)[0]->title;
             if (strtolower($item->title) === strtolower($keyword)) {

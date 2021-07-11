@@ -16,6 +16,23 @@ if (!defined('BASEPATH')) {
 class Vault_model extends CI_Model
 {
     /**
+     * Create media in the media vault
+     *
+     * @param array $media_data Contains media data
+     * @return boolean
+     */
+    public function create($media_data)
+    {
+        $this->db->insert('brands_media_vault', $media_data);
+
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Get media from the media vault of the brand
      *
      * @param int $brand_id Brand ID

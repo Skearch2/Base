@@ -92,9 +92,10 @@ class Field_model extends CI_Model
      */
     public function get_umbrella($id)
     {
-        $this->db->select("*");
+        $this->db->select("skearch_categories.title as umbrella");
         $this->db->from('skearch_subcategories');
-        $this->db->where('id', $id);
+        $this->db->join('skearch_categories', 'skearch_categories.id = skearch_subcategories.parent_id', 'left');
+        $this->db->where('skearch_subcategories.id', $id);
         $query = $this->db->get();
 
         if ($query) {

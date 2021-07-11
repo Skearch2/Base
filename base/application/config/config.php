@@ -538,5 +538,5 @@ $config['proxy_ips'] = '';
 */
 $config['tmp_dir']               = 'tmp';
 $config['tmp_permissions']       = 0777;
-$config['upload_file_size']      = "2048"; // in KBs
+$config['upload_file_size']      = "20480"; // in KBs
 $config['upload_file_types']     = "jpeg|jpg|png|gif|mp4";

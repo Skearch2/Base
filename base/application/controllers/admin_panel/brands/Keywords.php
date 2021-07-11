@@ -121,7 +121,7 @@ class Keywords extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $data['title'] = ucfirst("Brands Keywords");
+            $data['title'] = ucfirst("BrandLinks");
 
             // Load page content
             $this->load->view('admin_panel/pages/brands/keywords', $data);

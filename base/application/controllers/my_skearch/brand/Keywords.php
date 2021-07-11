@@ -51,11 +51,11 @@ class Keywords extends MY_Controller
     {
         $this->form_validation->set_data($this->input->get());
 
-        $this->form_validation->set_rules('keyword', 'Keywords', 'trim|required|is_unique[skearch_brands_keywords.keywords]');
+        $this->form_validation->set_rules('keyword', 'Keyword', 'trim|required|callback_check_exists');
         $this->form_validation->set_rules('url', 'URL', 'trim|required|callback_valid_url');
 
         if ($this->form_validation->run() === FALSE) {
-            echo json_encode(0);
+            echo json_encode(-1);
             return;
         }
 
@@ -64,7 +64,7 @@ class Keywords extends MY_Controller
             'keywords' => $this->input->get('keyword'),
             'url' => $this->input->get('url'),
             'active' => 0,
-            'approved' => 0
+            'approved' => 2
         );
 
         $create = $this->Keywords->create($user_data);
@@ -175,5 +175,21 @@ class Keywords extends MY_Controller
     function valid_url($url)
     {
         return (filter_var($url, FILTER_VALIDATE_URL) !== FALSE);
+    }
+
+    /**
+     * Callback function to check if keyword already exists
+     *
+     * @param string $url URL
+     * @return void
+     */
+    function check_exists($keyword)
+    {
+        if ($this->Keywords->check_exists($keyword)) {
+            $this->form_validation->set_message('keyword', "The keyword alerady exists.");
+            return false;
+        } else {
+            return true;
+        }
     }
 }
