@@ -86,7 +86,7 @@ $this->load->view('admin_panel/templates/close_html');
 
 		swal({
 			title: "Are you sure?",
-			text: "Are you sure you want approve the keyword: \"" + keyword + "\"?",
+			text: "Are you sure you want approve the BrandLink keyword: \"" + keyword + "\"?",
 			type: "info",
 			confirmButtonClass: "btn btn-success",
 			confirmButtonText: "Approve",
@@ -99,9 +99,9 @@ $this->load->view('admin_panel/templates/close_html');
 				type: 'GET',
 				success: function(data, status) {
 					if (data == 0) {
-						swal("Error!", "Unable to approve keyword.", "error")
+						swal("Error!", "Unable to approve BrandLink keyword.", "error")
 					} else {
-						swal("Success!", "The keyword has been approved.", "success")
+						swal("Success!", "The BrandLink keyword has been approved.", "success")
 						$('#m_table_1').DataTable().ajax.reload(null, false);
 					}
 				},
@@ -118,7 +118,7 @@ $this->load->view('admin_panel/templates/close_html');
 
 		swal({
 			title: "Are you sure?",
-			text: "Are you sure you want delete the keyword: \"" + keyword + "\"?",
+			text: "Are you sure you want delete the BrandLink keyword: \"" + keyword + "\"?",
 			type: "warning",
 			confirmButtonClass: "btn btn-danger",
 			confirmButtonText: "Yes, delete it!",
@@ -131,9 +131,9 @@ $this->load->view('admin_panel/templates/close_html');
 				type: 'GET',
 				success: function(data, status) {
 					if (data == 0) {
-						swal("Error!", "Unable to delete keyword.", "error")
+						swal("Error!", "Unable to delete BrandLink keyword.", "error")
 					} else {
-						swal("Success!", "The keyword has been deleted.", "success")
+						swal("Success!", "The BrandLink keyword has been deleted.", "success")
 						$("#" + id).remove();
 					}
 				},

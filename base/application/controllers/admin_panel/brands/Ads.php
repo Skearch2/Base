@@ -34,6 +34,32 @@ class Ads extends MY_Controller
 
         $this->load->model('admin_panel/ads_manager_model', 'ads_manager');
         $this->load->model('admin_panel/brands/brand_model', 'Brand');
+        $this->load->model('admin_panel/results/field_model', 'Field');
+        $this->load->model('admin_panel/results/umbrella_model', 'Umbrella');
+    }
+
+    /**
+     * Copy media to media vault
+     * 
+     * @param int $ad_id Ad id
+     * @return void
+     */
+    public function copy_to_media_vault($ad_id)
+    {
+        $ad = $this->ads_manager->get_ad($ad_id);
+
+        $data = [
+            'brand_id'  => $ad->brand_id,
+            'title'     => $ad->title,
+            'url'       => $ad->url,
+            'media'     => $ad->url // get media path
+        ];
+
+        if ($copy) {
+            echo json_encode(1);
+        } else {
+            echo json_encode(0);
+        }
     }
 
     /**
@@ -54,6 +80,20 @@ class Ads extends MY_Controller
             'sColumns' => '',
             'aaData' => $ads,
         ];
+
+        // get umbrella and field for each ad if exists
+        foreach ($result['aaData'] as $i => $ad) {
+            if ($ad->scope == 'umbrella') {
+                $result['aaData'][$i]->umbrella = $this->Umbrella->get($ad->scope_id)->title;
+                $result['aaData'][$i]->field = null;
+            } else if ($ad->scope == 'field') {
+                $result['aaData'][$i]->umbrella = $this->Field->get_umbrella($ad->scope_id)->umbrella;
+                $result['aaData'][$i]->field = $this->Field->get($ad->scope_id)->title;
+            } else {
+                $result['aaData'][$i]->umbrella = null;
+                $result['aaData'][$i]->field = null;
+            }
+        }
 
         $this->output
             ->set_content_type('application/json')
