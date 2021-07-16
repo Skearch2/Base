@@ -292,6 +292,7 @@ $route['admin/brands/get']                      = 'admin_panel/brands/brands/get
 $route['admin/brands/search/(:any)']            = 'admin_panel/brands/brands/search/$1';
 
 // Ads
+$route['admin/brands/ads/copy_to_vault/id/(:num)']                   = 'admin_panel/brands/ads/copy_to_media_vault/$1';
 $route['admin/brands/ads/brand/id/(:num)/get/archived/(0|1)']        = 'admin_panel/brands/ads/get/$1/$2';
 $route['admin/brands/ads/brand/id/(:num)/show/(library|archived)']   = 'admin_panel/brands/ads/view/$1/$2';
 

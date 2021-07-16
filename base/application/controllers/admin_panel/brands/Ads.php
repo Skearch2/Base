@@ -32,6 +32,7 @@ class Ads extends MY_Controller
             redirect('admin/auth/login');
         }
 
+        $this->load->model('admin_panel/brands/vault_model', 'media_vault');
         $this->load->model('admin_panel/ads_manager_model', 'ads_manager');
         $this->load->model('admin_panel/brands/brand_model', 'Brand');
         $this->load->model('admin_panel/results/field_model', 'Field');
@@ -52,13 +53,32 @@ class Ads extends MY_Controller
             'brand_id'  => $ad->brand_id,
             'title'     => $ad->title,
             'url'       => $ad->url,
-            'media'     => $ad->url // get media path
+            'media'     => $ad->filename
         ];
 
-        if ($copy) {
-            echo json_encode(1);
+        $target = FCPATH . "base/media/$ad->folder/";
+
+        $destination = FCPATH . "base/media/vault/brand_{$ad->brand_id}/";
+
+        // create the destination folder if not exists
+        if (!is_dir($destination)) {
+            if (!mkdir($destination, 0755, TRUE)) {
+                show_error('Unable to create media folder.', 500, 'Internal Server Error');
+                return;
+            }
+        }
+
+        if (copy("$target{$ad->filename}", "$destination{$ad->filename}")) {
+
+            $create = $this->media_vault->create($data);
+
+            if ($create) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
         } else {
-            echo json_encode(0);
+            show_error('Unable to copy media to target folder.', 500, 'Internal Server Error');
         }
     }
 
