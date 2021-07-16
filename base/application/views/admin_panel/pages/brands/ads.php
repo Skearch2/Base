@@ -223,6 +223,36 @@ $this->load->view('admin_panel/templates/close_html');
 		});
 	}
 
+	// Copy ad to Vault
+	function copyAdtoVault(id, title) {
+		var title = title.replace(/%20/g, ' ');
+		swal({
+			title: "Copy to Vault: " + title,
+			text: "Are you sure you want to copy this ad to Vault?",
+			type: "warning",
+			confirmButtonClass: "btn btn-success",
+			confirmButtonText: "Yes, copy it!",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
+			$.ajax({
+				url: '<?= site_url('admin/brands/ads/copy_to_vault/id/'); ?>' + id,
+				type: 'GET',
+				success: function(data, status) {
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else {
+						swal("Success!", "The ad has been copied to Vault.", "success")
+					}
+				},
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to copy ad to Vault.", "error")
+				}
+			});
+		});
+	}
+
 	// Delet ad
 	function deleteAd(id, title) {
 		var title = title.replace(/%20/g, ' ');
@@ -411,7 +441,8 @@ $this->load->view('admin_panel/templates/close_html');
 						orderable: !1,
 						render: function(a, t, e, n) {
 							var title = e['title'].replace(/ /g, '%20');
-							return '<a href="<?= site_url() . "admin/ads/manager/update/ad/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+							return '<a onclick=copyAdtoVault("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Copy to Vault"><i class="la la-copy"></i></a>' +
+								'<a href="<?= site_url() . "admin/ads/manager/update/ad/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 								'<a onclick=archiveAd("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Archive"><i class="la la-archive"></i></a>'
 						}
 					}, {
