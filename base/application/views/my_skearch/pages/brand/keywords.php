@@ -24,6 +24,14 @@ $this->load->view('my_skearch/templates/start_pagebody');
 
 ?>
 
+<div class="m-subheader ">
+	<div class="d-flex align-items-center">
+		<div class="mr-auto">
+			<h2 style="text-align:center;float:inline-end">BrandLink</h2>
+		</div>
+	</div>
+</div>
+
 <div class="m-content">
 	<div class="m-portlet m-portlet--mobile">
 		<?php if ($is_primary_brand_user) : ?>
@@ -40,8 +48,8 @@ $this->load->view('my_skearch/templates/start_pagebody');
 						<input class="form-control m-input" type="text" id="url">
 					</div>
 				</div>
-				<button type="button" class="btn btn-accent m-btn m-btn--air m-btn--custom" onclick="addKeyword()">Add</button>
-				<span class="m-form__help">*You can add upto 10 Branded Keywords in this account.</span>
+				<button type="button" class="btn btn-accent m-btn m-btn--air m-btn--custom" onclick="addKeyword()">Add Branded Keyword</button>
+				<span style="float: inline-end;" class="m-form__help">*You can add upto 10 Branded Keywords in this account.</span>
 			</div>
 		<?php endif ?>
 		<div class="m-portlet__body">
