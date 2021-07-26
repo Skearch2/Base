@@ -80,6 +80,10 @@ $this->load->view('auth/templates/head');
 											<input type="radio" name="typeInput" value="BrandLink"> BrandLink
 											<span></span>
 										</label>
+										<label class="m-radio">
+											<input type="radio" name="typeInput" value="Advertising & BrandLink"> Both
+											<span></span>
+										</label>
 									</div>
 								</div>
 							</div>
@@ -158,7 +162,7 @@ $this->load->view('auth/templates/head');
 		$("#brand").easyAutocomplete(options);
 	</script> -->
 
-	<script src="https://www.paypal.com/sdk/js?client-id=AbNAM8VBhUEX-d11vWG1v0F9atk_Oz1CZpKKBMUemqt0-ucUDc_8QLUlmfKmIR0ZjCfLXVpbhgeiL7hK&currency=USD" data-sdk-integration-source="button-factory"></script>
+	<script src="https://www.paypal.com/sdk/js?client-id=AbNAM8VBhUEX-d11vWG1v0F9atk_Oz1CZpKKBMUemqt0-ucUDc_8QLUlmfKmIR0ZjCfLXVpbhgeiL7hK&currency=USD&disable-funding=credit" data-sdk-integration-source="button-factory"></script>
 	<script>
 		function initPayPalButton() {
 			var description = document.querySelector('#smart-button-container #brand');

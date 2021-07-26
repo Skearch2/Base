@@ -36,7 +36,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet m-portlet--full-height m-portlet--tabs m-portlet--unair">
 				<div class="tab-content">
 					<div class="tab-pane active" id="m_user_profile_tab_1">
-						<form class="m-form m-form--fit m-form--label-align-right" id="m_forms" method="POST">
+						<form class="m-form m-form--fit m-form--label-align-right" id="m_form" method="POST">
 							<input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>" />
 							<div class="m-portlet__body">
 								<?php if (validation_errors()) : ?>
@@ -55,6 +55,20 @@ $this->load->view('admin_panel/templates/subheader');
 										</div>
 									</div>
 								<?php endif ?>
+								<div class="m-form__content">
+									<div class="m-alert m-alert--icon alert alert-danger m--hide" role="alert" id="m_form_msg">
+										<div class="m-alert__icon">
+											<i class="la la-warning"></i>
+										</div>
+										<div class="m-alert__text">
+											There are some errors found in the form, please check and try submitting again!
+										</div>
+										<div class="m-alert__close">
+											<button type="button" class="close" data-close="alert" aria-label="Close">
+											</button>
+										</div>
+									</div>
+								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
 										<h3 class="m-form__section">Make Link</h3>
@@ -134,7 +148,7 @@ $this->load->view('admin_panel/templates/subheader');
 										<div class="col-2">
 										</div>
 										<div class="col-7">
-											<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>&nbsp;&nbsp;
+											<button type="submit" name="action" value="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>&nbsp;&nbsp;
 											<button type="submit" name="action" value="save" class="btn btn-primary m-btn m-btn--air m-btn--custom">Save</button>
 										</div>
 										<div class="col-3">
@@ -182,7 +196,7 @@ $this->load->view('admin_panel/templates/close_html');
 					description_short: {
 						required: 1
 					},
-					www: {
+					url: {
 						required: 1,
 						url: 1
 					},
