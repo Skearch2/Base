@@ -225,9 +225,11 @@ class Ads_manager_model extends CI_Model
      */
     public function get_ad($id)
     {
-        $this->db->select('skearch_ads.id, skearch_ads.banner_id, skearch_ads.brand_id, skearch_ads.title, CONCAT(skearch_banners.folder,"/",skearch_ads.media) as media, skearch_ads.url, skearch_ads.duration, skearch_ads.priority, skearch_ads.is_active, skearch_ads.has_sign, skearch_ads.is_archived, skearch_banners.folder, skearch_ads.media as filename ');
+        $this->db->select('skearch_ads.id, skearch_ads.banner_id, skearch_ads.brand_id, skearch_ads.title, CONCAT(skearch_banners.folder,"/",skearch_ads.media) as media, skearch_ads.url, skearch_ads.duration, skearch_ads.priority, skearch_ads.is_active, skearch_ads.has_sign, skearch_ads.is_archived, skearch_banners.folder, skearch_ads.media as filename,
+         sum(skearch_ads_activity.clicks) as clicks, sum(skearch_ads_activity.impressions) as impressions, skearch_banners.scope, skearch_banners.scope_id');
         $this->db->from('skearch_ads');
         $this->db->join('skearch_banners', 'skearch_ads.banner_id = skearch_banners.id', 'left');
+        $this->db->join('skearch_ads_activity', 'skearch_ads.id = skearch_ads_activity.ad_id', 'left');
         $this->db->where('skearch_ads.id', $id);
 
         $query = $this->db->get();
@@ -240,7 +242,7 @@ class Ads_manager_model extends CI_Model
     }
 
     /**
-     * Get ad clicks history
+     * Get ad clicks and impressions history
      *
      * @param int $id Ad ID
      * @return mixed object
@@ -278,6 +280,24 @@ class Ads_manager_model extends CI_Model
             return $query->row();
         } else {
             return FALSE;
+        }
+    }
+
+    /**
+     * Reset ad clicks and impressions history
+     *
+     * @param int   $id   Ad ID
+     * @return boolean
+     */
+    public function reset_ad_activity($id)
+    {
+        $this->db->where('ad_id', $id);
+        $this->db->delete('skearch_ads_activity');
+
+        if ($this->db->affected_rows()) {
+            return $this->create_ad_activity($id);
+        } else {
+            return false;
         }
     }
 

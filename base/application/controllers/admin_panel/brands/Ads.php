@@ -121,6 +121,61 @@ class Ads extends MY_Controller
     }
 
     /**
+     * Update an ad
+     *
+     * @param int $id Ad ID
+     * @param int $brand_id     Brand ID
+     * @return void
+     */
+    public function update($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('ads_update') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+            $this->form_validation->set_rules('title', 'Title', 'trim|required');
+            $this->form_validation->set_rules('url', 'Link Reference', 'trim|callback_url_check');
+            $this->form_validation->set_rules('duration', 'Duration', 'required|numeric');
+            $this->form_validation->set_rules('has_sign', 'Sponsored', 'required|numeric');
+            $this->form_validation->set_rules('is_active', 'Enabled', 'required|numeric');
+
+            $ad = $this->ads_manager->get_ad($id);
+
+            if ($this->form_validation->run() === false) {
+
+                // page data
+                $data['ad'] = $ad;
+                $data['title'] = ucwords('edit ad');
+
+                $this->load->view('admin_panel/pages/brands/ads/edit', $data);
+            } else {
+                $data = [
+                    'title'     => $this->input->post('title'),
+                    'url'       => $this->input->post('has_no_url') == 1 ? '' : $this->input->post('url'),
+                    'duration'  => $this->input->post('duration'),
+                    'has_sign'  => $this->input->post('has_sign'),
+                    'is_active' => $this->input->post('is_active'),
+                ];
+
+                if ($_FILES['media']['error'] == 0) {
+                    $data['media'] = $this->upload_media($ad->scope, $ad->scope_id);
+                }
+
+                $update = (int) $this->ads_manager->update_ad($id, $data);
+
+                if ($update) {
+                    $this->session->set_flashdata('update_success', 1);
+                } else {
+                    $this->session->set_flashdata('update_success', 0);
+                }
+
+                redirect("admin/brands/ads/brand/id/$ad->brand_id/show/library");
+            }
+        }
+    }
+
+    /**
      * View page for ads.
      *
      * @param string $brand_id    Brand ID
@@ -141,6 +196,80 @@ class Ads extends MY_Controller
 
         // Load page content
         $data['title'] = ucwords('brands | ads');
-        $this->load->view('admin_panel/pages/brands/ads', $data);
+        $this->load->view('admin_panel/pages/brands/ads/view', $data);
+    }
+
+    /**
+     * Upload media
+     *
+     * @param string $scope          Scope: Default|Global|Umbrella|Field
+     * @param int $scope_id          Scope id
+     * @return string|false
+     */
+    private function upload_media($scope, $scope_id)
+    {
+        $tmp = $this->config->item('tmp_dir');
+
+        if (!file_exists("./$tmp/")) {
+            mkdir("./$tmp/", $this->config->item('tmp_permissions'));
+        }
+
+        $config['upload_path'] = "./$tmp/";
+        $config['max_size'] = $this->config->item('upload_file_size');
+        $config['allowed_types'] = $this->config->item('upload_file_types');
+        $config['encrypt_name'] = true;
+        // $config['max_width']            = 1024;
+        // $config['max_height']           = 768;
+
+        $this->load->library('upload', $config);
+
+        $upload = $this->upload->do_upload('media');
+
+        if ($upload) {
+
+            // $data = $this->upload->data();
+            // http_response_code(200);
+            // echo json_encode($data['media']);
+
+            $media = $this->upload->data();
+
+            if ($scope_id == 0) {
+                $folder_path = FCPATH . 'base/media/' . strtolower($scope)  . "/";
+            } else {
+                $folder_path = FCPATH . 'base/media/' . strtolower("{$scope}/{$scope_id}"  . "/");
+            }
+
+            if (move_uploaded_file($_FILES['media']['tmp_name'], $folder_path . $media['file_name'])) {
+                return $media['file_name'];
+            } else {
+                log_message('error', 'Unable to upload media.');
+                return false;
+            }
+        } else {
+            log_message('error', 'Unable to upload media.');
+            return false;
+            // http_response_code(500);
+            // echo json_encode($this->upload->display_errors());
+        }
+    }
+
+    /**
+     * Custome validation for link reference
+     *
+     * @param string $str URL
+     * @return void
+     */
+    public function url_check($str)
+    {
+        $has_no_link_checked = $this->input->post('has_no_url');
+
+        if (!$has_no_link_checked) {
+            if ($str === '') {
+                $this->form_validation->set_message('url_check', 'The {field} field is required.');
+                return FALSE;
+            }
+        } else {
+            return TRUE;
+        }
     }
 }

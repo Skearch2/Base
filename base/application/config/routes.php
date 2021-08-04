@@ -133,6 +133,8 @@ $route['myskearch/brand/keywords/add']                  = 'my_skearch/brand/keyw
 $route['myskearch/brand/keywords/delete/id/(:num)']     = 'my_skearch/brand/keywords/delete/$1';
 $route['myskearch/brand/keywords/get']                  = 'my_skearch/brand/keywords/get';
 $route['myskearch/brand/keywords/toggle/id/(:num)']     = 'my_skearch/brand/keywords/toggle/$1';
+$route['myskearch/brand/keyword/get/id/(:num)']         = 'my_skearch/brand/keywords/get_by_id/$1';
+$route['myskearch/brand/keyword/update/id/(:num)']      = 'my_skearch/brand/keywords/update/$1';
 
 // Media Vault
 $route['myskearch/brand/vault']                          = 'my_skearch/brand/media_vault';
@@ -295,6 +297,7 @@ $route['admin/brands/search/(:any)']            = 'admin_panel/brands/brands/sea
 $route['admin/brands/ads/copy_to_vault/id/(:num)']                   = 'admin_panel/brands/ads/copy_to_media_vault/$1';
 $route['admin/brands/ads/brand/id/(:num)/get/archived/(0|1)']        = 'admin_panel/brands/ads/get/$1/$2';
 $route['admin/brands/ads/brand/id/(:num)/show/(library|archived)']   = 'admin_panel/brands/ads/view/$1/$2';
+$route['admin/brands/ad/id/(:num)/action/update']                    = 'admin_panel/brands/ads/update/$1';
 
 // Media Vault
 $route['admin/brands/vault/brand/id/(:num)']                    = 'admin_panel/brands/vault/index/$1';
@@ -323,23 +326,24 @@ $route['admin/viewas/brand/id/(:num)/show/vault/action/get'] = 'my_skearch/brand
 
 // Ads Manager
 $route['admin/ads/manager']                                                                             = 'admin_panel/ads_manager';
-$route['admin/ads/manager/dashboard']                                                                   = 'admin_panel/ads_manager';
+$route['admin/ads/manager/archive/ad/id/(:num)']                                                        = 'admin_panel/ads_manager/toggle_archive/$1';
 $route['admin/ads/manager/create/(default|global)/banner/(a|b|u|va)']                                   = 'admin_panel/ads_manager/create/$1/0/$2';
 $route['admin/ads/manager/create/(umbrella|field)/id/(:num)/banner/(a|b|u)']                            = 'admin_panel/ads_manager/create/$1/$2/$3';
-$route['admin/ads/manager/view/(default|global)/banner/(a|b|u|va)/show/(library|archived)']             = 'admin_panel/ads_manager/view/$1/$2/$3';
-$route['admin/ads/manager/view/(umbrella|field)/id/(:num)/banner/(a|b|u)/show/(library|archived)']      = 'admin_panel/ads_manager/view_by_page/$1/$2/$3/$4';
-$route['admin/ads/manager/view/activity/ad/id/(:num)']                                                  = 'admin_panel/ads_manager/view_activity/$1';
+$route['admin/ads/manager/dashboard']                                                                   = 'admin_panel/ads_manager';
+$route['admin/ads/manager/delete/ad/id/(:num)']                                                         = 'admin_panel/ads_manager/delete/$1';
 $route['admin/ads/manager/get/(default|global)/banner/(a|b|u|va)/archived/(0|1)']                       = 'admin_panel/ads_manager/get/$1/0/$2/$3';
 $route['admin/ads/manager/get/(umbrella|field)/id/(:num)/banner/(a|b|u)/archived/(0|1)']                = 'admin_panel/ads_manager/get/$1/$2/$3/$4';
 $route['admin/ads/manager/get/activity/ad/id/(:num)']                                                   = 'admin_panel/ads_manager/get_activity/$1';
+$route['admin/ads/manager/restore/ad/id/(:num)']                                                        = 'admin_panel/ads_manager/toggle_archive/$1';
+$route['admin/ads/manager/ad/id/(:num)/action/reset/activity']                                          = 'admin_panel/ads_manager/reset_activity/$1';
+$route['admin/ads/manager/toggle/status/ad/id/(:num)']                                                  = 'admin_panel/ads_manager/toggle/$1';
 $route['admin/ads/manager/update/ad/id/(:num)/(default|global)/banner/(a|b|u|va)']                      = 'admin_panel/ads_manager/update/$1/$2/0/$3';
 $route['admin/ads/manager/update/ad/id/(:num)/(umbrella|field)/id/(:num)/banner/(a|b|u)']               = 'admin_panel/ads_manager/update/$1/$2/$3/$4';
 $route['admin/ads/manager/update/priority/banner/id/(:num)']                                            = 'admin_panel/ads_manager/update_priority/$1';
-$route['admin/ads/manager/archive/ad/id/(:num)']                                                        = 'admin_panel/ads_manager/toggle_archive/$1';
-$route['admin/ads/manager/restore/ad/id/(:num)']                                                        = 'admin_panel/ads_manager/toggle_archive/$1';
-$route['admin/ads/manager/toggle/status/ad/id/(:num)']                                                  = 'admin_panel/ads_manager/toggle/$1';
-$route['admin/ads/manager/delete/ad/id/(:num)']                                                         = 'admin_panel/ads_manager/delete/$1';
 $route['admin/ads/manager/upload/media']                                                                = 'admin_panel/ads_manager/upload_media';
+$route['admin/ads/manager/view/(default|global)/banner/(a|b|u|va)/show/(library|archived)']             = 'admin_panel/ads_manager/view/$1/$2/$3';
+$route['admin/ads/manager/view/(umbrella|field)/id/(:num)/banner/(a|b|u)/show/(library|archived)']      = 'admin_panel/ads_manager/view_by_page/$1/$2/$3/$4';
+$route['admin/ads/manager/view/activity/ad/id/(:num)']                                                  = 'admin_panel/ads_manager/view_activity/$1';
 
 /* Link Checker */
 $route['admin/linkchecker']                         = 'admin_panel/linkchecker';
@@ -358,7 +362,7 @@ $route['admin/email/log/view/id/(:num)']            = 'admin_panel/email/view/$1
 $route['admin/email/message']                       = 'admin_panel/email/message';
 $route['admin/email/templates/(:any)']              = 'admin_panel/email/templates/$1';
 
-/* Option Routes */
-$route['admin/option']                       = 'admin_panel/option';
+/* Settings */
+$route['admin/settings']                       = 'admin_panel/settings';
 $route['admin/option/update_option']         = 'admin_panel/option/update_option';
 $route['admin/option/brandlinks_status_all'] = 'admin_panel/option/brandlinks_status_all';
