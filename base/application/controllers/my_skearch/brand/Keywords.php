@@ -119,6 +119,20 @@ class Keywords extends MY_Controller
     }
 
     /**
+     * Get keyword by id
+     *
+     * @param int $id Keyword ID
+     * @return void
+     */
+    public function get_by_id($id)
+    {
+        $keyword = $this->Keywords->get($id);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($keyword));
+    }
+
+    /**
      * View page for brand keywords
      *
      * @return void
@@ -165,6 +179,28 @@ class Keywords extends MY_Controller
     //         echo json_encode(0);
     //     }
     // }
+
+    /**
+     * Update brand keywords
+     *
+     * @param int $id Keyword ID
+     * @return void
+     */
+    public function update($id)
+    {
+        $data = [
+            'keywords'     => $this->input->get('keyword'),
+            'url'       => $this->input->get('url')
+        ];
+
+        $update = $this->Keywords->update($id, $data);
+
+        if ($update) {
+            echo json_encode(1);
+        } else {
+            echo json_encode(0);
+        }
+    }
 
     /**
      * Callback function to validate url

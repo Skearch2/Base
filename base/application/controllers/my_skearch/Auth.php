@@ -27,6 +27,7 @@ class Auth extends MY_Controller
         $this->load->model('my_skearch/User_model', 'User');
         $this->load->model('Util_model', 'Util');
         $this->load->model('admin_panel/email/Template_model', 'Email_templates');
+        $this->load->model('admin_panel/Settings_model', 'Settings');
     }
 
     /**
@@ -624,19 +625,30 @@ class Auth extends MY_Controller
             $query = $this->db->query($sql, $binds);
             $row = $query->row();
 
+            // if captcha is valid
             if ($row->count > 0) {
+                // if brand sign up
                 if ($is_brand_signup) {
+
+                    $name      = $this->input->post('name');
+                    $brandname = $this->input->post('brandname');
+                    $email     = $this->input->post('email_b');
+                    $phone     = preg_replace("/[^0-9]/", "", $this->input->post('phone'));
+
                     $data = array(
-                        'name'      => $this->input->post('name'),
-                        'brandname' => $this->input->post('brandname'),
-                        'email'     => $this->input->post('email_b'),
-                        'phone'     => preg_replace("/[^0-9]/", "", $this->input->post('phone'))
+                        'name'      => $name,
+                        'brandname' => $brandname,
+                        'email'     => $email,
+                        'phone'     => $phone
                     );
+
                     $lead = $this->User->create_lead($data);
 
                     if ($lead) {
+
+                        // Email confirnmation to the lead
                         $data = array(
-                            'name' => $this->input->post('name'),
+                            'name' => $name
                         );
                         $template = $this->Email_templates->get_template('brand_signup_confirmation');
 
@@ -654,7 +666,34 @@ class Auth extends MY_Controller
                             //log_email(3, "Brand Signup", $template->subject, $message);
                         } else {
                             $this->email->print_debugger();
-                            log_message('error', 'Unable to send email');
+                            log_message('error', 'Unable to send email to the brand lead.');
+                        }
+
+                        // Email notification to the admin about brand lead sign up
+                        $data = array(
+                            'name'      => $name,
+                            'brandname' => $brandname,
+                            'email'     => $email,
+                            'phone'     => $phone
+                        );
+                        $template = $this->Email_templates->get_template('brand_lead_notification');
+
+                        $message = $this->parser->parse_string($template->body, $data);
+
+                        $admin_email = $this->Settings->get()->admin_email;
+
+                        $this->email->clear();
+                        $this->email->from($this->config->item('default_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+                        $this->email->to($admin_email);
+                        $this->email->subject($template->subject);
+                        $this->email->message($message);
+
+                        // log email if sent
+                        if ($this->email->send()) {
+                            // email should be logged
+                        } else {
+                            $this->email->print_debugger();
+                            log_message('error', 'Unable to send email to the brand lead.');
                         }
 
                         $this->session->set_flashdata('signup_success', true);
@@ -664,7 +703,9 @@ class Auth extends MY_Controller
                         $this->session->set_flashdata('error', 'Unable to signup for the brand, please try again!');
                         redirect('myskearch/auth/signup');
                     }
-                } else {
+                }
+                // User sign up
+                else {
                     // user data
                     $username = $this->input->post('skearch_id');
                     $password = $this->input->post('password');

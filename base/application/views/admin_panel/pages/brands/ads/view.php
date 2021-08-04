@@ -442,7 +442,7 @@ $this->load->view('admin_panel/templates/close_html');
 						render: function(a, t, e, n) {
 							var title = e['title'].replace(/ /g, '%20');
 							return '<a onclick=copyAdtoVault("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Copy to Vault"><i class="la la-copy"></i></a>' +
-								'<a href="<?= site_url() . "admin/ads/manager/update/ad/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+								'<a href="<?= site_url() ?>admin/brands/ad/id/' + e['id'] + '/action/update" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 								'<a onclick=archiveAd("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Archive"><i class="la la-archive"></i></a>'
 						}
 					}, {

@@ -32,24 +32,59 @@ $this->load->view('my_skearch/templates/start_pagebody');
 	</div>
 </div>
 
+<!--begin::Modal-->
+<div class="modal fade" id="edit_keyword_modal" tabindex="-1" role="dialog" aria-labelledby="updateKeyword" aria-hidden="true">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Edit Keyword</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form id="edit-keyword-form">
+				<div class="modal-body">
+					<input type="hidden" id="edit-keyword-id">
+					<div class="form-group">
+						<label for="branded-keyword" class="form-control-label">Branded Keyword:</label>
+						<input type="text" class="form-control" id="edit-keyword" name="edit-keyword">
+					</div>
+					<div class="form-group">
+						<label for="url-droppage" class="form-control-label">URL - Droppage</label>
+						<input type="text" class="form-control" id="edit-url" name="edit-url">
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary" id="btn-update-keyword-submit">Update</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!--end::Modal-->
+
 <div class="m-content">
 	<div class="m-portlet m-portlet--mobile">
 		<?php if ($is_primary_brand_user) : ?>
 			<div class="m-portlet__body">
-				<div class="form-group m-form__group row">
-					<label for="keyword" class="col-2 col-form-label">BrandLink Keyword</label>
-					<div class="col-7">
-						<input class="form-control m-input" type="text" id="keyword">
+				<form id="add-keyword-form">
+					<div class="form-group m-form__group row">
+						<label for="keyword" class="col-2 col-form-label">BrandLink Keyword</label>
+						<div class="col-7">
+							<input class="form-control m-input" type="text" id="keyword" name="keyword">
+						</div>
 					</div>
-				</div>
-				<div class="form-group m-form__group row">
-					<label for="url" class="col-2 col-form-label">URL</label>
-					<div class="col-7">
-						<input class="form-control m-input" type="text" id="url">
+					<div class="form-group m-form__group row">
+						<label for="url" class="col-2 col-form-label">URL - Droppage</label>
+						<div class="col-7">
+							<input class="form-control m-input" type="text" id="url" name="url">
+						</div>
 					</div>
-				</div>
-				<button type="button" class="btn btn-accent m-btn m-btn--air m-btn--custom" onclick="addKeyword()">Add Branded Keyword</button>
-				<span style="float: inline-end;" class="m-form__help">*You can add upto 10 Branded Keywords in this account.</span>
+					<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom" id="btn-add-keyword-submit">Add Branded Keyword</button>
+					<span style="float: inline-end;" class="m-form__help">*You can add upto 10 Branded Keywords in this account.</span>
+				</form>
 			</div>
 		<?php endif ?>
 		<div class="m-portlet__body">
@@ -57,8 +92,8 @@ $this->load->view('my_skearch/templates/start_pagebody');
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Keyword</th>
-						<th>URL</th>
+						<th>Branded Keyword</th>
+						<th>URL - Droppage</th>
 						<th>Status</th>
 						<th>Action</th>
 					</tr>
@@ -96,44 +131,38 @@ $this->load->view('my_skearch/templates/js_global');
 
 	// Add keywords
 	function addKeyword() {
-		if ($('#keyword').val().length === 0 || $('#url').val().length === 0) {
-			toastr.warning("", "All fields are required.");
-		} else {
-			$.ajax({
-				url: '<?= base_url() ?>myskearch/brand/keywords/add',
-				type: 'GET',
-				// contentType: "application/json",
-				// dataType: 'json',
-				data: {
-					// csrf_name: csrf_hash,
-					keyword: $('#keyword').val(),
-					url: $('#url').val()
-				},
-				beforeSend: function(data, status) {
-					$('#m_table_1').fadeOut("slow");
-				},
-				success: function(data, status) {
-					if (data == 1) {
-						toastr.success("", "Keyword added.");
-					} else if (data == 0) {
-						toastr.error("", "Unable to add keyword.");
-					} else if (data == -1) {
-						toastr.error("", "Keyword already exists.");
-					}
-				},
-				error: function(xhr, status, error) {
-					toastr.error("", "Unable to process request.");
-				},
-				complete: function(data, status) {
-					//csrf_hash = '<?= $this->security->get_csrf_hash() ?>';
 
-					$('#keyword').val('');
-					$('#url').val('');
-					$('#m_table_1').DataTable().ajax.reload(null, false);
-					$('#m_table_1').fadeIn("slow");
+		$.ajax({
+			url: '<?= base_url() ?>myskearch/brand/keywords/add',
+			type: 'GET',
+			// contentType: "application/json",
+			// dataType: 'json',
+			data: {
+				// csrf_name: csrf_hash,
+				keyword: $('#keyword').val(),
+				url: $('#url').val()
+			},
+			success: function(data, status) {
+				if (data == 1) {
+					toastr.success("", "Keyword added.");
+				} else if (data == 0) {
+					toastr.error("", "Unable to add keyword.");
+				} else if (data == -1) {
+					toastr.error("", "Keyword already exists.");
 				}
-			});
-		}
+			},
+			error: function(xhr, status, error) {
+				toastr.error("", "Unable to process request.");
+			},
+			complete: function(data, status) {
+				//csrf_hash = '<?= $this->security->get_csrf_hash() ?>';
+
+				$('#keyword').val('');
+				$('#url').val('');
+				$('#m_table_1').DataTable().ajax.reload(null, false);
+			}
+		});
+
 	}
 
 	// Delete keywords
@@ -168,6 +197,56 @@ $this->load->view('my_skearch/templates/js_global');
 		});
 	}
 
+	// edit keyword dialog
+	function editKeywordDialog(id) {
+		$.ajax({
+			url: '<?= site_url(); ?>myskearch/brand/keyword/get/id/' + id, // get keyword info
+			type: 'GET',
+			contentType: 'json',
+			success: function(data, status) {
+				$("#btn-update-keyword-submit").attr("class", "btn m-btn btn-primary");
+				$("#edit-keyword-id").val(data.id);
+				$("#edit-keyword").val(data.keywords);
+				$("#edit-url").val(data.url);
+			},
+			error: function(xhr, status, error) {
+				toastr.error("Unable to retrieve keyword information.");
+			}
+		});
+	}
+
+	// update keyword
+	function updateKeyword(id) {
+		$.ajax({
+			url: '<?= site_url(); ?>myskearch/brand/keyword/update/id/' + id,
+			type: 'GET',
+			contentType: 'json',
+			dataType: 'json',
+			data: {
+				keyword: $("#edit-keyword").val(),
+				url: $("#edit-url").val()
+			},
+			beforeSend: function(xhr, options) {
+				$("#btn-update-keyword-submit").attr("class", "btn m-btn btn-success m-loader m-loader--light m-loader--right");
+				setTimeout(function() {
+					$.ajax($.extend(options, {
+						beforeSend: $.noop
+					}));
+				}, 2000);
+				return false;
+			},
+			success: function(data, status) {
+				$('#m_table_1').DataTable().ajax.reload(null, false);
+				$("#edit_keyword_modal").modal('hide');
+				toastr.success("Keyword updated.");
+			},
+			error: function(xhr, status, error) {
+				$("#edit_keyword_modal").modal('hide');
+				toastr.error("Unable to process request.");
+			}
+		});
+	}
+
 	// //Toggles keywords status
 	// function toggle(id, row) {
 	// 	$.ajax({
@@ -191,6 +270,53 @@ $this->load->view('my_skearch/templates/js_global');
 	// 		}
 	// 	});
 	// }
+
+	var FormControls = {
+		init: function() {
+			$("#add-keyword-form").validate({
+				rules: {
+					'keyword': {
+						required: 1
+					},
+					'url': {
+						required: 1,
+						url: 1
+					}
+				},
+				submitHandler: function(e) {
+					addKeyword();
+				},
+			});
+
+			$("#edit-keyword-form").validate({
+				rules: {
+					'edit-keyword': {
+						required: 1
+					},
+					'edit-url': {
+						required: 1,
+						url: 1
+					}
+				},
+				submitHandler: function(e) {
+					updateKeyword($('#edit-keyword-id').val());
+				},
+			});
+		}
+	};
+
+	$(document).ready(function() {
+		FormControls.init();
+
+		// pre-populate https protocol in the url field
+		$("#url").inputmask({
+			regex: "https://.*"
+		});
+
+		$("#edit-url").inputmask({
+			regex: "https://.*"
+		});
+	});
 
 	var DatatablesDataSourceAjaxServer = {
 		init: function() {
@@ -229,7 +355,8 @@ $this->load->view('my_skearch/templates/js_global');
 					render: function(a, t, e, n) {
 						var keywords = e['keywords'].replace(/ /g, '%20');
 						<?php if ($is_primary_brand_user) : ?>
-							return '<a onclick=deleteKeyword("' + e['id'] + '","' + keywords + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+							return '<a onclick=editKeywordDialog("' + e['id'] + '") data-toggle="modal" data-target="#edit_keyword_modal" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+								'<a onclick=deleteKeyword("' + e['id'] + '","' + keywords + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 						<?php else : ?>
 							return "-"
 						<?php endif ?>

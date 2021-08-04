@@ -139,16 +139,6 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="brand" class="col-2 col-form-label">Brand *</label>
-									<div class="col-7">
-										<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="brand">
-											<?php foreach ($brands as $b) : ?>
-												<option value="<?= $b->id ?>" <?= set_select("brand", $b->brand) ?> <?= ($b->id == $ad->brand_id) ? "selected" : "" ?> data-subtext="<?= $b->organization; ?>"><?= $b->brand; ?></option>
-											<?php endforeach; ?>
-										</select>
-									</div>
-								</div>
-								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Title *</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title', $ad->title) ?>">
@@ -360,5 +350,5 @@ $this->load->view('admin_panel/templates/close_html');
 <!-- Sidemenu class -->
 <script>
 	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-brands-ads-manager").addClass("m-menu__item  m-menu__item--active");
+	$("#submenu-brands-brands").addClass("m-menu__item  m-menu__item--active");
 </script>
