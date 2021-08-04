@@ -6,6 +6,17 @@ $this->load->view('admin_panel/templates/start_html');
 // Load default head (metadata & linking).
 $this->load->view('admin_panel/templates/head');
 
+?>
+
+<style>
+	table tr td:nth-child(2):hover,
+	table tr th:nth-child(2):hover {
+		cursor: move
+	}
+</style>
+
+<?php
+
 // Start body element
 $this->load->view('admin_panel/templates/start_body');
 
@@ -167,6 +178,7 @@ $this->load->view('admin_panel/templates/subheader');
 				<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_library">
 					<thead>
 						<tr>
+							<th></th>
 							<th>Priority</th>
 							<th>Ad ID</th>
 							<th>Brand</th>
@@ -401,11 +413,19 @@ $this->load->view('admin_panel/templates/close_html');
 						selector: 'td:nth-child(2)',
 						dataSrc: 'priority'
 					},
+					responsive: {
+						details: {
+							type: 'column'
+						}
+					},
+					order: [1, 'asc'],
 					searchDelay: 500,
 					processing: !0,
 					serverSide: !1,
 					ajax: "<?= site_url(); ?>admin/ads/manager/get/<?= $scope ?>/banner/<?= $banner ?>/archived/<?= $is_archived ?>",
 					columns: [{
+						data: "id"
+					}, {
 						data: "priority"
 					}, {
 						data: "id"
@@ -441,7 +461,16 @@ $this->load->view('admin_panel/templates/close_html');
 								'<a onclick=archiveAd("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Archive"><i class="la la-archive"></i></a>'
 						}
 					}, {
-						targets: 4,
+						targets: 0,
+						orderable: !1,
+						className: 'control'
+					}, {
+						targets: 1,
+						render: function(a, t, e, n) {
+							return '<div data-toggle="tooltip" title="Hold to move up or down">' + e['priority'] + '</div>'
+						}
+					}, {
+						targets: 5,
 						render: function(a, t, e, n) {
 							// check if the media is a video (only mp4 format)
 							var isVideo = e['media'].substr(e['media'].length - 3) == 'mp4' ? 1 : 0;
@@ -451,17 +480,17 @@ $this->load->view('admin_panel/templates/close_html');
 								return '<td><img src="<?= site_url('base/media/') ?>' + e['media'] + '" title="View" alt="No Media" style="display:block; max-width:200px; max-height:100px; cursor:pointer;" onclick="view(\'<?= site_url('base/media') ?>/' + e['media'] + '\',0)"></td>'
 						}
 					}, {
-						targets: 6,
+						targets: 7,
 						render: function(a, t, e, n) {
 							return '<a href="<?= site_url('admin/ads/manager/view/activity/ad/id/') ?>' + e['id'] + '" title="View Details">' + e['clicks'] + '</a>'
 						}
 					}, {
-						targets: 7,
+						targets: 8,
 						render: function(a, t, e, n) {
 							return '<a href="<?= site_url('admin/ads/manager/view/activity/ad/id/') ?>' + e['id'] + '" title="View Details">' + e['impressions'] + '</a>'
 						}
 					}, {
-						targets: 8,
+						targets: 9,
 						render: function(a, t, e, n) {
 							var s = {
 								0: {
@@ -476,7 +505,7 @@ $this->load->view('admin_panel/templates/close_html');
 							return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
 						}
 					}, {
-						targets: 9,
+						targets: 10,
 						render: function(a, t, e, n) {
 							var s = {
 								1: {
@@ -491,12 +520,12 @@ $this->load->view('admin_panel/templates/close_html');
 							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 						}
 					}, {
-						targets: 10,
+						targets: 11,
 						render: function(a, t, e, n) {
 							return new Date(e['date_modified']).toLocaleString();
 						}
 					}, {
-						targets: 11,
+						targets: 12,
 						render: function(a, t, e, n) {
 							return new Date(e['date_created']).toLocaleString();
 						}

@@ -173,7 +173,7 @@ class Links extends MY_Controller
     /**
      * Gets a link
      *
-     * @param [type] $id
+     * @param int $id
      *
      * @return void
      */

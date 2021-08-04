@@ -30,7 +30,7 @@ class Pages extends MY_Controller
 
     $this->load->model('Category_model', 'Category_model');
     $this->load->model('Fields_History_model', 'Fields_History');
-    $this->load->model('admin_panel/Option_model_admin', 'Option_model');
+    $this->load->model('admin_panel/Settings_model', 'Settings');
     $this->load->model('frontend/ads_model', 'Ads');
     $this->load->model('my_skearch/User_model', 'User');
 
@@ -55,7 +55,7 @@ class Pages extends MY_Controller
 
     $data['user'] = $this->ion_auth->user()->row();
     $data['admin'] = $this->ion_auth->is_admin();
-    $data['version'] = $this->Option_model->get_skearch_ver();
+    $data['version'] = $this->Settings->get()->site_version;
 
     // set page title
     $data['title'] = ucwords('Skearch Home');

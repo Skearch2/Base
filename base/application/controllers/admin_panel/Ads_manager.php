@@ -184,7 +184,7 @@ class Ads_manager extends MY_Controller
 
 
     /**
-     * Get ad click history
+     * get ad clicks and impressions history
      *
      * @param int    $ad_id         Ad id
      * @param string $start_date    Start date
@@ -207,6 +207,27 @@ class Ads_manager extends MY_Controller
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($result));
+    }
+
+    /**
+     * Reset ad clicks and impressions history
+     *
+     * @param int    $ad_id         Ad id
+     * @return void
+     */
+    public function reset_activity($ad_id)
+    {
+        if (!$this->ion_auth_acl->has_permission('ads_update') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $reset = $this->ads_manager->reset_ad_activity($ad_id);
+
+            if ($reset) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        }
     }
 
     /**
