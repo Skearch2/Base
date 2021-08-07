@@ -47,12 +47,12 @@ $this->load->view('auth/templates/head');
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="text" placeholder="Email" name="email" value="<?= set_value('email'); ?>">
 							</div>
-							<div class="form-group m-form__group">
+							<!-- <div class="form-group m-form__group">
 								<select class="form-control m-bootstrap-select m-bootstrap-select--pill m_selectpicker" name="gender" title="Gender">
 									<option value="male" <?= set_select('gender', 'male') ?>>Male</option>
 									<option value="female" <?= set_select('gender', 'female') ?>>Female</option>
 								</select>
-							</div>
+							</div> -->
 							<div class="form-group m-form__group">
 								<select class="form-control m-bootstrap-select m-bootstrap-select--pill m_selectpicker" name="age_group" title="Age group">
 									<option value="1-17" <?= set_select('age_group', '1-17') ?>>1-17</option>

@@ -35,6 +35,7 @@ class Keywords extends MY_Controller
         }
 
         $this->load->model('admin_panel/brands/keywords_model', 'Keywords');
+        $this->load->model('admin_panel/brands/brand_model', 'Brand');
     }
 
     /**
@@ -64,6 +65,50 @@ class Keywords extends MY_Controller
     }
 
     /**
+     * Create brandlink for brand
+     *
+     * @param int $brand_id Brand ID
+     * @return void
+     */
+    public function create($brand_id)
+    {
+        if (!$this->ion_auth_acl->has_permission('brandlinks_create') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+            $this->form_validation->set_rules('keywords', 'BrandLink Keyword', 'trim|required');
+            $this->form_validation->set_rules('url', 'URL - Droppage', 'trim|required');
+            $this->form_validation->set_rules('active', 'Enabled', 'trim|required');
+
+            if ($this->form_validation->run() == false) {
+                $data['brand_id'] = $brand_id;
+
+                // set page title
+                $data['title'] = ucwords("add BrandLink");
+
+                $this->load->view('admin_panel/pages/brands/brandlinks/create', $data);
+            } else {
+
+                $data['keywords'] = $this->input->post('keywords');
+                $data['url'] = $this->input->post('url');
+                $data['active'] = $this->input->post('active');
+                $data['approved'] = 1;
+                $data['brand_id'] = $this->input->post('brand_id');
+
+                $create = $this->Keywords->create($data);
+
+                if ($create) {
+                    $this->session->set_flashdata('create_success', 1);
+                } else {
+                    $this->session->set_flashdata('create_success', 0);
+                }
+                redirect("admin/brands/brandlinks/brand/id/$brand_id");
+            }
+        }
+    }
+
+    /**
      * Delete a keyword
      *
      * @param int $id
@@ -85,14 +130,15 @@ class Keywords extends MY_Controller
     }
 
     /**
-     * Get all brands keywords
+     * Get brandlinks
      *
-     * @return object
+     * @param int $brand_id Brand ID
+     * @return void
      */
-    public function get()
+    public function get($brand_id = false)
     {
         if ($this->ion_auth_acl->has_permission('brands_keywords_get') or $this->ion_auth->is_admin()) {
-            $keywords = $this->Keywords->get();
+            $keywords = $this->Keywords->get($brand_id);
             $total_keywords = count($keywords);
             $result = array(
                 'iTotalRecords' => $total_keywords,
@@ -109,7 +155,7 @@ class Keywords extends MY_Controller
     }
 
     /**
-     * View page for brand keywords
+     * View page for brandlinks
      *
      * @return object
      */
@@ -139,9 +185,9 @@ class Keywords extends MY_Controller
         if (!$this->ion_auth_acl->has_permission('brands_keywords_update') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
-            $status = $this->Keywords->get($id)->active;
+            $keyword = $this->Keywords->get_by_id($id);
 
-            if ($status == 0) {
+            if ($keyword->active == 0) {
                 $status = 1;
             } else {
                 $status = 0;
@@ -154,6 +200,73 @@ class Keywords extends MY_Controller
             $this->Keywords->update($id, $keyword_data);
 
             echo json_encode($status);
+        }
+    }
+
+    /**
+     * Update brandlink
+     *
+     * @param int $id Keyword ID
+     * @return void
+     */
+    public function update($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('brandlinks_update') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+            $this->form_validation->set_rules('keywords', 'BrandLink Keyword', 'trim|required');
+            $this->form_validation->set_rules('url', 'URL - Droppage', 'trim|required');
+            $this->form_validation->set_rules('active', 'Enabled', 'trim|required');
+
+            $brandlink = $this->Keywords->get_by_id($id);
+
+            if ($this->form_validation->run() == false) {
+                $data['brandlink'] = $brandlink;
+
+                // set page title
+                $data['title'] = ucwords("update BrandLink");
+
+                $this->load->view('admin_panel/pages/brands/brandlinks/edit', $data);
+            } else {
+
+                $data['keywords'] = $this->input->post('keywords');
+                $data['url'] = $this->input->post('url');
+                $data['active'] = $this->input->post('active');
+                $data['brand_id'] = $this->input->post('brand_id');
+
+                $update = $this->Keywords->update($id, $data);
+
+                if ($update) {
+                    $this->session->set_flashdata('update_success', 1);
+                } else {
+                    $this->session->set_flashdata('update_success', 0);
+                }
+                redirect("admin/brands/brandlinks/brand/id/$brandlink->brand_id");
+            }
+        }
+    }
+
+    /**
+     * View page for brandlinks for particular brand
+     *
+     * @param int $brand_id Brand ID
+     * @return void
+     */
+    public function view_by_brand($brand_id)
+    {
+        if (!$this->ion_auth_acl->has_permission('brands_keywords_get') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+
+            $data['title'] = ucfirst("BrandLinks");
+            $data['brand'] = $this->Brand->get($brand_id);
+
+            // Load page content
+            $this->load->view('admin_panel/pages/brands/brandlinks/view', $data);
         }
     }
 }
