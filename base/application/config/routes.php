@@ -305,12 +305,17 @@ $route['admin/brands/vault/get/brand/id/(:num)']                = 'admin_panel/b
 $route['admin/brands/vault/brand/id/(:num)/media/id/(:num)']    = 'admin_panel/brands/vault/create_ad/$1/$2';
 $route['admin/brands/vault/update/status/media/id/(:num)']      = 'admin_panel/brands/vault/update_status/$1';
 
-// Keywords
+// BrandLinks
 $route['admin/brands/keywords']                         = 'admin_panel/brands/keywords';
+$route['admin/brands/keywords/create/id/(:num)']        = 'admin_panel/brands/keywords/create/$1';
+$route['admin/brands/keywords/update/id/(:num)']        = 'admin_panel/brands/keywords/update/$1';
 $route['admin/brands/keywords/delete/id/(:num)']        = 'admin_panel/brands/keywords/delete/$1';
 $route['admin/brands/keywords/approve/id/(:num)']       = 'admin_panel/brands/keywords/approve/$1';
 $route['admin/brands/keywords/get']                     = 'admin_panel/brands/keywords/get';
+$route['admin/brands/brandlinks/get/brand/id/(:num)']   = 'admin_panel/brands/keywords/get/$1';
 $route['admin/brands/keywords/toggle/id/(:num)']        = 'admin_panel/brands/keywords/toggle/$1';
+$route['admin/brands/brandlinks/brand/id/(:num)']       = 'admin_panel/brands/keywords/view_by_brand/$1';
+
 
 // Payments
 $route['admin/brand/payments/id/(:num)']                = 'admin_panel/brands/payments/index/$1';
