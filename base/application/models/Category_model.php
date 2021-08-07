@@ -284,10 +284,12 @@ class Category_model extends CI_Model
      */
     public function get_brandlinks_status()
     {
-        $query = $this->db->select('brandlinks_status');
-        $query = $this->db->from('skearch_settings');
+        $this->db->select('brandlinks_status');
+        $this->db->from('skearch_settings');
+
         $query = $this->db->get();
-        return $query->row;
+
+        return $query->row()->brandlinks_status;
     }
 
     /**
