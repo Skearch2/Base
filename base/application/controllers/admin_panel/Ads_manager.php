@@ -146,6 +146,7 @@ class Ads_manager extends MY_Controller
      */
     public function index()
     {
+        $data['brands'] = $this->Brand->get();
         $data['umbrellas'] = $this->umbrellas->get_by_status();
         $data['fields'] = $this->fields->get_by_status();
 

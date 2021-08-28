@@ -278,9 +278,9 @@ class Category_model extends CI_Model
     }
 
     /**
-     * Return status
+     * Return global brandlink status
      *
-     * @return void
+     * @return boolean
      */
     public function get_brandlinks_status()
     {
@@ -293,14 +293,14 @@ class Category_model extends CI_Model
     }
 
     /**
-     * Return all brand keywords and url
+     * Get brandlinks
      *
-     * @return void
+     * @return object
      */
-    public function get_brands_keywords()
+    public function get_brandlinks()
     {
-        $this->db->select('keywords, url');
-        $this->db->from('skearch_brands_keywords');
+        $this->db->select('keyword, url');
+        $this->db->from('skearch_brands_brandlinks');
         $this->db->where('approved', 1);
         $this->db->where('active', 1);
 

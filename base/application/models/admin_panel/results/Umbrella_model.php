@@ -54,9 +54,38 @@ class Umbrella_model extends CI_Model
     public function delete($id)
     {
         $this->db->where('id', $id);
-        $query = $this->db->delete('skearch_categories');
+        $this->db->delete('skearch_categories');
 
-        if ($query) {
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Check for duplicate umbrella or field title 
+     *
+     * @param string $string String
+     * @return boolean
+     */
+    public function duplicate_check($string)
+    {
+        $this->db->select('title');
+        $this->db->from('skearch_categories');
+        $this->db->where('title', $string);
+
+        $query1 = $this->db->get_compiled_select();
+
+        $this->db->select('title');
+        $this->db->from('skearch_subcategories');
+        $this->db->where('title', $string);
+
+        $query2 = $this->db->get_compiled_select();
+
+        $query = $this->db->query($query1 . " UNION " . $query2);
+
+        if ($query->num_rows()) {
             return true;
         } else {
             return false;
@@ -129,9 +158,9 @@ class Umbrella_model extends CI_Model
         // if (array_key_exists('enabled', $umbrella_data))                    $data['enabled']            = $umbrella_data['enabled'];
 
         $this->db->where('id', $id);
-        $query = $this->db->update('skearch_categories', $umbrella_data);
+        $this->db->update('skearch_categories', $umbrella_data);
 
-        if ($query) {
+        if ($this->db->affected_rows()) {
             return true;
         } else {
             return false;

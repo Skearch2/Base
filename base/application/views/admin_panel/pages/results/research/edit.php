@@ -71,7 +71,7 @@ $this->load->view('admin_panel/templates/subheader');
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">Make Link</h3>
+										<h3 class="m-form__section">Edit Research Link</h3>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -148,8 +148,8 @@ $this->load->view('admin_panel/templates/subheader');
 										<div class="col-2">
 										</div>
 										<div class="col-7">
-											<button type="submit" name="action" value="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>&nbsp;&nbsp;
-											<button type="submit" name="action" value="save" class="btn btn-primary m-btn m-btn--air m-btn--custom">Save</button>
+											<button type="submit" name="action" value="save" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>&nbsp;&nbsp;
+											<button type="submit" name="action" value="make_link" class="btn btn-success m-btn m-btn--custom m-btn--bolder">Make Link</button>
 										</div>
 										<div class="col-3">
 											<small>* Indicates required field</small>

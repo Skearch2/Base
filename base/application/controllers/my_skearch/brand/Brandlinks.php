@@ -5,16 +5,16 @@ if (!defined('BASEPATH')) {
 
 
 /**
- * File:    ~/application/controller/my_skearch/brands/keywords.php
+ * File:    ~/application/controller/my_skearch/brands/brandlinks.php
  *
- * Controller for Brand Keywords.
+ * Controller for BrandLinks
  * 
  * @package		Skearch
  * @author		Iftikhar Ejaz <ejaziftikhar@gmail.com>
- * @copyright	Copyright (c) 2020
+ * @copyright	Copyright (c) 2021
  * @version		2.0
  */
-class Keywords extends MY_Controller
+class Brandlinks extends MY_Controller
 {
     public function __construct()
     {
@@ -29,7 +29,7 @@ class Keywords extends MY_Controller
             redirect('myskearch', 'refresh');
         }
 
-        $this->load->model('my_skearch/brand/Keywords_model', 'Keywords');
+        $this->load->model('my_skearch/brand/Brandlink_model', 'Brandlink');
         $this->load->model('my_skearch/User_model', 'User');
 
         if (!$this->ion_auth->is_admin()) {
@@ -51,23 +51,23 @@ class Keywords extends MY_Controller
     {
         $this->form_validation->set_data($this->input->get());
 
-        $this->form_validation->set_rules('keyword', 'Keyword', 'trim|required|callback_check_exists');
-        $this->form_validation->set_rules('url', 'URL', 'trim|required|callback_valid_url');
+        $this->form_validation->set_rules('keyword', 'BrandLink Keyword', 'trim|required|callback_validate_keyword|callback_check_maximum_allowed');
+        $this->form_validation->set_rules('url', 'URL - Droppage', 'trim|required|valid_url');
 
         if ($this->form_validation->run() === FALSE) {
-            echo json_encode(-1);
+            echo validation_errors();
             return;
         }
 
         $user_data =  array(
-            'brand_id' => $this->brand_id,
-            'keywords' => $this->input->get('keyword'),
-            'url' => $this->input->get('url'),
-            'active' => 0,
-            'approved' => 2
+            'brand_id'  => $this->brand_id,
+            'keyword'   => $this->input->get('keyword'),
+            'url'       => $this->input->get('url'),
+            'active'    => 0,
+            'approved'  => 1
         );
 
-        $create = $this->Keywords->create($user_data);
+        $create = $this->Brandlink->create($user_data);
 
         if ($create) {
             echo json_encode(1);
@@ -77,14 +77,14 @@ class Keywords extends MY_Controller
     }
 
     /**
-     * Delete brand keywords
+     * Delete brandlink
      *
-     * @param int $id Keyword ID
+     * @param int $id Brandlink ID
      * @return void
      */
     public function delete($id)
     {
-        $delete = $this->Keywords->delete($id);
+        $delete = $this->Brandlink->delete($id);
 
         if ($delete) {
             echo json_encode(1);
@@ -94,23 +94,24 @@ class Keywords extends MY_Controller
     }
 
     /**
-     * Get brand keywords
+     * Get brandlinks
      *
      * @param int $id ID of the user group
      * @return void
      */
     public function get()
     {
+        // get brand id
         $brand_id = $this->input->get('brand_id') != 0 ? $this->input->get('brand_id') : $this->brand_id;
 
-        $keywords = $this->Keywords->get_by_brand($brand_id);
-        $total_keywords = count($keywords);
+        $brandlinks = $this->Brandlink->get($brand_id);
+        $total_brandlinks = count($brandlinks);
         $result = array(
-            'iTotalRecords' => $total_keywords,
-            'iTotalDisplayRecords' => $total_keywords,
+            'iTotalRecords' => $total_brandlinks,
+            'iTotalDisplayRecords' => $total_brandlinks,
             'sEcho' => 0,
             'sColumns' => "",
-            'aaData' => $keywords,
+            'aaData' => $brandlinks,
         );
 
         $this->output
@@ -126,10 +127,10 @@ class Keywords extends MY_Controller
      */
     public function get_by_id($id)
     {
-        $keyword = $this->Keywords->get($id);
+        $brandlink = $this->Brandlink->get_by_id($id);
         $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode($keyword));
+            ->set_output(json_encode($brandlink));
     }
 
     /**
@@ -152,10 +153,10 @@ class Keywords extends MY_Controller
         // template data
         $data['section'] = $this->section;
         $data['page'] = 'keywords';
-        $data['title'] = ucwords("my skearch | brands - keywords");
+        $data['title'] = ucwords("my skearch | brands - BrandLinks");
 
         // Load page content
-        $this->load->view('my_skearch/pages/brand/keywords', $data);
+        $this->load->view('my_skearch/pages/brand/brandlinks', $data);
     }
 
     // /**
@@ -181,19 +182,30 @@ class Keywords extends MY_Controller
     // }
 
     /**
-     * Update brand keywords
+     * Update brandlink
      *
-     * @param int $id Keyword ID
+     * @param int $id brandlink id
      * @return void
      */
     public function update($id)
     {
+        $this->form_validation->set_data($this->input->get());
+
+        $this->form_validation->set_rules('keyword', 'BrandLink Keyword', 'trim|required|callback_validate_keyword');
+        $this->form_validation->set_rules('url', 'URL - Droppage', 'trim|required|valid_url');
+
+        if ($this->form_validation->run() === FALSE) {
+            echo validation_errors();
+            return;
+        }
+
         $data = [
-            'keywords'     => $this->input->get('keyword'),
-            'url'       => $this->input->get('url')
+            'keyword'      => $this->input->get('keyword'),
+            'url'          => $this->input->get('url'),
+            'last_updated' => date("Y-m-d H:i:s")
         ];
 
-        $update = $this->Keywords->update($id, $data);
+        $update = $this->Brandlink->update($id, $data);
 
         if ($update) {
             echo json_encode(1);
@@ -203,29 +215,42 @@ class Keywords extends MY_Controller
     }
 
     /**
-     * Callback function to validate url
+     * Validate keyword
      *
-     * @param string $url URL
-     * @return void
+     * @param string $keyword Keyword
+     * @return boolean
      */
-    function valid_url($url)
+    public function validate_keyword($keyword)
     {
-        return (filter_var($url, FILTER_VALIDATE_URL) !== FALSE);
+        $brandlink_id = $this->input->get('brandlink_id');
+
+        if ($this->Brandlink->duplicate_check($keyword)) {
+            if (isset($brandlink_id) && $this->Brandlink->get_by_id($brandlink_id)->keyword === $keyword) {
+                return true;
+            } else {
+                $this->form_validation->set_message('validate_keyword', "Keyword already exists either as BrandLink or Search keyword.");
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
-     * Callback function to check if keyword already exists
+     * Check for maximum # of brandlinks per brand account
      *
-     * @param string $url URL
-     * @return void
+     * @return boolean
      */
-    function check_exists($keyword)
+    public function check_maximum_allowed()
     {
-        if ($this->Keywords->check_exists($keyword)) {
-            $this->form_validation->set_message('keyword', "The keyword alerady exists.");
+        $brandlinks = $this->Brandlink->get($this->brand_id);
+
+        // limit brandlinks upto 10 per brand account
+        if (count($brandlinks) > 10) {
+            $this->form_validation->set_message('check_maximum_allowed', "Maximum amount of Branded Keywords reached.");
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 }

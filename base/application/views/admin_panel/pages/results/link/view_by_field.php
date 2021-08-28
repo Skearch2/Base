@@ -420,26 +420,17 @@ $this->load->view('admin_panel/templates/close_html');
 						title: "Actions",
 						orderable: !1,
 						render: function(a, t, e, n) {
-							var $select = $("<select onchange= updatePriority(" + e['id'] + ",this.value)></select>", {
+							var $select = $("<select class=\"form-control m-input m-input--air\" onchange=updatePriority(" + e['id'] + ",this.value)></select>", {
 								"id": "priority" + e['id'],
 							});
-							for (var i = 0; i <= 250; i++) {
-								if (i == 0) {
-									var $option = $("<option></option>", {
-										"text": "Not Set",
-										"value": i
-									});
-								} else {
-									var $option = $("<option></option>", {
-										"text": i,
-										"value": i
-									});
-								}
+							for (var i = 1; i <= 250; i++) {
+								var $option = $("<option></option>", {
+									"text": i,
+									"value": i
+								});
+
 								if (searchArray(i, obj)) {
-									if (i != 0) {
-										$option.attr('disabled', 'disabled');
-										$option.attr('style', 'background-color:#99ff99');
-									}
+									$option.attr('disabled', 'disabled');
 								}
 								if (i == e['priority']) {
 									$option.attr("selected", "selected")
