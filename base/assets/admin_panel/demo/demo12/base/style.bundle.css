@@ -39116,7 +39116,8 @@ td>.m-checkbox.m-checkbox--single {
     overflow: hidden;
     margin-right: -14px;
     padding-right: 14px;
-    position: relative
+    position: relative;
+    height: 300px
 }
 
 .jstree-default .jstree-disabled {
@@ -43357,9 +43358,9 @@ select.m-select2 {
 }
 
 .m-pricing-table-1 .m-pricing-table-1__items .m-pricing-table-1__item:nth-child(1) .m-pricing-table-1__price {
-    font-size: 2.14rem;
-    margin-bottom: 0.571rem;
-    margin-top: 290px
+    /*! font-size: 2.14rem; */
+    /*! margin-bottom: 0.571rem; */
+    /*! margin-top: 290px */
 }
 
 .m-pricing-table-1 .m-pricing-table-1__items .m-pricing-table-1__item .m-pricing-table-1__subtitle {

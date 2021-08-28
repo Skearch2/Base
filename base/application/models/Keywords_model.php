@@ -53,21 +53,65 @@ class Keywords_model extends CI_Model
     }
 
     /**
-     * Check for duplicate keyword
+     * Check if the keyword already exists as brandlink keyword or search keyword
      *
-     * @param string $keyword
+     * @param string $keyword Keyword
+     * @param int    $id Keyword ID
      * @return boolean
      */
-    public function duplicate_check($keyword, $link_id)
+    public function duplicate_check($keyword, $id = null)
     {
         $this->db->select("id");
         $this->db->from('search_keywords');
         $this->db->where('keyword', $keyword);
-        if ($link_id) {
-            $this->db->where_not_in('link_id', $link_id);
+        if ($id) {
+            $this->db->where_not_in('id', $id);
         }
 
-        $query = $this->db->get();
+        $query1 = $this->db->get_compiled_select();
+
+        $this->db->select('id');
+        $this->db->from('skearch_brands_brandlinks');
+        $this->db->where('keyword', $keyword);
+
+        $query2 = $this->db->get_compiled_select();
+
+        $query = $this->db->query($query1 . " UNION " . $query2);
+
+        if ($query->num_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Check if the keyword already exists as brandlink keyword or search keyword
+     *
+     * @param string $keyword   Keyword
+     * @param int    $link_id   Link ID
+     * @param string $link_type Link Type  umbrella|field
+     * @return boolean
+     */
+    public function duplicate_check_using_link($keyword, $link_id = null, $link_type = null)
+    {
+        $this->db->select("id");
+        $this->db->from('search_keywords');
+        $this->db->where('keyword', $keyword);
+        if ($link_id !== null) {
+            $this->db->where('link_id !=', $link_id);
+            // $this->db->where('link_type !=', $link_type);
+        }
+
+        $query1 = $this->db->get_compiled_select();
+
+        $this->db->select('id');
+        $this->db->from('skearch_brands_brandlinks');
+        $this->db->where('keyword', $keyword);
+
+        $query2 = $this->db->get_compiled_select();
+
+        $query = $this->db->query($query1 . " UNION " . $query2);
 
         if ($query->num_rows()) {
             return true;

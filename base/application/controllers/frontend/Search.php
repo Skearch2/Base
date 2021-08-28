@@ -37,7 +37,7 @@ class Search extends MY_Controller
         $cat = $this->Category_model->get_categories();
         $sub_cat = $this->Category_model->get_subcategories();
         $links = $this->Category_model->get_results();
-        $brands_keywords = $this->Category_model->get_brands_keywords();
+        $brandlinks = $this->Category_model->get_brandlinks();
 
         /* If keyword matches with the title of umbrella page then redirect to the umbrella page */
         foreach ($cat as $item) {
@@ -69,10 +69,10 @@ class Search extends MY_Controller
             }
         }
 
-        /* If keyword matches with brand keywords then redirect to brand specified url */
-        foreach ($brands_keywords as $item) {
-            if (strcmp(strtolower($item->keywords), strtolower($keyword)) == 0) {
-                echo json_encode(array("type" => "external", "url" => $item->url));
+        /* If keyword matches with brandlinks then redirect to it's drop page */
+        foreach ($brandlinks as $brandlink) {
+            if (strcmp(strtolower($brandlink->keyword), strtolower($keyword)) == 0) {
+                echo json_encode(array("type" => "external", "url" => $brandlink->url));
                 return;
             }
         }

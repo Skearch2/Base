@@ -347,11 +347,11 @@ class Fields extends MY_Controller
         }
     }
 
-
     /**
-     * Validate keywords
+     * Validate keywords and check for duplicates
      *
      * @param string $string Keywords seperated by comma
+     * @param int $link_id Link ID
      * @return void
      */
     public function validate_keywords($string, $link_id = null)
@@ -368,16 +368,19 @@ class Fields extends MY_Controller
 
         foreach ($keywords as $keyword) {
             if (ctype_alpha(str_replace(array("\n", "\t", ' '), '', $keyword)) === false) {
-                $this->form_validation->set_message('validate_keywords', "The Keyword(s) can only have alphabets and spaces.");
+                $this->form_validation->set_message('validate_keywords', "%s can only have alphabets and spaces.");
                 $check = false;
             }
-            if ($this->Keywords->duplicate_check($keyword, $link_id)) {
+            if ($this->Keywords->duplicate_check_using_link($keyword, $link_id, $link_type = 'field')) {
                 array_push($duplicate_keywords, $keyword);
                 $duplicate_keywords_in_string = implode(' , ', $duplicate_keywords);
-                $this->form_validation->set_message('validate_keywords', "Keyword(s) already taken: $duplicate_keywords_in_string");
+                $this->form_validation->set_message('validate_keywords', "%s already reserved as BrandLink or Search keyword: <br><i>$duplicate_keywords_in_string</i>");
                 $check = false;
             }
         }
+
+        // print_r($duplicate_keywords);
+        // die();
 
         return $check;
     }

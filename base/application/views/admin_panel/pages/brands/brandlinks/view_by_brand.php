@@ -31,16 +31,75 @@ $this->load->view('admin_panel/templates/subheader');
 
 <div class="m-content">
 	<div class="m-portlet m-portlet--mobile">
-
+		<div class="m-portlet__head">
+			<div class="m-portlet__head-caption">
+				<div class="m-portlet__head-title">
+					<h3 class="m-portlet__head-text">
+						Brand: <?= $brand->brand ?>
+					</h3>
+				</div>
+			</div>
+			<div class="m-portlet__head-tools">
+				<ul class="m-portlet__nav">
+					<li class="m-portlet__nav-item">
+						<a href="<?= site_url("admin/brands/brandlinks/create/brand_id/$brand->id"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+							<span>
+								<i class="la la-plus-circle"></i>
+								<span>Add BrandLink</span>
+							</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 		<div class="m-portlet__body">
+			<?php if ($this->session->flashdata('create_success') === 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The BrandLink has been created.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('create_success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to create the BrandLink.
+					</div>
+				</div>
+			<?php endif ?>
+
+			<?php if ($this->session->flashdata('update_success') === 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The BrandLink has been updated.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('update_success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to update BrandLink.
+					</div>
+				</div>
+			<?php endif ?>
 
 			<!--begin: Datatable -->
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
+						<th>#</th>
 						<th>Keyword</th>
 						<th>URL</th>
-						<th>Brand</th>
 						<th>Status</th>
 						<th>Action</th>
 					</tr>
@@ -101,7 +160,7 @@ $this->load->view('admin_panel/templates/close_html');
 					if (data == 0) {
 						swal("Error!", "Unable to approve BrandLink keyword.", "error")
 					} else {
-						swal("Success!", "The BrandLink keyword has been approved.", "success")
+						swal("Success!", "The BrandLink keyword has been approved and set to active.", "success")
 						$('#m_table_1').DataTable().ajax.reload(null, false);
 					}
 				},
@@ -144,7 +203,7 @@ $this->load->view('admin_panel/templates/close_html');
 		});
 	}
 
-	//Toggles Brandlink status
+	//Toggles brandlink status
 	function toggle(id, row) {
 		$.ajax({
 			url: '<?= site_url('admin/brands/brandlinks/toggle/status/id/'); ?>' + id,
@@ -175,13 +234,13 @@ $this->load->view('admin_panel/templates/close_html');
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
-				ajax: "<?= site_url("admin/brands/brandlinks/get"); ?>",
+				ajax: "<?= site_url("admin/brands/brandlinks/get/brand_id/$brand->id"); ?>",
 				columns: [{
+					data: "#"
+				}, {
 					data: "keyword"
 				}, {
 					data: "url"
-				}, {
-					data: "brand"
 				}, {
 					data: "active"
 				}, {
@@ -193,7 +252,19 @@ $this->load->view('admin_panel/templates/close_html');
 					orderable: !1,
 					render: function(a, t, e, n) {
 						var keyword = e['keyword'].replace(/ /g, '%20');
-						return '<a onclick=deleteBrandlink("' + e['id'] + '","' + keyword + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+						return '<a href="<?= site_url() . "admin/brands/brandlinks/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+							'<a onclick=deleteBrandlink("' + e['id'] + '","' + keyword + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+					}
+				}, {
+					targets: 0,
+					title: "#",
+					render: function(a, t, e, n) {
+						return n['row'] + 1;
+					}
+				}, {
+					targets: 2,
+					render: function(a, t, e, n) {
+						return '<a href="' + e['url'] + '" target="_blank">' + e['url'] + '</a>'
 					}
 				}, {
 					targets: 3,
@@ -219,16 +290,6 @@ $this->load->view('admin_panel/templates/close_html');
 							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 						}
 					}
-				}, {
-					targets: 2,
-					render: function(a, t, e, n) {
-						return '<a href="<?= site_url("admin/brands/brandlinks/brand_id/") ?>' + e['brand_id'] + '" target="_blank" title="View Brandlinks">' + e['brand'] + '</a>'
-					}
-				}, {
-					targets: 1,
-					render: function(a, t, e, n) {
-						return '<a href="' + e['url'] + '" target="_blank">' + e['url'] + '</a>'
-					}
 				}]
 			})
 		}
@@ -242,5 +303,5 @@ $this->load->view('admin_panel/templates/close_html');
 
 <script>
 	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-brands-brandlinks").addClass("m-menu__item  m-menu__item--active");
+	$("#submenu-brands-brands").addClass("m-menu__item  m-menu__item--active");
 </script>

@@ -127,14 +127,14 @@ $route['myskearch/brand']                  = 'my_skearch/brand/ads/index';
 $route['myskearch/brand/ads']              = 'my_skearch/brand/ads';
 $route['myskearch/brand/ads/action/get']   = 'my_skearch/brand/ads/get';
 
-// Keywords
-$route['myskearch/brand/keywords']                      = 'my_skearch/brand/keywords';
-$route['myskearch/brand/keywords/add']                  = 'my_skearch/brand/keywords/create';
-$route['myskearch/brand/keywords/delete/id/(:num)']     = 'my_skearch/brand/keywords/delete/$1';
-$route['myskearch/brand/keywords/get']                  = 'my_skearch/brand/keywords/get';
-$route['myskearch/brand/keywords/toggle/id/(:num)']     = 'my_skearch/brand/keywords/toggle/$1';
-$route['myskearch/brand/keyword/get/id/(:num)']         = 'my_skearch/brand/keywords/get_by_id/$1';
-$route['myskearch/brand/keyword/update/id/(:num)']      = 'my_skearch/brand/keywords/update/$1';
+// Brandlinks
+$route['myskearch/brand/brandlinks']                    = 'my_skearch/brand/brandlinks';
+$route['myskearch/brand/brandlinks/add']                  = 'my_skearch/brand/brandlinks/create';
+$route['myskearch/brand/brandlinks/delete/id/(:num)']     = 'my_skearch/brand/brandlinks/delete/$1';
+$route['myskearch/brand/brandlinks/get']                = 'my_skearch/brand/brandlinks/get';
+$route['myskearch/brand/brandlinks/toggle/id/(:num)']     = 'my_skearch/brand/brandlinks/toggle/$1';
+$route['myskearch/brand/brandlinks/get/id/(:num)']         = 'my_skearch/brand/brandlinks/get_by_id/$1';
+$route['myskearch/brand/brandlinks/update/id/(:num)']      = 'my_skearch/brand/brandlinks/update/$1';
 
 // Media Vault
 $route['myskearch/brand/vault']                          = 'my_skearch/brand/media_vault';
@@ -269,7 +269,7 @@ $route['admin/results/research/delete/(:num)']    = 'admin_panel/results/researc
 $route['admin/results/research/get']              = 'admin_panel/results/research/get';
 $route['admin/results/research/get/(:num)']       = 'admin_panel/results/research/get/$1';
 $route['admin/results/research/list']             = 'admin_panel/results/research';
-$route['admin/results/research/make_link/(:num)'] = 'admin_panel/results/research/make_link/$1';
+$route['admin/results/research/update/(:num)']    = 'admin_panel/results/research/update/$1';
 
 /* 
     BRANDS 
@@ -306,15 +306,15 @@ $route['admin/brands/vault/brand/id/(:num)/media/id/(:num)']    = 'admin_panel/b
 $route['admin/brands/vault/update/status/media/id/(:num)']      = 'admin_panel/brands/vault/update_status/$1';
 
 // BrandLinks
-$route['admin/brands/keywords']                         = 'admin_panel/brands/keywords';
-$route['admin/brands/keywords/create/id/(:num)']        = 'admin_panel/brands/keywords/create/$1';
-$route['admin/brands/keywords/update/id/(:num)']        = 'admin_panel/brands/keywords/update/$1';
-$route['admin/brands/keywords/delete/id/(:num)']        = 'admin_panel/brands/keywords/delete/$1';
-$route['admin/brands/keywords/approve/id/(:num)']       = 'admin_panel/brands/keywords/approve/$1';
-$route['admin/brands/keywords/get']                     = 'admin_panel/brands/keywords/get';
-$route['admin/brands/brandlinks/get/brand/id/(:num)']   = 'admin_panel/brands/keywords/get/$1';
-$route['admin/brands/keywords/toggle/id/(:num)']        = 'admin_panel/brands/keywords/toggle/$1';
-$route['admin/brands/brandlinks/brand/id/(:num)']       = 'admin_panel/brands/keywords/view_by_brand/$1';
+$route['admin/brands/brandlinks']                                      = 'admin_panel/brands/brandlinks';
+$route['admin/brands/brandlinks/brand_id/(:num)']                      = 'admin_panel/brands/brandlinks/view_by_brand/$1';
+$route['admin/brands/brandlinks/approve/id/(:num)']                    = 'admin_panel/brands/brandlinks/approve/$1';
+$route['admin/brands/brandlinks/create/brand_id/(:num)']               = 'admin_panel/brands/brandlinks/create/$1';
+$route['admin/brands/brandlinks/delete/id/(:num)']                     = 'admin_panel/brands/brandlinks/delete/$1';
+$route['admin/brands/brandlinks/get']                                  = 'admin_panel/brands/brandlinks/get';
+$route['admin/brands/brandlinks/get/brand_id/(:num)']                  = 'admin_panel/brands/brandlinks/get/$1';
+$route['admin/brands/brandlinks/toggle/status/id/(:num)']              = 'admin_panel/brands/brandlinks/toggle/$1';
+$route['admin/brands/brandlinks/update/id/(:num)']                     = 'admin_panel/brands/brandlinks/update/$1';
 
 
 // Payments
@@ -324,7 +324,7 @@ $route['admin/brand/payments/get/id/(:num)']            = 'admin_panel/brands/pa
 // View as
 $route['admin/viewas/brand/id/(:num)']                       = 'my_skearch/brand/ads/index/$1';
 $route['admin/viewas/brand/id/(:num)/show/ads']              = 'my_skearch/brand/ads/index/$1';
-$route['admin/viewas/brand/id/(:num)/show/keywords']         = 'my_skearch/brand/keywords/index/$1';
+$route['admin/viewas/brand/id/(:num)/show/brandlinks']       = 'my_skearch/brand/brandlinks/index/$1';
 $route['admin/viewas/brand/id/(:num)/show/vault']            = 'my_skearch/brand/media_vault/index/$1';
 $route['admin/viewas/brand/id/(:num)/show/ads/action/get']   = 'my_skearch/brand/ads/get/$1';
 $route['admin/viewas/brand/id/(:num)/show/vault/action/get'] = 'my_skearch/brand/media_vault/get/$1';

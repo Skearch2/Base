@@ -127,7 +127,7 @@ class Research extends MY_Controller
      * 
      * @return void
      */
-    public function make_link($id)
+    public function update($id)
     {
         if (!$this->ion_auth_acl->has_permission('links_create') && !$this->ion_auth->is_admin()) {
             // set page title
@@ -141,7 +141,7 @@ class Research extends MY_Controller
                 $this->form_validation->set_rules('field_id', 'Field', 'required');
                 $this->form_validation->set_rules('display_url', 'Home Display', 'trim');
                 $this->form_validation->set_rules('url', 'URL', 'required|valid_url');
-            } else if ($this->input->post('action') == 'submit') {
+            } else if ($this->input->post('action') == 'make_link') {
                 $this->form_validation->set_rules('title', 'Title', 'trim|required');
                 $this->form_validation->set_rules('description_short', 'Short Description', 'trim|required|max_length[85]');
                 $this->form_validation->set_rules('display_url', 'Home Display', 'trim');
@@ -152,7 +152,7 @@ class Research extends MY_Controller
 
             if ($this->form_validation->run() == true) {
 
-                if ($this->input->post('action') == 'submit') {
+                if ($this->input->post('action') == 'make_link') {
 
                     $link_data = array(
                         'title' => $this->input->post('title'),
@@ -171,9 +171,9 @@ class Research extends MY_Controller
                     if ($create) {
                         // delete the research link
                         $this->Research->delete($id);
-                        $this->session->set_flashdata('submit_success', 1);
+                        $this->session->set_flashdata('make_link_success', 1);
                     } else {
-                        $this->session->set_flashdata('submit_failure', 0);
+                        $this->session->set_flashdata('make_link_failure', 0);
                     }
                 } elseif (($this->input->post('action') == 'save')) {
 
@@ -219,8 +219,8 @@ class Research extends MY_Controller
             }
             $data['priorities'] = $priorities;
 
-            $data['title'] = ucfirst("Make Link");
-            $this->load->view('admin_panel/pages/results/research/make_link', $data);
+            $data['title'] = ucfirst("Research Link");
+            $this->load->view('admin_panel/pages/results/research/edit', $data);
         }
     }
 

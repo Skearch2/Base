@@ -38,8 +38,8 @@ class Umbrellas extends MY_Controller
             redirect('admin/auth/login');
         }
 
-        $this->load->model('admin_panel/results/umbrella_model', 'umbrellas');
-        $this->load->model('admin_panel/results/field_model', 'fields');
+        $this->load->model('admin_panel/results/umbrella_model', 'Umbrella');
+        $this->load->model('admin_panel/results/field_model', 'Field');
         $this->load->model('Keywords_model', 'Keywords');
     }
 
@@ -56,7 +56,7 @@ class Umbrellas extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces|trim');
+            $this->form_validation->set_rules('title', 'Title', 'trim|required|alpha_numeric_spaces|callback_duplicate_check');
             $this->form_validation->set_rules('description', 'Description', 'max_length[500]|trim');
             $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
             $this->form_validation->set_rules('umbrella_name', 'Umbrella Name', 'alpha_numeric_spaces|trim');
@@ -77,7 +77,7 @@ class Umbrellas extends MY_Controller
                     'enabled' => $this->input->post('enabled'),
                 );
 
-                $umbrella_id = $this->umbrellas->create($umbrella_data);
+                $umbrella_id = $this->Umbrella->create($umbrella_data);
 
                 if ($umbrella_id) {
 
@@ -117,7 +117,7 @@ class Umbrellas extends MY_Controller
         if (!$this->ion_auth_acl->has_permission('umbrellas_delete') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
-            $delete = $this->umbrellas->delete($id);
+            $delete = $this->Umbrella->delete($id);
 
             if ($delete) {
                 echo json_encode(1);
@@ -136,7 +136,7 @@ class Umbrellas extends MY_Controller
     public function get_by_status($status = null)
     {
         if ($this->ion_auth_acl->has_permission('umbrellas_get') or $this->ion_auth->is_admin()) {
-            $umbrellas = $this->umbrellas->get_by_status($status);
+            $umbrellas = $this->Umbrella->get_by_status($status);
             $total_umbrellas = sizeof($umbrellas);
             $result = array(
                 'iTotalRecords' => $total_umbrellas,
@@ -146,7 +146,7 @@ class Umbrellas extends MY_Controller
                 'aaData' => $umbrellas,
             );
             for ($i = 0; $i < sizeof($result['aaData']); $i++) {
-                $fields = $this->fields->get_by_umbrella($result['aaData'][$i]->id);
+                $fields = $this->Field->get_by_umbrella($result['aaData'][$i]->id);
                 $result['aaData'][$i]->totalFields = sizeof($fields);
             }
             $this->output
@@ -164,7 +164,7 @@ class Umbrellas extends MY_Controller
     public function get($id)
     {
         if ($this->ion_auth_acl->has_permission('umbrellas_get') or $this->ion_auth->is_admin()) {
-            $umbrella = $this->umbrellas->get($id);
+            $umbrella = $this->Umbrella->get($id);
 
             $this->output
                 ->set_content_type('application/json')
@@ -207,7 +207,7 @@ class Umbrellas extends MY_Controller
         if (!$this->ion_auth_acl->has_permission('umbrellas_update') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
-            $status = $this->umbrellas->get($id)->enabled;
+            $status = $this->Umbrella->get($id)->enabled;
 
             if ($status == 0) {
                 $status = 1;
@@ -219,7 +219,7 @@ class Umbrellas extends MY_Controller
                 'enabled' => $status,
             );
 
-            $this->umbrellas->update($id, $umbrella_data);
+            $this->Umbrella->update($id, $umbrella_data);
 
             echo json_encode($status);
         }
@@ -238,7 +238,7 @@ class Umbrellas extends MY_Controller
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
-            $this->form_validation->set_rules('title', 'Title', 'trim|required|alpha_numeric_spaces');
+            $this->form_validation->set_rules('title', 'Title', 'trim|required|alpha_numeric_spaces|callback_duplicate_check');
             $this->form_validation->set_rules('description', 'Description', 'trim|max_length[500]');
             $this->form_validation->set_rules('description_short', 'Short Description', 'trim|required|max_length[140]');
             $this->form_validation->set_rules('umbrella_name', 'Umbrella Name', 'alpha_numeric_spaces|trim');
@@ -250,7 +250,7 @@ class Umbrellas extends MY_Controller
             if ($this->form_validation->run() === false) {
 
                 // umbrella data
-                $data['umbrella'] = $this->umbrellas->get($id);
+                $data['umbrella'] = $this->Umbrella->get($id);
 
                 // keywords for umbrella
                 // convert keywords to single string seperated by comma
@@ -288,22 +288,43 @@ class Umbrellas extends MY_Controller
                     $this->Keywords->replace($id, $keywords_data);
                 }
 
-                $update = $this->umbrellas->update($id, $umbrella_data);
+                $update = $this->Umbrella->update($id, $umbrella_data);
 
                 if ($update) {
                     $this->session->set_flashdata('update_success', 1);
                 } else {
                     $this->session->set_flashdata('update_success', 0);
                 }
-                redirect('/admin/results/umbrellas/status/all');
+                redirect('admin/results/umbrellas/status/all');
             }
         }
     }
 
     /**
-     * Validate keywords
+     * Check for duplicate umbrella or field title 
+     *
+     * @param string $string String
+     * @return void
+     */
+    public function duplicate_check($string)
+    {
+        $umbrella_id = $this->input->post('id');
+
+        if ($this->Umbrella->duplicate_check($string)) {
+            if ($this->Umbrella->get($umbrella_id)->title !== $string) {
+                $this->form_validation->set_message('duplicate_check', "{field} already reserved to Umbrella or Field.");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate keywords and check for duplicates
      *
      * @param string $string Keywords seperated by comma
+     * @param int $link_id Link ID
      * @return void
      */
     public function validate_keywords($string, $link_id = null)
@@ -320,13 +341,13 @@ class Umbrellas extends MY_Controller
 
         foreach ($keywords as $keyword) {
             if (ctype_alpha(str_replace(array("\n", "\t", ' '), '', $keyword)) === false) {
-                $this->form_validation->set_message('validate_keywords', "The Keyword(s) can only have alphabets and spaces.");
+                $this->form_validation->set_message('validate_keywords', "%s can only have alphabets and spaces.");
                 $check = false;
             }
-            if ($this->Keywords->duplicate_check($keyword, $link_id)) {
+            if ($this->Keywords->duplicate_check_using_link($keyword, $link_id, $link_type = 'umbrella')) {
                 array_push($duplicate_keywords, $keyword);
                 $duplicate_keywords_in_string = implode(' , ', $duplicate_keywords);
-                $this->form_validation->set_message('validate_keywords', "Keyword(s) already taken: $duplicate_keywords_in_string");
+                $this->form_validation->set_message('validate_keywords', "%s already reserved as BrandLink or Search keyword: <br><i>$duplicate_keywords_in_string</i>");
                 $check = false;
             }
         }
