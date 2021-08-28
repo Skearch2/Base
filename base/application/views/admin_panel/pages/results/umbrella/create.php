@@ -212,7 +212,7 @@ $this->load->view('admin_panel/templates/close_html');
 <script>
 	var FormControls = {
 		init: function() {
-			$("#m_form").validate({
+			$("#m_fsorm").validate({
 				rules: {
 					title: {
 						required: 1

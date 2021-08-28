@@ -278,8 +278,8 @@ $this->load->view('admin_panel/templates/close_html');
       },
       success: function(data, status) {
         var obj = JSON.parse(data);
-        for (i = 1; i <= 255; i++) {
-          // check if any link has taken the priority value (1-225)
+        for (i = 1; i <= 250; i++) {
+          // check if any link has taken the priority value (1-220)
           var link = searchArray(i, obj);
 
           if (link) {

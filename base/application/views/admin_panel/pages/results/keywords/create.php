@@ -128,7 +128,7 @@ $this->load->view('admin_panel/templates/subheader');
                 <div class="form-group m-form__group row" id="umbrella-list" style=<?= $link_type == 'umbrella' ?: 'display:none' ?>>
                   <label for="example-text-input" class="col-2 col-form-label">Umbrella *</label>
                   <div class="col-7">
-                    <select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="umbrella_id">
+                    <select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="umbrella_id" id="umbrella_id">
                       <option value="" <?= set_select('umbrella_id', '', TRUE) ?>>Select</option>
                       <?php foreach ($umbrellas as $umbrella) : ?>
                         <option value="<?= $umbrella->id ?>" <?= set_select("umbrella_id", $umbrella->id) ?>><?= $umbrella->title ?></option>
@@ -139,7 +139,7 @@ $this->load->view('admin_panel/templates/subheader');
                 <div class="form-group m-form__group row" id="field-list" style=<?= $link_type == 'field' ?: 'display:none' ?>>
                   <label for="example-text-input" class="col-2 col-form-label">Field *</label>
                   <div class="col-7">
-                    <select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="field_id">
+                    <select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="field_id" id="field_id">
                       <option value="" <?= set_select('field_id', '', TRUE) ?>>Select</option>
                       <?php foreach ($fields as $field) : ?>
                         <option value="<?= $field->id ?>" <?= set_select("field_id", $field->id) ?>><?= $field->title ?></option>
@@ -216,10 +216,14 @@ $this->load->view('admin_panel/templates/close_html');
             required: 1
           },
           umbrella_id: {
-            required: [1, '#field_id:blank']
+            required: function(element) {
+              return $("#field_id").val() == "";
+            }
           },
           field_id: {
-            required: [1, '#umbrella_id:blank']
+            required: function(element) {
+              return $("#umbrella_id").val() == "";
+            }
           }
         },
         invalidHandler: function(e, r) {
@@ -248,10 +252,11 @@ $this->load->view('admin_panel/templates/close_html');
     if (type == 'umbrella') {
       listUmbrella.style.display = "";
       listField.style.display = "none";
+      $("#field_id").val('').selectpicker("refresh");
     } else if (type == 'field') {
       listUmbrella.style.display = "none";
       listField.style.display = "";
-
+      $("#umbrella_id").val('').selectpicker("refresh");
     }
   }
 </script>

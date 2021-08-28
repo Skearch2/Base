@@ -53,7 +53,7 @@ $this->load->view('admin_panel/templates/subheader');
 		</div>
 
 		<div class="m-portlet__body">
-			<?php if ($this->session->flashdata('submit_success') == 1) : ?>
+			<?php if ($this->session->flashdata('make_link_success') == 1) : ?>
 				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -62,7 +62,7 @@ $this->load->view('admin_panel/templates/subheader');
 						The research link has successfully been made.
 					</div>
 				</div>
-			<?php elseif ($this->session->flashdata('submit_failure') == 1) : ?>
+			<?php elseif ($this->session->flashdata('make_link_failure') == 1) : ?>
 				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -94,7 +94,6 @@ $this->load->view('admin_panel/templates/subheader');
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
-						<th>ID</th>
 						<th>Short Description</th>
 						<th>URL</th>
 						<th>Field</th>
@@ -174,8 +173,6 @@ $this->load->view('admin_panel/templates/close_html');
 				serverSide: !1,
 				ajax: "<?= site_url(); ?>admin/results/research/get",
 				columns: [{
-					data: "id"
-				}, {
 					data: "description_short"
 				}, {
 					data: "url"
@@ -191,11 +188,11 @@ $this->load->view('admin_panel/templates/close_html');
 					title: "Actions",
 					orderable: !1,
 					render: function(a, t, e, n) {
-						return '<a href="<?= site_url() . "admin/results/research/make_link/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Make Link"><i class="la la-link"></i></a>' +
+						return '<a href="<?= site_url() . "admin/results/research/update/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 							'<a onclick=deleteLink(' + e['id'] + ') class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}, {
-					targets: 2,
+					targets: 1,
 					render: function(a, t, e, n) {
 						return '<a href="' + e['url'] + '" target="_blank">' + e['url'] + '</a>'
 					}

@@ -37,6 +37,7 @@ $this->load->view('admin_panel/templates/subheader');
 					<div class="tab-pane active" id="m_user_profile_tab_1">
 						<form class="m-form m-form--state m-form--fit m-form--label-align-right" id="m_form" role="form" method="POST">
 							<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+							<input type="hidden" name="id" value="<?= $brandlink->id ?>">
 							<input type="hidden" name="brand_id" value="<?= $brandlink->brand_id ?>">
 							<div class="m-portlet__body">
 								<?php if (validation_errors()) : ?>
@@ -77,13 +78,13 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<label for="brand" class="col-2 col-form-label">BrandLink Keyword *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="keywords" value="<?= set_value('keywords', $brandlink->keywords); ?>">
+										<input class="form-control m-input" type="text" name="keyword" value="<?= set_value('keyword', $brandlink->keyword); ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="organization" class="col-2 col-form-label">URL - Droppage *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="url" value="<?= set_value('url', $brandlink->url); ?>">
+										<input class="form-control m-input" type="text" name="url" id="url" value="<?= set_value('url', $brandlink->url); ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -144,12 +145,10 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
-	var Autosize = {
-		init: function() {
-			var t;
-			t = $("#note"), autosize(t), autosize.update(t)
-		}
-	};
+	// pre-populate https protocol in the url field
+	$("#url").inputmask({
+		regex: "https://.*"
+	});
 
 	var FormControls = {
 		init: function() {

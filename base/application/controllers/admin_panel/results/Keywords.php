@@ -38,6 +38,92 @@ class Keywords extends MY_Controller
     }
 
     /**
+     * Shows create page for research link and add research links on POST
+     * 
+     * @return void
+     */
+    public function create()
+    {
+
+        if (!$this->ion_auth_acl->has_permission('search_keywords_create') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+
+            $this->form_validation->set_rules('keywords', 'Keyword(s)', 'callback_validate_keywords');
+            $this->form_validation->set_rules('link_type', 'Link to', 'required');
+            if ($this->input->post("link_type") == 'umbrella') {
+                $this->form_validation->set_rules('umbrella_id', 'Umbrella', 'required|numeric');
+            } else if ($this->input->post("link_type") == 'field') {
+                $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
+            }
+
+            // check if the keyword links to umbrella or field
+            $link_type = (null !== $this->input->post("link_type")) ? $this->input->post("link_type") : null;
+
+            if ($this->form_validation->run() == false) {
+                $data['title'] = ucfirst("Add Keyword");
+                $data['link_type'] = $link_type;
+                $data['umbrellas'] = $this->Umbrellas->get_by_status('active');
+                $data['fields'] = $this->Fields->get_by_status('active');
+
+                $this->load->view('admin_panel/pages/results/keywords/create', $data);
+            } else {
+
+                // POST data
+                $keywords = explode(',', strtolower($this->input->post('keywords')));
+                if ($this->input->post("link_type") == 'umbrella') {
+                    $link_id = $this->input->post('umbrella_id');
+                } else if ($this->input->post("link_type") == 'field') {
+                    $link_id = $this->input->post('field_id');
+                }
+                $link_type = $this->input->post('link_type');
+                $status = $this->input->post('status');
+
+                foreach ($keywords as $i => $keyword) {
+                    $keywords_data[$i] = array(
+                        'keyword' => $keyword,
+                        'link_id' => $link_id,
+                        'link_type' => $link_type,
+                        'status' => $status
+                    );
+                }
+
+                $create = $this->Keywords->create($keywords_data);
+
+                if ($create) {
+                    $this->session->set_flashdata('create_success', 1);
+                } else {
+                    $this->session->set_flashdata('create_success', 0);
+                }
+
+                redirect('/admin/results/keyword/add');
+            }
+        }
+    }
+
+    /**
+     * Delete keyword
+     * 
+     * @return void
+     */
+    public function delete($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('search_keywords_delete') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $delete = $this->Keywords->delete($id);
+
+            if ($delete) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        }
+    }
+
+    /**
      * Get keywords JSON
      * 
      * @return void
@@ -81,68 +167,31 @@ class Keywords extends MY_Controller
     }
 
     /**
-     * Shows create page for research link and add research links on POST
-     * 
+     * Toggle keyword status
+     *
+     * @param int $id Keyword ID
      * @return void
      */
-    public function create()
+    public function toggle($id)
     {
-
-        if (!$this->ion_auth_acl->has_permission('search_keywords_create') && !$this->ion_auth->is_admin()) {
-            // set page title
-            $data['title'] = ucwords('access denied');
-            $this->load->view('admin_panel/errors/error_403', $data);
+        if (!$this->ion_auth_acl->has_permission('search_keywords_update') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
         } else {
+            $status = $this->Keywords->get_by_id($id)->status;
 
-            $this->form_validation->set_rules('keywords', 'Keyword(s)', 'callback_validate_keywords');
-            $this->form_validation->set_rules('link_type', 'Link to', 'required');
-            if ($this->input->post("link_type") == 'umbrella') {
-                $this->form_validation->set_rules('umbrella_id', 'Umbrella', 'required|numeric');
-            } else if ($this->input->post("link_type") == 'field') {
-                $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
-            }
-
-            // check if the keyword links to umbrella or field
-            $link_type = (null !== $this->input->post("link_type")) ? $this->input->post("link_type") : null;
-
-            if ($this->form_validation->run() == false) {
-                $data['title'] = ucfirst("Add Keyword");
-                $data['link_type'] = $link_type;
-                $data['umbrellas'] = $this->Umbrellas->get_by_status('active');
-                $data['fields'] = $this->Fields->get_by_status('active');
-
-                $this->load->view('admin_panel/pages/results/keywords/create', $data);
+            if ($status == 0) {
+                $status = 1;
             } else {
-
-                // POST data
-                $keywords = explode(',', $this->input->post('keywords'));
-                if ($this->input->post("link_type") == 'umbrella') {
-                    $link_id = $this->input->post('umbrella_id');
-                } else if ($this->input->post("link_type") == 'field') {
-                    $link_id = $this->input->post('field_id');
-                }
-                $link_type = $this->input->post('link_type');
-                $status = $this->input->post('status');
-
-                foreach ($keywords as $i => $keyword) {
-                    $keywords_data[$i] = array(
-                        'keyword' => $keyword,
-                        'link_id' => $link_id,
-                        'link_type' => $link_type,
-                        'status' => $status
-                    );
-                }
-
-                $create = $this->Keywords->create($keywords_data);
-
-                if ($create) {
-                    $this->session->set_flashdata('create_success', 1);
-                } else {
-                    $this->session->set_flashdata('create_success', 0);
-                }
-
-                redirect('/admin/results/keyword/add');
+                $status = 0;
             }
+
+            $data = array(
+                'status' => $status,
+            );
+
+            $this->Keywords->update($id, $data);
+
+            echo json_encode($status);
         }
     }
 
@@ -178,7 +227,7 @@ class Keywords extends MY_Controller
             } else {
 
                 // POST data
-                $keyword = $this->input->post('keyword');
+                $keyword = strtolower($this->input->post('keyword'));
                 if ($this->input->post("link_type") == 'umbrella') {
                     $link_id = $this->input->post('umbrella_id');
                 } else if ($this->input->post("link_type") == 'field') {
@@ -208,61 +257,13 @@ class Keywords extends MY_Controller
     }
 
     /**
-     * Delete keyword
-     * 
-     * @return void
-     */
-    public function delete($id)
-    {
-        if (!$this->ion_auth_acl->has_permission('search_keywords_delete') && !$this->ion_auth->is_admin()) {
-            echo json_encode(-1);
-        } else {
-            $delete = $this->Keywords->delete($id);
-
-            if ($delete) {
-                echo json_encode(1);
-            } else {
-                echo json_encode(0);
-            }
-        }
-    }
-
-    /**
-     * Toggle keyword status
-     *
-     * @param int $id Keyword ID
-     * @return void
-     */
-    public function toggle($id)
-    {
-        if (!$this->ion_auth_acl->has_permission('search_keywords_update') && !$this->ion_auth->is_admin()) {
-            echo json_encode(-1);
-        } else {
-            $status = $this->Keywords->get($id)->status;
-
-            if ($status == 0) {
-                $status = 1;
-            } else {
-                $status = 0;
-            }
-
-            $data = array(
-                'status' => $status,
-            );
-
-            $this->Keywords->update($id, $data);
-
-            echo json_encode($status);
-        }
-    }
-
-    /**
      * Validate keyword
      *
      * @param string $string Keyword
+     * @param string $id Keyword ID
      * @return void
      */
-    public function validate_keyword($string, $link_id = null)
+    public function validate_keyword($string, $id)
     {
         if (empty($string)) {
             $this->form_validation->set_message('validate_keyword', "The %s field is required");
@@ -270,15 +271,14 @@ class Keywords extends MY_Controller
         }
 
         if (ctype_alpha(str_replace(array("\n", "\t", ' '), '', $string)) === false) {
-            $this->form_validation->set_message('validate_keyword', "The Keyword can only contain alphabets and spaces.");
+            $this->form_validation->set_message('validate_keyword', "The %s can only contain alphabets and spaces.");
             return false;
         }
 
-        // TODO: duplicate check on edit
-        // if ($this->Keywords->duplicate_check($string, $link_id)) {
-        //     $this->form_validation->set_message('validate_keyword', "The keyword already exists.");
-        //     return false;
-        // }
+        if ($this->Keywords->duplicate_check($string, $id)) {
+            $this->form_validation->set_message('validate_keyword', "The %s already reserved as BrandLink or Search keyword.");
+            return false;
+        }
 
         return true;
     }
@@ -289,7 +289,7 @@ class Keywords extends MY_Controller
      * @param string $string Keywords seperated by comma
      * @return void
      */
-    public function validate_keywords($string, $link_id = null)
+    public function validate_keywords($string)
     {
         if (empty($string)) {
             $this->form_validation->set_message('validate_keywords', "The %s field is required");
@@ -304,13 +304,13 @@ class Keywords extends MY_Controller
 
         foreach ($keywords as $keyword) {
             if (ctype_alpha(str_replace(array("\n", "\t", ' '), '', $keyword)) === false) {
-                $this->form_validation->set_message('validate_keywords', "The Keyword(s) can only have alphabets and spaces.");
+                $this->form_validation->set_message('validate_keywords', "%s can only have alphabets and spaces.");
                 $check = false;
             }
-            if ($this->Keywords->duplicate_check($keyword, $link_id)) {
+            if ($this->Keywords->duplicate_check_using_link($keyword)) {
                 array_push($duplicate_keywords, $keyword);
                 $duplicate_keywords_in_string = implode(' , ', $duplicate_keywords);
-                $this->form_validation->set_message('validate_keywords', "Keyword(s) already taken: $duplicate_keywords_in_string");
+                $this->form_validation->set_message('validate_keywords', "%s already reserved as BrandLink or Search keyword: <br><i>$duplicate_keywords_in_string</i>");
                 $check = false;
             }
         }

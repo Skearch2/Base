@@ -53,7 +53,8 @@ $this->load->view('admin_panel/templates/subheader');
 		</div>
 
 		<div class="m-portlet__body">
-			<?php if ($this->session->flashdata('update_success') === 1) : ?>
+			<?php
+			if ($this->session->flashdata('update_success') === 1) : ?>
 				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -155,12 +156,12 @@ $this->load->view('admin_panel/templates/close_html');
 			success: function(data, status) {
 				if (data == 0) {
 					document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
-					document.getElementById("tablerow" + row).innerHTML = "Off";
-					toastr.success("", "Status updated.");
+					document.getElementById("tablerow" + row).innerHTML = "Inactive";
+					toastr.success("", "Status set to Inactive.");
 				} else if (data == 1) {
 					document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
 					document.getElementById("tablerow" + row).innerHTML = "Active";
-					toastr.success("", "Status updated.");
+					toastr.success("", "Status set to Active.");
 				} else if (data == -1) {
 					toastr.warning("", "You have no permission.");
 				}

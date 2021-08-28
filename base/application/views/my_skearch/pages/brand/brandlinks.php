@@ -33,20 +33,20 @@ $this->load->view('my_skearch/templates/start_pagebody');
 </div>
 
 <!--begin::Modal-->
-<div class="modal fade" id="edit_keyword_modal" tabindex="-1" role="dialog" aria-labelledby="updateKeyword" aria-hidden="true">
+<div class="modal fade" id="edit_brandlink_modal" tabindex="-1" role="dialog" aria-labelledby="updateBrandlink" aria-hidden="true">
 	<div class="modal-dialog modal-sm" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Edit Keyword</h5>
+				<h5 class="modal-title" id="exampleModalLabel">Edit Brandlink</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form id="edit-keyword-form">
+			<form id="edit-brandlink-form">
 				<div class="modal-body">
-					<input type="hidden" id="edit-keyword-id">
+					<input type="hidden" id="brandlink_id" name="brandlink_id">
 					<div class="form-group">
-						<label for="branded-keyword" class="form-control-label">Branded Keyword:</label>
+						<label for="branded-keyword" class="form-control-label">Branded Keyword</label>
 						<input type="text" class="form-control" id="edit-keyword" name="edit-keyword">
 					</div>
 					<div class="form-group">
@@ -57,7 +57,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary" id="btn-update-keyword-submit">Update</button>
+					<button type="submit" class="btn btn-primary" id="btn-update-brandlink-submit">Update</button>
 				</div>
 			</form>
 		</div>
@@ -69,7 +69,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 	<div class="m-portlet m-portlet--mobile">
 		<?php if ($is_primary_brand_user) : ?>
 			<div class="m-portlet__body">
-				<form id="add-keyword-form">
+				<form id="add-brandlink-form">
 					<div class="form-group m-form__group row">
 						<label for="keyword" class="col-2 col-form-label">BrandLink Keyword</label>
 						<div class="col-7">
@@ -82,7 +82,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 							<input class="form-control m-input" type="text" id="url" name="url">
 						</div>
 					</div>
-					<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom" id="btn-add-keyword-submit">Add Branded Keyword</button>
+					<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom" id="btn-add-brandlink-submit">Add Branded Keyword</button>
 					<span style="float: inline-end;" class="m-form__help">*You can add upto 10 Branded Keywords in this account.</span>
 				</form>
 			</div>
@@ -130,13 +130,11 @@ $this->load->view('my_skearch/templates/js_global');
 	// var csrf_hash = '<?= $this->security->get_csrf_hash() ?>';
 
 	// Add keywords
-	function addKeyword() {
+	function addBrandlink() {
 
 		$.ajax({
-			url: '<?= base_url() ?>myskearch/brand/keywords/add',
+			url: '<?= base_url() ?>myskearch/brand/brandlinks/add',
 			type: 'GET',
-			// contentType: "application/json",
-			// dataType: 'json',
 			data: {
 				// csrf_name: csrf_hash,
 				keyword: $('#keyword').val(),
@@ -144,29 +142,25 @@ $this->load->view('my_skearch/templates/js_global');
 			},
 			success: function(data, status) {
 				if (data == 1) {
-					toastr.success("", "Keyword added.");
+					toastr.success("", "BrandLink added.");
+					$('#keyword').val('');
+					$('#url').val('');
+					$('#m_table_1').DataTable().ajax.reload(null, false);
 				} else if (data == 0) {
-					toastr.error("", "Unable to add keyword.");
-				} else if (data == -1) {
-					toastr.error("", "Keyword already exists.");
+					toastr.error("", "Unable to add BrandLink.");
+				} else {
+					toastr.error("", data);
 				}
 			},
 			error: function(xhr, status, error) {
 				toastr.error("", "Unable to process request.");
-			},
-			complete: function(data, status) {
-				//csrf_hash = '<?= $this->security->get_csrf_hash() ?>';
-
-				$('#keyword').val('');
-				$('#url').val('');
-				$('#m_table_1').DataTable().ajax.reload(null, false);
 			}
 		});
 
 	}
 
 	// Delete keywords
-	function deleteKeyword(id, keyword) {
+	function deleteBrandlink(id, keyword) {
 		var keyword = keyword.replace(/%20/g, ' ');
 
 		swal({
@@ -180,7 +174,7 @@ $this->load->view('my_skearch/templates/js_global');
 		}).then(function(e) {
 			if (!e.value) return;
 			$.ajax({
-				url: '<?= site_url('myskearch/brand/keywords/delete/id/'); ?>' + id,
+				url: '<?= site_url('myskearch/brand/brandlinks/delete/id/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
 					if (data == 0) {
@@ -198,15 +192,15 @@ $this->load->view('my_skearch/templates/js_global');
 	}
 
 	// edit keyword dialog
-	function editKeywordDialog(id) {
+	function editBrandlinkDialog(id) {
 		$.ajax({
-			url: '<?= site_url(); ?>myskearch/brand/keyword/get/id/' + id, // get keyword info
+			url: '<?= site_url(); ?>myskearch/brand/brandlinks/get/id/' + id, // get keyword info
 			type: 'GET',
 			contentType: 'json',
 			success: function(data, status) {
-				$("#btn-update-keyword-submit").attr("class", "btn m-btn btn-primary");
-				$("#edit-keyword-id").val(data.id);
-				$("#edit-keyword").val(data.keywords);
+				$("#btn-update-brandlink-submit").attr("class", "btn m-btn btn-primary");
+				$("#brandlink_id").val(data.id);
+				$("#edit-keyword").val(data.keyword);
 				$("#edit-url").val(data.url);
 			},
 			error: function(xhr, status, error) {
@@ -216,18 +210,17 @@ $this->load->view('my_skearch/templates/js_global');
 	}
 
 	// update keyword
-	function updateKeyword(id) {
+	function updateBrandlink(id) {
 		$.ajax({
-			url: '<?= site_url(); ?>myskearch/brand/keyword/update/id/' + id,
+			url: '<?= site_url(); ?>myskearch/brand/brandlinks/update/id/' + id,
 			type: 'GET',
-			contentType: 'json',
-			dataType: 'json',
 			data: {
+				brandlink_id: $("#brandlink_id").val(),
 				keyword: $("#edit-keyword").val(),
 				url: $("#edit-url").val()
 			},
 			beforeSend: function(xhr, options) {
-				$("#btn-update-keyword-submit").attr("class", "btn m-btn btn-success m-loader m-loader--light m-loader--right");
+				$("#btn-update-brandlink-submit").attr("class", "btn m-btn btn-success m-loader m-loader--light m-loader--right");
 				setTimeout(function() {
 					$.ajax($.extend(options, {
 						beforeSend: $.noop
@@ -236,13 +229,22 @@ $this->load->view('my_skearch/templates/js_global');
 				return false;
 			},
 			success: function(data, status) {
-				$('#m_table_1').DataTable().ajax.reload(null, false);
-				$("#edit_keyword_modal").modal('hide');
-				toastr.success("Keyword updated.");
+				if (data == 1) {
+					toastr.success("", "BrandLink updated.");
+				} else if (data == 0) {
+					toastr.error("", "Unable to update BrandLink.");
+				} else {
+					toastr.error("", data);
+				}
 			},
 			error: function(xhr, status, error) {
-				$("#edit_keyword_modal").modal('hide');
 				toastr.error("Unable to process request.");
+			},
+			complete: function(xhr, status) {
+				$("#edit_brandlink_modal").modal('hide');
+				$('#edit-keyword').val('');
+				$('#edit-url').val('');
+				$('#m_table_1').DataTable().ajax.reload(null, false);
 			}
 		});
 	}
@@ -273,7 +275,7 @@ $this->load->view('my_skearch/templates/js_global');
 
 	var FormControls = {
 		init: function() {
-			$("#add-keyword-form").validate({
+			$("#add-brandlink-form").validate({
 				rules: {
 					'keyword': {
 						required: 1
@@ -284,11 +286,11 @@ $this->load->view('my_skearch/templates/js_global');
 					}
 				},
 				submitHandler: function(e) {
-					addKeyword();
+					addBrandlink();
 				},
 			});
 
-			$("#edit-keyword-form").validate({
+			$("#edit-brandlink-form").validate({
 				rules: {
 					'edit-keyword': {
 						required: 1
@@ -299,7 +301,7 @@ $this->load->view('my_skearch/templates/js_global');
 					}
 				},
 				submitHandler: function(e) {
-					updateKeyword($('#edit-keyword-id').val());
+					updateBrandlink($('#brandlink_id').val());
 				},
 			});
 		}
@@ -330,17 +332,16 @@ $this->load->view('my_skearch/templates/js_global');
 				filter: 0,
 				info: 0,
 				ajax: {
-					url: "<?= site_url(); ?>myskearch/brand/keywords/get",
+					url: "<?= site_url(); ?>myskearch/brand/brandlinks/get",
 					type: "GET",
 					data: {
 						brand_id: <?= $brand_id ?>
 					}
 				},
-				//ajax: "<?= site_url(); ?>myskearch/brand/keywords/get",
 				columns: [{
 					data: "#"
 				}, {
-					data: "keywords"
+					data: "keyword"
 				}, {
 					data: "url"
 				}, {
@@ -353,12 +354,12 @@ $this->load->view('my_skearch/templates/js_global');
 					title: "Actions",
 					orderable: !1,
 					render: function(a, t, e, n) {
-						var keywords = e['keywords'].replace(/ /g, '%20');
+						var keyword = e['keyword'].replace(/ /g, '%20');
 						<?php if ($is_primary_brand_user) : ?>
-							return '<a onclick=editKeywordDialog("' + e['id'] + '") data-toggle="modal" data-target="#edit_keyword_modal" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-								'<a onclick=deleteKeyword("' + e['id'] + '","' + keywords + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+							return '<a onclick=editBrandlinkDialog("' + e['id'] + '") data-toggle="modal" data-target="#edit_brandlink_modal" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+								'<a onclick=deleteBrandlink("' + e['id'] + '","' + keyword + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 						<?php else : ?>
-							return "-"
+							return "<i>For Lead Member only</i>"
 						<?php endif ?>
 					}
 				}, {
