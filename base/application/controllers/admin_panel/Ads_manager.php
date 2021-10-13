@@ -89,8 +89,13 @@ class Ads_manager extends MY_Controller
                 //     return;
                 // }
 
+                $banner_id = $this->ads_manager->get_banner($scope, $scope_id, $banner)->id;
+                // $total_ads = $this->ads_manager->count_ads_in_banner($banner_id);
+                $last_priority = $this->ads_manager->get_last_priority($banner_id)->priority;
+                $priority = $last_priority + 1;
+
                 $data = [
-                    'banner_id' => $this->ads_manager->get_banner($scope, $scope_id, $banner)->id,
+                    'banner_id' => $banner_id,
                     'brand_id'  => $this->input->post('brand'),
                     'title'     => $this->input->post('title'),
                     'media'     => $this->upload_media($scope, $scope_id),
@@ -98,11 +103,13 @@ class Ads_manager extends MY_Controller
                     'duration'  => $this->input->post('duration'),
                     'has_sign'  => $this->input->post('has_sign'),
                     'is_active' => $this->input->post('is_active'),
+                    'priority' =>  $priority
                 ];
 
-                $create = $this->ads_manager->create_ad($data);
+                $ad_id = $this->ads_manager->create_ad($data);
 
-                if ($create) {
+                if ($ad_id) {
+                    $this->copy_to_media_vault($ad_id);
                     $this->session->set_flashdata('create_success', 1);
                 } else {
                     $this->session->set_flashdata('create_success', 0);
@@ -116,6 +123,50 @@ class Ads_manager extends MY_Controller
             }
         }
     }
+
+    /**
+     * Copy media to media vault
+     * 
+     * @param int $ad_id Ad id
+     * @return void
+     */
+    public function copy_to_media_vault($ad_id)
+    {
+        $ad = $this->ads_manager->get_ad($ad_id);
+
+        $data = [
+            'brand_id'  => $ad->brand_id,
+            'title'     => $ad->title,
+            'url'       => $ad->url,
+            'media'     => $ad->filename
+        ];
+
+        $target = FCPATH . "base/media/$ad->folder/";
+
+        $destination = FCPATH . "base/media/vault/brand_{$ad->brand_id}/";
+
+        // create the destination folder if not exists
+        if (!is_dir($destination)) {
+            if (!mkdir($destination, 0755, TRUE)) {
+                show_error('Unable to create media folder.', 500, 'Internal Server Error');
+                return;
+            }
+        }
+
+        if (copy("$target{$ad->filename}", "$destination{$ad->filename}")) {
+
+            $create = $this->media_vault->create($data);
+
+            if ($create) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        } else {
+            show_error('Unable to copy media to target folder.', 500, 'Internal Server Error');
+        }
+    }
+
 
     /**
      * Delete brand

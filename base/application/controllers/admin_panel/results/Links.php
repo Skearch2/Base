@@ -371,10 +371,6 @@ class Links extends MY_Controller
     {
         $priorities = $this->links->get_by_field($field_id);
 
-        // $this->output
-        //     ->set_content_type('application/json')
-        //     ->set_output(json_encode($priorities));
-
         echo json_encode($priorities);
     }
 
@@ -416,6 +412,7 @@ class Links extends MY_Controller
      */
     public function toggle($id)
     {
+
         if (!$this->ion_auth_acl->has_permission('links_update') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
@@ -512,6 +509,22 @@ class Links extends MY_Controller
         if (!$this->ion_auth_acl->has_permission('links_update') && !$this->ion_auth->is_admin()) {
             echo json_encode(-1);
         } else {
+            // make sure priority value is within limits (1 to 250)
+            if ($priority < 1 || $priority > 250) {
+                echo json_encode(0);
+                return;
+            }
+
+            $links = $this->links->get_by_field($this->input->post('field_id'));
+
+            // check if the priority number is already taken
+            foreach ($links as $link) {
+                if ($link->priority == $priority) {
+                    echo json_encode(0);
+                    return;
+                }
+            }
+
             $link_data = array(
                 'priority' => $priority,
             );

@@ -156,6 +156,10 @@ $this->load->view('admin_panel/templates/close_html');
 ?>
 
 <script>
+	var obj;
+	var csrfTokenName = "<?= $this->security->get_csrf_token_name() ?>"
+	var csrfHash = "<?= $this->security->get_csrf_hash() ?>"
+
 	// get priorites of the links for the given field
 	function getPriorities(fieldId = false) {
 		// get priorites of the links for the field page
@@ -193,7 +197,7 @@ $this->load->view('admin_panel/templates/close_html');
 					return false;
 				},
 				success: function(data, status) {
-					var obj = JSON.parse(data);
+					obj = JSON.parse(data);
 					for (i = 1; i <= 255; i++) {
 						// check if any field has taken the priority value (1-225)
 						var field = searchArray(i, obj);
@@ -286,10 +290,13 @@ $this->load->view('admin_panel/templates/close_html');
 
 	// Updates link priority
 	function updatePriority(id, priority) {
-		$('#m_table_1').fadeOut("slow");
 		$.ajax({
 			url: '<?= site_url('admin/results/link/update/id/'); ?>' + id + '/priority/' + priority,
-			type: 'GET',
+			type: 'POST',
+			data: {
+				[csrfTokenName]: csrfHash,
+				'field_id': <?= $field_id ?>
+			},
 			success: function(data, status) {
 				if (data == -1) {
 					toastr.warning("", "You have no permission.");
@@ -301,6 +308,19 @@ $this->load->view('admin_panel/templates/close_html');
 			},
 			error: function(err) {
 				toastr.error("", "Unable to process request.");
+			},
+			complete: function(xhr, status) {
+				// update csrf token on the page
+				$.ajax({
+					url: '<?= site_url('auth/get/csrf_hash'); ?>',
+					type: 'GET',
+					success: function(data, status) {
+						csrfHash = data.csrf_hash
+					},
+					error: function(err) {
+						toastr.error("", "Unable to process request.");
+					}
+				});
 			}
 		});
 	}
@@ -350,7 +370,10 @@ $this->load->view('admin_panel/templates/close_html');
 	function toggle(id, row) {
 		$.ajax({
 			url: '<?= site_url('admin/results/link/toggle/id/'); ?>' + id,
-			type: 'GET',
+			type: 'POST',
+			data: {
+				[csrfTokenName]: csrfHash
+			},
 			success: function(data, status) {
 				if (data == 0) {
 					document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
@@ -365,7 +388,20 @@ $this->load->view('admin_panel/templates/close_html');
 				}
 			},
 			error: function(xhr, status, error) {
-				toastr.error("", "Unable to update the status.");
+				toastr.error("", "Unable to process request.");
+			},
+			complete: function(xhr, status) {
+				// update csrf token on the page
+				$.ajax({
+					url: '<?= site_url('auth/get/csrf_hash'); ?>',
+					type: 'GET',
+					success: function(data, status) {
+						csrfHash = data.csrf_hash
+					},
+					error: function(err) {
+						console.log("Unable to update CSRF token.")
+					}
+				});
 			}
 		});
 	}
@@ -468,7 +504,7 @@ $this->load->view('admin_panel/templates/close_html');
 									class: " m-badge--success"
 								},
 								0: {
-									title: "Off",
+									title: "Inactive",
 									class: " m-badge--danger"
 								}
 							};

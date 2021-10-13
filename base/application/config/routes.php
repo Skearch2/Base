@@ -55,6 +55,9 @@ $route['default_controller'] = 'landing/index';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = false;
 
+// CSRF
+$route['auth/get/csrf_hash']                          = 'auth/get_csrf_hash';
+
 /**********************************************  Skearch Frontend Routes  **********************************************/
 
 /* Pages */
@@ -297,6 +300,7 @@ $route['admin/brands/search/(:any)']            = 'admin_panel/brands/brands/sea
 $route['admin/brands/ads/copy_to_vault/id/(:num)']                   = 'admin_panel/brands/ads/copy_to_media_vault/$1';
 $route['admin/brands/ads/brand/id/(:num)/get/archived/(0|1)']        = 'admin_panel/brands/ads/get/$1/$2';
 $route['admin/brands/ads/brand/id/(:num)/show/(library|archived)']   = 'admin_panel/brands/ads/view/$1/$2';
+$route['admin/brands/ad/id/(:num)/action/create']                    = 'admin_panel/brands/ads/create/$1';
 $route['admin/brands/ad/id/(:num)/action/update']                    = 'admin_panel/brands/ads/update/$1';
 
 // Media Vault

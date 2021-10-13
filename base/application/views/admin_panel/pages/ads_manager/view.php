@@ -246,7 +246,7 @@ $this->load->view('admin_panel/templates/close_html');
 					if (data == -1) {
 						swal("Not Allowed!", "You have no permission.", "warning")
 					} else {
-						$("#" + id).remove();
+						$('#m_table_library').DataTable().ajax.reload();
 						swal("Success!", "The ad has been archived.", "success")
 					}
 				},

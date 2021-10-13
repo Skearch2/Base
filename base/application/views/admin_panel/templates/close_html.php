@@ -41,18 +41,18 @@
 			// 	}, 5000)
 			// });
 
-			// Ping the server every 10 seconds that the user is active
-			setInterval(function() {
-				ping();
-			}, 10000);
+			// // Ping the server every 10 seconds that the user is active
+			// setInterval(function() {
+			// 	ping();
+			// }, 10000);
 
-			// Update user activity
-			function ping() {
-				$.ajax({
-					url: "<?= base_url(); ?>admin/messaging/ping",
-					method: "GET"
-				})
-			}
+			// // Update user activity
+			// function ping() {
+			// 	$.ajax({
+			// 		url: "<?= base_url(); ?>admin/messaging/ping",
+			// 		method: "GET"
+			// 	})
+			// }
 		</script>
 
 		<script>
@@ -62,12 +62,12 @@
 				get_chats();
 
 				// check for new messages and notifications every second
-				setInterval(function() {
-					if (receiver_id > 0) {
-						get_chat_conversation(receiver_id, 'yes');
-					}
-					get_chat_notifications(receiver_id);
-				}, 1000);
+				// setInterval(function() {
+				// 	if (receiver_id > 0) {
+				// 		get_chat_conversation(receiver_id, 'yes');
+				// 	}
+				// 	get_chat_notifications(receiver_id);
+				// }, 1000);
 
 				$(document).on('click', '#m_quick_sidebar_tabs_btn_staff', function() {
 					$("#m_quick_sidebar_tabs_staff").show();

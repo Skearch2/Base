@@ -70,32 +70,13 @@ $this->load->view('admin_panel/templates/subheader');
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">Media</h3>
-									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="media-preview" class="col-2 col-form-label"></label>
-									<div class="col-7">
-										<?php $is_video = (substr($media->media, -3) == "mp4") ? 1 : 0 ?>
-										<?php if ($is_video) : ?>
-											<video controls src="<?= site_url("base/media/vault/brand_$brand->id/$media->media") ?>" style="display:block; width:auto; height:auto; max-width:600px; max-height:600px;">
-												Unable to play video, incompatible browser.
-											</video>
-										<?php else : ?>
-											<img src="<?= site_url("base/media/vault/brand_$brand->id/$media->media") ?>" style="display:block; width:auto; height:auto; max-width:600px; max-height:600px;">
-										<?php endif ?>
-									</div>
-								</div>
-								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
-								<div class="form-group m-form__group row">
-									<div class="col-10 ml-auto">
 										<h3 class="m-form__section">Details</h3>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="brand" class="col-2 col-form-label">Brand *</label>
 									<div class="col-7">
-										<select class="form-control m-bootstrap-select m_selectpicker" name="brand">
+										<select class="form-control m-bootstrap-select m_selectpicker" name="brand" disabled>
 											<option value="<?= $brand->id ?>" selected data-subtext="<?= $brand->organization; ?>"><?= $brand->brand; ?></option>
 										</select>
 									</div>
@@ -103,14 +84,20 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Title *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title', $media->title) ?>">
+										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title') ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Link Reference *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="url" id="url" value="<?= set_value('url', $media->url) ?>">
+										<input class="form-control m-input" type="text" name="url" id="url" value="<?= set_value('url') ?>">
 									</div>
+									<label class="m-checkbox">
+										No Link
+										<div class="col-3">
+											<input type="checkbox" name="has_no_url" id="no_url" value="1" <?= set_value('has_no_url', 0) == 1 ? 'checked' : "" ?>>
+										</div>
+									</label>
 								</div>
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Duration *</label>
@@ -154,7 +141,7 @@ $this->load->view('admin_panel/templates/subheader');
 							<div class="form-group m-form__group row">
 								<label for="age_group" class="col-2 col-form-label">Scope *</label>
 								<div class="col-3">
-									<select class="form-control m-bootstrap-select m_selectpicker" name="scope" onchange="listBanners(this.value)">
+									<select class="form-control m-bootstrap-select m_selectpicker" name="scope" id="scope" onchange="listBanners(this.value)">
 										<option value="">Select</option>
 										<option value="global" <?= set_select('scope', 'global') ?>>Global</option>
 										<option value="umbrella" <?= set_select('scope', 'umbrella') ?>>Umbrella</option>
@@ -184,12 +171,36 @@ $this->load->view('admin_panel/templates/subheader');
 									</select>
 								</div>
 							</div>
-							<div class="form-group m-form__group row">
+							<div class="form-group m-form__group row" id="banner_div">
 								<label for="age_group" class="col-2 col-form-label">Banner *</label>
 								<div class="col-3">
-									<select class="form-control m-bootstrap-select m_selectpicker" id="banner" name="banner">
+									<select class="form-control m-bootstrap-select m_selectpicker" name="banner" id="banner">
 										<option value="">Select</option>
 									</select>
+								</div>
+							</div>
+							<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+							<div class="form-group m-form__group row">
+								<div class="col-10 ml-auto">
+									<h3 class="m-form__section">Media</h3>
+								</div>
+							</div>
+							<!-- <div class="form-group m-form__group row">
+									<label for="example-text-input" class="col-2 col-form-label"></label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<div class="m-dropzone dropzone" id="m-dropzone-one" name="media">
+											<div class="m-dropzone__msg dz-message needsclick">
+												<h3 class="m-dropzone__msg-title">Drop files here or click to upload.</h3>
+												<span class="m-dropzone__msg-desc">This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.</span>
+											</div>
+										</div>
+									</div>
+								</div> -->
+							<div class="form-group m-form__group row">
+								<label for="media-upload" class="col-2 col-form-label"></label>
+								<div class="col-7 custom-file">
+									<input type="file" class="custom-file-input" id="customFile" name="media">
+									<label class="custom-file-label" for="media">Add Media</label>
 								</div>
 							</div>
 							<div class="m-portlet__foot m-portlet__foot--fit">
@@ -249,12 +260,28 @@ $this->load->view('admin_panel/templates/close_html');
 						required: 1
 					},
 					url: {
-						required: 1,
+						required: "#no_url:unchecked",
 						url: 1
 					},
 					duration: {
 						required: 1,
 						digits: 1
+					},
+					scope: {
+						required: 1
+					},
+					umbrella: {
+						required: function() {
+							return $("#scope").val() == "umbrella";
+						}
+					},
+					field: {
+						required: function() {
+							return $("#scope").val() == "field";
+						}
+					},
+					banner: {
+						required: 1
 					}
 				},
 				invalidHandler: function(e, r) {
@@ -279,31 +306,46 @@ $this->load->view('admin_panel/templates/close_html');
 
 	function listBanners(scope) {
 		if (scope == "umbrella") {
+			$("#umbrella").show();
+			$("#field").hide();
 			$("#banner").empty();
 			$("#banner").append('<option value="">Select</option>');
 			$("#banner").append('<option value="A">A</option>');
 			$("#banner").append('<option value="U">U</option>');
-			$("#umbrella").show();
-			$("#field").hide();
+			$("#banner_div").show();
 		} else if (scope == "field") {
+			$("#field").show();
+			$("#umbrella").hide();
 			$("#banner").empty();
 			$("#banner").append('<option value="">Select</option>');
 			$("#banner").append('<option value="A">A</option>');
 			$("#banner").append('<option value="B">B</option>');
-			$("#field").show();
-			$("#umbrella").hide();
+			$("#banner_div").show();
 		} else {
+			$("#umbrella").hide();
+			$("#field").hide();
 			$("#banner").empty();
 			$("#banner").append('<option value="">Select</option>');
 			$("#banner").append('<option value="A">A</option>');
 			$("#banner").append('<option value="B">B</option>');
 			$("#banner").append('<option value="U">U</option>');
 			$("#banner").append('<option value="VA">VA</option>');
-			$("#umbrella").hide();
-			$("#field").hide();
+			$("#banner_div").show();
 		}
 		$('option[value=""]').hide().parent().selectpicker('refresh');
 	}
+
+	// disbale url input if no url checkbox is checked
+	if ($('#no_url').is(':checked')) {
+		$('#url').prop('disabled', true);
+	}
+	$('#no_url').change(function() {
+		if ($(this).is(':checked') == true) {
+			$('#url').prop('disabled', true);
+		} else {
+			$('#url').prop('disabled', false);
+		}
+	});
 
 	$(document).ready(function() {
 		FormControls.init();
@@ -319,7 +361,7 @@ $this->load->view('admin_panel/templates/close_html');
 
 		$("#umbrella").hide();
 		$("#field").hide();
-		$("#banner").hide();
+		$("#banner_div").hide();
 	});
 </script>
 
