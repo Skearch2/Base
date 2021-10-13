@@ -157,24 +157,40 @@ $this->load->view('admin_panel/templates/close_html');
 
 	// Toggle umbrella active status
 	function toggle(id, row) {
+		// ger csrf token
 		$.ajax({
-			url: '<?= site_url('admin/results/umbrella/toggle/id/'); ?>' + id,
+			url: '<?= site_url('auth/get/csrf_hash'); ?>',
 			type: 'GET',
 			success: function(data, status) {
-				if (data == 0) {
-					document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
-					document.getElementById("tablerow" + row).innerHTML = "Off";
-					toastr.success("", "Status updated.");
-				} else if (data == 1) {
-					document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
-					document.getElementById("tablerow" + row).innerHTML = "Active";
-					toastr.success("", "Status updated.");
-				} else if (data == -1) {
-					toastr.warning("", "You have no permission.");
-				}
+				csrfName = data.csrf_name
+				csrfHash = data.csrf_hash
+
+				$.ajax({
+					url: '<?= site_url('admin/results/umbrella/toggle/id/'); ?>' + id,
+					type: 'POST',
+					data: {
+						[csrfName]: csrfHash
+					},
+					success: function(data, status) {
+						if (data == 0) {
+							document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
+							document.getElementById("tablerow" + row).innerHTML = "Off";
+							toastr.success("", "Status updated.");
+						} else if (data == 1) {
+							document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
+							document.getElementById("tablerow" + row).innerHTML = "Active";
+							toastr.success("", "Status updated.");
+						} else if (data == -1) {
+							toastr.warning("", "You have no permission.");
+						}
+					},
+					error: function(xhr, status, error) {
+						toastr.error("", "Unable to process request.");
+					}
+				});
 			},
-			error: function(xhr, status, error) {
-				toastr.error("", "Unable to change the status.");
+			error: function(err) {
+				console.log("Unable to get CSRF token.")
 			}
 		});
 	}

@@ -54,6 +54,14 @@ $this->load->view('admin_panel/templates/subheader');
 							</div>
 						</div>
 					</li>
+					<li class="m-portlet__nav-item">
+						<a href="<?= site_url("admin/brands/ad/id/$brand->id/action/create") ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+							<span>
+								<i class="la la-plus-circle"></i>
+								<span>Create Ad</span>
+							</span>
+						</a>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -149,8 +157,7 @@ $this->load->view('admin_panel/templates/subheader');
 							<th>Title</th>
 							<th width="20px">Thumbnail</th>
 							<th>Duration</th>
-							<th>Umbrella</th>
-							<th>Field</th>
+							<th>Target</th>
 							<th>Clicks</th>
 							<th>Impressions</th>
 							<th>Ad Sign</th>
@@ -385,7 +392,7 @@ $this->load->view('admin_panel/templates/close_html');
 								'<a onclick=deleteAd("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i class="la la-trash"></i></a>'
 						}
 					}, {
-						targets: 2,
+						targets: 3,
 						render: function(a, t, e, n) {
 							// check if the media is a video (only mp4 format)
 							var isVideo = e['media'].substr(e['media'].length - 3) == 'mp4' ? 1 : 0;
@@ -418,9 +425,7 @@ $this->load->view('admin_panel/templates/close_html');
 					}, {
 						data: "duration"
 					}, {
-						data: "umbrella"
-					}, {
-						data: "field"
+						data: "Target"
 					}, {
 						data: "clicks"
 					}, {
@@ -437,85 +442,92 @@ $this->load->view('admin_panel/templates/close_html');
 						data: "Actions"
 					}],
 					columnDefs: [{
-						targets: -1,
-						orderable: !1,
-						render: function(a, t, e, n) {
-							var title = e['title'].replace(/ /g, '%20');
-							return '<a onclick=copyAdtoVault("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Copy to Vault"><i class="la la-copy"></i></a>' +
-								'<a href="<?= site_url() ?>admin/brands/ad/id/' + e['id'] + '/action/update" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-								'<a onclick=archiveAd("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Archive"><i class="la la-archive"></i></a>'
+							targets: -1,
+							orderable: !1,
+							render: function(a, t, e, n) {
+								var title = e['title'].replace(/ /g, '%20');
+								return '<a onclick=copyAdtoVault("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Copy to Vault"><i class="la la-copy"></i></a>' +
+									'<a href="<?= site_url() ?>admin/brands/ad/id/' + e['id'] + '/action/update" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+									'<a onclick=archiveAd("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill" title="Archive"><i class="la la-archive"></i></a>'
+							}
+						}, {
+							targets: 2,
+							render: function(a, t, e, n) {
+								// check if the media is a video (only mp4 format)
+								var isVideo = e['media'].substr(e['media'].length - 3) == 'mp4' ? 1 : 0;
+								if (isVideo)
+									return '<td><i title="View" class="fas fa-video" style="cursor:pointer" onclick="view(\'<?= site_url('base/media') ?>/' + e['media'] + '\',1)"></i></td>'
+								else
+									return '<td><img src="<?= site_url('base/media/') ?>' + e['media'] + '" title="View" alt="No Media" style="display:block; max-width:200px; max-height:100px; cursor:pointer;" onclick="view(\'<?= site_url('base/media') ?>/' + e['media'] + '\',0)"></td>'
+							}
+						}, {
+							targets: 4,
+							render: function(a, t, e, n) {
+								if (e['umbrella'] == null && e['field'] == null)
+									return 'Global'
+								else if (e['field'] == null)
+									return '<a href="<?= site_url('browse/') ?>' + e['umbrella'] + '" title="Visit" target="_blank">' + e['umbrella'] + '</a>'
+								else
+									return '<a href="<?= site_url('browse/') ?>' + e['umbrella'] + "/" + e['field'] + '" title="Visit" target="_blank">' + e['field'] + '</a>'
+							}
+						},
+						{
+							targets: 5,
+							render: function(a, t, e, n) {
+								return '<a href="<?= site_url('admin/ads/manager/view/activity/ad/id/') ?>' + e['id'] + '" title="View Details">' + e['clicks'] + '</a>'
+							}
+						},
+						{
+							targets: 6,
+							render: function(a, t, e, n) {
+								return '<a href="<?= site_url('admin/ads/manager/view/activity/ad/id/') ?>' + e['id'] + '" title="View Details">' + e['impressions'] + '</a>'
+							}
+						},
+						{
+							targets: 7,
+							render: function(a, t, e, n) {
+								var s = {
+									0: {
+										title: "No",
+										state: "danger"
+									},
+									1: {
+										title: "Yes",
+										state: "accent"
+									}
+								};
+								return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
+							}
+						},
+						{
+							targets: 8,
+							render: function(a, t, e, n) {
+								var s = {
+									1: {
+										title: "Active",
+										class: "m-badge--success"
+									},
+									0: {
+										title: "Inactive",
+										class: " m-badge--danger"
+									}
+								};
+								return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
+							}
+						},
+						{
+							targets: 9,
+							render: function(a, t, e, n) {
+								return new Date(e['date_modified']).toLocaleString();
+							}
+						},
+						{
+							targets: 10,
+							render: function(a, t, e, n) {
+								return new Date(e['date_created']).toLocaleString();
+							}
 						}
-					}, {
-						targets: 2,
-						render: function(a, t, e, n) {
-							// check if the media is a video (only mp4 format)
-							var isVideo = e['media'].substr(e['media'].length - 3) == 'mp4' ? 1 : 0;
-							if (isVideo)
-								return '<td><i title="View" class="fas fa-video" style="cursor:pointer" onclick="view(\'<?= site_url('base/media') ?>/' + e['media'] + '\',1)"></i></td>'
-							else
-								return '<td><img src="<?= site_url('base/media/') ?>' + e['media'] + '" title="View" alt="No Media" style="display:block; max-width:200px; max-height:100px; cursor:pointer;" onclick="view(\'<?= site_url('base/media') ?>/' + e['media'] + '\',0)"></td>'
-						}
-					}, {
-						targets: 4,
-						render: function(a, t, e, n) {
-							return (e['umbrella'] == null) ? '-' : '<a href="<?= site_url('browse/') ?>' + e['umbrella'] + '" title="Visit" target="_blank">' + e['umbrella'] + '</a>'
-						}
-					}, {
-						targets: 5,
-						render: function(a, t, e, n) {
-							return (e['field'] == null) ? '-' : '<a href="<?= site_url('browse/') ?>' + e['umbrella'] + "/" + e['field'] + '" title="Visit" target="_blank">' + e['field'] + '</a>'
-						}
-					}, {
-						targets: 6,
-						render: function(a, t, e, n) {
-							return '<a href="<?= site_url('admin/ads/manager/view/activity/ad/id/') ?>' + e['id'] + '" title="View Details">' + e['clicks'] + '</a>'
-						}
-					}, {
-						targets: 7,
-						render: function(a, t, e, n) {
-							return '<a href="<?= site_url('admin/ads/manager/view/activity/ad/id/') ?>' + e['id'] + '" title="View Details">' + e['impressions'] + '</a>'
-						}
-					}, {
-						targets: 8,
-						render: function(a, t, e, n) {
-							var s = {
-								0: {
-									title: "No",
-									state: "danger"
-								},
-								1: {
-									title: "Yes",
-									state: "accent"
-								}
-							};
-							return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
-						}
-					}, {
-						targets: 9,
-						render: function(a, t, e, n) {
-							var s = {
-								1: {
-									title: "Active",
-									class: "m-badge--success"
-								},
-								0: {
-									title: "Inactive",
-									class: " m-badge--danger"
-								}
-							};
-							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
-						}
-					}, {
-						targets: 10,
-						render: function(a, t, e, n) {
-							return new Date(e['date_modified']).toLocaleString();
-						}
-					}, {
-						targets: 11,
-						render: function(a, t, e, n) {
-							return new Date(e['date_created']).toLocaleString();
-						}
-					}]
+					]
 				})
 			}
 		}

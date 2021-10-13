@@ -129,7 +129,9 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Duration *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="duration" value="<?= set_value('duration') ?>">
+										<div class="m-ion-range-slider">
+											<input type="hidden" name="duration" id="duration" value="<?= set_value('duration') ?>">
+										</div>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -222,8 +224,7 @@ $this->load->view('admin_panel/templates/close_html');
 					},
 					duration: {
 						required: 1,
-						digits: 1,
-						range: [1, 30]
+						digits: 1
 					}
 				},
 				invalidHandler: function(e, r) {
@@ -236,11 +237,22 @@ $this->load->view('admin_panel/templates/close_html');
 		}
 	};
 
+	var IONRangeSlider = {
+		init: function() {
+			$("#duration").ionRangeSlider({
+				min: 10,
+				max: 180,
+				from: 30
+			});
+		},
+	};
+
 	// hide option which has no value
 	$('option[value=""]').hide().parent().selectpicker('refresh');
 
 	$(document).ready(function() {
 		FormControls.init();
+		IONRangeSlider.init();
 
 		// var myDropzone = new Dropzone("#m-dropzone-one", {
 		// 	method: 'GET',
