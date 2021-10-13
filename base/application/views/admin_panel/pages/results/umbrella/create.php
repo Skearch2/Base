@@ -36,7 +36,7 @@ $this->load->view('admin_panel/templates/subheader');
 				<div class="tab-content">
 					<div class="tab-pane active" id="m_user_profile_tab_1">
 						<form class="m-form m-form--state m-form--fit m-form--label-align-right" id="m_form" role="form" method="POST">
-							<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+							<!-- <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>"> -->
 							<div class="m-portlet__body">
 								<?php if ($this->session->flashdata('create_success') === 1) : ?>
 									<div class="m-form__content">
@@ -212,7 +212,7 @@ $this->load->view('admin_panel/templates/close_html');
 <script>
 	var FormControls = {
 		init: function() {
-			$("#m_fsorm").validate({
+			$("#m_form").validate({
 				rules: {
 					title: {
 						required: 1

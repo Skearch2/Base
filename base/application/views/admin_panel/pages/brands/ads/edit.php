@@ -186,6 +186,53 @@ $this->load->view('admin_panel/templates/subheader');
 										</span>
 									</div>
 								</div>
+								<!-- <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+								<div class="form-group m-form__group row">
+									<div class="col-10 ml-auto">
+										<h3 class="m-form__section">Banner</h3>
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<label for="age_group" class="col-2 col-form-label">Scope *</label>
+									<div class="col-3">
+										<select class="form-control m-bootstrap-select m_selectpicker" name="scope" id="scope" onchange="listBanners(this.value)">
+											<option value="">Select</option>
+											<option value="global" <?= set_select('scope', 'global') ?>>Global</option>
+											<option value="umbrella" <?= set_select('scope', 'umbrella') ?>>Umbrella</option>
+											<option value="field" <?= set_select('scope', 'field') ?>>Field</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group m-form__group row" id="umbrella">
+									<label for="example-text-input" class="col-2 col-form-label">Umbrella *</label>
+									<div class="col-7">
+										<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="umbrella">
+											<option value="" <?= set_select('scope_id', '', TRUE) ?>>Select</option>
+											<?php foreach ($umbrellas as $umbrella) : ?>
+												<option value="<?= $umbrella->id ?>" <?= set_select("scope_id", $umbrella->id) ?>><?= $umbrella->title ?></option>
+											<?php endforeach ?>
+										</select>
+									</div>
+								</div>
+								<div class="form-group m-form__group row" id="field">
+									<label for="example-text-input" class="col-2 col-form-label">Field *</label>
+									<div class="col-7">
+										<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="field">
+											<option value="" <?= set_select('scope_id', '', TRUE) ?>>Select</option>
+											<?php foreach ($fields as $field) : ?>
+												<option value="<?= $field->id ?>" <?= set_select("scope_id", $field->id) ?>><?= $field->title ?></option>
+											<?php endforeach ?>
+										</select>
+									</div>
+								</div>
+								<div class="form-group m-form__group row" id="banner_div">
+									<label for="age_group" class="col-2 col-form-label">Banner *</label>
+									<div class="col-3">
+										<select class="form-control m-bootstrap-select m_selectpicker" name="banner" id="banner">
+											<option value="">Select</option>
+										</select>
+									</div>
+								</div> -->
 							</div>
 							<div class="m-portlet__foot m-portlet__foot--fit">
 								<div class="m-form__actions">
@@ -283,8 +330,23 @@ $this->load->view('admin_panel/templates/close_html');
 					},
 					duration: {
 						required: 1,
-						digits: 1,
-						range: [1, 30]
+						digits: 1
+					},
+					scope: {
+						required: 1
+					},
+					umbrella: {
+						required: function() {
+							return $("#scope").val() == "umbrella";
+						}
+					},
+					field: {
+						required: function() {
+							return $("#scope").val() == "field";
+						}
+					},
+					banner: {
+						required: 1
 					}
 				},
 				invalidHandler: function(e, r) {
@@ -297,8 +359,50 @@ $this->load->view('admin_panel/templates/close_html');
 		}
 	};
 
+	var IONRangeSlider = {
+		init: function() {
+			$("#duration").ionRangeSlider({
+				min: 10,
+				max: 180,
+				from: 30
+			});
+		},
+	};
+
+	function listBanners(scope) {
+		if (scope == "umbrella") {
+			$("#umbrella").show();
+			$("#field").hide();
+			$("#banner").empty();
+			$("#banner").append('<option value="">Select</option>');
+			$("#banner").append('<option value="A">A</option>');
+			$("#banner").append('<option value="U">U</option>');
+			$("#banner_div").show();
+		} else if (scope == "field") {
+			$("#field").show();
+			$("#umbrella").hide();
+			$("#banner").empty();
+			$("#banner").append('<option value="">Select</option>');
+			$("#banner").append('<option value="A">A</option>');
+			$("#banner").append('<option value="B">B</option>');
+			$("#banner_div").show();
+		} else {
+			$("#umbrella").hide();
+			$("#field").hide();
+			$("#banner").empty();
+			$("#banner").append('<option value="">Select</option>');
+			$("#banner").append('<option value="A">A</option>');
+			$("#banner").append('<option value="B">B</option>');
+			$("#banner").append('<option value="U">U</option>');
+			$("#banner").append('<option value="VA">VA</option>');
+			$("#banner_div").show();
+		}
+		$('option[value=""]').hide().parent().selectpicker('refresh');
+	}
+
 	$(document).ready(function() {
 		FormControls.init();
+		IONRangeSlider.init();
 
 		// var myDropzone = new Dropzone("#m-dropzone-one", {
 		// 	method: 'GET',
@@ -342,6 +446,13 @@ $this->load->view('admin_panel/templates/close_html');
 		$("#url").inputmask({
 			regex: "https://.*"
 		});
+
+		// hide option which has no value
+		$('option[value=""]').hide().parent().selectpicker('refresh');
+
+		$("#umbrella").hide();
+		$("#field").hide();
+		$("#banner_div").hide();
 	});
 
 	Dropzone.autoDiscover = false;

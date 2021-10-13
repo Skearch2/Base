@@ -40,6 +40,85 @@ class Ads extends MY_Controller
     }
 
     /**
+     * Create an ad
+     *
+     * @param int $brand_id  Brand ID
+     * @return void
+     */
+    public function create($brand_id)
+    {
+        if (!$this->ion_auth_acl->has_permission('ads_create') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+            $this->form_validation->set_rules('title', 'Title', 'trim|required');
+            $this->form_validation->set_rules('url', 'Link Reference', 'trim|callback_url_check');
+            $this->form_validation->set_rules('duration', 'Duration', 'required|numeric');
+            $this->form_validation->set_rules('has_sign', 'Sponsored', 'required|numeric');
+            $this->form_validation->set_rules('is_active', 'Enabled', 'required|numeric');
+
+            if ($this->form_validation->run() === false) {
+
+                // page data
+                $data['brand'] = $this->Brand->get($brand_id);
+                $data['umbrellas'] = $this->Umbrella->get_by_status();
+                $data['fields'] = $this->Field->get_by_status();
+                $data['title'] = ucwords('create ad');
+
+                $this->load->view('admin_panel/pages/brands/ads/create', $data);
+            } else {
+
+                $scope = $this->input->post('scope');
+                if ($scope == 'umbrella') {
+                    $scope_id = $this->input->post('umbrella');
+                } elseif ($scope == 'field') {
+                    $scope_id = $this->input->post('field');
+                } else {
+                    $scope_id = 0;
+                }
+                $banner = $this->input->post('banner');
+
+                $current_banner = $this->ads_manager->get_banner($scope, $scope_id, $banner);
+
+                // get banner otherwise create new banner
+                if ($current_banner) {
+                    $banner_id = $current_banner->id;
+                } else {
+                    $folder = strtolower("$scope/$scope_id");
+                    $banner_id = $this->ads_manager->create_banner($scope, $scope_id, $banner, $folder);
+                }
+
+                $last_priority = $this->ads_manager->get_last_priority($banner_id)->priority;
+                $priority = $last_priority + 1;
+
+                $data = [
+                    'banner_id' => $banner_id,
+                    'brand_id'  => $brand_id,
+                    'title'     => $this->input->post('title'),
+                    'media'     => $this->upload_media($scope, $scope_id),
+                    'url'       => $this->input->post('has_no_url') == 1 ? '' : $this->input->post('url'),
+                    'duration'  => $this->input->post('duration'),
+                    'has_sign'  => $this->input->post('has_sign'),
+                    'is_active' => $this->input->post('is_active'),
+                    'priority'  => $priority
+                ];
+
+                $ad_id = (int) $this->ads_manager->create_ad($data);
+
+                if ($ad_id) {
+                    $this->copy_to_media_vault($ad_id);
+                    $this->session->set_flashdata('create_success', 1);
+                } else {
+                    $this->session->set_flashdata('create_success', 0);
+                }
+
+                redirect("admin/brands/ads/brand/id/$brand_id/show/library");
+            }
+        }
+    }
+
+    /**
      * Copy media to media vault
      * 
      * @param int $ad_id Ad id
@@ -124,7 +203,6 @@ class Ads extends MY_Controller
      * Update an ad
      *
      * @param int $id Ad ID
-     * @param int $brand_id     Brand ID
      * @return void
      */
     public function update($id)
@@ -218,8 +296,6 @@ class Ads extends MY_Controller
         $config['max_size'] = $this->config->item('upload_file_size');
         $config['allowed_types'] = $this->config->item('upload_file_types');
         $config['encrypt_name'] = true;
-        // $config['max_width']            = 1024;
-        // $config['max_height']           = 768;
 
         $this->load->library('upload', $config);
 
@@ -227,11 +303,19 @@ class Ads extends MY_Controller
 
         if ($upload) {
 
-            // $data = $this->upload->data();
-            // http_response_code(200);
-            // echo json_encode($data['media']);
-
             $media = $this->upload->data();
+
+            $folder = strtolower("{$scope}/{$scope_id}");
+
+            // structure example: base/media/umbrella/123/
+            $structure = './base/media/' . $folder . "/";
+
+            // create media folder for selected umbrella or field
+            if (!is_dir($structure)) {
+                if (!mkdir($structure, 0755, TRUE)) {
+                    show_error('Unable to create media folder.', 500, 'Internal Server Error');
+                }
+            }
 
             if ($scope_id == 0) {
                 $folder_path = FCPATH . 'base/media/' . strtolower($scope)  . "/";
