@@ -69,15 +69,18 @@ $this->load->view('admin_panel/templates/quick_sidebar');
 // Load scrolltop button
 $this->load->view('admin_panel/templates/scrolltop');
 
-// Close body and html (contains some javascripts links)
-$this->load->view('admin_panel/templates/close_html');
+// Load global JS files
+$this->load->view('admin_panel/templates/js_global');
 
 ?>
+
 <style>
 	[role=button] {
 		cursor: pointer
 	}
 </style>
+
+<!--begin::Page Scripts -->
 
 <script>
 	// Approve keywords
@@ -237,10 +240,14 @@ $this->load->view('admin_panel/templates/close_html');
 	jQuery(document).ready(function() {
 		DatatablesDataSourceAjaxServer.init()
 	});
-</script>
 
-
-<script>
 	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 	$("#submenu-brands-brandlinks").addClass("m-menu__item  m-menu__item--active");
 </script>
+
+<!--end::Page Scripts -->
+
+<?php
+// Close body and html
+$this->load->view('admin_panel/templates/close_html');
+?>

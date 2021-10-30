@@ -214,10 +214,12 @@ $this->load->view('admin_panel/templates/quick_sidebar');
 // Load scrolltop button
 $this->load->view('admin_panel/templates/scrolltop');
 
-// Close body and html (contains some javascripts links)
-$this->load->view('admin_panel/templates/close_html');
+// Load global JS files
+$this->load->view('admin_panel/templates/js_global');
 
 ?>
+
+<!--begin::Page Scripts -->
 
 <script>
   // maximum items allowed in homepage list
@@ -284,11 +286,15 @@ $this->load->view('admin_panel/templates/close_html');
     for (var i = 0, l = lis.length; i < l; i++)
       lis[i].innerHTML = vals[i];
   }
-</script>
 
-<!-- Sidemenu class -->
-<script>
   $("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
   $("#submenu-suggestions").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
   $("#homepage").addClass("m-menu__item  m-menu__item--active");
 </script>
+
+<!--end::Page Scripts -->
+
+<?php
+// Close body and html
+$this->load->view('admin_panel/templates/close_html');
+?>
