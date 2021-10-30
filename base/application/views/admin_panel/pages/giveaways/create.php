@@ -37,7 +37,6 @@ $this->load->view('admin_panel/templates/subheader');
 					<div class="tab-pane active" id="m_user_profile_tab_1">
 						<form class="m-form m-form--state m-form--fit m-form--label-align-right" id="m_form" role="form" method="POST">
 							<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
-							<input type="hidden" name="brand_id" value="<?= $brand_id ?>">
 							<div class="m-portlet__body">
 								<?php if (validation_errors()) : ?>
 									<div class="m-form__content">
@@ -71,44 +70,39 @@ $this->load->view('admin_panel/templates/subheader');
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">Brandlink</h3>
+										<h3 class="m-form__section">Details</h3>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="brand" class="col-2 col-form-label">BrandLink Keyword *</label>
+									<label for="brand" class="col-2 col-form-label">Title *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="keyword" value="<?= set_value('keyword'); ?>">
+										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title'); ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="organization" class="col-2 col-form-label">URL - Droppage *</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="url" id="url" value="<?= set_value('url'); ?>">
-									</div>
-								</div>
-								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Enabled</label>
-									<div class="col-7">
-										<input type="hidden" name="active" value="0" <?= set_value('active') == 0 ? 'checked' : "" ?>>
-										<span class="m-switch m-switch--icon-check">
-											<label>
-												<input type="checkbox" name="active" value="1" <?= set_value('active') == 1 ? 'checked' : "" ?>>
-												<span></span>
-											</label>
-										</span>
-									</div>
-								</div>
-							</div>
-							<div class="m-portlet__foot m-portlet__foot--fit">
-								<div class="m-form__actions">
-									<div class="row">
-										<div class="col-2">
+									<label class="col-2 col-form-label">Deadline *</label>
+									<div class="col-lg-4 col-md-9 col-sm-12">
+										<div class="input-group date">
+											<input type="text" class="form-control m-input" readonly placeholder="Select date" id="m_datepicker" name="end_date" value="<?= set_value('end_date'); ?>">
+											<div class="input-group-append">
+												<span class="input-group-text">
+													<i class="la la-calendar-check-o"></i>
+												</span>
+											</div>
 										</div>
-										<div class="col-7">
-											<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>
-										</div>
-										<div class="col-3">
-											<small>* Indicates required field</small>
+									</div>
+								</div>
+								<div class="m-portlet__foot m-portlet__foot--fit">
+									<div class="m-form__actions">
+										<div class="row">
+											<div class="col-2">
+											</div>
+											<div class="col-7">
+												<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>
+											</div>
+											<div class="col-3">
+												<small>* Indicates required field</small>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -145,24 +139,36 @@ $this->load->view('admin_panel/templates/js_global');
 
 <!--begin::Page Scripts -->
 
+
 <script>
-	// pre-populate https protocol in the url field
-	$("#url").inputmask({
-		regex: "https://.*"
-	});
+	var BootstrapDatepicker = function() {
+		var t;
+		t = {
+			leftArrow: '<i class="la la-angle-left"></i>',
+			rightArrow: '<i class="la la-angle-right"></i>'
+		};
+		return {
+			init: function() {
+				$("#m_datepicker").datepicker({
+					startDate: new Date(),
+					todayHighlight: 1,
+					orientation: "bottom",
+					templates: t,
+					autoclose: 1
+				})
+			}
+		}
+	}();
 
 	var FormControls = {
 		init: function() {
 			$("#m_form").validate({
 				onfocusout: true,
 				rules: {
-					keyword: {
+					title: {
 						required: 1
 					},
-					url: {
-						required: 1
-					},
-					active: {
+					end_date: {
 						required: 1
 					}
 				},
@@ -177,11 +183,11 @@ $this->load->view('admin_panel/templates/js_global');
 	};
 
 	$(document).ready(function() {
+		BootstrapDatepicker.init()
 		FormControls.init()
 	});
 
-	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-brands-brands").addClass("m-menu__item  m-menu__item--active");
+	$("#menu-giveaways").addClass("m-menu__item  m-menu__item--active");
 </script>
 
 <!--end::Page Scripts -->

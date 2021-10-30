@@ -106,6 +106,7 @@
 					</ul>
 				</div>
 			</li>
+			<li id="menu-giveaways" class="m-menu__item " aria-haspopup="true" m-menu-link-redirect="1"><a href="<?= site_url("admin/giveaways"); ?>" class="m-menu__link "><span class="m-menu__item-here"></span><i class="m-menu__link-icon la la-gift"></i><span class="m-menu__link-text">Giveaways</span></a></li>
 			<li class="m-menu__section ">
 				<h4 class="m-menu__section-text">Settings</h4>
 				<i class="m-menu__section-icon flaticon-more-v2"></i>

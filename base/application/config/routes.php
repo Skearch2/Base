@@ -107,7 +107,9 @@ $route['myskearch/dashboard/history/clear']     = 'my_skearch/dashboard/delete_h
 $route['myskearch/dashboard/settings/update']   = 'my_skearch/dashboard/update_settings';
 
 /* Digital assets */
-$route['myskearch/digital_assets'] = 'my_skearch/digital_assets';
+$route['myskearch/digital_assets']              = 'my_skearch/digital_assets';
+$route['myskearch/participate/giveaway/(:num)'] = 'my_skearch/digital_assets/participate_in_giveaway/$1';
+
 
 /* Private social */
 $route['myskearch/private_social']                      = 'my_skearch/private_social';
@@ -361,6 +363,16 @@ $route['admin/linkchecker/remove/id/(:num)']        = 'admin_panel/linkchecker/r
 $route['admin/linkchecker/run']                     = 'admin_panel/linkchecker/run';
 $route['admin/linkchecker/run/get/progress']        = 'admin_panel/linkchecker/get_curl_progress';
 $route['admin/linkchecker/get_status_info']         = 'admin_panel/option/get_status_info';
+
+/* Giveaways */
+$route['admin/giveaways']                                        = 'admin_panel/giveaways';
+$route['admin/giveaways/create']                                 = 'admin_panel/giveaways/create';
+$route['admin/giveaways/delete/id/(:num)']                       = 'admin_panel/giveaways/delete/$1';
+$route['admin/giveaways/draw/id/(:num)']                         = 'admin_panel/giveaways/draw/$1';
+$route['admin/giveaways/get']                                    = 'admin_panel/giveaways/get';
+$route['admin/giveaways/update/id/(:num)']                       = 'admin_panel/giveaways/update/$1';
+$route['admin/giveaways/view/participants/id/(:num)']            = 'admin_panel/giveaways/view_participants/$1';
+$route['admin/giveaways/view/participants/id/(:num)/get']        = 'admin_panel/giveaways/get_participants/$1';
 
 /* Email */
 $route['admin/email/invite']                        = 'admin_panel/email/invite';

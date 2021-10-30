@@ -29,38 +29,59 @@ $this->load->view('admin_panel/templates/subheader');
 
 ?>
 
+<style>
+	.hightlightWinner {
+		background-color: #00f05e91;
+	}
+</style>
+
 <div class="m-content">
 	<div class="m-portlet m-portlet--mobile">
-		<div class="m-portlet__body">
+		<div class="m-portlet__head">
+			<div class="m-portlet__head-caption">
+				<div class="m-portlet__head-title">
+					<h3 class="m-portlet__head-text">
+						Giveaway: <?= ucwords($giveaway->title) ?>
+					</h3>
+				</div>
+			</div>
+		</div>
 
-			<!-- Datatable -->
+		<!--begin::Modal-->
+		<div class="modal fade" id="m_modal_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">User Details</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--end::Modal-->
+
+		<div class="m-portlet__body">
+			<!--begin: Datatable -->
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
-						<th>#</th>
-						<th>Reference No.</th>
-						<th>Payment Service</th>
-						<th>Transcation ID</th>
-						<th>Payment Type</th>
-						<th>Payment Date</th>
-						<th>Amount</th>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Email Address</th>
+						<th>Gender</th>
+
 					</tr>
 				</thead>
-				<tfoot>
-					<tr>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-					</tr>
-				</tfoot>
 			</table>
 		</div>
 	</div>
-</div>
 </div>
 
 <?php
@@ -85,12 +106,6 @@ $this->load->view('admin_panel/templates/js_global');
 
 ?>
 
-<style>
-	[role=button] {
-		cursor: pointer
-	}
-</style>
-
 <!--begin::Page Scripts -->
 
 <script>
@@ -103,65 +118,21 @@ $this->load->view('admin_panel/templates/js_global');
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
-				language: {
-					"emptyTable": "No payment records found"
-				},
-				ajax: "<?= site_url("admin/brand/payments/get/id/$brand_id"); ?>",
-				columns: [{
-					data: "#"
-				}, {
-					data: "id"
-				}, {
-					data: "service"
-				}, {
-					data: "transaction_id"
-				}, {
-					data: "payment_type"
-				}, {
-					data: "payment_date"
-				}, {
-					data: "amount"
-				}],
-				columnDefs: [{
-						targets: 6,
-						render: function(a, t, e, n) {
-							return "$" + (Math.round(e['amount'] * 100) / 100).toFixed(2);
-						}
-					}, {
-						targets: 5,
-						render: function(a, t, e, n) {
-							return new Date(e['payment_date'].replace(/-/g, "/")).toLocaleString();
-						}
-					},
-					{
-						targets: 0,
-						render: function(a, t, e, n) {
-							return n['row'] + 1;
-						}
-
+				ajax: "<?= site_url("admin/giveaways/view/participants/id/{$giveaway->id}/get"); ?>",
+				rowCallback: function(row, data, dataIndex) {
+					if (data['is_winner'] == 1) {
+						$(row).addClass('hightlightWinner');
 					}
-				],
-				footerCallback: function(t, e, n, a, r) {
-					var o = this.api(),
-						l = function(t) {
-							return "string" == typeof t ? 1 * t.replace(/[\$,]/g, "") : "number" == typeof t ? t : 0;
-						},
-						u = o
-						.column(6)
-						.data()
-						.reduce(function(t, e) {
-							return l(t) + l(e);
-						}, 0),
-						i = o
-						.column(6, {
-							page: "all"
-						})
-						.data()
-						.reduce(function(t, e) {
-							return l(t) + l(e);
-						}, 0);
-					$(o.column(6).footer()).html("Total $" + mUtil.numberString(i.toFixed(2)));
-				}
+				},
+				columns: [{
+					data: "firstname"
+				}, {
+					data: "lastname"
+				}, {
+					data: "email"
+				}, {
+					data: "gender"
+				}]
 			})
 		}
 	}
@@ -170,8 +141,7 @@ $this->load->view('admin_panel/templates/js_global');
 		DatatablesDataSourceAjaxServer.init()
 	});
 
-	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-brands").addClass("m-menu__item  m-menu__item--active");
+	$("#menu-giveaways").addClass("m-menu__item  m-menu__item--active");
 </script>
 
 <!--end::Page Scripts -->

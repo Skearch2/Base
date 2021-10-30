@@ -96,9 +96,8 @@ $this->load->view('admin_panel/templates/quick_sidebar');
 // Load scrolltop button
 $this->load->view('admin_panel/templates/scrolltop');
 
-// Close body and html (contains some javascripts links)
-$this->load->view('admin_panel/templates/close_html');
-
+// Load global JS files
+$this->load->view('admin_panel/templates/js_global');
 ?>
 
 <script>
@@ -319,8 +318,12 @@ $this->load->view('admin_panel/templates/close_html');
     jQuery(document).ready(function() {
         DatatablesDataSourceAjaxServer.init();
     });
-</script>
 
-<script>
     $("#menu-linkchecker").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 </script>
+<!--end::Page Scripts -->
+
+<?php
+// Close body and html
+$this->load->view('admin_panel/templates/close_html');
+?>
