@@ -154,11 +154,12 @@ $this->load->view('admin_panel/templates/quick_sidebar');
 // Load scrolltop button
 $this->load->view('admin_panel/templates/scrolltop');
 
-// Close body and html (contains some javascripts links)
-$this->load->view('admin_panel/templates/close_html');
+// Load global JS files
+$this->load->view('admin_panel/templates/js_global');
 
 ?>
 
+<!--begin::Page Scripts -->
 <script>
 	var FormControls = {
 		init: function() {
@@ -186,28 +187,6 @@ $this->load->view('admin_panel/templates/close_html');
 		}
 	};
 
-	// initialize html editor
-	$(document).ready(function() {
-		FormControls.init();
-
-		$('#html-editor').summernote({
-			toolbar: [
-				// [groupName, [list of button]]
-				['clear', ['clear']],
-				['fontsize', ['style', 'fontname', 'fontsize']],
-				['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript']],
-				['color', ['color']],
-				['para', ['ul', 'ol', 'paragraph']],
-				['insert', ['table', 'link', 'signupLink', 'picture', 'video']],
-				['other', ['fullscreen', 'code', 'help']]
-			],
-			buttons: {
-				signupLink: signupLink
-			},
-			height: 300
-		});
-	});
-
 	// custom button function
 	var signupLink = function(context) {
 		var ui = $.summernote.ui;
@@ -228,6 +207,25 @@ $this->load->view('admin_panel/templates/close_html');
 	}
 
 	$(document).ready(function() {
+		FormControls.init();
+
+		$('#html-editor').summernote({
+			toolbar: [
+				// [groupName, [list of button]]
+				['clear', ['clear']],
+				['fontsize', ['style', 'fontname', 'fontsize']],
+				['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript']],
+				['color', ['color']],
+				['para', ['ul', 'ol', 'paragraph']],
+				['insert', ['table', 'link', 'signupLink', 'picture', 'video']],
+				['other', ['fullscreen', 'code', 'help']]
+			],
+			buttons: {
+				signupLink: signupLink
+			},
+			height: 300
+		});
+
 		var maxField = 10; //Input fields increment limitation
 		var addButton = $('#add_recipent'); //Add button selector
 		var wrapper = $('#recipents'); //Input field wrapper
@@ -251,10 +249,14 @@ $this->load->view('admin_panel/templates/close_html');
 			x--; //Decrement field counter
 		});
 	});
-</script>
 
-
-<script>
 	$("#menu-sales").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 	$("#invite").addClass("m-menu__item  m-menu__item--active");
 </script>
+
+<!--end::Page Scripts -->
+
+<?php
+// Close body and html
+$this->load->view('admin_panel/templates/close_html');
+?>

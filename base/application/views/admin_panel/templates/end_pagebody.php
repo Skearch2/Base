@@ -1,5 +1,4 @@
 				</div>
-
-			</div>
-
-			<!-- end:: Body -->
+				<!-- end: Inner Body -->
+				</div>
+				<!-- end:: Page Body -->

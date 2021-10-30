@@ -41,7 +41,44 @@ $this->load->view('my_skearch/templates/start_pagebody');
 			</div>
 		</div>
 		<div class="col-xl-4">
-			<div class="m-portlet m-portlet--bordered-semi m-portlet--widget-fit m-portlet--full-height m-portlet--skin-light  m-portlet--rounded m-portlet--rounded-force">
+			<div class="m-portlet m-portlet--bordered-semi m-portlet--half-height ">
+				<div class="m-portlet__head">
+					<div class="m-portlet__head-caption">
+						<div class="m-portlet__head-title">
+							<h3 class="m-portlet__head-text">
+								Weekly Giveaways
+							</h3>
+						</div>
+					</div>
+				</div>
+				<div class="m-portlet__body">
+					<div class="m-widget4">
+						<?php if ($giveaway) : ?>
+							<div class="m-widget4__item">
+								<div class="m-widget4__info">
+									<span class="m-widget4__title">
+										<?= $giveaway->title ?>
+									</span><br>
+									<span class="m-widget4__sub">
+										Deadline: <?= $giveaway->end_date ?>
+									</span>
+								</div>
+
+								<span class="m-widget4__ext">
+									<?php if ($is_user_participant) : ?>
+										<span class="m-badge m-badge--success m-badge--wide m-badge--rounded m--font-boldest">
+											Enlisted
+										</span>
+									<?php else : ?>
+										<button id="btn-enter-giveaway" type="button" class="btn m-btn m-btn--gradient-from-focus m-btn--gradient-to-danger" onclick="enterGiveaway(<?= $giveaway->id ?>, <?= $this->session->userdata('user_id') ?>)">Enter</button>
+									<?php endif ?>
+								</span>
+							</div>
+						<?php else : ?>
+							There are no giveaway at this time.
+						<?php endif ?>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="col-xl-4">
@@ -126,6 +163,38 @@ $this->load->view('my_skearch/templates/js_global');
 
 <!-- Page Scripts -->
 <script defer src="https://www.livecoinwatch.com/static/lcw-widget.js"></script>
+
+<script>
+	// Draw giveaway
+	function enterGiveaway(id, userID) {
+		swal({
+			title: "Enter Giveaway?",
+			text: "Are you sure?",
+			type: "info",
+			confirmButtonClass: "btn btn-success",
+			confirmButtonText: "Enter Giveaway",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
+			$.ajax({
+				url: '<?= site_url('myskearch/participate/giveaway/'); ?>' + id,
+				type: 'GET',
+				success: function(data, status) {
+					if (data == 0) {
+						swal("Error!", "Unable to enter giveaway.", "warning")
+					} else {
+						$("#btn-enter-giveaway").attr("disabled", "disabled").text("Enlisted");
+						swal("Success!", "You have been enlisted in the giveaway.", "success")
+					}
+				},
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to process request.", "error")
+				}
+			});
+		});
+	}
+</script>
 <!--Page Scripts-- >
 
 <?php

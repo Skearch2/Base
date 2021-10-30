@@ -41,12 +41,13 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
 					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/brand/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+						<a href="<?= site_url("admin/giveaways/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
 								<i class="la la-plus-circle"></i>
-								<span>Add Brand</span>
+								<span>Create Giveaway</span>
 							</span>
 						</a>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -78,7 +79,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						The brand has been created.
+						The giveaway has been created.
 					</div>
 				</div>
 			<?php elseif ($this->session->flashdata('create_success') === 0) : ?>
@@ -87,7 +88,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						Unable to create the brand.
+						Unable to create giveaway.
 					</div>
 				</div>
 			<?php endif ?>
@@ -98,7 +99,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						The brand information has been updated.
+						The giveaway has been updated.
 					</div>
 				</div>
 			<?php elseif ($this->session->flashdata('update_success') === 0) : ?>
@@ -107,7 +108,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						Unable to update brand information.
+						Unable to update giveaway.
 					</div>
 				</div>
 			<?php endif ?>
@@ -116,19 +117,18 @@ $this->load->view('admin_panel/templates/subheader');
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
-						<th>Brand ID</th>
-						<th>Brand</th>
-						<th>Organization</th>
-						<th>Members</th>
-						<th>Payments</th>
+						<th>Title</th>
+						<th>Participants</th>
+						<th>Date Created</th>
+						<th>Deadline</th>
+						<th>Status</th>
 						<th width=150>Actions</th>
 					</tr>
 				</thead>
 			</table>
 		</div>
+		<!-- END EXAMPLE TABLE PORTLET-->
 	</div>
-
-	<!-- END EXAMPLE TABLE PORTLET-->
 </div>
 
 <?php
@@ -156,12 +156,12 @@ $this->load->view('admin_panel/templates/js_global');
 <!--begin::Page Scripts -->
 
 <script>
-	// Deletes brand
-	function deleteBrand(id, brand) {
-		var brand = brand.replace(/%20/g, ' ');
+	// Deletes giveaway
+	function deleteGiveaway(id, title) {
+		var title = title.replace(/%20/g, ' ');
 		swal({
 			title: "Are you sure?",
-			text: "Are you sure you want delete the brand: \"" + brand + "\"?",
+			text: "Are you sure you want delete the giveway: \"" + title + "\"?",
 			type: "warning",
 			confirmButtonClass: "btn btn-danger",
 			confirmButtonText: "Yes, delete it!",
@@ -170,55 +170,53 @@ $this->load->view('admin_panel/templates/js_global');
 		}).then(function(e) {
 			if (!e.value) return;
 			$.ajax({
-				url: '<?= site_url('admin/brand/delete/id/'); ?>' + id,
+				url: '<?= site_url('admin/giveaways/delete/id/'); ?>' + id,
 				type: 'DELETE',
 				success: function(data, status) {
 					if (data == -1) {
 						swal("Not Allowed!", "You have no permission.", "warning")
 					} else {
-						swal("Success!", "The brand has been deleted.", "success")
+						swal("Success!", "The giveaway has been deleted.", "success")
 						$("#" + id).remove();
 					}
 				},
 				error: function(xhr, status, error) {
-					swal("Error!", "Unable to delete the brand.", "error")
+					swal("Error!", "Unable to process request.", "error")
 				}
 			});
 		});
 	}
 
-	//Shows brand details
-	function showBrandDetails(id) {
-		$.ajax({
-			url: '<?= site_url('admin/brand/get/id/'); ?>' + id,
-			type: 'GET',
-			success: function(data, status) {
-				$("div.modal-body").html(
-					"<p>Brand: " + data.brand + " </p>\
-					<p>Organization: " + data.organization + " </p>\
-					<p>Street Address: " + data.address1 + " </p>\
-					<p>Apt/Unit/Suite: " + data.address2 + " </p>\
-					<p>City: " + data.city + " </p>\
-					<p>State: " + data.state + " </p>\
-					<p>Country: " + data.country + " </p>\
-					<p>Zipcode: " + data.zipcode + " </p>\
-					<p>Members: " + data.members + " </p>\
-					<p>Date Created: " + new Date((data.date_created)).toLocaleString() + " </p>\
-					<p>Note: " + data.note + " </p>"
-				)
-			},
-			error: function(xhr, status, error) {
-				$("div.modal-body").html(
-					"<div class='m-alert m-alert--icon m-alert--air m-alert--square alert alert-danger' role='alert'>\
-						<div class='m-alert__icon'>\
-							<i class='la la-times'></i>\
-						</div>\
-						<div class='m-alert__text'>\
-							<strong>Error!</strong> Unable to get brand details.\
-						</div>\
-					</div>"
-				)
-			}
+	// Draw giveaway
+	function drawGiveaway(id, title) {
+		var title = title.replace(/%20/g, ' ');
+		swal({
+			title: "Draw Giveaway?",
+			text: title,
+			type: "info",
+			confirmButtonClass: "btn btn-success",
+			confirmButtonText: "Draw Giveaway",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
+			$.ajax({
+				url: '<?= site_url('admin/giveaways/draw/id/'); ?>' + id,
+				type: 'GET',
+				success: function(data, status) {
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning");
+					} else if (data == 0) {
+						swal("Error!", "Unable to draw giveaway.", "warning")
+					} else {
+						$('#m_table_1').DataTable().ajax.reload();
+						swal("Success!", "The giveaway has been drawn.", "success")
+					}
+				},
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to process request.", "error")
+				}
+			});
 		});
 	}
 
@@ -231,17 +229,17 @@ $this->load->view('admin_panel/templates/js_global');
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
-				ajax: "<?= site_url("admin/brands/get"); ?>",
+				ajax: "<?= site_url("admin/giveaways/get"); ?>",
 				columns: [{
-					data: "id"
+					data: "title"
 				}, {
-					data: "brand"
+					data: "participants"
 				}, {
-					data: "organization"
+					data: "date_created"
 				}, {
-					data: "members"
+					data: "end_date"
 				}, {
-					data: "payments"
+					data: "status"
 				}, {
 					data: "Actions"
 				}],
@@ -250,36 +248,40 @@ $this->load->view('admin_panel/templates/js_global');
 						title: "Actions",
 						orderable: !1,
 						render: function(a, t, e, n) {
-							var brand = e['brand'].replace(/ /g, '%20');
-							return '<a onclick=showBrandDetails("' + e['id'] + '") data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View Details"><i class="la la-search-plus"></i></a>' +
-								'<a href="<?= site_url() . "admin/viewas/brand/id/" ?>' + e['id'] + '" target="_blank" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View as Brand"><i class="la la-eye"></i></a>' +
-								'<a href="<?= site_url() . "admin/brands/ads/brand/id/" ?>' + e['id'] + '/show/library" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View Ads"><i class="flaticon-web"></i></a>' +
-								'<a href="<?= site_url() . "admin/brands/vault/brand/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View Media Vault"><i class="la la-bank"></i></a>' +
-								'<a href="<?= site_url() . "admin/brands/brandlinks/brand_id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View BrandLinks"><i class="la">BL</i></a>' +
-								'<a href="<?= site_url() . "admin/brand/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-								'<a onclick=deleteBrand("' + e['id'] + '","' + brand + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+							var title = e['title'].replace(/ /g, '%20');
+							if (e['status'] == 0) {
+								return '<a onclick=deleteGiveaway("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+							} else {
+								return '<a onclick=drawGiveaway("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Draw"><i class="la la-cog"></i></a>' +
+									'<a href="<?= site_url() . "admin/giveaways/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+									'<a onclick=deleteGiveaway("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+							}
 						}
 					},
 					{
-						targets: 3,
-						title: "Members",
+						targets: 1,
+						title: "Participants",
 						render: function(a, t, e, n) {
-							if (e['members'] > 0) {
-								return '<a href="<?= site_url() . "admin/brand/members/id/" ?>' + e['id'] + '"  title="View members">' + e['members'] + '</a>'
+							if (e['participants'] > 0) {
+								return '<a href="<?= site_url() . "admin/giveaways/view/participants/id/" ?>' + e['id'] + '"  title="View participants">' + e['participants'] + '</a>'
 							} else {
 								return '0'
 							}
 						}
-					},
-					{
+					}, {
 						targets: 4,
-						title: "Payments",
 						render: function(a, t, e, n) {
-							if (e['payments'] > 0) {
-								return '<a href="<?= site_url() . "admin/brand/payments/id/" ?>' + e['id'] + '" title="View payments">' + e['payments'] + '</a>'
-							} else {
-								return 'None'
-							}
+							var s = {
+								0: {
+									title: "Completed",
+									state: "danger"
+								},
+								1: {
+									title: "Active",
+									state: "accent"
+								}
+							};
+							return void 0 === s[a] ? a : '<span class="m--font-bold m--font-' + s[a].state + '">' + s[a].title + "</span>"
 						}
 					}
 				]
@@ -288,13 +290,10 @@ $this->load->view('admin_panel/templates/js_global');
 	}
 
 	jQuery(document).ready(function() {
-			DatatablesDataSourceAjaxServer.init()
-		}
+		DatatablesDataSourceAjaxServer.init()
+	});
 
-	);
-
-	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-brands-brands").addClass("m-menu__item  m-menu__item--active");
+	$("#menu-giveaways").addClass("m-menu__item  m-menu__item--active");
 </script>
 
 <!--end::Page Scripts -->

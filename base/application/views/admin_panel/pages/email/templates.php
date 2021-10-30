@@ -174,11 +174,14 @@ $this->load->view('admin_panel/templates/quick_sidebar');
 // Load scrolltop button
 $this->load->view('admin_panel/templates/scrolltop');
 
-// Close body and html (contains some javascripts links)
-$this->load->view('admin_panel/templates/close_html');
+// Load global JS files
+$this->load->view('admin_panel/templates/js_global');
 
 ?>
 
+<!--begin::Page Scripts -->
+
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 <script>
 	var FormControls = {
 		init: function() {
@@ -201,6 +204,7 @@ $this->load->view('admin_panel/templates/close_html');
 			});
 		}
 	};
+
 	$(document).ready(function() {
 		FormControls.init();
 		$('#html-editor').summernote({
@@ -217,10 +221,14 @@ $this->load->view('admin_panel/templates/close_html');
 			height: 300
 		});
 	});
-</script>
 
-
-<script>
 	$("#menu-email").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 	$("#submenu-templates").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 </script>
+
+<!--end::Page Scripts -->
+
+<?php
+// Close body and html
+$this->load->view('admin_panel/templates/close_html');
+?>
