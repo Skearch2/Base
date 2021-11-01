@@ -138,8 +138,14 @@ $this->load->view('my_skearch/templates/start_pagebody');
 			</div>
 		</div>
 	</div>
-</div>
-<!--End::Section-->
+	<!--End::Section-->
+
+	<!--	Button - Set Skearch as homepage -->
+	<div class='home-footer-btn'>
+		<a href="#" class="btn-footer-skear"></a> <br>
+		<a href="#" title="Set Skearch as Default Search Engine" class="set-skearch">»Set Skearch as my default search engine</a>
+	</div>
+	<!--	End: Button - Set Skearch as homepage -->
 </div>
 
 <?php
