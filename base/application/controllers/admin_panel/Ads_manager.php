@@ -393,6 +393,8 @@ class Ads_manager extends MY_Controller
                 // page data
                 $data['brands'] = $this->Brand->get();
                 $data['ad'] = $this->ads_manager->get_ad($id);
+
+                $data['banner'] = $banner;
                 $data['title'] = ucwords('edit ad');
 
                 $this->load->view('admin_panel/pages/ads_manager/edit', $data);

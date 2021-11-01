@@ -201,8 +201,10 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="col-7 custom-file">
 									<input type="file" class="custom-file-input" id="customFile" name="media">
 									<label class="custom-file-label" for="media">Add Media</label>
+									<span class="m-form__help">Media dimension must be <mark id="dimensions">Please select banner</mark></span>
 								</div>
 							</div>
+							<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 							<div class="m-portlet__foot m-portlet__foot--fit">
 								<div class="m-form__actions">
 									<div class="row">
@@ -364,6 +366,19 @@ $this->load->view('admin_panel/templates/js_global');
 		$("#umbrella").hide();
 		$("#field").hide();
 		$("#banner_div").hide();
+
+		$("#banner").on('change', function() {
+			banner = this.value.toLowerCase()
+			if (banner == 'a') {
+				$('#dimensions').text('1000 x 110');
+			} else if (banner == 'b') {
+				$('#dimensions').text('300 x 600');
+			} else if (banner == 'u') {
+				$('#dimensions').text('1000 x 450');
+			} else if (banner == 'va') {
+				$('#dimensions').text('1000 x 110');
+			}
+		});
 	});
 
 	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");

@@ -53,7 +53,7 @@ $this->load->view('auth/templates/head');
 									<option value="female" <?= set_select('gender', 'female') ?>>Female</option>
 								</select>
 							</div> -->
-							<div class="form-group m-form__group">
+							<!-- <div class="form-group m-form__group">
 								<select class="form-control m-bootstrap-select m-bootstrap-select--pill m_selectpicker" name="age_group" title="Age group">
 									<option value="1-17" <?= set_select('age_group', '1-17') ?>>1-17</option>
 									<option value="18-22" <?= set_select('age_group', '18-22') ?>>18-22</option>
@@ -61,7 +61,7 @@ $this->load->view('auth/templates/head');
 									<option value="31-50" <?= set_select('age_group', '31-50') ?>>31-50</option>
 									<option value="51+" <?= set_select('age_group', '51+') ?>>51+</option>
 								</select>
-							</div>
+							</div> -->
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="password" placeholder="Password" name="password" id="password">
 							</div>

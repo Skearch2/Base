@@ -594,7 +594,7 @@ class Auth extends MY_Controller
             $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'trim|required|callback_validate_username|is_unique[skearch_users.username]|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']', array('is_unique' => 'The Skearch ID or username already exists.'));
             $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
             // $this->form_validation->set_rules('gender', 'Gender', 'required');
-            $this->form_validation->set_rules('age_group', 'Age group', 'required');
+            // $this->form_validation->set_rules('age_group', 'Age group', 'required');
             $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
             $this->form_validation->set_rules('password2', 'Confirm Password', 'required|matches[password]');
         }
@@ -711,8 +711,8 @@ class Auth extends MY_Controller
                     $password = $this->input->post('password');
                     $email = $this->input->post('email');
                     $additional_data = array(
-                        'gender'    => $this->input->post('gender'),
-                        'age_group' => $this->input->post('age_group')
+                        // 'gender'    => $this->input->post('gender'),
+                        // 'age_group' => $this->input->post('age_group')
                     );
                     $group = ($is_premium_user_signup) ? $this->config->item('premium', 'ion_auth') : $this->config->item('regular', 'ion_auth');
 
