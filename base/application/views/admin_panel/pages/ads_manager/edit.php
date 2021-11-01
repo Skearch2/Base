@@ -102,6 +102,15 @@ $this->load->view('admin_panel/templates/subheader');
 									<div class="col-7 custom-file">
 										<input type="file" class="custom-file-input" id="customFile" name="media">
 										<label class="custom-file-label" for="media">Replace Media</label>
+										<?php if ($banner == "a") : ?>
+											<span class="m-form__help">Media dimension must be <mark>1000 x 110</mark></span>
+										<?php elseif ($banner == "b") : ?>
+											<span class="m-form__help">Media dimension must be <mark>300 x 600</mark></span>
+										<?php elseif ($banner == "u") : ?>
+											<span class="m-form__help">Media dimension must be <mark>1000 x 450</mark></span>
+										<?php elseif ($banner == "va") : ?>
+											<span class="m-form__help">Media dimension must be <mark>1000 x 110</mark></span>
+										<?php endif ?>
 									</div>
 								</div>
 								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>

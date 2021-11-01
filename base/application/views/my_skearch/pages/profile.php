@@ -308,7 +308,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 										</div>
 									</div>
 								<?php endif ?>
-								<div class="form-group m-form__group row">
+								<!-- <div class="form-group m-form__group row">
 									<label for="gender" class="col-2 col-form-label">Gender *</label>
 									<div class="col-3">
 										<select class="form-control m-bootstrap-select m_selectpicker" name="gender" disabled>
@@ -323,7 +323,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 											<option value=""><?= $user->age_group ?></option>
 										</select>
 									</div>
-								</div>
+								</div> -->
 								<?php if (in_array($group, array(1, 2, 3))) : ?>
 									<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 									<div class="form-group m-form__group row">
