@@ -251,7 +251,9 @@ class Ads_manager_model extends CI_Model
     {
         $this->db->select('ad_id, clicks, impressions, date');
         $this->db->from('skearch_ads_activity');
-        $this->db->where('skearch_ads_activity.ad_id', $id);
+        $this->db->where('ad_id', $id);
+        $this->db->where('date >=', $start_date);
+        $this->db->where('date <=', $end_date);
 
         $query = $this->db->get();
 

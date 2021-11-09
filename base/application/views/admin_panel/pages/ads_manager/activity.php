@@ -43,38 +43,21 @@ $this->load->view('admin_panel/templates/subheader');
 			</div>
 		</div>
 		<div class="m-portlet__body">
-
-			<!--begin: Search Form -->
-			<form class="m-form m-form--fit m--margin-bottom-20">
-				<div class="row m--margin-bottom-20">
-					<div class="col-lg-3 m--margin-bottom-10-tablet-and-mobile">
-						<label>Date Range:</label>
-						<div class="input-daterange input-group" id="m_datepicker">
-							<input type="text" class="form-control m-input" name="start" placeholder="From" data-col-index="5" />
-							<div class="input-group-append">
-								<span class="input-group-text"><i class="la la-ellipsis-h"></i></span>
-							</div>
-							<input type="text" class="form-control m-input" name="end" placeholder="To" data-col-index="5" />
+			<div class="m-portlet m-portlet--full-height m-portlet--skin-light m-portlet--fit ">
+				<div class="m-portlet__body">
+					<div class="m-widget21" style="min-height: 310px">
+						<div class="m-widget21__chart m-portlet-fit--sides" style="height:310px;">
+							<canvas id="m_chart_adwords_stats"></canvas>
 						</div>
 					</div>
 				</div>
-				<div class="m-separator m-separator--md m-separator--dashed"></div>
-				<div class="row">
-					<div class="col-lg-12">
-						<button class="btn btn-brand m-btn m-btn--icon" id="m_search">
-							<span>
-								<i class="la la-search"></i>
-								<span>Search</span>
-							</span>
-						</button>
-						&nbsp;&nbsp;
-						<button class="btn btn-secondary m-btn m-btn--icon" id="m_reset">
-							<span>
-								<i class="la la-close"></i>
-								<span>Reset</span>
-							</span>
-						</button>
-					</div>
+			</div>
+
+			<!--begin: Search Form -->
+			<form class="m-form m-form--fit m--margin-bottom-20">
+				<div class="input-group m-input-group col-3">
+					<div class="input-group-prepend"><span class="input-group-text" id="basic-addon1"><i class="la la-calendar"></i></span></div>
+					<input type="text" class="form-control m-input" placeholder="Month" aria-describedby="basic-addon1" id="m_datepicker" name="monthFilter">
 				</div>
 			</form>
 			<!-- <table cellspacing="5" cellpadding="5" border="0">
@@ -155,131 +138,114 @@ $this->load->view('admin_panel/templates/js_global');
 
 	var BootstrapDatepicker = (function() {
 		var t;
-		t = mUtil.isRTL() ? {
-			leftArrow: '<i class="la la-angle-right"></i>',
-			rightArrow: '<i class="la la-angle-left"></i>'
-		} : {
+		t = {
 			leftArrow: '<i class="la la-angle-left"></i>',
 			rightArrow: '<i class="la la-angle-right"></i>'
 		};
 		return {
 			init: function() {
 				$("#m_datepicker").datepicker({
-					rtl: mUtil.isRTL(),
-					todayHighlight: !0,
-					templates: t
-				})
-			},
+					templates: t,
+					changeMonth: true,
+					changeYear: true,
+					showButtonPanel: true,
+					startView: "months",
+					minViewMode: "months",
+					format: 'MM yyyy',
+					endDate: '+0m',
+					autoclose: true
+				});
+			}
 		};
 	})();
 
 	jQuery(document).ready(function() {
-
 		BootstrapDatepicker.init();
 		datatable.init();
+
+		$("#m_datepicker").datepicker().on('changeDate', function(e) {
+			$.ajax({
+				url: '<?= site_url('admin/ads/manager/archive/ad/id/'); ?>' + id,
+				type: 'GET',
+				success: function(data, status) {
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else {
+						$('#m_table_library').DataTable().ajax.reload();
+						swal("Success!", "The ad has been archived.", "success")
+					}
+				},
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to archive the ad.", "error")
+				}
+			});
+			console.log(e.date.getMonth() + "/" + e.date.getFullYear());
+		});
 	});
-
-	// var minDate, maxDate;
-
-	// // Custom filtering function which will search data in column four between two values
-	// $.fn.dataTable.ext.search.push(
-	// 	function(settings, data, dataIndex) {
-	// 		var min = minDate.val();
-	// 		var max = maxDate.val();
-	// 		var date = new Date(data[4]);
-
-	// 		if (
-	// 			(min === null && max === null) ||
-	// 			(min === null && date <= max) ||
-	// 			(min <= date && max === null) ||
-	// 			(min <= date && date <= max)
-	// 		) {
-	// 			return true;
-	// 		}
-	// 		return false;
-	// 	}
-	// );
-
-	// var DatatablesSearchOptionsAdvancedSearch = (function() {
-	// 	return {
-	// 		init: function() {
-	// 			var a;
-	// 			(a = $("#m_table_1").DataTable({
-	// 				responsive: !0,
-	// 				dom: "<'row'<'col-sm-12'tr>>\n\t\t\t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
-	// 				lengthMenu: [5, 10, 25, 50],
-	// 				pageLength: 10,
-	// 				searchDelay: 500,
-	// 				processing: !0,
-	// 				serverSide: !0,
-	// 				ajax: {
-	// 					url: "<?= site_url("admin/ads/manager/get/activity/ad/id/{$ad->id}"); ?>",
-	// 					type: "GET",
-	// 					data: {
-	// 						columnsDef: ["ShipDate"]
-	// 					},
-	// 				},
-	// 				columns: [{
-	// 					data: "date"
-	// 				}, {
-	// 					data: "clicks"
-	// 				}, {
-	// 					data: "impressions"
-	// 				}],
-	// 			})),
-	// 			$("#m_search").on("click", function(t) {
-	// 					t.preventDefault();
-	// 					var e = {};
-	// 					$(".m-input").each(function() {
-	// 							var a = $(this).data("col-index");
-	// 							e[a] ? (e[a] += "|" + $(this).val()) : (e[a] = $(this).val());
-	// 						}),
-	// 						$.each(e, function(t, e) {
-	// 							a.column(t).search(e || "", !1, !1);
-	// 						}),
-	// 						a.table().draw();
-	// 				}),
-	// 				$("#m_reset").on("click", function(t) {
-	// 					t.preventDefault(),
-	// 						$(".m-input").each(function() {
-	// 							$(this).val(""), a.column($(this).data("col-index")).search("", !1, !1);
-	// 						}),
-	// 						a.table().draw();
-	// 				});
-	// 			// $("#m_datepicker").datepicker({
-	// 			// 	todayHighlight: !0,
-	// 			// 	templates: {
-	// 			// 		leftArrow: '<i class="la la-angle-left"></i>',
-	// 			// 		rightArrow: '<i class="la la-angle-right"></i>'
-	// 			// 	}
-	// 			// });
-	// 		},
-	// 	};
-	// })();
-
-	// $(document).ready(function() {
-	// 	DatatablesSearchOptionsAdvancedSearch.init();
-
-	// 	minDate = new Date($('#min'), {
-	// 		format: 'YYYY-MM-DD'
-	// 	});
-	// 	maxDate = new Date($('#max'), {
-	// 		format: 'YYYY-MM-DD'
-	// 	});
-
-
-	// 	// DataTables initialisation
-	// 	var table = $('#m_table_1').DataTable();
-
-	// 	// Refilter the table
-	// 	$('#min, #max').on('change', function() {
-	// 		table.draw();
-	// 	});
-	// });
 
 	// menu highlight
 	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 	$("#submenu-brands-ads-manager").addClass("m-menu__item  m-menu__item--active");
+
+	var Dashboard = (function() {
+		if (0 != $("#m_chart_adwords_stats").length) {
+			var e = document.getElementById("m_chart_adwords_stats").getContext("2d");
+			var a = {
+				type: "bar",
+				data: {
+					labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novemeber", "December"],
+					datasets: [{
+						label: "Impressions",
+						backgroundColor: mApp.getColor("accent"),
+						borderColor: mApp.getColor("accent"),
+						pointBackgroundColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
+						pointBorderColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
+						pointHoverBackgroundColor: mApp.getColor("danger"),
+						pointHoverBorderColor: Chart.helpers.color("#000000").alpha(0.1).rgbString(),
+						data: [26254, 16396, 27027, 17532, 17686, 29158, 15876, 23791, 30241, 31183, 31224, 27620],
+					}, {
+						label: "Clicks",
+						backgroundColor: mApp.getColor("brand"),
+						borderColor: mApp.getColor("brand"),
+						pointBackgroundColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
+						pointBorderColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
+						pointHoverBackgroundColor: mApp.getColor("danger"),
+						pointHoverBorderColor: Chart.helpers.color("#000000").alpha(0.1).rgbString(),
+						data: [1501, 1543, 1612, 1581, 1615, 1707, 1095, 1240, 1922, 1920, 1971, 1745],
+					}, ],
+				},
+				options: {
+					title: {
+						display: 0
+					},
+					legend: {
+						display: 1
+					},
+					responsive: 1,
+					maintainAspectRatio: 0,
+					scales: {
+						xAxes: [{
+							display: 1,
+							gridLines: 0,
+							scaleLabel: {
+								display: 1
+							}
+						}],
+						yAxes: [{
+							display: 1,
+							scaleLabel: {
+								display: 1
+							},
+							ticks: {
+								beginAtZero: 1
+							}
+						}],
+					}
+				},
+			};
+			new Chart(e, a);
+		}
+	})();
 </script>
 
 <!--end::Page Scripts -->
