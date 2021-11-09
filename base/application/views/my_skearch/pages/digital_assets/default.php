@@ -46,7 +46,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 					<div class="m-portlet__head-caption">
 						<div class="m-portlet__head-title">
 							<h3 class="m-portlet__head-text">
-								Weekly Giveaways
+								Enter Weekly Crypto Give Away !
 							</h3>
 						</div>
 					</div>
@@ -74,6 +74,12 @@ $this->load->view('my_skearch/templates/start_pagebody');
 									<?php endif ?>
 								</span>
 							</div>
+							<?php if (!$is_user_participant) : ?>
+								<label class="m-checkbox">
+									<input type="checkbox" id="age_verify">I am at least 18 years of age
+									<span></span>
+								</label>
+							<?php endif ?>
 						<?php else : ?>
 							There are no giveaway at this time.
 						<?php endif ?>
@@ -139,13 +145,6 @@ $this->load->view('my_skearch/templates/start_pagebody');
 		</div>
 	</div>
 	<!--End::Section-->
-
-	<!--	Button - Set Skearch as homepage -->
-	<div class='home-footer-btn'>
-		<a href="#" class="btn-footer-skear"></a> <br>
-		<a href="#" title="Set Skearch as Default Search Engine" class="set-skearch">»Set Skearch as my default search engine</a>
-	</div>
-	<!--	End: Button - Set Skearch as homepage -->
 </div>
 
 <?php
@@ -173,32 +172,36 @@ $this->load->view('my_skearch/templates/js_global');
 <script>
 	// Draw giveaway
 	function enterGiveaway(id, userID) {
-		swal({
-			title: "Enter Giveaway?",
-			text: "Are you sure?",
-			type: "info",
-			confirmButtonClass: "btn btn-success",
-			confirmButtonText: "Enter Giveaway",
-			showCancelButton: true,
-			timer: 5000
-		}).then(function(e) {
-			if (!e.value) return;
-			$.ajax({
-				url: '<?= site_url('myskearch/participate/giveaway/'); ?>' + id,
-				type: 'GET',
-				success: function(data, status) {
-					if (data == 0) {
-						swal("Error!", "Unable to enter giveaway.", "warning")
-					} else {
-						$("#btn-enter-giveaway").attr("disabled", "disabled").text("Enlisted");
-						swal("Success!", "You have been enlisted in the giveaway.", "success")
+		if ($("#age_verify").prop('checked') != 1) {
+			swal("Warning!", "You must be atleast 18 years of age to participate.", "warning")
+		} else {
+			swal({
+				title: "Enter Giveaway?",
+				text: "Are you sure?",
+				type: "info",
+				confirmButtonClass: "btn btn-success",
+				confirmButtonText: "Enter Giveaway",
+				showCancelButton: true,
+				timer: 5000
+			}).then(function(e) {
+				if (!e.value) return;
+				$.ajax({
+					url: '<?= site_url('myskearch/participate/giveaway/'); ?>' + id,
+					type: 'GET',
+					success: function(data, status) {
+						if (data == 0) {
+							swal("Error!", "Unable to enter giveaway.", "warning")
+						} else {
+							$("#btn-enter-giveaway").attr("disabled", "disabled").text("Enlisted");
+							swal("Success!", "You have been enlisted in the giveaway.", "success")
+						}
+					},
+					error: function(xhr, status, error) {
+						swal("Error!", "Unable to process request.", "error")
 					}
-				},
-				error: function(xhr, status, error) {
-					swal("Error!", "Unable to process request.", "error")
-				}
+				});
 			});
-		});
+		}
 	}
 </script>
 <!--Page Scripts-- >
