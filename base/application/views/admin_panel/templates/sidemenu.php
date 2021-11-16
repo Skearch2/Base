@@ -102,7 +102,14 @@
 					<ul class="m-menu__subnav">
 						<li id="leads" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands/leads"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Leads</span></a></li>
 						<li class="m-menu__item" aria-haspopup="true" m-menu-link-redirect="1"><a href="https://crm.skearch.com/admin" target="_blank" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">CRM</span></a></li>
-						<li id="invite" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/invite"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Invite</span></a></li>
+						<li id="submenu-invite" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" m-menu-submenu-toggle="hover" m-menu-link-redirect="1"><a href="javascript:;" class="m-menu__link m-menu__toggle"><i class="m-menu__link-bullet m-menu__link-bullet--line"><span></span></i><span class="m-menu__link-text">Invite</span><i class="m-menu__ver-arrow la la-angle-right"></i></a>
+							<div class="m-menu__submenu "><span class="m-menu__arrow"></span>
+								<ul class="m-menu__subnav">
+									<li id="invite-email" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/invite"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Send Email</span></a></li>
+									<li id="invite-logs" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/logs/invite/view"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Sent Invite</span></a></li>
+								</ul>
+							</div>
+						</li>
 					</ul>
 				</div>
 			</li>

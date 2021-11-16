@@ -25,10 +25,11 @@ class Giveaway_model extends CI_Model
      */
     public function get()
     {
-        $this->db->select('giveaways.id, title, DATE_FORMAT(giveaways.date_created, "%b %d %Y") as date_created, DATE_FORMAT(end_date, "%b %d %Y") as end_date, status');
+        $this->db->select('giveaways.id, title, DATE_FORMAT(giveaways.date_created, "%b %d %Y %h:%i %p") as date_created, DATE_FORMAT(end_date, "%b %d %Y %h:%i %p") as end_date, status');
         $this->db->from('giveaways');
         $this->db->join('giveaways_participants', 'giveaways_participants.giveaway_id = giveaways.id', 'left');
         $this->db->where('status', 1);
+        $this->db->where('end_date >', NOW());
         $this->db->order_by('date_created', 'desc');
 
         $query = $this->db->get();

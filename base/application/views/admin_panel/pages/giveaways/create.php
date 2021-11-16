@@ -83,7 +83,7 @@ $this->load->view('admin_panel/templates/subheader');
 									<label class="col-2 col-form-label">Deadline *</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date">
-											<input type="text" class="form-control m-input" readonly placeholder="Select date" id="m_datepicker" name="end_date" value="<?= set_value('end_date'); ?>">
+											<input type="text" class="form-control m-input" readonly placeholder="Select date and time" id="m_datetimepicker" name="end_date" value="<?= set_value('end_date'); ?>">
 											<div class="input-group-append">
 												<span class="input-group-text">
 													<i class="la la-calendar-check-o"></i>
@@ -141,7 +141,7 @@ $this->load->view('admin_panel/templates/js_global');
 
 
 <script>
-	var BootstrapDatepicker = function() {
+	var BootstrapDatetimepicker = function() {
 		var t;
 		t = {
 			leftArrow: '<i class="la la-angle-left"></i>',
@@ -149,8 +149,9 @@ $this->load->view('admin_panel/templates/js_global');
 		};
 		return {
 			init: function() {
-				$("#m_datepicker").datepicker({
+				$("#m_datetimepicker").datetimepicker({
 					startDate: new Date(),
+					showMeridian: 1,
 					todayHighlight: 1,
 					orientation: "bottom",
 					templates: t,
@@ -183,7 +184,7 @@ $this->load->view('admin_panel/templates/js_global');
 	};
 
 	$(document).ready(function() {
-		BootstrapDatepicker.init()
+		BootstrapDatetimepicker.init()
 		FormControls.init()
 	});
 
