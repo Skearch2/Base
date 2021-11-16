@@ -376,6 +376,9 @@ $route['admin/giveaways/view/participants/id/(:num)/get']        = 'admin_panel/
 
 /* Email */
 $route['admin/email/invite']                        = 'admin_panel/email/invite';
+$route['admin/email/logs/invite/view']              = 'admin_panel/email/invite_logs';
+$route['admin/email/logs/invite/get']               = 'admin_panel/email/get_invite_logs';
+$route['admin/email/logs/invite/view/id/(:num)']    = 'admin_panel/email/view_invite/$1';
 $route['admin/email/logs/user/id/(:num)']           = 'admin_panel/email/logs/$1';
 $route['admin/email/logs/get/user/id/(:num)']       = 'admin_panel/email/get_logs/$1';
 $route['admin/email/logs/clear/user/id/(:num)']     = 'admin_panel/email/clear_logs/$1';

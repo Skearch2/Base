@@ -160,6 +160,8 @@ $this->load->view('admin_panel/templates/js_global');
 ?>
 
 <!--begin::Page Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
 <script>
 	var FormControls = {
 		init: function() {
@@ -233,7 +235,7 @@ $this->load->view('admin_panel/templates/js_global');
 						 <input type="text" class="form-control m-input" name="recipents[]" placeholder="Email Address"></div>' //Input field
 		var x = 1; //Initial field counter is 1
 
-		//Once add button is clicked
+		// when add button is clicked
 		$(addButton).click(function() {
 			//Check maximum number of input fields
 			if (x < maxField) {
@@ -242,7 +244,7 @@ $this->load->view('admin_panel/templates/js_global');
 			}
 		});
 
-		//Once remove button is clicked
+		// when remove button is clicked
 		$(wrapper).on('click', '#remove_recipent', function(e) {
 			e.preventDefault();
 			$(this).parent('div').remove(); //Remove field html
@@ -251,7 +253,7 @@ $this->load->view('admin_panel/templates/js_global');
 	});
 
 	$("#menu-sales").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#invite").addClass("m-menu__item  m-menu__item--active");
+	$("#submenu-invite").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded m-menu__item--active");
 </script>
 
 <!--end::Page Scripts -->

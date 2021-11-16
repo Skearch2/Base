@@ -154,7 +154,7 @@ $this->load->view('auth/templates/head');
 		// 						email: 1
 		// 					},
 		// 					phone: {
-		// 						required: 1,
+		// 						required: 0,
 		// 						phoneUS: 1
 		// 					},
 		// 					agree: {
