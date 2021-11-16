@@ -79,10 +79,10 @@ $this->load->view('admin_panel/templates/js_global');
 ?>
 
 <!--begin::Page Scripts -->
-
+<!-- 
 <script>
     $("#menu-users").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-</script>
+</script> -->
 
 <!--end::Page Scripts -->
 

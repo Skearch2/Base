@@ -95,7 +95,7 @@ class User_model extends CI_Model
      */
     public function get_active_users()
     {
-        $this->db->select('id, email');
+        $this->db->select('skearch_users.id, skearch_users.email');
         $this->db->from('skearch_users');
         $this->db->join('skearch_users_groups', 'skearch_users_groups.user_id = skearch_users.id', 'left');
         $this->db->join('skearch_groups', 'skearch_groups.id = skearch_users_groups.group_id', 'left');

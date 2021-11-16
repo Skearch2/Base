@@ -589,7 +589,7 @@ class Auth extends MY_Controller
             $this->form_validation->set_rules('name', 'Name', 'trim|required');
             $this->form_validation->set_rules('brandname', 'Brand Name', 'trim|required|is_unique[skearch_brand_leads.brandname]');
             $this->form_validation->set_rules('email_b', 'Email', 'trim|required|valid_email');
-            $this->form_validation->set_rules('phone', 'Phone', 'trim|required|callback_validate_phone');
+            $this->form_validation->set_rules('phone', 'Phone', 'trim|callback_validate_phone');
         } else {
             $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'trim|required|callback_validate_username|is_unique[skearch_users.username]|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']', array('is_unique' => 'The Skearch ID or username already exists.'));
             $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
@@ -758,7 +758,8 @@ class Auth extends MY_Controller
     public function validate_phone($phone)
     {
         $phone = preg_replace("/[^0-9]/", "", $phone);
-        if (strlen($phone) != 10) {
+
+        if (!empty($phone) && strlen($phone) != 10) {
             $this->form_validation->set_message('validate_phone', 'The %s number entered is invalid.');
             return false;
         } else {
