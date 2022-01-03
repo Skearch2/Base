@@ -49,6 +49,8 @@ class Giveaways extends MY_Controller
         } else {
             $this->form_validation->set_rules('title', 'Title', 'trim|required');
             $this->form_validation->set_rules('end_date', 'Deadline', 'required');
+            $this->form_validation->set_rules('crypto', 'Crypto', 'trim|required');
+            $this->form_validation->set_rules('amount', 'Amount', 'required|numeric');
 
             if ($this->form_validation->run() == false) {
                 // set page title
@@ -59,6 +61,8 @@ class Giveaways extends MY_Controller
 
                 $giveaway_data['title'] = $this->input->post('title');
                 $giveaway_data['end_date'] = date("Y-m-d H:i:s", strtotime($this->input->post('end_date')));
+                $giveaway_data['crypto'] = $this->input->post('crypto');
+                $giveaway_data['amount'] = $this->input->post('amount');
 
                 $create = $this->Giveaways->create($giveaway_data);
 
@@ -211,6 +215,8 @@ class Giveaways extends MY_Controller
         } else {
             $this->form_validation->set_rules('title', 'Title', 'trim|required');
             $this->form_validation->set_rules('end_date', 'Deadline', 'required');
+            $this->form_validation->set_rules('crypto', 'Crypto', 'trim|required');
+            $this->form_validation->set_rules('amount', 'Amount', 'required|numeric');
 
             if ($this->form_validation->run() == false) {
                 $data['giveaway'] = $this->Giveaways->get_by_id($id);
@@ -220,6 +226,8 @@ class Giveaways extends MY_Controller
             } else {
                 $giveaway_data['title'] = $this->input->post('title');
                 $giveaway_data['end_date'] = date("Y-m-d H:i:s", strtotime($this->input->post('end_date')));
+                $giveaway_data['crypto'] = $this->input->post('crypto');
+                $giveaway_data['amount'] = $this->input->post('amount');
 
                 $update = $this->Giveaways->update($id, $giveaway_data);
 

@@ -92,6 +92,19 @@ $this->load->view('admin_panel/templates/subheader');
 										</div>
 									</div>
 								</div>
+								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
+								<div class="form-group m-form__group row">
+									<label for="brand" class="col-2 col-form-label">Crypto *</label>
+									<div class="col-7">
+										<input class="form-control m-input" type="text" name="crypto" value="<?= set_value('crypto'); ?>">
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<label for="brand" class="col-2 col-form-label">Amount *</label>
+									<div class="col-7">
+										<input class="form-control m-input" type="text" name="amount" value="<?= set_value('amount'); ?>">
+									</div>
+								</div>
 								<div class="m-portlet__foot m-portlet__foot--fit">
 									<div class="m-form__actions">
 										<div class="row">
@@ -171,6 +184,14 @@ $this->load->view('admin_panel/templates/js_global');
 					},
 					end_date: {
 						required: 1
+					},
+					crypto: {
+						required: 1
+					},
+					amount: {
+						required: 1,
+						number: 1
+
 					}
 				},
 				invalidHandler: function(e, r) {
