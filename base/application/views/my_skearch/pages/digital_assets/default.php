@@ -54,34 +54,58 @@ $this->load->view('my_skearch/templates/start_pagebody');
 				<div class="m-portlet__body">
 					<div class="m-widget4">
 						<?php if ($giveaway) : ?>
-							<div class="m-widget4__item">
-								<div class="m-widget4__info">
-									<span class="m-widget4__title">
-										<?= $giveaway->title ?>
-									</span><br>
-									<span class="m-widget4__sub">
-										Deadline: <?= $giveaway->end_date ?>
-									</span>
+							<?php if ($giveaway->status == 0) : ?>
+								<div class="m-widget4__item">
+									<div class="m-widget4__info">
+										<span class="m-widget4__title">
+											Giveaway over!
+										</span><br>
+										<span class="m-widget4__sub">
+											<b>Winner user ID: <?= $giveaway->user_id ?></b>
+											<br>
+											<b>Crypto: <?= $giveaway->crypto ?> &emsp; Amount: <?= $giveaway->amount ?></b>
+										</span>
+									</div>
+									<!-- <span class="m-widget4__ext">
+										<?php if ($is_user_participant) : ?>
+											<span class="m-badge m-badge--success m-badge--wide m-badge--rounded m--font-boldest">
+												Enlisted
+											</span>
+										<?php else : ?>
+											<button id="btn-enter-giveaway" type="button" class="btn m-btn m-btn--gradient-from-focus m-btn--gradient-to-danger" onclick="enterGiveaway(<?= $giveaway->id ?>, <?= $this->session->userdata('user_id') ?>)">Enter</button>
+										<?php endif ?>
+									</span> -->
 								</div>
 
-								<span class="m-widget4__ext">
-									<?php if ($is_user_participant) : ?>
-										<span class="m-badge m-badge--success m-badge--wide m-badge--rounded m--font-boldest">
-											Enlisted
+							<?php else : ?>
+								<div class="m-widget4__item">
+									<div class="m-widget4__info">
+										<span class="m-widget4__title">
+											<?= $giveaway->title ?>
+										</span><br>
+										<span class="m-widget4__sub">
+											Deadline: <?= $giveaway->end_date ?>
 										</span>
-									<?php else : ?>
-										<button id="btn-enter-giveaway" type="button" class="btn m-btn m-btn--gradient-from-focus m-btn--gradient-to-danger" onclick="enterGiveaway(<?= $giveaway->id ?>, <?= $this->session->userdata('user_id') ?>)">Enter</button>
-									<?php endif ?>
-								</span>
-							</div>
-							<?php if (!$is_user_participant) : ?>
-								<label class="m-checkbox">
-									<input type="checkbox" id="age_verify">I am at least 18 years of age
-									<span></span>
-								</label>
+									</div>
+									<span class="m-widget4__ext">
+										<?php if ($is_user_participant) : ?>
+											<span class="m-badge m-badge--success m-badge--wide m-badge--rounded m--font-boldest">
+												Enlisted
+											</span>
+										<?php else : ?>
+											<button id="btn-enter-giveaway" type="button" class="btn m-btn m-btn--gradient-from-focus m-btn--gradient-to-danger" onclick="enterGiveaway(<?= $giveaway->id ?>, <?= $this->session->userdata('user_id') ?>)">Enter</button>
+										<?php endif ?>
+									</span>
+								</div>
+								<?php if (!$is_user_participant) : ?>
+									<label class="m-checkbox">
+										<input type="checkbox" id="age_verify">I am at least 18 years of age
+										<span></span>
+									</label>
+								<?php endif ?>
 							<?php endif ?>
 						<?php else : ?>
-							There are no giveaway at this time.
+							There are no giveaways at this time.
 						<?php endif ?>
 					</div>
 				</div>

@@ -239,13 +239,11 @@ class Ads_manager extends MY_Controller
      * get ad clicks and impressions history
      *
      * @param int    $ad_id         Ad id
-     * @param string $start_date    Start date
-     * @param string $end_date      End date
      * @return void
      */
-    public function get_activity($ad_id, $start_date = null, $end_date = null)
+    public function get_activity($ad_id, $month_and_year = null)
     {
-        $clicks = $this->ads_manager->get_ad_activity($ad_id, $start_date, $end_date);
+        $clicks = $this->ads_manager->get_ad_activity($ad_id, $month_and_year);
 
         $total_clicks = count($clicks);
         $result = [

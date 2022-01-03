@@ -247,13 +247,33 @@ class Ads_manager_model extends CI_Model
      * @param int $id Ad ID
      * @return mixed object
      */
-    public function get_ad_activity($id, $start_date, $end_date)
+    public function get_ad_activity($id, $month_and_year)
     {
-        $this->db->select('ad_id, clicks, impressions, date');
+        $this->db->select('ad_id, clicks, impressions, DATE_FORMAT(date, "%b %d %Y") as date');
         $this->db->from('skearch_ads_activity');
         $this->db->where('ad_id', $id);
-        $this->db->where('date >=', $start_date);
-        $this->db->where('date <=', $end_date);
+        $this->db->like('date', $month_and_year, 'after');
+        $this->db->order_by('date', 'DESC');
+
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    /**
+     * Get ad clicks and impressions history
+     *
+     * @param int $id Ad ID
+     * @return mixed object
+     */
+    public function get_ad_yearly_stats($id)
+    {
+        $this->db->select('ad_id, sum(skearch_ads_activity.clicks) as clicks, sum(skearch_ads_activity.impressions) as impressions, DATE_FORMAT(date, "%m %Y") as month_and_year');
+        $this->db->from('skearch_ads_activity');
+        $this->db->where('ad_id', $id);
+        $this->db->group_by('DATE_FORMAT(date, "%m %Y")');
+        $this->db->order_by('month_and_year', 'ASC');
+        $this->db->limit(12);
 
         $query = $this->db->get();
 
