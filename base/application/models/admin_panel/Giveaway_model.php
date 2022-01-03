@@ -25,6 +25,9 @@ class Giveaway_model extends CI_Model
      */
     public function create($data)
     {
+        $this->db->set('is_archived', 1);
+        $this->db->update('giveaways');
+
         $this->db->insert('giveaways', $data);
 
         if ($this->db->affected_rows()) {

@@ -118,19 +118,12 @@ $this->load->view('admin_panel/templates/js_global');
 				processing: !0,
 				serverSide: !1,
 				order: [0, "desc"],
-				ajax: "<?= site_url("admin/ads/manager/get/activity/ad/id/{$ad->id}"); ?>",
 				columns: [{
 					data: "date"
 				}, {
 					data: "clicks"
 				}, {
 					data: "impressions"
-				}],
-				columnDefs: [{
-					targets: 0,
-					render: function(a, t, e, n) {
-						return new Date(e['date']).toLocaleDateString();
-					}
 				}]
 			});
 		}
@@ -163,23 +156,10 @@ $this->load->view('admin_panel/templates/js_global');
 		BootstrapDatepicker.init();
 		datatable.init();
 
+		// on date select run ajax call to get filtered query
 		$("#m_datepicker").datepicker().on('changeDate', function(e) {
-			$.ajax({
-				url: '<?= site_url('admin/ads/manager/archive/ad/id/'); ?>' + id,
-				type: 'GET',
-				success: function(data, status) {
-					if (data == -1) {
-						swal("Not Allowed!", "You have no permission.", "warning")
-					} else {
-						$('#m_table_library').DataTable().ajax.reload();
-						swal("Success!", "The ad has been archived.", "success")
-					}
-				},
-				error: function(xhr, status, error) {
-					swal("Error!", "Unable to archive the ad.", "error")
-				}
-			});
-			console.log(e.date.getMonth() + "/" + e.date.getFullYear());
+			filter_val = e.date.getFullYear() + "-" + ("0" + (e.date.getMonth() + 1)).slice(-2)
+			$('#m_table').DataTable().ajax.url("<?= site_url("admin/ads/manager/get/activity/ad/id/{$ad->id}") ?>/filter/" + filter_val).load();
 		});
 	});
 
