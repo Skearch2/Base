@@ -94,9 +94,12 @@ $this->load->view('admin_panel/templates/subheader');
 								</div>
 								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 								<div class="form-group m-form__group row">
-									<label for="brand" class="col-2 col-form-label">Crypto *</label>
+									<label for="example-text-input" class="col-2 col-form-label">Crypto *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="crypto" value="<?= set_value('crypto', $giveaway->crypto); ?>">
+										<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="crypto">
+											<option value="SGB" <?= set_select('crypto', 'SGB') ?> <?= ($giveaway->crypto == "SGB") ? "selected" : "" ?>>SGB</option>
+											<option value="GALA" <?= set_select('crypto', 'GALA') ?> <?= ($giveaway->crypto == "GALA") ? "selected" : "" ?>>GALA</option>
+										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">

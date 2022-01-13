@@ -236,27 +236,59 @@ class Ads_manager extends MY_Controller
 
 
     /**
-     * get ad clicks and impressions history
+     * Get clicks and impressions history based on month and year for the ad
      *
-     * @param int    $ad_id         Ad id
+     * @param int    $ad_id          Ad id
+     * @param int    $month_and_year Month and Year
      * @return void
      */
     public function get_activity($ad_id, $month_and_year = null)
     {
-        $clicks = $this->ads_manager->get_ad_activity($ad_id, $month_and_year);
+        $activity = $this->ads_manager->get_ad_activity($ad_id, $month_and_year);
 
-        $total_clicks = count($clicks);
+        $total_activity = count($activity);
         $result = [
-            'iTotalRecords' => $total_clicks,
-            'iTotalDisplayRecords' => $total_clicks,
+            'iTotalRecords' => $total_activity,
+            'iTotalDisplayRecords' => $total_activity,
             'sEcho' => 0,
             'sColumns' => '',
-            'aaData' => $clicks,
+            'aaData' => $activity,
         ];
 
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($result));
+    }
+
+    /**
+     * Get monthly clicks and impressions based on the year for the ad
+     *
+     * @param int    $ad_id         Ad id
+     * @param int    $year          Year
+     * @return void
+     */
+    public function get_yearly_stats($ad_id, $year = null)
+    {
+        if ($year == null) {
+            $year = date('Y');
+        }
+
+        $yearly_stats = $this->ads_manager->get_ad_yearly_stats($ad_id, $year);
+
+        $clicks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        $impressions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        foreach ($yearly_stats as $monthly_stats) {
+            $clicks[$monthly_stats->month - 1] = $monthly_stats->clicks;
+            $impressions[$monthly_stats->month - 1] = $monthly_stats->impressions;
+        }
+
+        $stats['clicks'] = $clicks;
+        $stats['impressions'] = $impressions;
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($stats));
     }
 
     /**
@@ -534,11 +566,29 @@ class Ads_manager extends MY_Controller
      */
     public function view_activity($id)
     {
+        $ad = $this->ads_manager->get_ad($id);
+        $stats = $this->ads_manager->get_ad_yearly_stats($id, date('Y'));
+        $year = $this->ads_manager->get_oldest_activity_year($id)->year;
+
+        $clicks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        $impressions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        foreach ($stats as $activity) {
+            $clicks[$activity->month - 1] = $activity->clicks;
+            $impressions[$activity->month - 1] = $activity->impressions;
+        }
+
+        $ad->monthly_clicks = $clicks;
+        $ad->monthly_impressions = $impressions;
+        $ad->oldest_activity_year = $year;
+
         // page data
-        $data['ad'] = $this->ads_manager->get_ad($id);
+
+        $data['ad'] = $ad;
+        $data['impressions'] = $impressions;
 
         // Load page content
-        $data['title'] = ucwords('ads manager');
+        $data['title'] = ucwords('ads manager - activity');
         $this->load->view('admin_panel/pages/ads_manager/activity', $data);
     }
 
