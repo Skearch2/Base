@@ -94,9 +94,13 @@ $this->load->view('admin_panel/templates/subheader');
 								</div>
 								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 								<div class="form-group m-form__group row">
-									<label for="brand" class="col-2 col-form-label">Crypto *</label>
+									<label for="example-text-input" class="col-2 col-form-label">Crypto *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="crypto" value="<?= set_value('crypto'); ?>">
+										<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="crypto">
+											<option value="" <?= set_select('crypto', '', TRUE) ?>>Select</option>
+											<option value="SGB">SGB</option>
+											<option value="GALA">GALA</option>
+										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
@@ -203,6 +207,9 @@ $this->load->view('admin_panel/templates/js_global');
 			});
 		}
 	};
+
+	// hide option which has no value
+	$('option[value=""]').hide().parent().selectpicker('refresh');
 
 	$(document).ready(function() {
 		BootstrapDatetimepicker.init()

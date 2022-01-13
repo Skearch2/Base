@@ -345,6 +345,8 @@ $route['admin/ads/manager/delete/ad/id/(:num)']                                 
 $route['admin/ads/manager/get/(default|global)/banner/(a|b|u|va)/archived/(0|1)']                       = 'admin_panel/ads_manager/get/$1/0/$2/$3';
 $route['admin/ads/manager/get/(umbrella|field)/id/(:num)/banner/(a|b|u)/archived/(0|1)']                = 'admin_panel/ads_manager/get/$1/$2/$3/$4';
 $route['admin/ads/manager/get/activity/ad/id/(:num)']                                                   = 'admin_panel/ads_manager/get_activity/$1';
+$route['admin/ads/manager/get/activity/ad/id/(:num)/filter/(:any)']                                     = 'admin_panel/ads_manager/get_activity/$1/$2';
+$route['admin/ads/manager/get/activity/ad/id/(:num)/year/(:num)']                                       = 'admin_panel/ads_manager/get_yearly_stats/$1/$2';
 $route['admin/ads/manager/restore/ad/id/(:num)']                                                        = 'admin_panel/ads_manager/toggle_archive/$1';
 $route['admin/ads/manager/ad/id/(:num)/action/reset/activity']                                          = 'admin_panel/ads_manager/reset_activity/$1';
 $route['admin/ads/manager/toggle/status/ad/id/(:num)']                                                  = 'admin_panel/ads_manager/toggle/$1';
