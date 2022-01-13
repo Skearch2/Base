@@ -242,9 +242,10 @@ class Ads_manager_model extends CI_Model
     }
 
     /**
-     * Get ad clicks and impressions history
+     * Get clicks and impressions history based on month and year for the ad
      *
      * @param int $id Ad ID
+     * @param int $month_and_year Month and Year
      * @return mixed object
      */
     public function get_ad_activity($id, $month_and_year)
@@ -261,23 +262,42 @@ class Ads_manager_model extends CI_Model
     }
 
     /**
-     * Get ad clicks and impressions history
+     * Get monthly clicks and impressions based on the year for the ad
      *
      * @param int $id Ad ID
+     * @param int $year Year
      * @return mixed object
      */
-    public function get_ad_yearly_stats($id)
+    public function get_ad_yearly_stats($id, $year)
     {
-        $this->db->select('ad_id, sum(skearch_ads_activity.clicks) as clicks, sum(skearch_ads_activity.impressions) as impressions, DATE_FORMAT(date, "%m %Y") as month_and_year');
+        $this->db->select('ad_id, sum(skearch_ads_activity.clicks) as clicks, sum(skearch_ads_activity.impressions) as impressions, DATE_FORMAT(date, "%c") as month, DATE_FORMAT(date, "%Y") as year');
         $this->db->from('skearch_ads_activity');
         $this->db->where('ad_id', $id);
-        $this->db->group_by('DATE_FORMAT(date, "%m %Y")');
-        $this->db->order_by('month_and_year', 'ASC');
-        $this->db->limit(12);
+        $this->db->like('date', $year, 'after');
+        $this->db->group_by(array('DATE_FORMAT(date, "%c")', 'DATE_FORMAT(date, "%Y")'));
+        $this->db->order_by('month', 'ASC');
 
         $query = $this->db->get();
 
         return $query->result();
+    }
+
+    /**
+     * Get oldest activity year for the ad
+     *
+     * @param int $id Ad ID
+     * @return mixed object
+     */
+    public function get_oldest_activity_year($id)
+    {
+        $this->db->select('DATE_FORMAT(date, "%Y") as year');
+        $this->db->from('skearch_ads_activity');
+        $this->db->where('ad_id', $id);
+        $this->db->order_by('date', 'ASC');
+
+        $query = $this->db->get();
+
+        return $query->row();
     }
 
     /**

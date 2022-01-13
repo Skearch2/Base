@@ -43,11 +43,29 @@ $this->load->view('admin_panel/templates/subheader');
 			</div>
 		</div>
 		<div class="m-portlet__body">
-			<div class="m-portlet m-portlet--full-height m-portlet--skin-light m-portlet--fit ">
+			<div class="m-portlet m-portlet--full-height m-portlet--skin-light m-portlet--fit">
+				<div class="m-portlet__head">
+					<div class="m-portlet__head-tools">
+						<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+							<div class="btn-group" role="group">
+								<button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Change year
+								</button>
+								<div class="dropdown-menu" aria-labelledby="btnGroupDrop1" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 45px, 0px);">
+									<?php $current_year = Date('Y'); ?>
+									<?php while ($current_year >= $ad->oldest_activity_year) : ?>
+										<a class="dropdown-item" href="javascript:void(0)" onclick="updateStats(<?= $current_year ?>)"><?= $current_year ?></a>
+										<?php $current_year--; ?>
+									<?php endwhile ?>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="m-portlet__body">
 					<div class="m-widget21" style="min-height: 310px">
 						<div class="m-widget21__chart m-portlet-fit--sides" style="height:310px;">
-							<canvas id="m_chart_adwords_stats"></canvas>
+							<canvas id="m_chart_ad_stats"></canvas>
 						</div>
 					</div>
 				</div>
@@ -57,7 +75,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<form class="m-form m-form--fit m--margin-bottom-20">
 				<div class="input-group m-input-group col-3">
 					<div class="input-group-prepend"><span class="input-group-text" id="basic-addon1"><i class="la la-calendar"></i></span></div>
-					<input type="text" class="form-control m-input" placeholder="Month" aria-describedby="basic-addon1" id="m_datepicker" name="monthFilter">
+					<input type="text" class="form-control m-input" placeholder="Select Month" aria-describedby="basic-addon1" id="m_datepicker" name="monthFilter">
 				</div>
 			</form>
 			<!-- <table cellspacing="5" cellpadding="5" border="0">
@@ -109,6 +127,98 @@ $this->load->view('admin_panel/templates/js_global');
 
 <!--begin::Page Scripts -->
 <script>
+	const stats = document.getElementById("m_chart_ad_stats").getContext("2d");
+	const chart = new Chart(stats, {
+		type: "bar",
+		data: {
+			labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novemeber", "December"],
+			datasets: [{
+				label: "Impressions",
+				backgroundColor: mApp.getColor("warning"),
+				borderColor: mApp.getColor("warning"),
+				pointBackgroundColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
+				pointBorderColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
+				pointHoverBackgroundColor: mApp.getColor("danger"),
+				pointHoverBorderColor: Chart.helpers.color("#000000").alpha(0.1).rgbString(),
+				data: <?= json_encode($ad->monthly_impressions) ?>,
+			}, {
+				label: "Clicks",
+				backgroundColor: mApp.getColor("danger"),
+				borderColor: mApp.getColor("danger"),
+				pointBackgroundColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
+				pointBorderColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
+				pointHoverBackgroundColor: mApp.getColor("danger"),
+				pointHoverBorderColor: Chart.helpers.color("#000000").alpha(0.1).rgbString(),
+				data: <?= json_encode($ad->monthly_clicks) ?>,
+			}, ],
+		},
+		options: {
+			title: {
+				display: 1,
+				text: <?= date('Y') ?>
+			},
+			legend: {
+				display: 1
+			},
+			responsive: 1,
+			maintainAspectRatio: 0,
+			scales: {
+				xAxes: [{
+					display: 1,
+					gridLines: 0,
+					scaleLabel: {
+						display: 1
+					}
+				}],
+				yAxes: [{
+					display: 1,
+					scaleLabel: {
+						display: 1
+					},
+					ticks: {
+						beginAtZero: 1
+					}
+				}],
+			}
+		}
+	});
+
+	function updateStats(year) {
+		$.ajax({
+			url: '<?= site_url("admin/ads/manager/get/activity/ad/id/{$ad->id}/year/"); ?>' + year,
+			type: 'GET',
+			success: function(data, status) {
+				console.log(data)
+				chart.config.data.datasets = [];
+				chart.config.data.labels = [];
+
+				chart.config.data.labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novemeber", "December"]
+
+				var dataSet1 = {
+					label: "Impressions",
+					data: data.impressions,
+					backgroundColor: mApp.getColor("warning")
+				}
+
+				var dataSet2 = {
+					label: "Clicks",
+					data: data.clicks,
+					backgroundColor: mApp.getColor("danger")
+				}
+
+				chart.config.data.datasets.push(dataSet1);
+				chart.config.data.datasets.push(dataSet2);
+				chart.options.title.text = year;
+
+				chart.update();
+			},
+			error: function(xhr, status, error) {
+				toastr.error("", "Unable to process request.");
+			}
+		});
+	}
+
+
 	var datatable = {
 		init: function() {
 			$("#m_table").DataTable({
@@ -117,7 +227,9 @@ $this->load->view('admin_panel/templates/js_global');
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
-				order: [0, "desc"],
+				displayLength: 31,
+				lengthChange: false,
+				order: [0, "asc"],
 				columns: [{
 					data: "date"
 				}, {
@@ -145,6 +257,7 @@ $this->load->view('admin_panel/templates/js_global');
 					startView: "months",
 					minViewMode: "months",
 					format: 'MM yyyy',
+					startDate: new Date(<?= $ad->oldest_activity_year ?>, 0),
 					endDate: '+0m',
 					autoclose: true
 				});
@@ -159,75 +272,14 @@ $this->load->view('admin_panel/templates/js_global');
 		// on date select run ajax call to get filtered query
 		$("#m_datepicker").datepicker().on('changeDate', function(e) {
 			filter_val = e.date.getFullYear() + "-" + ("0" + (e.date.getMonth() + 1)).slice(-2)
-			$('#m_table').DataTable().ajax.url("<?= site_url("admin/ads/manager/get/activity/ad/id/{$ad->id}") ?>/filter/" + filter_val).load();
+			$('#m_table').DataTable().ajax.url("<?= site_url("admin/ads/manager/get/activity/ad/id/{$ad->id}") ?>/filter/" + filter_val).load()
 		});
 	});
 
 	// menu highlight
 	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
 	$("#submenu-brands-ads-manager").addClass("m-menu__item  m-menu__item--active");
-
-	var Dashboard = (function() {
-		if (0 != $("#m_chart_adwords_stats").length) {
-			var e = document.getElementById("m_chart_adwords_stats").getContext("2d");
-			var a = {
-				type: "bar",
-				data: {
-					labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novemeber", "December"],
-					datasets: [{
-						label: "Impressions",
-						backgroundColor: mApp.getColor("accent"),
-						borderColor: mApp.getColor("accent"),
-						pointBackgroundColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
-						pointBorderColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
-						pointHoverBackgroundColor: mApp.getColor("danger"),
-						pointHoverBorderColor: Chart.helpers.color("#000000").alpha(0.1).rgbString(),
-						data: [26254, 16396, 27027, 17532, 17686, 29158, 15876, 23791, 30241, 31183, 31224, 27620],
-					}, {
-						label: "Clicks",
-						backgroundColor: mApp.getColor("brand"),
-						borderColor: mApp.getColor("brand"),
-						pointBackgroundColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
-						pointBorderColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
-						pointHoverBackgroundColor: mApp.getColor("danger"),
-						pointHoverBorderColor: Chart.helpers.color("#000000").alpha(0.1).rgbString(),
-						data: [1501, 1543, 1612, 1581, 1615, 1707, 1095, 1240, 1922, 1920, 1971, 1745],
-					}, ],
-				},
-				options: {
-					title: {
-						display: 0
-					},
-					legend: {
-						display: 1
-					},
-					responsive: 1,
-					maintainAspectRatio: 0,
-					scales: {
-						xAxes: [{
-							display: 1,
-							gridLines: 0,
-							scaleLabel: {
-								display: 1
-							}
-						}],
-						yAxes: [{
-							display: 1,
-							scaleLabel: {
-								display: 1
-							},
-							ticks: {
-								beginAtZero: 1
-							}
-						}],
-					}
-				},
-			};
-			new Chart(e, a);
-		}
-	})();
 </script>
-
 <!--end::Page Scripts -->
 
 <?php
