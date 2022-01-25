@@ -41,11 +41,6 @@ class Digital_Assets extends MY_Controller
 
 		$data['giveaway'] = $giveaway;
 
-		// echo "<pre>";
-		// print_r($giveaway);		// print_r($giveaway);
-
-		// die();
-
 		if ($giveaway) {
 			$data['is_user_participant'] = $this->Giveaway->verify_participant($giveaway->id, $this->session->userdata('user_id'));
 		}

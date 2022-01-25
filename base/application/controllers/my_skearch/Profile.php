@@ -88,6 +88,10 @@ class Profile extends MY_Controller
             $this->load->view('my_skearch/pages/profile', $data);
         } else {
 
+            echo '<pre>';
+            print_r($this->input->post());
+            die();
+
             $data['username'] = $this->input->post('username');
 
             // for admin, editor, and brand member groups
