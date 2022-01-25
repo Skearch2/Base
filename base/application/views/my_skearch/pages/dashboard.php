@@ -21,7 +21,6 @@ $this->load->view('my_skearch/templates/start_pagebody');
 ?>
 
 <div class="m-content">
-
 	<div class="m-portlet m-portlet--full-height m-portlet--fit  m-portlet--rounded">
 		<div class="m-portlet__body">
 			<div class="form-group m-form__group row">
@@ -36,35 +35,110 @@ $this->load->view('my_skearch/templates/start_pagebody');
 			</div>
 		</div>
 	</div>
-
-	<div class="m-section">
-		<h3 class="m-section__heading">
-			Recent Fields Visited
-		</h3>
-		<div class="m-section__content">
-			<div class="m-demo">
-				<div class="m-demo__preview" id="recent_history">
+	<div class="row">
+		<?php if (
+			$this->ion_auth->in_group($this->config->item('regular', 'ion_auth')) ||
+			$this->ion_auth->in_group($this->config->item('premium', 'ion_auth'))
+		) : ?>
+			<div class="col-xl-4">
+				<div class="m-portlet m-portlet--bordered-semi m-portlet--full-height ">
+					<div class="m-portlet__head">
+						<div class="m-portlet__head-caption">
+							<div class="m-portlet__head-title">
+								<h3 class="m-portlet__head-text">
+									Brand Deals
+								</h3>
+							</div>
+						</div>
+					</div>
+					<div class="m-portlet__body">
+						<div class="m-widget4">
+							<div class="m-scrollable" data-scrollable="true" data-height="380" data-mobile-height="300">
+								<?php if (!empty($brand_deals_feed)) : ?>
+									<?php foreach ($brand_deals_feed as $deal) : ?>
+										<div class="m-widget4__item">
+											<div class="m-widget4__img m-widget4__img--logo">
+												<img src="https://localhost/metronic%20templates/default/assets/app/media/img/client-logos/logo5.png" alt="">
+											</div>
+											<div class="m-widget4__info">
+												<span class="m-widget4__title">
+													<?= $deal->title ?>
+												</span><br>
+												<span class="m-widget4__sub">
+													<?= $deal->description ?>
+												</span>
+											</div>
+											<div class="m-widget4__ext">
+												<?php if ($deal->is_user_opted_in) : ?>
+													<span class="m-badge m-badge--success m-badge--wide">Opted</span>
+												<?php else : ?>
+													<a id="btn-opt-in-deal" onclick="optInDeal(<?= $deal->id ?>, '<?= $deal->title ?>', <?= $this->session->userdata('user_id') ?>, this)" class="m-btn m-btn--pill m-btn--hover-brand btn btn-sm btn-secondary">Opt In</a>
+												<?php endif ?>
+											</div>
+										</div>
+									<?php endforeach ?>
+								<?php else : ?>
+									<div class="m-widget7">
+										<div class="m-widget7__desc">
+											There are no new deals available right now!
+										</div>
+									</div>
+								<?php endif ?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endif ?>
+		<div class="col-xl-8">
+			<div class="m-portlet m-portlet--bordered-semi m-portlet--full-height ">
+				<div class="m-portlet__head">
+					<div class="m-portlet__head-caption">
+						<div class="m-portlet__head-title">
+							<h3 class="m-portlet__head-text">
+								Recent Fields Visited
+							</h3>
+						</div>
+					</div>
+				</div>
+				<div class="m-portlet__body" id="recent_history">
 					<?php if ($fields_history) : ?>
-						<div class="m-list-timeline">
-							<div class="m-list-timeline__items">
-								<?php foreach ($fields_history as $field) : ?>
+						<div class="m-scrollable" data-scrollable="true" data-height="380" data-mobile-height="300">
+							<div class="m-list-timeline">
+								<div class="m-list-timeline__items">
 									<div class="m-list-timeline__item">
 										<span class="m-list-timeline__badge"></span>
-										<span class="m-list-timeline__text"><a href="browse/<?= strtolower($field->umbrella) ?>/<?= strtolower($field->title) ?>"><?= $field->title ?></a></span>
-										<span class="m-list-timeline__time"><?= ($field->recurrence > 1) ? "$field->recurrence times" : "$field->recurrence time" ?></span>
-										<span class="m-list-timeline__time"><?= $field->timestamp ?></span>
+										<span class="m-list-timeline__text">
+											<h5>Field</h5>
+										</span>
+										<span class="m-list-timeline__text">
+											<h5>Last Visited</h5>
+										</span>
+										<span class="m-list-timeline__text">
+											<h5>Times Visited</h5>
+										</span>
 									</div>
-								<?php endforeach ?>
+									<?php foreach ($fields_history as $field) : ?>
+										<div class="m-list-timeline__item">
+											<span class="m-list-timeline__badge"></span>
+											<span class="m-list-timeline__text"><a href="browse/<?= strtolower($field->umbrella) ?>/<?= strtolower($field->title) ?>"><?= $field->title ?></a></span>
+											<span class="m-list-timeline__text"><?= $field->time_elapsed ?></span>
+											<span class="m-list-timeline__text"><?= $field->recurrence ?></span>
+										</div>
+									<?php endforeach ?>
+								</div>
+								<br><button type="button" class="btn btn-danger btn-sm float-right" onclick="clearHistory()">Clear History</button><br>
 							</div>
-							<br><button type="button" class="btn btn-danger btn-sm float-right" onclick="clearHistory()">Clear History</button><br>
 						</div>
 					<?php else : ?>
 						<i>No recent history</i>
 					<?php endif ?>
 				</div>
+
 			</div>
 		</div>
 	</div>
+
 	<!--	Button - Set Skearch as homepage -->
 	<div class='home-footer-btn'>
 		<a href="#" class="btn-footer-skear"></a> <br>
@@ -98,6 +172,36 @@ $this->load->view('my_skearch/templates/js_global');
 
 <!-- Page Scripts -->
 <script>
+	// Opt in for the deal
+	function optInDeal(id, title, userID, element) {
+		swal({
+			title: title,
+			text: "Are you sure to opt in?",
+			type: "info",
+			confirmButtonClass: "btn btn-success",
+			confirmButtonText: "Opt In",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
+			$.ajax({
+				url: '<?= site_url() ?>' + 'myskearch/dashboard/deals/id/' + id + '/action/opt-in',
+				type: 'GET',
+				success: function(data, status) {
+					if (data == 0) {
+						swal("Error!", "Unable to opt-in for the deal.", "warning")
+					} else {
+						$(element).attr("disabled", "disabled").prop("onclick", null).off("click").text("Opted In");
+						swal("Success!", "You have been opted in for this deal.", "success")
+					}
+				},
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to process request.", "error")
+				}
+			});
+		});
+	}
+
 	//Toggles user active status
 	function clearHistory() {
 		$.ajax({
