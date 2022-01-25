@@ -45,6 +45,7 @@
 													<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="<?= base_url("admin/viewas/brand/id/{$brand_id}/show/ads"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--line"><span></span></i><span class="m-menu__link-text">Ads</span></a></li>
 													<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="<?= base_url("admin/viewas/brand/id/{$brand_id}/show/brandlinks"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--line"><span></span></i><span class="m-menu__link-text">BrandLink</span></a></li>
 													<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="<?= base_url("admin/viewas/brand/id/{$brand_id}/show/vault"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--line"><span></span></i><span class="m-menu__link-text">Media Vault</span></a></li>
+													<li class="m-menu__item " m-menu-link-redirect="1" aria-haspopup="true"><a href="<?= base_url("admin/viewas/brand/id/{$brand_id}/show/deals"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--line"><span></span></i><span class="m-menu__link-text">Deals</span></a></li>
 												</ul>
 											</div>
 										</li>

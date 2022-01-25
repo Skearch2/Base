@@ -366,7 +366,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 											<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="state_us">
 												<option value="" <?= set_select("state_us", "", TRUE) ?>>Select</option>
 												<?php foreach ($states as $state) : ?>
-													<option value="<?= $state->statecode; ?>" <?= set_select("state_us", $state->statecode) ?>><?= $state->statecode; ?></option>
+													<option value="<?= $state->statecode; ?>" <?= set_select("state_us", $state->statecode) ?> <?= (strcmp($user->state, $state->statecode) == 0) ? "selected" : "" ?>><?= $state->statecode; ?></option>
 												<?php endforeach; ?>
 											</select>
 										</div>
@@ -475,28 +475,30 @@ $this->load->view('my_skearch/templates/js_global');
 		// show US states dropdown for United States as country otherwise
 		// input field for states/province otherwise
 		if ($("#country").val().toLowerCase() == "united states") {
-			// $('input[name="state_other"]').val('');
-			$("#field_state_other").hide();
 			$('input[name="state_other"]').prop('disabled', true);
+			$("#field_state_other").hide();
 			$("#field_state_us").show();
 		} else if ($("#country").val() == '') {
 			$("#field_state_other").hide();
 			$("#field_state_us").hide();
 		} else {
-			$("#field_state_us").hide();
 			$('input[name="state_us"]').prop('disabled', true);
-			$("#field_state_other").show();
+			$("#field_state_us").hide();
 		}
+
+		//TODO: on change state should disable the other one so it wont conflict which one to choose
 
 		$("#country").change(function() {
 			if ($(this).val().toLowerCase() == "united states") {
 				$("#field_state_other").hide();
 				$('input[name="state_other"]').prop('disabled', true);
 				$("#field_state_us").show();
+				$('input[name="state_us"]').prop('disabled', false);
 			} else {
 				$("#field_state_us").hide();
 				$('input[name="state_us"]').prop('disabled', true);
 				$("#field_state_other").show();
+				$('input[name="state_other"]').prop('disabled', false);
 			}
 		});
 	});

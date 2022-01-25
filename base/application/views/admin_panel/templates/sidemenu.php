@@ -46,6 +46,7 @@
 						<li id="submenu-brands-brands" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Brands</span></a></li>
 						<li id="submenu-brands-ads-manager" class="m-menu__item" aria-haspopup="true" m-menu-link-redirect="1"><a href="<?= site_url("admin/ads/manager") ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Ads Manager</span></a></li>
 						<li id="submenu-brands-brandlinks" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands/brandlinks"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">BrandLinks</span></a></li>
+						<li id="submenu-brands-dealdrop" class="m-menu__item" aria-haspopup="true"><a href="<?= site_url("admin/brands/dealdrop"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Deal Drop</span></a></li>
 					</ul>
 				</div>
 			</li>

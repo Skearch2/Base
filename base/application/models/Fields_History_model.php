@@ -108,7 +108,7 @@ class Fields_History_model extends CI_Model
         $this->db->join('skearch_subcategories', 'skearch_users_fields_history.field_id = skearch_subcategories.id', 'left');
         $this->db->join('skearch_categories', 'skearch_subcategories.parent_id = skearch_categories.id', 'left');
         $this->db->where('user_id', $user_id);
-        $this->db->order_by("recurrence", "desc");
+        $this->db->order_by("timestamp", "desc");
 
         $query = $this->db->get();
 

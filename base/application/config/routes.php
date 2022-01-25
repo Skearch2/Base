@@ -60,7 +60,9 @@ $route['auth/get/csrf_hash']                          = 'auth/get_csrf_hash';
 
 /**********************************************  Skearch Frontend Routes  **********************************************/
 
-/* Pages */
+/* 
+    Pages 
+*/
 $route['home']                                   = 'frontend/pages';
 $route['browse']                                 = 'frontend/pages/browse_all';
 $route['browse/desc']                            = 'frontend/pages/browse_all/desc';
@@ -70,21 +72,29 @@ $route['browse/(:any)']                          = 'frontend/pages/browse_umbrel
 $route['browse/(:any)/(:any)']                   = 'frontend/pages/browse_field/$1/$2';
 $route['browse/get_field_results/(:any)/(:any)'] = 'frontend/pages/get_field_results/$1/$2';
 
-/* Ads */
+/* 
+    Ads 
+*/
 $route['redirect/ad/id/(:num)']                  = 'frontend/ads/redirect/$1';
 $route['update/impression/ad/id/(:num)']         = 'frontend/ads/update_impression/$1';
 
-/* Search */
+/* 
+    Search 
+*/
 $route['search'] = 'frontend/search';
 
-/* Theme */
+/* 
+    Theme 
+*/
 $route['theme/change'] = 'frontend/pages/change_theme';
 
 
 
 /**********************************************  My Skearch Routes  ***************************************************/
 
-/* Authentication */
+/* 
+    Authentication 
+*/
 $route['signup']                                    = 'my_skearch/auth/signup';
 $route['myskearch/auth/login']                      = 'my_skearch/auth/login';
 $route['myskearch/auth/logout']                     = 'my_skearch/auth/logout';
@@ -100,18 +110,22 @@ $route['myskearch/auth/change_email']               = 'my_skearch/auth/change_em
 $route['myskearch/auth/payment']                    = 'my_skearch/auth/payment';
 $route['myskearch/auth/payment/transaction/done']   = 'my_skearch/auth/payment/1';
 
-/* Dashboard */
+/* 
+    Dashboard 
+*/
 $route['myskearch']                             = 'my_skearch/dashboard';
 $route['myskearch/dashboard']                   = 'my_skearch/dashboard';
 $route['myskearch/dashboard/history/clear']     = 'my_skearch/dashboard/delete_history';
 $route['myskearch/dashboard/settings/update']   = 'my_skearch/dashboard/update_settings';
+$route['myskearch/dashboard/deals/id/(:num)/action/opt-in'] = 'my_skearch/dashboard/enlist_user_in_brand_deal/$1';
 
 /* Digital assets */
 $route['myskearch/digital_assets']              = 'my_skearch/digital_assets';
 $route['myskearch/participate/giveaway/(:num)'] = 'my_skearch/digital_assets/participate_in_giveaway/$1';
 
-
-/* Private social */
+/* 
+    Private social 
+*/
 $route['myskearch/private_social']                      = 'my_skearch/private_social';
 $route['myskearch/private_social/get/chats']            = 'my_skearch/private_social/chats';
 $route['myskearch/private_social/get/conversation']     = 'my_skearch/private_social/conversation';
@@ -122,6 +136,11 @@ $route['myskearch/private_social/ping']                 = 'my_skearch/private_so
 $route['myskearch/private_social/request']              = 'my_skearch/private_social/request';
 $route['myskearch/private_social/search']               = 'my_skearch/private_social/users';
 
+/* 
+    Profile 
+*/
+$route['myskearch/profile']             = 'my_skearch/profile';
+$route['myskearch/profile/(:num)']      = 'my_skearch/profile/index/$1';
 
 /* 
     Brand 
@@ -148,9 +167,12 @@ $route['myskearch/brand/vault/add/media']                = 'my_skearch/brand/med
 $route['myskearch/brand/vault/edit/media/id/(:num)']     = 'my_skearch/brand/media_vault/update/$1';
 $route['myskearch/brand/vault/delete/media/id/(:num)']   = 'my_skearch/brand/media_vault/delete/$1';
 
-/* Profile */
-$route['myskearch/profile']             = 'my_skearch/profile';
-$route['myskearch/profile/(:num)']      = 'my_skearch/profile/index/$1';
+// Deals
+$route['myskearch/brand/deals']                          = 'my_skearch/brand/deals';
+$route['myskearch/brand/deals/get']                      = 'my_skearch/brand/deals/get';
+$route['myskearch/brand/deals/create']                   = 'my_skearch/brand/deals/create';
+$route['myskearch/brand/deals/edit/id/(:num)']           = 'my_skearch/brand/deals/update/$1';
+$route['myskearch/brand/deals/delete/id/(:num)']         = 'my_skearch/brand/deals/delete/$1';
 
 
 
@@ -322,6 +344,12 @@ $route['admin/brands/brandlinks/get/brand_id/(:num)']                  = 'admin_
 $route['admin/brands/brandlinks/toggle/status/id/(:num)']              = 'admin_panel/brands/brandlinks/toggle/$1';
 $route['admin/brands/brandlinks/update/id/(:num)']                     = 'admin_panel/brands/brandlinks/update/$1';
 
+// Deals
+$route['admin/brands/dealdrop']                       = 'admin_panel/brands/deals';
+$route['admin/brands/deals/get']                      = 'admin_panel/brands/deals/get';
+$route['admin/brands/deals/edit/id/(:num)']           = 'admin_panel/brands/deals/update/$1';
+$route['admin/brands/deals/delete/id/(:num)']         = 'admin_panel/brands/deals/delete/$1';
+
 
 // Payments
 $route['admin/brand/payments/id/(:num)']                = 'admin_panel/brands/payments/index/$1';
@@ -334,6 +362,7 @@ $route['admin/viewas/brand/id/(:num)/show/brandlinks']       = 'my_skearch/brand
 $route['admin/viewas/brand/id/(:num)/show/vault']            = 'my_skearch/brand/media_vault/index/$1';
 $route['admin/viewas/brand/id/(:num)/show/ads/action/get']   = 'my_skearch/brand/ads/get/$1';
 $route['admin/viewas/brand/id/(:num)/show/vault/action/get'] = 'my_skearch/brand/media_vault/get/$1';
+$route['admin/viewas/brand/id/(:num)/show/deals/action/get'] = 'my_skearch/brand/deals/get/$1';
 
 // Ads Manager
 $route['admin/ads/manager']                                                                             = 'admin_panel/ads_manager';
