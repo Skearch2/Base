@@ -36,38 +36,37 @@ $this->load->view('my_skearch/templates/start_pagebody');
 		</div>
 	</div>
 	<div class="row">
-		<?php if (
-			$this->ion_auth->in_group($this->config->item('regular', 'ion_auth')) ||
-			$this->ion_auth->in_group($this->config->item('premium', 'ion_auth'))
-		) : ?>
-			<div class="col-xl-4">
-				<div class="m-portlet m-portlet--bordered-semi m-portlet--full-height ">
-					<div class="m-portlet__head">
-						<div class="m-portlet__head-caption">
-							<div class="m-portlet__head-title">
-								<h3 class="m-portlet__head-text">
-									Brand Deals
-								</h3>
-							</div>
+		<div class="col-xl-4">
+			<div class="m-portlet m-portlet--bordered-semi m-portlet--full-height ">
+				<div class="m-portlet__head">
+					<div class="m-portlet__head-caption">
+						<div class="m-portlet__head-title">
+							<h3 class="m-portlet__head-text">
+								Brand Deals
+							</h3>
 						</div>
 					</div>
-					<div class="m-portlet__body">
-						<div class="m-widget4">
-							<div class="m-scrollable" data-scrollable="true" data-height="380" data-mobile-height="300">
-								<?php if (!empty($brand_deals_feed)) : ?>
-									<?php foreach ($brand_deals_feed as $deal) : ?>
-										<div class="m-widget4__item">
-											<div class="m-widget4__img m-widget4__img--logo">
-												<img src="https://localhost/metronic%20templates/default/assets/app/media/img/client-logos/logo5.png" alt="">
-											</div>
-											<div class="m-widget4__info">
-												<span class="m-widget4__title">
-													<?= $deal->title ?>
-												</span><br>
-												<span class="m-widget4__sub">
-													<?= $deal->description ?>
-												</span>
-											</div>
+				</div>
+				<div class="m-portlet__body">
+					<div class="m-widget4">
+						<div class="m-scrollable" data-scrollable="true" data-height="380" data-mobile-height="300">
+							<?php if (!empty($brand_deals_feed)) : ?>
+								<?php foreach ($brand_deals_feed as $deal) : ?>
+									<div class="m-widget4__item">
+										<div class="m-widget4__img m-widget4__img--logo" style="text-align:center;font-weight: bold">
+											<img alt="<?= $deal->brand ?>">
+										</div>
+										<div class="m-widget4__info">
+											<span class="m-widget4__title">
+												<?= $deal->title ?>
+											</span><br>
+											<span class="m-widget4__sub">
+												<?= $deal->description ?>
+											</span>
+										</div>
+										<?php if (
+											$this->ion_auth->in_group($this->config->item('regular', 'ion_auth')) || $this->ion_auth->in_group($this->config->item('premium', 'ion_auth'))
+										) : ?>
 											<div class="m-widget4__ext">
 												<?php if ($deal->is_user_opted_in) : ?>
 													<span class="m-badge m-badge--success m-badge--wide">Opted</span>
@@ -75,21 +74,21 @@ $this->load->view('my_skearch/templates/start_pagebody');
 													<a id="btn-opt-in-deal" onclick="optInDeal(<?= $deal->id ?>, '<?= $deal->title ?>', <?= $this->session->userdata('user_id') ?>, this)" class="m-btn m-btn--pill m-btn--hover-brand btn btn-sm btn-secondary">Opt In</a>
 												<?php endif ?>
 											</div>
-										</div>
-									<?php endforeach ?>
-								<?php else : ?>
-									<div class="m-widget7">
-										<div class="m-widget7__desc">
-											There are no new deals available right now!
-										</div>
+										<?php endif ?>
 									</div>
-								<?php endif ?>
-							</div>
+								<?php endforeach ?>
+							<?php else : ?>
+								<div class="m-widget7">
+									<div class="m-widget7__desc">
+										There are no new deals available right now!
+									</div>
+								</div>
+							<?php endif ?>
 						</div>
 					</div>
 				</div>
 			</div>
-		<?php endif ?>
+		</div>
 		<div class="col-xl-8">
 			<div class="m-portlet m-portlet--bordered-semi m-portlet--full-height ">
 				<div class="m-portlet__head">
