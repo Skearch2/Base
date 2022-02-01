@@ -61,6 +61,7 @@ class Deals_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('brands_deals');
+        $this->db->join('skearch_brands', 'brands_deals.brand_id = skearch_brands.id', 'left');
 
         if ($status) {
             $this->db->where('status', $status);

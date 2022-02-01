@@ -60,25 +60,23 @@ class Dashboard extends MY_Controller
 		// default search engine
 		$data['search_engine'] = $this->session->userdata('settings')->search_engine;
 
-		if ($this->ion_auth->in_group($this->config->item('regular', 'ion_auth')) || $this->ion_auth->in_group($this->config->item('premium', 'ion_auth'))) {
-			// brand deals
-			$brand_deals = $this->Deals->get($status = 'running');
+		// brand deals
+		$brand_deals = $this->Deals->get($status = 'running');
 
-			if (!empty($brand_deals)) {
-				$deals_opted_in_by_user = $this->Deals->get_brands_deals_opted_in_by_user($this->session->userdata('user_id'));
-				$deals_opted_in_by_user = array_column($deals_opted_in_by_user, 'id');
+		if (!empty($brand_deals)) {
+			$deals_opted_in_by_user = $this->Deals->get_brands_deals_opted_in_by_user($this->session->userdata('user_id'));
+			$deals_opted_in_by_user = array_column($deals_opted_in_by_user, 'id');
 
-				foreach ($brand_deals as $deal) {
-					if (in_array($deal->id, $deals_opted_in_by_user)) {
-						$deal->is_user_opted_in = 1;
-					} else {
-						$deal->is_user_opted_in = 0;
-					}
+			foreach ($brand_deals as $deal) {
+				if (in_array($deal->id, $deals_opted_in_by_user)) {
+					$deal->is_user_opted_in = 1;
+				} else {
+					$deal->is_user_opted_in = 0;
 				}
 			}
-
-			$data['brand_deals_feed'] = $brand_deals;
 		}
+
+		$data['brand_deals_feed'] = $brand_deals;
 
 		// fields history
 		$fields_history = $this->Fields_History->get($this->user_id);
