@@ -137,8 +137,8 @@ $this->load->view('my_skearch/templates/start_pagebody');
 								</a>
 							</li>
 							<li class="nav-item m-tabs__item">
-								<a class="nav-link m-tabs__link" data-toggle="tab" href="#settings" role="tab">
-									Settings
+								<a class="nav-link m-tabs__link" data-toggle="tab" href="#brand" role="tab">
+									Brand
 								</a>
 							</li>
 						</ul>
@@ -404,7 +404,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 						</fieldset>
 						<?= form_close(); ?>
 					</div>
-					<div class="tab-pane" id="settings">
+					<div class="tab-pane" id="brand">
 					</div>
 				</div>
 			</div>

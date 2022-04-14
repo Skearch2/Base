@@ -38,6 +38,7 @@ class Users extends MY_Controller
         $this->load->model('Util_model', 'Util_model');
         $this->load->model('admin_panel/email/Template_model', 'Template_model');
         $this->load->model('admin_panel/email/Log_model', 'Log_model');
+        $this->load->model('admin_panel/email/Marketing_emails_model');
     }
 
 
@@ -165,14 +166,17 @@ class Users extends MY_Controller
                 // create user
                 $create = $user_id = $this->User->create($username, $password, $email, $additional_data, array($group));
 
-                // link user to brand
-                if ($group == 3) {
-                    $brand = $this->input->post('brand');
-                    $is_key_member = $this->input->post('key_member');
-                    $this->Brand->link_user($user_id, $brand, $is_key_member);
-                }
-
                 if ($create) {
+                    // link user to brand
+                    if ($group == 3) {
+                        $brand = $this->input->post('brand');
+                        $is_key_member = $this->input->post('key_member');
+                        $this->Brand->link_user($user_id, $brand, $is_key_member);
+                    }
+
+                    // add user email to email marketing list
+                    $this->Marketing_emails_model->add([$email]);
+
                     $this->session->set_flashdata('create_success', 1);
                 } else {
                     $this->session->set_flashdata('create_success', 0);

@@ -123,4 +123,23 @@ class User_model extends CI_Model
             return FALSE;
         }
     }
+
+    /**
+     * Unsubscribe email from marketing list
+     *
+     * @param string $email User email
+     * @return boolean
+     */
+    public function unsubsribe_user_email($email)
+    {
+        $this->db->set('is_subscribed', 0);
+        $this->db->where('email', $email);
+        $this->db->update('marketing_emails');
+
+        if ($this->db->affected_rows()) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 }

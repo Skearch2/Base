@@ -165,4 +165,25 @@ class Giveaway_model extends CI_Model
             return false;
         }
     }
+
+    /**
+     * Update giveaway status on start date or end date
+     *
+     * @return boolean
+     */
+    public function update_status()
+    {
+        $this->db->trans_start();
+
+        $this->db->set('status', 0);
+        $this->db->where('status', 1);
+        $this->db->where('end_date < NOW()');
+        $this->db->update('giveaways');
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            return false;
+        }
+    }
 }

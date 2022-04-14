@@ -109,6 +109,7 @@ $route['myskearch/auth/reset_password/(:any)']      = 'my_skearch/auth/reset_pas
 $route['myskearch/auth/change_email']               = 'my_skearch/auth/change_email';
 $route['myskearch/auth/payment']                    = 'my_skearch/auth/payment';
 $route['myskearch/auth/payment/transaction/done']   = 'my_skearch/auth/payment/1';
+$route['myskearch/auth/unsubscribe/email']          = 'my_skearch/auth/unsubscribe_email';
 
 /* 
     Dashboard 
@@ -347,6 +348,7 @@ $route['admin/brands/brandlinks/update/id/(:num)']                     = 'admin_
 // Deals
 $route['admin/brands/dealdrop']                       = 'admin_panel/brands/deals';
 $route['admin/brands/deals/get']                      = 'admin_panel/brands/deals/get';
+$route['admin/brands/deals/create']                   = 'admin_panel/brands/deals/create';
 $route['admin/brands/deals/edit/id/(:num)']           = 'admin_panel/brands/deals/update/$1';
 $route['admin/brands/deals/delete/id/(:num)']         = 'admin_panel/brands/deals/delete/$1';
 
@@ -416,6 +418,14 @@ $route['admin/email/logs/clear/user/id/(:num)']     = 'admin_panel/email/clear_l
 $route['admin/email/log/view/id/(:num)']            = 'admin_panel/email/view/$1';
 $route['admin/email/message']                       = 'admin_panel/email/message';
 $route['admin/email/templates/(:any)']              = 'admin_panel/email/templates/$1';
+$route['admin/email/marketing_emails']              = 'admin_panel/email/get_marketing_emails/1';
+$route['admin/email/marketing_emails/get']          = 'admin_panel/email/get_marketing_emails';
+$route['admin/email/marketing_emails/add']          = 'admin_panel/email/add_marketing_emails';
+$route['admin/email/marketing_emails/update/id/(:num)'] = 'admin_panel/email/update_marketing_email/$1';
+$route['admin/email/marketing_emails/delete/id/(:num)'] = 'admin_panel/email/delete_marketing_email/$1';
+$route['admin/email/marketing_emails/delete/id/(:num)'] = 'admin_panel/email/delete_marketing_email/$1';
+$route['admin/email/marketing_emails/toggle/subscription/id/(:num)'] = 'admin_panel/email/toggle_marketing_email_subscription/$1';
+$route['admin/email/marketing_emails/send']         = 'admin_panel/email/send_mass_email';
 
 /* Settings */
 $route['admin/settings']                       = 'admin_panel/settings';

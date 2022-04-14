@@ -31,6 +31,7 @@ class Profile extends MY_Controller
         }
 
         $this->load->model('my_skearch/User_model', 'User');
+        $this->load->model('admin_panel/brands/Brand_model', 'Brand');
         $this->load->model('Util_model', 'Util');
     }
 
@@ -87,10 +88,6 @@ class Profile extends MY_Controller
 
             $this->load->view('my_skearch/pages/profile', $data);
         } else {
-
-            echo '<pre>';
-            print_r($this->input->post());
-            die();
 
             $data['username'] = $this->input->post('username');
 

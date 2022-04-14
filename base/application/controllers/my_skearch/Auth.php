@@ -113,10 +113,6 @@ class Auth extends MY_Controller
             return;
         }
 
-        // echo "<pre>";
-        // print_r($user);
-        // die();
-
         // // if the user is already active redirect to login page
         // elseif ($user->active == 1) {
         //     // redirect to the login page
@@ -325,7 +321,6 @@ class Auth extends MY_Controller
      */
     public function forgot_password()
     {
-
         $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'trim|required');
 
         if ($this->form_validation->run() === false) {
@@ -732,6 +727,38 @@ class Auth extends MY_Controller
                 $this->session->set_flashdata('error', "Unable to complete security validation. Please try again!");
                 redirect('myskearch/auth/signup');
             }
+        }
+    }
+
+    /**
+     * Unsubscribe email from marketing list
+     */
+    public function unsubscribe_email()
+    {
+        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
+
+        if ($this->form_validation->run() === false) {
+            $data['title'] = ucwords("my skearch | unsubscribe newsletter");
+            $this->load->view('auth/pages/unsubscribe_email', $data);
+        } else {
+            $is_unsubscribed = $this->User->unsubsribe_user_email($this->input->post('email'));
+
+            if ($is_unsubscribed) {
+                $subject = "Skearch - Unsubscribe Newsletter Confirmation";
+                $content = "Your email has been successfully unsubscribed from our email newsletter.";
+
+                $this->email->clear();
+                $this->email->from($this->config->item('default_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+                $this->email->to($this->input->post('email'));
+                $this->email->subject($subject);
+                $this->email->message($content);
+                $this->email->send();
+
+                $this->session->set_flashdata('success', 'Your email has been successfully unsubscribed.');
+            } else {
+                $this->session->set_flashdata('error', 'Unable to unsubsribe email, some error occurred.');
+            }
+            redirect("myskearch/auth/unsubscribe/email");
         }
     }
 
