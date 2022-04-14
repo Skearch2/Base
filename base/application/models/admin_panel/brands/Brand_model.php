@@ -18,7 +18,7 @@ class Brand_model extends CI_Model
     /**
      * Creates a brand
      *
-     * @param Array $brand_data Required information for brands
+     * @param array $brand_data Required information for brands
      * @return boolean
      */
     public function create($brand_data)

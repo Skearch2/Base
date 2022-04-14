@@ -33,6 +33,9 @@ class Giveaways extends MY_Controller
 
         $this->load->model('admin_panel/Giveaway_model', 'Giveaways');
         $this->load->model('admin_panel/users/User_model', 'Users');
+
+        // update status on giveaways based on start/end date
+        $this->Giveaways->update_status();
     }
 
     /**

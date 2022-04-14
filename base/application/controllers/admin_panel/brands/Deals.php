@@ -34,10 +34,64 @@ class Deals extends MY_Controller
             redirect('admin/auth/login');
         }
 
+        $this->load->model('admin_panel/brands/brand_model', 'Brand');
         $this->load->model('admin_panel/brands/Dealdrop_model', 'Deals');
 
         // update status on deals based on start/end date
         $this->Deals->update_status();
+    }
+
+    /**
+     * Create brand drop
+     *
+     * @return void
+     */
+    public function create()
+    {
+        if (!$this->ion_auth_acl->has_permission('brand_deals_create') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+
+            $this->form_validation->set_rules('title', 'Title', 'trim|required');
+            $this->form_validation->set_rules('description', 'Description', 'trim|required');
+            $this->form_validation->set_rules('start_date', 'Start Date', 'required');
+            $this->form_validation->set_rules('duration', 'Duration', 'required|min_length[1]|max_length[30]');
+
+            if ($this->form_validation->run() === false) {
+
+                $data['brands'] = $this->Brand->get();
+
+                // page title
+                $data['title'] = ucwords('create deal drop');
+                $this->load->view('admin_panel/pages/brands/deals/create', $data);
+            } else {
+
+                $duration = $this->input->post('duration');
+                $end_date = date_create($this->input->post('start_date'));
+                date_add($end_date, date_interval_create_from_date_string("{$duration} days"));
+                $end_date = date_format($end_date, 'Y-m-d H:i');
+
+                $data = [
+                    'brand_id'     => $this->input->post('brand'),
+                    'title'        => $this->input->post('title'),
+                    'description'  => $this->input->post('description'),
+                    'start_date'   => $this->input->post('start_date'),
+                    'end_date'     => $end_date
+                ];
+
+                $create = $this->Deals->create($data);
+
+                if ($create) {
+                    $this->session->set_flashdata('create_success', 1);
+                } else {
+                    $this->session->set_flashdata('create_success', 0);
+                }
+
+                redirect("admin/brands/dealdrop");
+            }
+        }
     }
 
     /**
@@ -130,13 +184,14 @@ class Deals extends MY_Controller
                 $start_date = date_create($deal->start_date);
                 $end_date = date_create($deal->end_date);
                 $interval = date_diff($start_date, $end_date);
+
                 $deal->duration = $interval->format('%a');
 
                 // page data
                 $data['deal'] = $deal;
 
                 // page title
-                $data['title'] = ucwords('edit deal');
+                $data['title'] = ucwords('edit deal drop');
                 $this->load->view('admin_panel/pages/brands/deals/edit', $data);
             } else {
 
@@ -146,7 +201,7 @@ class Deals extends MY_Controller
                 $end_date = date_format($end_date, 'Y-m-d H:i');
 
                 $data = [
-                    'brand_id'     => $this->brand_id,
+                    'brand_id'     => $this->input->post('brand'),
                     'title'        => $this->input->post('title'),
                     'description'  => $this->input->post('description'),
                     'start_date'   => $this->input->post('start_date'),

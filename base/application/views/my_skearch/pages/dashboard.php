@@ -37,7 +37,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 	</div>
 	<div class="row">
 		<div class="col-xl-4">
-			<div class="m-portlet m-portlet--bordered-semi m-portlet--full-height ">
+			<div class="m-portlet m-portlet--primary m-portlet--head-solid-bg m-portlet--bordered">
 				<div class="m-portlet__head">
 					<div class="m-portlet__head-caption">
 						<div class="m-portlet__head-title">

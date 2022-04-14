@@ -31,8 +31,48 @@ $this->load->view('admin_panel/templates/subheader');
 
 <div class="m-content">
 	<div class="m-portlet m-portlet--mobile">
+		<div class="m-portlet__head">
+			<div class="m-portlet__head-caption">
+				<div class="m-portlet__head-title">
+					<h3 class="m-portlet__head-text">
+					</h3>
+				</div>
+			</div>
+			<div class="m-portlet__head-tools">
+				<ul class="m-portlet__nav">
+					<li class="m-portlet__nav-item">
+						<a href="<?= site_url("admin/brands/deals/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+							<span>
+								<i class="la la-plus-circle"></i>
+								<span>Create Deal Drop</span>
+							</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 
 		<div class="m-portlet__body">
+
+			<?php if ($this->session->flashdata('create_success') === 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The deal drop has been created.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('create_success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to create deal drop.
+					</div>
+				</div>
+			<?php endif ?>
 
 			<?php if ($this->session->flashdata('update_success') === 1) : ?>
 				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
@@ -40,7 +80,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						The deal information has been updated.
+						The deal drop has been updated.
 					</div>
 				</div>
 			<?php elseif ($this->session->flashdata('update_success') === 0) : ?>
@@ -49,7 +89,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<div class="alert-icon">
-						Unable to update deal information.
+						Unable to update deal drop.
 					</div>
 				</div>
 			<?php endif ?>
@@ -59,6 +99,7 @@ $this->load->view('admin_panel/templates/subheader');
 				<thead>
 					<tr>
 						<th>ID</th>
+						<th>Brand</th>
 						<th>Title</th>
 						<th>Description</th>
 						<th>Start Date</th>
@@ -110,7 +151,7 @@ $this->load->view('admin_panel/templates/js_global');
 		var title = title.replace(/%20/g, ' ');
 		swal({
 			title: "Delete?",
-			text: "Are you sure you want delete this deal: \"" + title + "\"?",
+			text: "Are you sure you want delete this deal drop: \"" + title + "\"?",
 			type: "warning",
 			confirmButtonClass: "btn btn-danger",
 			confirmButtonText: "Yes, delete it!",
@@ -123,12 +164,12 @@ $this->load->view('admin_panel/templates/js_global');
 				type: 'DELETE',
 				success: function(data, status) {
 					if (data == 1) {
-						swal("Success!", "The deal has been deleted.", "success")
+						swal("Success!", "The deal drop has been deleted.", "success")
 						$("#" + id).remove();
 					}
 				},
 				error: function(xhr, status, error) {
-					swal("Error!", "Unable to delete the deal.", "error")
+					swal("Error!", "Unable to delete the deal drop.", "error")
 				}
 			});
 		});
@@ -146,6 +187,8 @@ $this->load->view('admin_panel/templates/js_global');
 				ajax: "<?= site_url("admin_panel/brands/deals/get"); ?>",
 				columns: [{
 					data: "id"
+				}, {
+					data: "brand"
 				}, {
 					data: "title"
 				}, {
@@ -165,24 +208,28 @@ $this->load->view('admin_panel/templates/js_global');
 					orderable: !1,
 					render: function(a, t, e, n) {
 						var title = e['title'].replace(/ /g, '%20');
-						return '<a href="<?= site_url('admin/brands/deals/edit/id/') ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-							'<a onclick=deleteDeal("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+						if (e['status'] == 'pending') {
+							return '<a href="<?= site_url('admin/brands/deals/edit/id/') ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+								'<a onclick=deleteDeal("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+						} else {
+							return '<a onclick=deleteDeal("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+						}
 					}
 				}, {
 					targets: 0,
 					orderable: !1
 				}, {
-					targets: 3,
+					targets: 4,
 					render: function(a, t, e, n) {
 						return new Date(e['start_date']).toLocaleString();
 					}
 				}, {
-					targets: 4,
+					targets: 5,
 					render: function(a, t, e, n) {
 						return new Date(e['end_date']).toLocaleString();
 					}
 				}, {
-					targets: 5,
+					targets: 6,
 					render: function(a, t, e, n) {
 						var s = {
 							"pending": {

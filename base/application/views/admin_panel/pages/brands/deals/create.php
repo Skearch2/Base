@@ -70,20 +70,37 @@ $this->load->view('admin_panel/templates/subheader');
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-10 ml-auto">
-										<h3 class="m-form__section">Details</h3>
+										<h3 class="m-form__section">Deal Drop</h3>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="brand" class="col-2 col-form-label">Title *</label>
+									<label for="brand" class="col-2 col-form-label">Brand *</label>
 									<div class="col-7">
-										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title'); ?>">
+										<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="brand">
+											<option value="" <?= set_select('brand', '', TRUE) ?>>Select</option>
+											<?php foreach ($brands as $brand) : ?>
+												<option value="<?= $brand->id ?>" <?= set_select("brand", $brand->brand) ?> data-subtext="<?= $brand->organization; ?>"><?= $brand->brand; ?></option>
+											<?php endforeach; ?>
+										</select>
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label class="col-2 col-form-label">Deadline *</label>
+									<label for="title" class="col-2 col-form-label">Title *</label>
+									<div class="col-7">
+										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title') ?>">
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<label for="title" class="col-2 col-form-label">Description *</label>
+									<div class="col-7">
+										<input class="form-control m-input" type="text" name="description" value="<?= set_value('description') ?>">
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<label class="col-2 col-form-label">Start Date *</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date">
-											<input type="text" class="form-control m-input" readonly placeholder="Select date and time" id="m_datetimepicker" name="end_date" value="<?= set_value('end_date'); ?>">
+											<input type="text" class="form-control m-input" readonly placeholder="Select date and time" id="m_datetimepicker" name="start_date" value="<?= set_value('start_date'); ?>">
 											<div class="input-group-append">
 												<span class="input-group-text">
 													<i class="la la-calendar-check-o"></i>
@@ -92,36 +109,27 @@ $this->load->view('admin_panel/templates/subheader');
 										</div>
 									</div>
 								</div>
-								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Crypto *</label>
+									<label for="example-text-input" class="col-2 col-form-label">Duration in day(s) *</label>
 									<div class="col-7">
-										<select class="form-control m-bootstrap-select m_selectpicker" data-live-search="true" name="crypto">
-											<option value="" <?= set_select('crypto', '', TRUE) ?>>Select</option>
-											<option value="SGB">SGB</option>
-											<option value="GALA">GALA</option>
-										</select>
+										<div class="m-ion-range-slider">
+											<input type="hidden" name="duration" id="duration" value="<?= set_value('duration') ?>">
+										</div>
 									</div>
 								</div>
-								<div class="form-group m-form__group row">
-									<label for="brand" class="col-2 col-form-label">Amount *</label>
-									<div class="col-7">
-										<input class="form-control m-input" type="text" name="amount" value="<?= set_value('amount'); ?>">
-									</div>
-								</div>
-								<div class="m-portlet__foot m-portlet__foot--fit">
-									<div class="m-form__actions">
-										<div class="row">
-											<div class="col-2">
-											</div>
-											<div class="col-7">
-												<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>
-												&emsp;
-												<button type="button" class="btn btn-secondary m-btn m-btn--air m-btn--custom" onclick="window.history.back()">Cancel</button>
-											</div>
-											<div class="col-3">
-												<small>* Indicates required field</small>
-											</div>
+							</div>
+							<div class="m-portlet__foot m-portlet__foot--fit">
+								<div class="m-form__actions">
+									<div class="row">
+										<div class="col-2">
+										</div>
+										<div class="col-7">
+											<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>
+											&emsp;
+											<button type="button" class="btn btn-secondary m-btn m-btn--air m-btn--custom" onclick="window.history.back()">Cancel</button>
+										</div>
+										<div class="col-3">
+											<small>* Indicates required field</small>
 										</div>
 									</div>
 								</div>
@@ -158,8 +166,44 @@ $this->load->view('admin_panel/templates/js_global');
 
 <!--begin::Page Scripts -->
 
-
 <script>
+	var FormControls = {
+		init: function() {
+			$("#m_form").validate({
+				rules: {
+					brand: {
+						required: 1
+					},
+					title: {
+						required: 1
+					},
+					description: {
+						required: 1
+					},
+					start_date: {
+						required: 1
+					}
+				},
+				invalidHandler: function(e, r) {
+					$("#m_form_msg").removeClass("m--hide").show(), mUtil.scrollTop();
+				},
+				submitHandler: function(e) {
+					form.submit();
+				},
+			});
+		}
+	};
+
+	var IONRangeSlider = {
+		init: function() {
+			$("#duration").ionRangeSlider({
+				min: 1,
+				max: 30
+				// postfix: " days"
+			});
+		},
+	};
+
 	var BootstrapDatetimepicker = function() {
 		var t;
 		t = {
@@ -174,51 +218,25 @@ $this->load->view('admin_panel/templates/js_global');
 					todayHighlight: 1,
 					orientation: "bottom",
 					templates: t,
-					autoclose: 1
+					autoclose: 1,
+					todayBtn: 1,
+					pickerPosition: "top-left"
 				})
 			}
 		}
 	}();
 
-	var FormControls = {
-		init: function() {
-			$("#m_form").validate({
-				onfocusout: true,
-				rules: {
-					title: {
-						required: 1
-					},
-					end_date: {
-						required: 1
-					},
-					crypto: {
-						required: 1
-					},
-					amount: {
-						required: 1,
-						number: 1
-
-					}
-				},
-				invalidHandler: function(e, r) {
-					$("#m_form_msg").removeClass("m--hide").show(), mUtil.scrollTop();
-				},
-				submitHandler: function(e) {
-					form.submit();
-				},
-			});
-		}
-	};
-
 	// hide option which has no value
 	$('option[value=""]').hide().parent().selectpicker('refresh');
 
 	$(document).ready(function() {
-		BootstrapDatetimepicker.init()
-		FormControls.init()
+		BootstrapDatetimepicker.init();
+		FormControls.init();
+		IONRangeSlider.init();
 	});
 
-	$("#menu-giveaways").addClass("m-menu__item  m-menu__item--active");
+	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-brands-dealdrop").addClass("m-menu__item  m-menu__item--active");
 </script>
 
 <!--end::Page Scripts -->

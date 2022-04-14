@@ -115,6 +115,8 @@ $this->load->view('admin_panel/templates/subheader');
 											</div>
 											<div class="col-7">
 												<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>
+												&emsp;
+												<button type="button" class="btn btn-secondary m-btn m-btn--air m-btn--custom" onclick="window.history.back()">Cancel</button>
 											</div>
 											<div class="col-3">
 												<small>* Indicates required field</small>

@@ -322,4 +322,50 @@ class Brands extends MY_Controller
             $this->load->view('admin_panel/pages/brands/members', $data);
         }
     }
+
+    /**
+     * Upload media
+     *
+     * @param string $scope          Scope: Default|Global|Umbrella|Field
+     * @param int $scope_id          Scope id
+     * @return string|false
+     */
+    private function _upload_media($scope, $scope_id)
+    {
+        $tmp = $this->config->item('tmp_dir');
+
+        if (!file_exists("./$tmp/")) {
+            mkdir("./$tmp/", $this->config->item('tmp_permissions'));
+        }
+
+        $config['upload_path'] = "./$tmp/";
+        $config['max_size'] = $this->config->item('upload_file_size');
+        $config['allowed_types'] = $this->config->item('upload_file_types');
+        $config['encrypt_name'] = true;
+        // $config['max_width']            = 1024;
+        // $config['max_height']           = 768;
+
+        $this->load->library('upload', $config);
+
+        $upload = $this->upload->do_upload('media');
+
+        if ($upload) {
+
+            $media = $this->upload->data();
+
+            $folder_path = FCPATH . 'base/media/brands/';
+
+            if (move_uploaded_file($_FILES['media']['tmp_name'], $folder_path . $media['file_name'])) {
+                return $media['file_name'];
+            } else {
+                log_message('error', 'Unable to upload media.');
+                return false;
+            }
+        } else {
+            log_message('error', 'Unable to upload media.');
+            return false;
+            // http_response_code(500);
+            // echo json_encode($this->upload->display_errors());
+        }
+    }
 }
