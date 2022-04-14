@@ -27,11 +27,15 @@ class Dashboard extends MY_Controller
 		$this->section = 'dashboard';
 
 		$this->load->model('my_skearch/brand/Deals_model', 'Deals');
+		$this->load->model('admin_panel/Giveaway_model', 'Giveaways');
 		$this->load->model('Fields_History_model', 'Fields_History');
 		$this->load->model('my_skearch/User_model', 'User');
 
 		// update status on deals based on start/end date
 		$this->Deals->update_status();
+
+		// update status on giveaways based on start/end date
+		$this->Giveaways->update_status();
 	}
 
 	/**

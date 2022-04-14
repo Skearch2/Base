@@ -74,6 +74,14 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
+									<label for="brand" class="col-2 col-form-label">Brand *</label>
+									<div class="col-7">
+										<select class="form-control m-bootstrap-select m_selectpicker" name="brand">
+											<option value="<?= $deal->brand_id ?>" selected data-subtext="<?= $deal->organization; ?>"><?= $deal->brand; ?></option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
 									<label for="title" class="col-2 col-form-label">Title *</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title', $deal->title) ?>">
@@ -114,6 +122,8 @@ $this->load->view('admin_panel/templates/subheader');
 										</div>
 										<div class="col-7">
 											<button type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom">Submit</button>
+											&emsp;
+											<button type="button" class="btn btn-secondary m-btn m-btn--air m-btn--custom" onclick="window.history.back()">Cancel</button>
 										</div>
 										<div class="col-3">
 											<small>* Indicates required field</small>

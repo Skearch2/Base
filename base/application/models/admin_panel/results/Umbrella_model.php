@@ -24,17 +24,6 @@ class Umbrella_model extends CI_Model
      */
     public function create($umbrella_data)
     {
-        // $data = array(
-        //     'title'             => $data['title'],
-        //     'description'       => $data['description'],
-        //     'description_short' => $data['description_short'],
-        //     'umbrella_name'     => $data['umbrella_name'],
-        //     'home_display'      => $data['home_display'],
-        //     'keywords'          => $data['keywords'],
-        //     'featured'          => $data['featured'],
-        //     'enabled'           => $data['enabled']
-        // );
-
         $this->db->insert('skearch_categories', $umbrella_data);
 
         if ($this->db->affected_rows()) {
@@ -148,15 +137,6 @@ class Umbrella_model extends CI_Model
      */
     public function update($id, $umbrella_data)
     {
-        // if (array_key_exists('title', $umbrella_data))                      $data['title']              = $umbrella_data['title'];
-        // if (array_key_exists('description', $umbrella_data))                $data['description']        = $umbrella_data['description'];
-        // if (array_key_exists('description_short', $umbrella_data))          $data['description_short']  = $umbrella_data['description_short'];
-        // if (array_key_exists('umbrella_name', $umbrella_data))              $data['umbrella_name']      = $umbrella_data['umbrella_name'];
-        // if (array_key_exists('home_display', $umbrella_data))               $data['home_display']       = $umbrella_data['home_display'];
-        // if (array_key_exists('keywords', $umbrella_data))                   $data['keywords']           = $umbrella_data['keywords'];
-        // if (array_key_exists('featured', $umbrella_data))                   $data['featured']           = $umbrella_data['featured'];
-        // if (array_key_exists('enabled', $umbrella_data))                    $data['enabled']            = $umbrella_data['enabled'];
-
         $this->db->where('id', $id);
         $this->db->update('skearch_categories', $umbrella_data);
 

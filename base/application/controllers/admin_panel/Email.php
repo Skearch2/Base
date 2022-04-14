@@ -38,6 +38,7 @@ class Email extends MY_Controller
         $this->load->model('admin_panel/users/User_model', 'Users');
         $this->load->model('admin_panel/email/Log_model', 'Email_Logs');
         $this->load->model('admin_panel/email/Invite_log_model');
+        $this->load->model('admin_panel/email/Marketing_emails_model');
 
         $this->email->initialize($this->config->item('email_config', 'ion_auth'));
     }
@@ -294,7 +295,7 @@ class Email extends MY_Controller
                     }
                     $this->session->set_flashdata('success', 1);
                 } else {
-                    $this->session->set_flashdata('success', 1);
+                    $this->session->set_flashdata('success', 0);
                 }
                 $this->email->clear();
                 redirect('admin/email/message');
@@ -384,6 +385,170 @@ class Email extends MY_Controller
 
             $data['title'] = ucwords("Email Snapshot");
             $this->load->view('admin_panel/pages/email/view', $data);
+        }
+    }
+
+    /**
+     * View list of emails for marketing
+     * 
+     * @return void
+     */
+    public function get_marketing_emails($page = false)
+    {
+        if (!$this->ion_auth_acl->has_permission('email') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+            // view page
+            if ($page ==  true) {
+                $data['title'] = ucwords("master email list");
+                $this->load->view('admin_panel/pages/email/view_marketing_emails', $data);
+            } else {
+                // data for view page
+                $emails = $this->Marketing_emails_model->get();
+                $total_emails = count($emails);
+                $result = array(
+                    'iTotalRecords' => $total_emails,
+                    'iTotalDisplayRecords' => $total_emails,
+                    'sEcho' => 0,
+                    'sColumns' => "",
+                    'aaData' => $emails,
+                );
+
+                $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode($result));
+            }
+        }
+    }
+
+    /**
+     * Add marketing emails to master email list
+     * 
+     * @return void
+     */
+    public function add_marketing_emails()
+    {
+        if ($this->ion_auth_acl->has_permission('email') || $this->ion_auth->is_admin()) {
+            $email_array = preg_split("/\r\n|\n|\r/", $this->input->get('emails'));
+
+            $is_valid = true;
+
+            $emails = [];
+
+            // check each email is valid and prepare for batch array
+            foreach ($email_array as $k => $v) {
+                $is_valid = filter_var($v, FILTER_VALIDATE_EMAIL);
+                $emails[$k] = array('email' => $v);
+            }
+
+            if ($is_valid && $this->Marketing_emails_model->add($emails)) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        } else {
+            echo json_encode(-1);
+        }
+    }
+
+    /**
+     * Deletes email
+     *
+     * @param int $id Email id
+     * @return void
+     */
+    public function delete_marketing_email($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('email') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $delete = $this->Marketing_emails_model->delete($id);
+
+            if ($delete) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        }
+    }
+
+    /**
+     * Toggle email subscription
+     *
+     * @param int $id email id
+     * @return void
+     */
+    public function toggle_marketing_email_subscription($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('email') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $is_subscribed = $this->Marketing_emails_model->get($id)->is_subscribed;
+
+            if ($is_subscribed == 0) {
+                $is_subscribed = 1;
+            } else {
+                $is_subscribed = 0;
+            }
+
+            $data = array(
+                'is_subscribed' => $is_subscribed,
+            );
+
+            $this->Marketing_emails_model->update($id, $data);
+
+            echo json_encode($is_subscribed);
+        }
+    }
+
+    /**
+     * Send email to all emails in the master email list
+     *
+     * @return void
+     */
+    public function send_mass_email()
+    {
+        if (!$this->ion_auth_acl->has_permission('email') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+            if ($this->input->post('email-subject') == null || $this->input->post('email-content') == null) {
+                http_response_code(400);
+                exit;
+            }
+            $subject = $this->input->post('email-subject');
+            $content = $this->input->post('email-content');
+
+            $unsubscribe_url = site_url('myskearch/auth/unsubscribe/email');
+
+            $footer = "<p align='center'><i>To unsubscribe marketing emails from Skearch.com, click <a href='{$unsubscribe_url}' target='_blank'>here</a>.</i><br></p>";
+            $message = $content . "<br>" . $footer;
+
+            $emails = $this->Marketing_emails_model->get($id = null, $is_subscribed = 1);
+            foreach ($emails as $email) {
+                $recipents[] = $email->email;
+            }
+            $recipents = implode(', ', $recipents);
+
+            $this->email->clear();
+            $this->email->from($this->config->item('default_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+            $this->email->to($this->config->item('default_email', 'ion_auth'));
+            $this->email->bcc($recipents);
+            $this->email->subject($subject);
+            $this->email->message($message);
+
+            if ($this->email->send()) {
+                // TODO: log email
+                // foreach ($users as $user) {
+                //     log_email($user->id, "Custom Message", $subject, $content);
+                // }
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
         }
     }
 }

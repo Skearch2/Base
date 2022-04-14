@@ -95,6 +95,7 @@
 								</ul>
 							</div>
 						</li>
+						<li id="submenu-marketing-email" class="m-menu__item " aria-haspopup="true"><a href="<?= site_url("admin/email/marketing_emails"); ?>" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Master Email List</span></a></li>
 					</ul>
 				</div>
 			</li>

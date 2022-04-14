@@ -16,6 +16,23 @@ if (!defined('BASEPATH')) {
 class Dealdrop_model extends CI_Model
 {
     /**
+     * Create deal drop
+     *
+     * @param array $data Required information for deal drop
+     * @return boolean
+     */
+    public function create($data)
+    {
+        $this->db->insert('brands_deals', $data);
+
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Delete deal
      *
      * @param array $id Deal ID
@@ -41,8 +58,9 @@ class Dealdrop_model extends CI_Model
      */
     public function get()
     {
-        $this->db->select('*');
+        $this->db->select('brands_deals.id, title, description, start_date, end_date, status, skearch_brands.brand');
         $this->db->from('brands_deals');
+        $this->db->join('skearch_brands', 'brands_deals.brand_id = skearch_brands.id', 'left');
 
         $query = $this->db->get();
 
@@ -59,7 +77,8 @@ class Dealdrop_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('brands_deals');
-        $this->db->where('id', $id);
+        $this->db->where('brands_deals.id', $id);
+        $this->db->join('skearch_brands', 'brands_deals.brand_id = skearch_brands.id', 'left');
 
         $query = $this->db->get();
 
@@ -111,8 +130,6 @@ class Dealdrop_model extends CI_Model
         $this->db->trans_complete();
 
         if ($this->db->trans_status() === FALSE) {
-            print_r($this->db->trans_status());
-            die();
             return false;
         }
     }
