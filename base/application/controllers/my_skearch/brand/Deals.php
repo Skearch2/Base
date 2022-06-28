@@ -162,7 +162,7 @@ class Deals extends MY_Controller
 
         $data['section'] = $this->section;
         $data['page'] = 'deals';
-        $data['title'] = ucwords("my skearch | brands - media vault");
+        $data['title'] = ucwords("MySkearch | brands - media vault");
 
         // Load page content
         $this->load->view('my_skearch/pages/brand/deals/view', $data);

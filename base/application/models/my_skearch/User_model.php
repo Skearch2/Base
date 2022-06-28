@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {
 /**
  * File:    ~/application/models/my_skearch/User_model.php
  *
- * User model for My Skearch
+ * User model for MySkearch
  * 
  * @package        Skearch
  * @author         Iftikhar Ejaz <ejaziftikhar@gmail.com>

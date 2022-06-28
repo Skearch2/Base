@@ -4,7 +4,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * File:    ~/application/controller/Admin_new.php
  *
- * This is the My Skearch controller.
+ * This is the MySkearch controller.
  * @package		Skearch
  * @author		Iftikhar Ejaz <ejaziftikhar@gmail.com>
  * @copyright	Copyright (c) 2019
@@ -48,7 +48,7 @@ class Digital_Assets extends MY_Controller
 		// page data
 		$data['section'] = 'digital assets';
 		$data['page'] = 'digital assets';
-		$data['title'] = ucwords("my skearch | digital assets");
+		$data['title'] = ucwords("MySkearch | digital assets");
 
 		// Load page content
 		$this->load->view('my_skearch/pages/digital_assets/default', $data);

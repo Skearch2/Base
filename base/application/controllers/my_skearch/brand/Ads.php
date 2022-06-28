@@ -60,7 +60,7 @@ class Ads extends MY_Controller
 
         $data['section'] = $this->section;
         $data['page'] = 'ads';
-        $data['title'] = ucwords("my skearch | brands - ads");
+        $data['title'] = ucwords("MySkearch | brands - ads");
 
         // Load page content
         $this->load->view('my_skearch/pages/brand/ads', $data);

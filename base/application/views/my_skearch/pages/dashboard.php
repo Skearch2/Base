@@ -42,41 +42,45 @@ $this->load->view('my_skearch/templates/start_pagebody');
 					<div class="m-portlet__head-caption">
 						<div class="m-portlet__head-title">
 							<h3 class="m-portlet__head-text">
-								Brand Deals
+								Brand Deals Right Now!
 							</h3>
 						</div>
 					</div>
 				</div>
 				<div class="m-portlet__body">
-					<div class="m-widget4">
-						<div class="m-scrollable" data-scrollable="true" data-height="380" data-mobile-height="300">
+					<div class="m-widget4 demo">
+						<div class="m-scrollable toutiao demo1" data-scrollable="true" data-height="380" data-mobile-height="300">
 							<?php if (!empty($brand_deals_feed)) : ?>
-								<?php foreach ($brand_deals_feed as $deal) : ?>
-									<div class="m-widget4__item">
-										<div class="m-widget4__img m-widget4__img--logo" style="text-align:center;font-weight: bold">
-											<img alt="<?= $deal->brand ?>">
-										</div>
-										<div class="m-widget4__info">
-											<span class="m-widget4__title">
-												<?= $deal->title ?>
-											</span><br>
-											<span class="m-widget4__sub">
-												<?= $deal->description ?>
-											</span>
-										</div>
-										<?php if (
-											$this->ion_auth->in_group($this->config->item('regular', 'ion_auth')) || $this->ion_auth->in_group($this->config->item('premium', 'ion_auth'))
-										) : ?>
-											<div class="m-widget4__ext">
-												<?php if ($deal->is_user_opted_in) : ?>
-													<span class="m-badge m-badge--success m-badge--wide">Opted</span>
-												<?php else : ?>
-													<a id="btn-opt-in-deal" onclick="optInDeal(<?= $deal->id ?>, '<?= $deal->title ?>', <?= $this->session->userdata('user_id') ?>, this)" class="m-btn m-btn--pill m-btn--hover-brand btn btn-sm btn-secondary">Opt In</a>
+								<ui class="clearfix">
+									<?php foreach ($brand_deals_feed as $deal) : ?>
+										<li>
+											<div class="m-widget4__item">
+												<div class="m-widget4__img m-widget4__img--logo" style="text-align:center;font-weight: bold">
+													<img alt="<?= $deal->brand ?>">
+												</div>
+												<div class="m-widget4__info">
+													<a class="m-widget4__title" href="<?= $deal->link ?>" target="_blank">
+														<?= $deal->title ?>
+													</a><br>
+													<span class="m-widget4__sub">
+														<?= $deal->description ?>
+													</span>
+												</div>
+												<?php if (
+													$this->ion_auth->in_group($this->config->item('regular', 'ion_auth')) || $this->ion_auth->in_group($this->config->item('premium', 'ion_auth'))
+												) : ?>
+													<div class="m-widget4__ext">
+														<?php if ($deal->is_user_opted_in) : ?>
+															<span class="m-badge m-badge--success m-badge--wide">Opted</span>
+														<?php else : ?>
+															<a id="btn-opt-in-deal" onclick="optInDeal(<?= $deal->id ?>, '<?= $deal->title ?>', <?= $this->session->userdata('user_id') ?>, this)" class="m-btn m-btn--pill m-btn--hover-brand btn btn-sm btn-secondary">Opt In</a>
+														<?php endif ?>
+													</div>
 												<?php endif ?>
 											</div>
-										<?php endif ?>
-									</div>
-								<?php endforeach ?>
+										</li>
+									<?php endforeach ?>
+								</ui>
 							<?php else : ?>
 								<div class="m-widget7">
 									<div class="m-widget7__desc">
@@ -138,6 +142,10 @@ $this->load->view('my_skearch/templates/start_pagebody');
 		</div>
 	</div>
 
+	<div class="demo">
+
+	</div>
+
 	<!--	Button - Set Skearch as homepage -->
 	<div class='home-footer-btn'>
 		<a href="#" class="btn-footer-skear"></a> <br>
@@ -170,6 +178,7 @@ $this->load->view('my_skearch/templates/js_global');
 ?>
 
 <!-- Page Scripts -->
+<script src="<?= site_url(ASSETS); ?>/js/jquery-vertical-loop.js" type="text/javascript"></script>
 <script>
 	// Opt in for the deal
 	function optInDeal(id, title, userID, element) {
@@ -242,6 +251,24 @@ $this->load->view('my_skearch/templates/js_global');
 			}
 		});
 	}
+
+	$('.demo1').verticalLoop({
+		delay: 2000,
+		order: 'asc'
+	});
+
+	setTimeout(function() {
+		//$('.demo1').verticalLoop('autoPause');
+	}, 10 * 1000);
+
+
+	var verticalLoop = new VerticalLoop('.demo2', {
+		delay: 2000,
+		order: 'desc',
+		oninitend: function(res) {
+			console.log(res);
+		}
+	});
 </script>
 <!--end::Page Scripts -->
 

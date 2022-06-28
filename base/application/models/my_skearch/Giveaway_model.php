@@ -9,7 +9,7 @@ if (!defined('BASEPATH')) {
 }
 
 /**
- * Giveaway model for My Skearch
+ * Giveaway model for MySkearch
  *
  * @version      2.0
  * @author       Iftikhar Ejaz <ejaziftikhar@gmail.com>

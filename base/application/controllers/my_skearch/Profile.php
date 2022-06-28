@@ -9,7 +9,7 @@ if (!defined('BASEPATH')) {
 }
 
 /**
- * Controls member's profile on My Skearch
+ * Controls member's profile on MySkearch
  *
  * Shows member's profile and allow member to edit profile
  *
@@ -36,7 +36,7 @@ class Profile extends MY_Controller
     }
 
     /**
-     * Shows My Skearch user profile
+     * Shows MySkearch user profile
      *
      * @return void
      */
@@ -84,7 +84,7 @@ class Profile extends MY_Controller
             $data['group'] = $group;
             $data['is_brandmember'] = $this->ion_auth->in_group(3);
 
-            $data['title'] = ucwords("my skearch | profile");
+            $data['title'] = ucwords("MySkearch | profile");
 
             $this->load->view('my_skearch/pages/profile', $data);
         } else {

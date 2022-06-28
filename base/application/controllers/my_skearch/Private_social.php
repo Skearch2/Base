@@ -116,7 +116,7 @@ class Private_social extends CI_Controller
         $data['section'] = 'private social';
         $data['page'] = 'private social';
 
-        $data['title'] = ucwords("my skearch | private social");
+        $data['title'] = ucwords("MySkearch | private social");
 
         $this->load->view('my_skearch/pages/private_social', $data);
     }
