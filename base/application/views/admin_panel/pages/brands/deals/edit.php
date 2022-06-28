@@ -94,6 +94,12 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
+									<label for="example-text-input" class="col-2 col-form-label">Link *</label>
+									<div class="col-7">
+										<input class="form-control m-input" type="text" name="link" value="<?= set_value('link', $deal->link); ?>">
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
 									<label class="col-2 col-form-label">Start Date *</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date">
@@ -173,6 +179,10 @@ $this->load->view('admin_panel/templates/js_global');
 					},
 					description: {
 						required: 1
+					},
+					link: {
+						required: 1,
+						url: 1
 					},
 					start_date: {
 						required: 1

@@ -26,7 +26,7 @@
 					<?php if ($this->ion_auth->is_admin()) : ?>
 						<a href="<?= site_url('admin') ?>" class="btn btn-danger" role="button">Admin Panel</a>
 					<?php endif ?>
-					<a href="<?= site_url() ?>myskearch" class="btn btn-danger" role="button">My Skearch</a>
+					<a href="<?= site_url() ?>myskearch" class="btn btn-danger" role="button">MySkearch</a>
 					<a href="<?= site_url() ?>myskearch/auth/logout" class="btn btn-danger" role="button">Logout</a>
 				<?php else : ?>
 					<a href="<?= site_url() ?>myskearch/auth/login" class="btn btn-danger" role="button">Sign in</a>

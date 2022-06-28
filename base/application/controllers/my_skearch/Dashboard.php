@@ -4,7 +4,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * File:    ~/application/controller/Admin_new.php
  *
- * This is the My Skearch controller.
+ * This is the MySkearch controller.
  * @package		Skearch
  * @author		Iftikhar Ejaz <ejaziftikhar@gmail.com>
  * @copyright	Copyright (c) 2019
@@ -55,7 +55,7 @@ class Dashboard extends MY_Controller
 	}
 
 	/**
-	 * View page for My Skearch dashboard
+	 * View page for MySkearch dashboard
 	 *
 	 * @return void
 	 */
@@ -92,7 +92,7 @@ class Dashboard extends MY_Controller
 		$data['fields_history'] = $fields_history;
 
 		$data['section'] = "dashboard";
-		$data['title'] = ucwords("my skearch | dashboard");
+		$data['title'] = ucwords("MySkearch | dashboard");
 
 		// Load page content
 		$this->load->view('my_skearch/pages/dashboard', $data);

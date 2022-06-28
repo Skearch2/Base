@@ -23,7 +23,7 @@ $this->load->view('auth/templates/head');
 					</div>
 					<div class="m-login__signin">
 						<div class="m-login__head">
-							<h3 class="m-login__title">Set new My Skearch password</h3>
+							<h3 class="m-login__title">Set new MySkearch password</h3>
 							<div class="m-login__desc">
 								<?php $this->load->view('auth/templates/notifications'); ?>
 							</div>

@@ -56,6 +56,7 @@ class Deals extends MY_Controller
 
             $this->form_validation->set_rules('title', 'Title', 'trim|required');
             $this->form_validation->set_rules('description', 'Description', 'trim|required');
+            $this->form_validation->set_rules('link', 'Link', 'required|valid_url');
             $this->form_validation->set_rules('start_date', 'Start Date', 'required');
             $this->form_validation->set_rules('duration', 'Duration', 'required|min_length[1]|max_length[30]');
 
@@ -77,6 +78,8 @@ class Deals extends MY_Controller
                     'brand_id'     => $this->input->post('brand'),
                     'title'        => $this->input->post('title'),
                     'description'  => $this->input->post('description'),
+                    'link'         => $this->input->post('link'),
+                    'override_duration' => $this->input->post('override_duration'),
                     'start_date'   => $this->input->post('start_date'),
                     'end_date'     => $end_date
                 ];
@@ -175,6 +178,7 @@ class Deals extends MY_Controller
 
             $this->form_validation->set_rules('title', 'Title', 'trim|required');
             $this->form_validation->set_rules('description', 'Description', 'trim|required');
+            $this->form_validation->set_rules('link', 'Link', 'required|valid_url');
             $this->form_validation->set_rules('start_date', 'Start Date', 'required');
             $this->form_validation->set_rules('duration', 'Duration', 'required|min_length[1]|max_length[30]');
 
@@ -204,6 +208,8 @@ class Deals extends MY_Controller
                     'brand_id'     => $this->input->post('brand'),
                     'title'        => $this->input->post('title'),
                     'description'  => $this->input->post('description'),
+                    'link'         => $this->input->post('link'),
+                    'override_duration' => $this->input->post('override_duration'),
                     'start_date'   => $this->input->post('start_date'),
                     'end_date'     => $end_date
                 ];
