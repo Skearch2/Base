@@ -66,6 +66,55 @@
 				url(<?= site_url(ASSETS); ?>/my_skearch/app/media/img/bg/bg-3.jpg);
 				background-size: cover;
 			}
+
+			.demo {
+				/* margin: 150px auto; */
+				max-width: 960px;
+			}
+
+			.demo .toutiao-wrap {
+				border: 1px solid #ccc;
+				width: 272px;
+			}
+
+			.demo .toutiao {
+				width: 350px;
+				height: 96px;
+				overflow: hidden;
+				margin: 9px 10px;
+			}
+
+			.demo .toutiao ul {
+				width: 350px
+			}
+
+			.demo .toutiao ul li {
+				width: 350px;
+				height: 48px
+			}
+
+			.demo .toutiao p {
+				width: 350px;
+				height: 40px;
+				overflow: hidden
+			}
+
+			.demo .toutiao a {
+				text-decoration: none
+			}
+
+			.demo .toutiao a:hover {
+				color: #F60
+			}
+
+			.demo .toutiao a:hover i {
+				color: #F60
+			}
+
+			.demo .toutiao i {
+				margin-right: 5px;
+				color: #F60
+			}
 		</style>
 		<!--end::Global Theme Styles -->
 

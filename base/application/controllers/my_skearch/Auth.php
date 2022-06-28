@@ -9,9 +9,9 @@ if (!defined('BASEPATH')) {
 }
 
 /**
- * An authetication controller for My Skearch
+ * An authetication controller for MySkearch
  *
- * Allows users to login, register and signup to My Skearch
+ * Allows users to login, register and signup to MySkearch
  *
  * @version      2.0
  * @author       Iftikhar Ejaz <ejaziftikhar@gmail.com>
@@ -130,7 +130,7 @@ class Auth extends MY_Controller
 
             $data['user_id'] = $user->id;
 
-            $data['title'] = ucwords("my skearch | set password");
+            $data['title'] = "MySkearch" + ucwords(" | set password");
             $this->load->view('auth/pages/set_password', $data);
         } else {
             $id = $user->id;
@@ -230,7 +230,7 @@ class Auth extends MY_Controller
             $data['skearch_id'] = $user->id;
             $data['csrf'] = $this->_get_csrf_nonce();
 
-            $data['title'] = ucwords("my skearch | change email address");
+            $data['title'] = ucwords("MySkearch | change email address");
             $this->load->view('auth/pages/change_email', $data);
         } else {
 
@@ -292,7 +292,7 @@ class Auth extends MY_Controller
             $data['skearch_id'] = $user->id;
             $data['csrf'] = $this->_get_csrf_nonce();
 
-            $data['title'] = ucwords("my skearch | change password");
+            $data['title'] = ucwords("MySkearch | change password");
             $this->load->view('auth/pages/change_password', $data);
         } else {
 
@@ -324,7 +324,7 @@ class Auth extends MY_Controller
         $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'trim|required');
 
         if ($this->form_validation->run() === false) {
-            $data['title'] = ucwords("my skearch | forgot password");
+            $data['title'] = ucwords("MySkearch | forgot password");
             $this->load->view('auth/pages/forgot_password', $data);
         } else {
             $identity = $this->ion_auth->where('username', $this->input->post('skearch_id'))->users()->row();
@@ -382,7 +382,7 @@ class Auth extends MY_Controller
     }
 
     /**
-     * Allow user to login to My Skearch
+     * Allow user to login to MySkearch
      */
     public function login()
     {
@@ -395,7 +395,7 @@ class Auth extends MY_Controller
 
         if ($this->form_validation->run() === false) {
             // set page title
-            $data['title'] = ucwords("my skearch  | login");
+            $data['title'] = ucwords("MySkearch  | login");
             $this->load->view('auth/pages/login', $data);
         } else {
             $remember = (bool) $this->input->post('remember');
@@ -417,7 +417,7 @@ class Auth extends MY_Controller
     }
 
     /**
-     * Allow member to logout from My Skearch
+     * Allow member to logout from MySkearch
      */
     public function logout()
     {
@@ -506,13 +506,13 @@ class Auth extends MY_Controller
                 echo json_encode(0);
             }
         } else {
-            $data['title'] = ucwords("my skearch | make payment");
+            $data['title'] = ucwords("MySkearch | make payment");
             $this->load->view('auth/pages/payment', $data);
         }
     }
 
     /**
-     * Set new password for My Skearch member
+     * Set new password for MySkearch member
      *
      * @param string|null $code The reset code
      */
@@ -536,7 +536,7 @@ class Auth extends MY_Controller
                 $data['csrf'] = $this->_get_csrf_nonce();
                 $data['code'] = $code;
 
-                $data['title'] = ucwords("my skearch | reset password");
+                $data['title'] = ucwords("MySkearch | reset password");
                 $this->load->view('auth/pages/reset_password', $data);
             } else {
                 $identity = $user->username;
@@ -607,7 +607,7 @@ class Auth extends MY_Controller
             $data['states'] = $this->Util->get_state_list();
             $data['countries'] = $this->Util->get_country_list();
 
-            $data['title'] = ucwords('my skearch  | sign up');
+            $data['title'] = ucwords('MySkearch  | sign up');
             $this->load->view('auth/pages/register', $data);
         } else {
             // verify captcha
@@ -738,7 +738,7 @@ class Auth extends MY_Controller
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
 
         if ($this->form_validation->run() === false) {
-            $data['title'] = ucwords("my skearch | unsubscribe newsletter");
+            $data['title'] = ucwords("MySkearch | unsubscribe newsletter");
             $this->load->view('auth/pages/unsubscribe_email', $data);
         } else {
             $is_unsubscribed = $this->User->unsubsribe_user_email($this->input->post('email'));

@@ -97,6 +97,24 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
+									<label for="example-text-input" class="col-2 col-form-label">Link *</label>
+									<div class="col-7">
+										<input class="form-control m-input" type="text" name="link" value="<?= set_value('link'); ?>">
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<label for="example-text-input" class="col-2 col-form-label">Ongoing</label>
+									<div class="col-7">
+										<input type="hidden" id="ongoing" name="override_duration" value="0" <?= set_value('is_active', 0) == 0 ? 'checked' : "" ?>>
+										<span class="m-switch m-switch--icon-check">
+											<label>
+												<input type="checkbox" id="ongoing" name="override_duration" value="1" <?= set_value('is_active', 0) == 1 ? 'checked' : "" ?>>
+												<span></span>
+											</label>
+										</span>
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
 									<label class="col-2 col-form-label">Start Date *</label>
 									<div class="col-lg-4 col-md-9 col-sm-12">
 										<div class="input-group date">
@@ -180,8 +198,12 @@ $this->load->view('admin_panel/templates/js_global');
 					description: {
 						required: 1
 					},
+					link: {
+						required: 1,
+						url: 1
+					},
 					start_date: {
-						required: 1
+						required: "#ongoing:unchecked",
 					}
 				},
 				invalidHandler: function(e, r) {

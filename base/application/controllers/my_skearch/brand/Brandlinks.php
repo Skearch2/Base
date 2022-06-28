@@ -153,7 +153,7 @@ class Brandlinks extends MY_Controller
         // template data
         $data['section'] = $this->section;
         $data['page'] = 'keywords';
-        $data['title'] = ucwords("my skearch | brands - BrandLinks");
+        $data['title'] = ucwords("MySkearch | brands - BrandLinks");
 
         // Load page content
         $this->load->view('my_skearch/pages/brand/brandlinks', $data);

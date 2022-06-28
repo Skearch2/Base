@@ -34,9 +34,7 @@ $this->load->view('my_skearch/templates/start_pagebody');
 		<div class="col-xl-4">
 			<div class="m-portlet m-portlet--bordered-semi m-portlet--full-height m-portlet--skin-dark  m-portlet--rounded m-portlet--rounded-force">
 				<div class="m-portlet__body">
-					<div class="livecoinwatch-widget-1" lcw-coin="BTC" lcw-base="USD" lcw-period="d" lcw-color-tx="#ffffff" lcw-color-pr="#58c7c5" lcw-color-bg="#1f2434" lcw-border-w="1"></div>
-					<div class="livecoinwatch-widget-1" lcw-coin="ETH" lcw-base="USD" lcw-period="d" lcw-color-tx="#ffffff" lcw-color-pr="#58c7c5" lcw-color-bg="#1f2434" lcw-border-w="1"></div>
-					<div class="livecoinwatch-widget-1" lcw-coin="XRP" lcw-base="USD" lcw-period="d" lcw-color-tx="#ffffff" lcw-color-pr="#58c7c5" lcw-color-bg="#1f2434" lcw-border-w="1"></div>
+					<div class="livecoinwatch-widget-3" lcw-base="USD" lcw-d-head="true" lcw-d-name="true" lcw-d-code="true" lcw-d-icon="true" lcw-color-tx="#ffffff" lcw-color-bg="#1f2434" lcw-border-w="1"></div>
 				</div>
 			</div>
 		</div>
@@ -135,19 +133,6 @@ $this->load->view('my_skearch/templates/start_pagebody');
 							</div>
 							<span class="m-widget4__ext">
 								<a href="https://shop.ledger.com/?r=c4a2f222a12e" target="_blank"><span class="m-widget4__number m--font-brand">Visit</span></a>
-							</span>
-						</div>
-						<div class="m-widget4__item">
-							<div class="m-widget4__info">
-								<span class="m-widget4__title">
-									Crypto.com
-								</span><br>
-								<span class="m-widget4__sub">
-									https://crypto.com/app/nwsrehpf2k
-								</span>
-							</div>
-							<span class="m-widget4__ext">
-								<a href="https://crypto.com/app/nwsrehpf2k" target="_blank"><span class="m-widget4__number m--font-brand">Visit</span></a>
 							</span>
 						</div>
 						<div class="m-widget4__item">
