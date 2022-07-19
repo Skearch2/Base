@@ -208,12 +208,8 @@ $this->load->view('admin_panel/templates/js_global');
 					orderable: !1,
 					render: function(a, t, e, n) {
 						var title = e['title'].replace(/ /g, '%20');
-						if (e['status'] == 'pending') {
-							return '<a href="<?= site_url('admin/brands/deals/edit/id/') ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-								'<a onclick=deleteDeal("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
-						} else {
-							return '<a onclick=deleteDeal("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
-						}
+						return '<a href="<?= site_url('admin/brands/deals/edit/id/') ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+							'<a onclick=deleteDeal("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}, {
 					targets: 0,
@@ -226,7 +222,10 @@ $this->load->view('admin_panel/templates/js_global');
 				}, {
 					targets: 5,
 					render: function(a, t, e, n) {
-						return new Date(e['end_date']).toLocaleString();
+						if (e['end_date'] == "0000-00-00 00:00:00")
+							return "None"
+						else
+							return new Date(e['end_date']).toLocaleString();
 					}
 				}, {
 					targets: 6,

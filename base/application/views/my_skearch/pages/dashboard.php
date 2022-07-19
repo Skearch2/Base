@@ -20,6 +20,24 @@ $this->load->view('my_skearch/templates/start_pagebody');
 
 ?>
 
+<style>
+	* {
+		margin: 0;
+		padding: 0;
+	}
+
+	.inner {
+
+		position: relative;
+		top: 0px;
+	}
+
+	.outer {
+
+		overflow: hidden;
+	}
+</style>
+
 <div class="m-content">
 	<div class="m-portlet m-portlet--full-height m-portlet--fit  m-portlet--rounded">
 		<div class="m-portlet__body">
@@ -49,45 +67,43 @@ $this->load->view('my_skearch/templates/start_pagebody');
 				</div>
 				<div class="m-portlet__body">
 					<div class="m-widget4 demo">
-						<div class="m-scrollable toutiao demo1" data-scrollable="true" data-height="380" data-mobile-height="300">
-							<?php if (!empty($brand_deals_feed)) : ?>
-								<ui class="clearfix">
+						<div class="outer m-scrollable" data-scrollable="true" data-height="380" data-mobile-height="300">
+							<div class="inner">
+								<?php if (!empty($brand_deals_feed)) : ?>
 									<?php foreach ($brand_deals_feed as $deal) : ?>
-										<li>
-											<div class="m-widget4__item">
-												<div class="m-widget4__img m-widget4__img--logo" style="text-align:center;font-weight: bold">
-													<img alt="<?= $deal->brand ?>">
-												</div>
-												<div class="m-widget4__info">
-													<a class="m-widget4__title" href="<?= $deal->link ?>" target="_blank">
-														<?= $deal->title ?>
-													</a><br>
-													<span class="m-widget4__sub">
-														<?= $deal->description ?>
-													</span>
-												</div>
-												<?php if (
-													$this->ion_auth->in_group($this->config->item('regular', 'ion_auth')) || $this->ion_auth->in_group($this->config->item('premium', 'ion_auth'))
-												) : ?>
-													<div class="m-widget4__ext">
-														<?php if ($deal->is_user_opted_in) : ?>
-															<span class="m-badge m-badge--success m-badge--wide">Opted</span>
-														<?php else : ?>
-															<a id="btn-opt-in-deal" onclick="optInDeal(<?= $deal->id ?>, '<?= $deal->title ?>', <?= $this->session->userdata('user_id') ?>, this)" class="m-btn m-btn--pill m-btn--hover-brand btn btn-sm btn-secondary">Opt In</a>
-														<?php endif ?>
-													</div>
-												<?php endif ?>
+										<div class="m-widget4__item">
+											<div class="m-widget4__img m-widget4__img--logo" style="text-align:center;font-weight: bold">
+												<img alt="<?= $deal->brand ?>">
 											</div>
-										</li>
+											<div class="m-widget4__info">
+												<a class="m-widget4__title" href="<?= $deal->link ?>" target="_blank">
+													<?= $deal->title ?>
+												</a><br>
+												<span class="m-widget4__sub">
+													<?= $deal->description ?>
+												</span>
+											</div>
+											<?php if (
+												$this->ion_auth->in_group($this->config->item('regular', 'ion_auth')) || $this->ion_auth->in_group($this->config->item('premium', 'ion_auth'))
+											) : ?>
+												<div class="m-widget4__ext">
+													<?php if ($deal->is_user_opted_in) : ?>
+														<span class="m-badge m-badge--success m-badge--wide">Opted</span>
+													<?php else : ?>
+														<a id="btn-opt-in-deal" onclick="optInDeal(<?= $deal->id ?>, '<?= $deal->title ?>', <?= $this->session->userdata('user_id') ?>, this)" class="m-btn m-btn--pill m-btn--hover-brand btn btn-sm btn-secondary">Opt In</a>
+													<?php endif ?>
+												</div>
+											<?php endif ?>
+										</div>
 									<?php endforeach ?>
-								</ui>
-							<?php else : ?>
-								<div class="m-widget7">
-									<div class="m-widget7__desc">
-										There are no new deals available right now!
+								<?php else : ?>
+									<div class="m-widget7">
+										<div class="m-widget7__desc">
+											There are no new deals available right now!
+										</div>
 									</div>
-								</div>
-							<?php endif ?>
+								<?php endif ?>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -140,10 +156,6 @@ $this->load->view('my_skearch/templates/start_pagebody');
 
 			</div>
 		</div>
-	</div>
-
-	<div class="demo">
-
 	</div>
 
 	<!--	Button - Set Skearch as homepage -->
@@ -252,23 +264,30 @@ $this->load->view('my_skearch/templates/js_global');
 		});
 	}
 
-	$('.demo1').verticalLoop({
-		delay: 2000,
-		order: 'asc'
+	function autoScrollUp() {
+		$(".inner").css({
+				top: 0
+			}) // jump back
+			.animate({
+				top: -$(".outer").outerHeight()
+			}, 10000, "linear", autoScrollUp); // and animate
+	}
+	// fix hight of outer:
+	$('.outer').css({
+		maxHeight: $('.inner').height()
 	});
 
-	setTimeout(function() {
-		//$('.demo1').verticalLoop('autoPause');
-	}, 10 * 1000);
+	// duplicate content of inner:
+	$('.inner').html($('.inner').html() + $('.inner').html());
+	autoScrollUp();
 
+	$(".inner").mouseenter(function() {
+		$(this).stop(); //Stop the animation when mouse in
+	})
 
-	var verticalLoop = new VerticalLoop('.demo2', {
-		delay: 2000,
-		order: 'desc',
-		oninitend: function(res) {
-			console.log(res);
-		}
-	});
+	$(".inner").mouseleave(function() {
+		autoScrollUp(); //Start the animation when mouse in
+	})
 </script>
 <!--end::Page Scripts -->
 
