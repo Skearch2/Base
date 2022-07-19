@@ -57,8 +57,10 @@ class Deals extends MY_Controller
             $this->form_validation->set_rules('title', 'Title', 'trim|required');
             $this->form_validation->set_rules('description', 'Description', 'trim|required');
             $this->form_validation->set_rules('link', 'Link', 'required|valid_url');
-            $this->form_validation->set_rules('start_date', 'Start Date', 'required');
-            $this->form_validation->set_rules('duration', 'Duration', 'required|min_length[1]|max_length[30]');
+            if ($this->input->post('override_duration') == 0) {
+                $this->form_validation->set_rules('start_date', 'Start Date', 'required');
+                $this->form_validation->set_rules('duration', 'Duration', 'required|min_length[1]|max_length[30]');
+            }
 
             if ($this->form_validation->run() === false) {
 
@@ -69,10 +71,16 @@ class Deals extends MY_Controller
                 $this->load->view('admin_panel/pages/brands/deals/create', $data);
             } else {
 
-                $duration = $this->input->post('duration');
-                $end_date = date_create($this->input->post('start_date'));
-                date_add($end_date, date_interval_create_from_date_string("{$duration} days"));
-                $end_date = date_format($end_date, 'Y-m-d H:i');
+                if ($this->input->post('override_duration') == 1) {
+                    $start_date = date("Y-m-d H:i");
+                    $end_date = "";
+                } else {
+                    $start_date = $this->input->post('start_date');
+                    $duration = $this->input->post('duration');
+                    $end_date = date_create($start_date);
+                    date_add($end_date, date_interval_create_from_date_string("{$duration} days"));
+                    $end_date = date_format($end_date, 'Y-m-d H:i');
+                }
 
                 $data = [
                     'brand_id'     => $this->input->post('brand'),
@@ -80,7 +88,7 @@ class Deals extends MY_Controller
                     'description'  => $this->input->post('description'),
                     'link'         => $this->input->post('link'),
                     'override_duration' => $this->input->post('override_duration'),
-                    'start_date'   => $this->input->post('start_date'),
+                    'start_date'   => $start_date,
                     'end_date'     => $end_date
                 ];
 
@@ -179,8 +187,10 @@ class Deals extends MY_Controller
             $this->form_validation->set_rules('title', 'Title', 'trim|required');
             $this->form_validation->set_rules('description', 'Description', 'trim|required');
             $this->form_validation->set_rules('link', 'Link', 'required|valid_url');
-            $this->form_validation->set_rules('start_date', 'Start Date', 'required');
-            $this->form_validation->set_rules('duration', 'Duration', 'required|min_length[1]|max_length[30]');
+            if ($this->input->post('override_duration') == 0) {
+                $this->form_validation->set_rules('start_date', 'Start Date', 'required');
+                $this->form_validation->set_rules('duration', 'Duration', 'required|min_length[1]|max_length[30]');
+            }
 
             if ($this->form_validation->run() === false) {
                 $deal = $this->Deals->get_by_id($id);
@@ -199,10 +209,16 @@ class Deals extends MY_Controller
                 $this->load->view('admin_panel/pages/brands/deals/edit', $data);
             } else {
 
-                $duration = $this->input->post('duration');
-                $end_date = date_create($this->input->post('start_date'));
-                date_add($end_date, date_interval_create_from_date_string("{$duration} days"));
-                $end_date = date_format($end_date, 'Y-m-d H:i');
+                if ($this->input->post('override_duration') == 1) {
+                    $start_date = date("Y-m-d H:i");
+                    $end_date = "";
+                } else {
+                    $start_date = $this->input->post('start_date');
+                    $duration = $this->input->post('duration');
+                    $end_date = date_create($start_date);
+                    date_add($end_date, date_interval_create_from_date_string("{$duration} days"));
+                    $end_date = date_format($end_date, 'Y-m-d H:i');
+                }
 
                 $data = [
                     'brand_id'     => $this->input->post('brand'),
@@ -210,7 +226,7 @@ class Deals extends MY_Controller
                     'description'  => $this->input->post('description'),
                     'link'         => $this->input->post('link'),
                     'override_duration' => $this->input->post('override_duration'),
-                    'start_date'   => $this->input->post('start_date'),
+                    'start_date'   => $start_date,
                     'end_date'     => $end_date
                 ];
 
