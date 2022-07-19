@@ -118,6 +118,10 @@ class Dealdrop_model extends CI_Model
         $this->db->trans_start();
 
         $this->db->set('status', 'running');
+        $this->db->where('override_duration', '1');
+        $this->db->update('brands_deals');
+
+        $this->db->set('status', 'running');
         $this->db->where('status', 'pending');
         $this->db->where('start_date < NOW()');
         $this->db->update('brands_deals');
