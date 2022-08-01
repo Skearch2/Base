@@ -42,7 +42,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="m-portlet__head-tools">
 				<ul class="m-portlet__nav">
 					<li class="m-portlet__nav-item">
-						<a href="<?= site_url("admin/categories/create_result"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
+						<a href="<?= site_url("admin/results/link/create"); ?>" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air">
 							<span>
 								<i class="la la-plus-circle"></i>
 								<span>Add Link</span>
@@ -236,6 +236,11 @@ $this->load->view('admin_panel/templates/js_global');
 						return '<a href="<?= site_url() . "admin/results/link/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 							'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="BrandLink"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
 							'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+					}
+				}, {
+					targets: 4,
+					render: function(a, t, e, n) {
+						return '<a href="' + e['display_url'] + '" target="_blank">' + e['display_url'] + '</a>'
 					}
 				}, {
 					targets: 5,

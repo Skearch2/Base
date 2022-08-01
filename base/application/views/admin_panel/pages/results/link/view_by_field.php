@@ -496,6 +496,11 @@ $this->load->view('admin_panel/templates/js_global');
 							// return '<a href="javascript:;" id="priority-dropdown-' + e['id'] + '" title="Change Priority" onclick="showPriorities(' + e['id'] + ',' + e['priority'] + ')">' + e['priority'] + '</a>'
 							return e['priority']
 						}
+					}, {
+						targets: 3,
+						render: function(a, t, e, n) {
+							return '<a href="' + e['display_url'] + '" target="_blank">' + e['display_url'] + '</a>'
+						}
 					},
 					{
 						targets: 4,

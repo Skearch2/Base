@@ -433,6 +433,11 @@ $this->load->view('admin_panel/templates/js_global');
 							'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}, {
+					targets: 4,
+					render: function(a, t, e, n) {
+						return '<a href="' + e['display_url'] + '" target="_blank">' + e['display_url'] + '</a>'
+					}
+				}, {
 					targets: 5,
 					render: function(a, t, e, n) {
 						var s = {
