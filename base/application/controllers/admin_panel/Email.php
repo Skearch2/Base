@@ -454,6 +454,29 @@ class Email extends MY_Controller
     }
 
     /**
+     * Updates email
+     * 
+     * @return void
+     */
+    public function update_marketing_email()
+    {
+        if (!$this->ion_auth_acl->has_permission('email') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $id = $this->input->get('id');
+            $data['email'] = $this->input->get('email');
+
+            $update = $this->Marketing_emails_model->update($id, $data);
+
+            if ($update) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
+            }
+        }
+    }
+
+    /**
      * Deletes email
      *
      * @param int $id Email id

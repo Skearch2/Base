@@ -28,6 +28,7 @@ class Auth extends MY_Controller
         $this->load->model('Util_model', 'Util');
         $this->load->model('admin_panel/email/Template_model', 'Email_templates');
         $this->load->model('admin_panel/Settings_model', 'Settings');
+        $this->load->model('admin_panel/email/Marketing_emails_model');
     }
 
     /**
@@ -51,6 +52,9 @@ class Auth extends MY_Controller
 
             // User
             $user = $this->ion_auth->user($id)->row();
+
+            // add user email to email marketing list
+            $this->Marketing_emails_model->add([$user->email]);
 
             // select welcome email based on type of account
             if ($this->ion_auth->in_group($this->config->item('regular', 'ion_auth'), $id)) {

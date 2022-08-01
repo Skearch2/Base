@@ -33,7 +33,7 @@ $this->load->view('admin_panel/templates/subheader');
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Send Email</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Send Email to All</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -80,8 +80,8 @@ $this->load->view('admin_panel/templates/subheader');
     </div>
 </div>
 
-<!-- <div class="modal fade" id="modal_edit_email" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
+<div class="modal fade" id="modal_edit_email" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Edit Email</h5>
@@ -103,7 +103,7 @@ $this->load->view('admin_panel/templates/subheader');
             </div>
         </div>
     </div>
-</div> -->
+</div>
 
 <div class="m-content">
     <div class="m-portlet m-portlet--mobile">
@@ -117,7 +117,7 @@ $this->load->view('admin_panel/templates/subheader');
             </div>
             <div class="m-portlet__head-tools">
                 <ul class="m-portlet__nav">
-                    <button type="button" class="btn btn-success m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air" data-toggle="modal" data-target="#modal_send_email">Send Email</button>
+                    <button type="button" class="btn btn-success m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air" data-toggle="modal" data-target="#modal_send_email">Send Email to All</button>
                     &emsp;
                     <button type="button" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--icon m-btn--air" data-toggle="modal" data-target="#modal_add_emails">Add Emails</button>
                 </ul>
@@ -259,47 +259,62 @@ $this->load->view('admin_panel/templates/js_global');
                 $("#modal_add_emails").modal('hide');
                 $("#btn-emails-add").attr("class", "btn m-btn btn-primary");
                 toastr.error("Unable to process request.");
+            },
+            complete: function(xhr, status, error) {
+                $("#btn-emails-add").attr("class", "btn m-btn btn-primary").removeAttr("disabled");
             }
         });
     }
 
+    var email_id
+
     // edit email
-    // function updateEmail() {
-    //     $.ajax({
-    //         url: '<?= site_url('admin/email/marketing_emails/update'); ?>',
-    //         type: 'GET',
-    //         data: {
-    //             emails: $("[name=emails]").val().trim()
-    //         },
-    //         beforeSend: function(xhr, options) {
-    //             $("#btn-emails-add").attr("class", "btn m-btn btn-success m-loader m-loader--light m-loader--right").attr("disabled", "disabled");
-    //             setTimeout(function() {
-    //                 $.ajax($.extend(options, {
-    //                     beforeSend: $.noop
-    //                 }));
-    //             }, 2000);
-    //             return false;
-    //         },
-    //         success: function(data, status) {
-    //             $("#modal_add_emails").modal('hide');
-    //             $("#btn-emails-add").attr("class", "btn m-btn btn-primary");
-    //             if (data == -1) {
-    //                 toastr.warning("", "You have no permission.");
-    //             } else if (data == 0) {
-    //                 toastr.error("Unable to add emails or some emails were invalid.");
-    //             } else {
-    //                 $("[name=emails]").val("")
-    //                 toastr.success("Emails added successfully.");
-    //                 $('#m_table_1').DataTable().ajax.reload(null, false);
-    //             }
-    //         },
-    //         error: function(xhr, status, error) {
-    //             $("#modal_add_emails").modal('hide');
-    //             $("#btn-emails-add").attr("class", "btn m-btn btn-primary");
-    //             toastr.error("Unable to process request.");
-    //         }
-    //     });
-    // }
+    function editEmail(id, email) {
+        email_id = id
+        $('#email').val(email);
+    }
+
+    // update email
+    function updateEmail() {
+        $.ajax({
+            url: '<?= site_url('admin/email/marketing_emails/update'); ?>',
+            type: 'GET',
+            data: {
+                id: email_id,
+                email: $("#email").val().trim()
+            },
+            beforeSend: function(xhr, options) {
+                $("#btn-email-save").attr("class", "btn m-btn btn-success m-loader m-loader--light m-loader--right").attr("disabled", "disabled");
+                setTimeout(function() {
+                    $.ajax($.extend(options, {
+                        beforeSend: $.noop
+                    }));
+                }, 2000);
+                return false;
+            },
+            success: function(data, status) {
+                $("#modal_edit_email").modal('hide');
+                $("#btn-email-save").attr("class", "btn m-btn btn-primary");
+                if (data == -1) {
+                    toastr.warning("", "You have no permission.");
+                } else if (data == 0) {
+                    toastr.error("Unable to update email or email is invalid.");
+                } else {
+                    $("#email").val("")
+                    toastr.success("Email updated successfully.");
+                    $('#m_table_1').DataTable().ajax.reload(null, false);
+                }
+            },
+            error: function(xhr, status, error) {
+                $("#modal_edit_email").modal('hide');
+                $("#btn-emails-add").attr("class", "btn m-btn btn-primary");
+                toastr.error("Unable to process request.");
+            },
+            complete: function(xhr, status, error) {
+                $("#btn-email-save").attr("class", "btn m-btn btn-primary").removeAttr("disabled");
+            }
+        });
+    }
 
     // delete email
     function deleteEmail(id, email) {
@@ -380,7 +395,8 @@ $this->load->view('admin_panel/templates/js_global');
                     title: "Actions",
                     orderable: !1,
                     render: function(a, t, e, n) {
-                        return '<a onclick=deleteEmail("' + e['id'] + '","' + e['email'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+                        return '<button onclick=editEmail("' + e['id'] + '","' + e['email'] + '") data-toggle="modal" data-target="#modal_edit_email" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></button>' +
+                            '<a onclick=deleteEmail("' + e['id'] + '","' + e['email'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
                     }
                 }, {
                     targets: 1,

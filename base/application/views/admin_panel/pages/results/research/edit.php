@@ -196,7 +196,8 @@ $this->load->view('admin_panel/templates/js_global');
 						required: 1
 					},
 					description_short: {
-						required: 1
+						required: 1,
+						maxlength: 85
 					},
 					url: {
 						required: 1,
