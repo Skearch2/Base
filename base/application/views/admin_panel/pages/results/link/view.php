@@ -240,7 +240,14 @@ $this->load->view('admin_panel/templates/js_global');
 				}, {
 					targets: 4,
 					render: function(a, t, e, n) {
-						return '<a href="' + e['display_url'] + '" target="_blank">' + e['display_url'] + '</a>'
+						url = e['display_url']
+						pattern = /^((http|https|ftp):\/\/)/
+
+						if (!pattern.test(url)) {
+							url = "http://" + url;
+						}
+
+						return '<a href="' + url + '" target="_blank">' + url + '</a>'
 					}
 				}, {
 					targets: 5,
