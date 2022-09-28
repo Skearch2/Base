@@ -64,7 +64,7 @@ class Brandlinks extends MY_Controller
             'keyword'   => $this->input->get('keyword'),
             'url'       => $this->input->get('url'),
             'active'    => 0,
-            'approved'  => 1
+            'approved'  => 0
         );
 
         $create = $this->Brandlink->create($user_data);
@@ -159,27 +159,30 @@ class Brandlinks extends MY_Controller
         $this->load->view('my_skearch/pages/brand/brandlinks', $data);
     }
 
-    // /**
-    //  * Toggle brand keywords status
-    //  *
-    //  * @param int $id Keyword ID
-    //  * @return void
-    //  */
-    // public function toggle($id)
-    // {
-    //     $user_data = array(
-    //         'active' => 0,
-    //         'approved' => 0,
-    //     );
+    /**
+     * Toggle brand keywords status
+     *
+     * @param int $id Keyword ID
+     * @return void
+     */
+    public function toggle($id)
+    {
+        $status = $this->Brandlink->get_by_id($id)->active;
 
-    //     $update = $this->Keywords->update($id, $user_data);
+        if ($status == 0) {
+            $status = 1;
+        } else {
+            $status = 0;
+        }
 
-    //     if ($update) {
-    //         echo json_encode(1);
-    //     } else {
-    //         echo json_encode(0);
-    //     }
-    // }
+        $brandlink_data = array(
+            'active' => $status,
+        );
+
+        $this->Brandlink->update($id, $brandlink_data);
+
+        echo json_encode($status);
+    }
 
     /**
      * Update brandlink
@@ -202,6 +205,8 @@ class Brandlinks extends MY_Controller
         $data = [
             'keyword'      => $this->input->get('keyword'),
             'url'          => $this->input->get('url'),
+            'active'       => 0,
+            'approved'     => 0,
             'last_updated' => date("Y-m-d H:i:s")
         ];
 

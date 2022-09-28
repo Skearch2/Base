@@ -88,7 +88,7 @@ class Brandlink_model extends CI_Model
      */
     public function get_by_id($id)
     {
-        $this->db->select('id, brand_id, keyword, url');
+        $this->db->select('id, brand_id, keyword, url, active, approved');
         $this->db->from('skearch_brands_brandlinks');
         $this->db->where('skearch_brands_brandlinks.id', $id);
 

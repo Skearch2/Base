@@ -249,29 +249,29 @@ $this->load->view('my_skearch/templates/js_global');
 		});
 	}
 
-	// //Toggles keywords status
-	// function toggle(id, row) {
-	// 	$.ajax({
-	// 		url: '<?= site_url('myskearch/brand/keywords/toggle/id/'); ?>' + id,
-	// 		type: 'GET',
-	// 		success: function(data, status) {
-	// 			if (data == 0) {
-	// 				document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
-	// 				document.getElementById("tablerow" + row).innerHTML = "Inactive";
-	// 				toastr.success("", "Status updated.");
-	// 			} else if (data == 1) {
-	// 				$("#tablerow" + row).prop("onclick", null).off("click");
-	// 				// $("#tablerow" + row).removeStyle('cursor');
-	// 				document.getElementById("tablerow" + row).className = "m-badge m-badge--warning m-badge--wide";
-	// 				document.getElementById("tablerow" + row).innerHTML = "Pending Approval";
-	// 				toastr.success("", "Request has been sent.");
-	// 			}
-	// 		},
-	// 		error: function(xhr, status, error) {
-	// 			toastr.error("", "Unable to process request.");
-	// 		}
-	// 	});
-	// }
+	//Toggles keywords status
+	function toggle(id, row) {
+		$.ajax({
+			url: '<?= site_url('myskearch/brand/brandlinks/toggle/id/'); ?>' + id,
+			type: 'GET',
+			success: function(data, status) {
+				console.log(data)
+				if (data == 0) {
+					console.log('hahahs')
+					document.getElementById("tablerow" + row).className = "m-badge m-badge--danger m-badge--wide";
+					document.getElementById("tablerow" + row).innerHTML = "Inactive";
+					toastr.success("", "Status updated.");
+				} else if (data == 1) {
+					document.getElementById("tablerow" + row).className = "m-badge m-badge--success m-badge--wide";
+					document.getElementById("tablerow" + row).innerHTML = "Active";
+					toastr.success("", "Status updated.");
+				}
+			},
+			error: function(xhr, status, error) {
+				toastr.error("", "Unable to process request.");
+			}
+		});
+	}
 
 	var FormControls = {
 		init: function() {
@@ -381,7 +381,7 @@ $this->load->view('my_skearch/templates/js_global');
 						};
 						if (e['approved'] == 0) return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[2].class + ' m-badge--wide">' + s[2].title + '</span>'
 						else
-							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + '</span>'
+							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
 					}
 				}, {
 					targets: 2,
