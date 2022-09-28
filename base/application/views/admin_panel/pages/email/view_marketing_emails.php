@@ -49,7 +49,7 @@ $this->load->view('admin_panel/templates/subheader');
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btn-emails-add" onclick="sendEmail()">Send</button>
+                <button type="button" class="btn btn-primary" id="btn-email-send" onclick="sendEmail()">Send</button>
             </div>
         </div>
     </div>
@@ -219,6 +219,9 @@ $this->load->view('admin_panel/templates/js_global');
                 $("#modal_add_emails").modal('hide');
                 $("#btn-emails-add").attr("class", "btn m-btn btn-primary");
                 toastr.error("Unable to process request.");
+            },
+            complete: function(xhr, status, error) {
+                $("#btn-emails-add").attr("class", "btn m-btn btn-primary").removeAttr("disabled");
             }
         });
     }
@@ -234,7 +237,7 @@ $this->load->view('admin_panel/templates/js_global');
                 "email-content": $("[name=email-content]").val().trim()
             },
             beforeSend: function(xhr, options) {
-                $("#btn-emails-add").attr("class", "btn m-btn btn-success m-loader m-loader--light m-loader--right").attr("disabled", "disabled");
+                $("#btn-email-send").attr("class", "btn m-btn btn-success m-loader m-loader--light m-loader--right").attr("disabled", "disabled");
                 setTimeout(function() {
                     $.ajax($.extend(options, {
                         beforeSend: $.noop
@@ -256,12 +259,12 @@ $this->load->view('admin_panel/templates/js_global');
                 }
             },
             error: function(xhr, status, error) {
-                $("#modal_add_emails").modal('hide');
-                $("#btn-emails-add").attr("class", "btn m-btn btn-primary");
+                $("#modal_send_email").modal('hide');
+                $("#btn-email-send").attr("class", "btn m-btn btn-primary");
                 toastr.error("Unable to process request.");
             },
             complete: function(xhr, status, error) {
-                $("#btn-emails-add").attr("class", "btn m-btn btn-primary").removeAttr("disabled");
+                $("#btn-email-send").attr("class", "btn m-btn btn-primary").removeAttr("disabled");
             }
         });
     }

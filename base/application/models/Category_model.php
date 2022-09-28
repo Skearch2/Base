@@ -9,7 +9,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
  * 
  * @package		Skearch
  * @author		Iftikhar Ejaz <ejaziftikhar@gmail.com>
- * @copyright	Copyright (c) 2020
+ * @copyright	Copyright (c) 2022
  * @version		2.0
  */
 class Category_model extends CI_Model
@@ -112,12 +112,8 @@ class Category_model extends CI_Model
             $query = $this->db->query("SELECT * FROM skearch_listings WHERE enabled = 1 AND sub_id = $subcategory_id
             ORDER BY RAND()");
         else if ($orderby == 'priority')
-            $query = $this->db->query("SELECT * FROM (
-                SELECT 1 as Rank, title, description_short, display_url, priority, www FROM skearch_listings WHERE enabled = 1 AND sub_id = $subcategory_id AND priority > 0
-                UNION ALL
-                SELECT 2 as Rank, title, description_short, display_url, priority, www FROM skearch_listings WHERE enabled = 1 AND sub_id = $subcategory_id AND priority = 0
-                ) AS mytable
-                ORDER BY Rank, priority ASC");
+            $query = $this->db->query("SELECT * FROM skearch_listings WHERE enabled = 1 AND sub_id = $subcategory_id
+            ORDER BY priority ASC");
 
         return $query->result();
     }
