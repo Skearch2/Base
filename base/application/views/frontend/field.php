@@ -27,7 +27,7 @@ $this->load->view('frontend/templates/header');
                 $.each(response, function(key, val) {
                     items.push("\
 						<li>\
-							<div>" + (++key) + ". <a href='" + (val.www) + "' title='" + (val.title) + "' target='_blank'>" + (val.title) + "</a></div>\
+							<div>" + (val.priority) + ". <a href='" + (val.www) + "' title='" + (val.title) + "' target='_blank'>" + (val.title) + "</a></div>\
 							<p>" + (val.description_short) + "</br>\
 							    <span><a href='" + (val.www) + "' title='" + (val.title) + "' target='_blank'>" + (val.display_url) + "</a>\</span>\
                             </p>\
