@@ -97,23 +97,12 @@ class Category_model extends CI_Model
      * Order is used to order the data
      * 
      * @param string $subcategory_id
-     * @param string $order
      * @return object
      */
-    public function get_adlinks($subcategory_id, $orderby)
+    public function get_adlinks($subcategory_id)
     {
-        if ($orderby == 'asc')
-            $query = $this->db->query("SELECT * FROM skearch_listings WHERE enabled = 1 AND sub_id = $subcategory_id
-            ORDER BY title ASC");
-        else if ($orderby == 'desc')
-            $query = $this->db->query("SELECT * FROM skearch_listings WHERE enabled = 1 AND sub_id = $subcategory_id
-            ORDER BY title DESC");
-        else if ($orderby == 'random')
-            $query = $this->db->query("SELECT * FROM skearch_listings WHERE enabled = 1 AND sub_id = $subcategory_id
-            ORDER BY RAND()");
-        else if ($orderby == 'priority')
-            $query = $this->db->query("SELECT * FROM skearch_listings WHERE enabled = 1 AND sub_id = $subcategory_id
-            ORDER BY priority ASC");
+        $query = $this->db->query("SELECT * FROM skearch_listings WHERE enabled = 1 AND sub_id = $subcategory_id
+        ORDER BY priority ASC");
 
         return $query->result();
     }

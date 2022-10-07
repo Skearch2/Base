@@ -276,10 +276,23 @@ class Pages extends MY_Controller
   public function get_field_results($field_id, $order)
   {
 
-    $query_result = $this->Category_model->get_adlinks($field_id, $order);
+    $adlinks = $this->Category_model->get_adlinks($field_id);
+
+    // sequence priority numbers
+    foreach ($adlinks as $index => $adlink) {
+      $adlink->priority = $index + 1;
+    }
+
+    if ($order == 'asc') {
+      usort($adlinks, fn ($a, $b) => strcasecmp($a->title, $b->title));
+    } else if ($order == 'desc') {
+      usort($adlinks, fn ($a, $b) => strcasecmp($b->title, $a->title));
+    } else if ($order == 'random') {
+      shuffle($adlinks);
+    }
 
     $this->output
       ->set_content_type('application/json')
-      ->set_output(json_encode($query_result));
+      ->set_output(json_encode($adlinks));
   }
 }
