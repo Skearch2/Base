@@ -62,6 +62,29 @@ class Link_model extends CI_Model
     }
 
     /**
+     * Check if the url already associated to a link in the field
+     *
+     * @param string $url URL
+     * @param int    $field_id Field ID
+     * @return boolean
+     */
+    public function check_duplicate_url_in_field($url, $field_id)
+    {
+        $this->db->select("id");
+        $this->db->from('skearch_listings');
+        $this->db->where('www', $url);
+        $this->db->where('sub_id', $field_id);
+
+        $query = $this->db->get();
+
+        if ($query->num_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Gets a link
      *
      * @param int $id An id of a link

@@ -5,6 +5,7 @@
 
 					<a href="https://www.skearch.io/about">About</a>
 					<a href="https://www.skearch.io/brands">Brands</a>
+					<a href="https://www.skearch.io">Local</a>
 					<a href="https://www.skearch.io/privacy">Privacy Policy</a>
 					<a href="https://www.skearch.io/tos">Terms of Service</a>
 					<a href="<?= base_url('news'); ?>">News</a>

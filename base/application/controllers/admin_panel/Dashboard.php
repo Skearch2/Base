@@ -42,6 +42,7 @@ class Dashboard extends MY_Controller
 
 		$data['brand_stats'] = $this->Dashboard->get_brands_stats();
 		$data['stats'] = $this->Dashboard->get_results_stats();
+		$data['research_stats'] = $this->Dashboard->get_research_stats();
 
 		$data['title'] = ucfirst("dashboard");
 		$this->load->view('admin_panel/pages/dashboard', $data);

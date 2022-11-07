@@ -93,4 +93,25 @@ class Dashboard_model extends CI_Model
 
     return (object) ($results);
   }
+
+  /**
+   * Returns statistics for research links
+   * 
+   * @return object
+   */
+  public function get_research_stats()
+  {
+    // total numbers of research links
+    $this->db->select('id');
+    $this->db->from('skearch_research_links');
+    $results['total_research_links'] = $this->db->count_all_results();
+
+    // total number of fields assigned to research links
+    $this->db->select('field_id');
+    $this->db->group_by('field_id');
+    $this->db->from('skearch_research_links');
+    $results['total_research_links_fields'] = $this->db->count_all_results();
+
+    return (object) ($results);
+  }
 }
