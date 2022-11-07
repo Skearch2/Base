@@ -93,7 +93,7 @@ class Research extends MY_Controller
         } else {
 
             $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[85]');
-            $this->form_validation->set_rules('url', 'URL', 'required|valid_url');
+            $this->form_validation->set_rules('url', 'URL', 'required|valid_url|callback_check_duplicate_url');
             $this->form_validation->set_rules('field_id', 'Field', 'required|numeric');
 
 
@@ -140,12 +140,12 @@ class Research extends MY_Controller
                 $this->form_validation->set_rules('description_short', 'Short Description', 'required|trim|max_length[85]');
                 $this->form_validation->set_rules('field_id', 'Field', 'required');
                 $this->form_validation->set_rules('display_url', 'Home Display', 'trim');
-                $this->form_validation->set_rules('url', 'URL', 'required|valid_url');
+                $this->form_validation->set_rules('url', 'URL', 'required|valid_url|callback_check_duplicate_url');
             } else if ($this->input->post('action') == 'make_link') {
                 $this->form_validation->set_rules('title', 'Title', 'trim|required');
                 $this->form_validation->set_rules('description_short', 'Short Description', 'trim|required|max_length[85]');
                 $this->form_validation->set_rules('display_url', 'Home Display', 'trim');
-                $this->form_validation->set_rules('url', 'URL', 'required|valid_url');
+                $this->form_validation->set_rules('url', 'URL', 'required|valid_url|callback_check_duplicate_url');
                 $this->form_validation->set_rules('field_id', 'Field', 'required');
                 $this->form_validation->set_rules('priority', 'Priority', 'required');
             }
@@ -241,6 +241,24 @@ class Research extends MY_Controller
             } else {
                 echo json_encode(0);
             }
+        }
+    }
+
+    /**
+     * Check for duplicate url in the current field
+     *
+     * @param string $url URL
+     * @return boolean
+     */
+    public function check_duplicate_url($url)
+    {
+        $field_id = $this->input->post('field_id');
+
+        if ($this->Links->check_duplicate_url_in_field($url, $field_id)) {
+            $this->form_validation->set_message('check_duplicate_url', "The URL already exists in the selected Field.");
+            return false;
+        } else {
+            return true;
         }
     }
 }
