@@ -40,12 +40,8 @@ $this->load->view('admin_panel/templates/subheader');
 <!-- end::Page Loader -->
 
 <div class="m-content">
-
-	<!--Begin::Section-->
 	<div class="row">
 		<div class="col-xl-4">
-
-			<!--begin:: Packages-->
 			<div class="m-portlet m-portlet--full-height m-portlet--fit m-portlet--unair">
 				<div class="m-portlet__head">
 					<div class="m-portlet__head-caption">
@@ -57,8 +53,6 @@ $this->load->view('admin_panel/templates/subheader');
 					</div>
 				</div>
 				<div class="m-portlet__body">
-
-					<!--begin::Widget 29-->
 					<div class="m-widget29">
 						<div class="m-widget_content">
 							<h3 class="m-widget_content-title">Umbrellas</h3>
@@ -116,15 +110,10 @@ $this->load->view('admin_panel/templates/subheader');
 							</div>
 						</div>
 					</div>
-					<!--end::Widget 29-->
 				</div>
 			</div>
-
-			<!--end:: Packages-->
 		</div>
 		<div class="col-xl-4">
-
-			<!--begin:: Packages-->
 			<div class="m-portlet m-portlet--semi-height m-portlet--fit m-portlet--unair">
 				<div class="m-portlet__head">
 					<div class="m-portlet__head-caption">
@@ -136,8 +125,6 @@ $this->load->view('admin_panel/templates/subheader');
 					</div>
 				</div>
 				<div class="m-portlet__body">
-
-					<!--begin::Widget 29-->
 					<div class="m-widget29">
 						<div class="m-widget_content">
 							<h3 class="m-widget_content-title">Brand Links</h3>
@@ -153,11 +140,39 @@ $this->load->view('admin_panel/templates/subheader');
 							</div>
 						</div>
 					</div>
-					<!--end::Widget 29-->
 				</div>
 			</div>
 
-			<!--end:: Packages-->
+		</div>
+		<div class="col-xl-4">
+			<div class="m-portlet m-portlet--semi-height m-portlet--fit m-portlet--unair">
+				<div class="m-portlet__head">
+					<div class="m-portlet__head-caption">
+						<div class="m-portlet__head-title">
+							<h3 class="m-portlet__head-text">
+								Research
+							</h3>
+						</div>
+					</div>
+				</div>
+				<div class="m-portlet__body">
+					<div class="m-widget29">
+						<div class="m-widget_content">
+							<h3 class="m-widget_content-title">Research Links</h3>
+							<div class="m-widget_content-items">
+								<div class="m-widget_content-item">
+									<span>Total Links</span>
+									<span class="m--font-primary"><?= $research_stats->total_research_links ?></span>
+								</div>
+								<div class="m-widget_content-item">
+									<span>Total Fields</span>
+									<span class="m--font-primary"><?= $research_stats->total_research_links_fields ?></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class="col-xl-4">
 

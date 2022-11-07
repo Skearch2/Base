@@ -57,11 +57,11 @@ class Fields extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces|trim');
+            $this->form_validation->set_rules('title', 'Title', 'required|trim');
             $this->form_validation->set_rules('description', 'Description', 'max_length[500]|trim');
             $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
             $this->form_validation->set_rules('parent_id', 'Umbrella', 'required');
-            $this->form_validation->set_rules('home_display', 'Home Display', 'alpha_numeric_spaces|trim');
+            $this->form_validation->set_rules('home_display', 'Home Display', 'trim');
             $this->form_validation->set_rules('keywords', 'Keyword(s)', 'callback_validate_keywords');
             $this->form_validation->set_rules('featured', 'Featured', 'required|numeric');
             $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
@@ -284,11 +284,11 @@ class Fields extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $this->form_validation->set_rules('title', 'Title', 'required|alpha_numeric_spaces|trim');
+            $this->form_validation->set_rules('title', 'Title', 'required|trim');
             $this->form_validation->set_rules('description', 'Description', 'max_length[500]|trim');
             $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
             $this->form_validation->set_rules('parent_id', 'Umbrella', 'required');
-            $this->form_validation->set_rules('home_display', 'Home Display', 'alpha_numeric_spaces|trim');
+            $this->form_validation->set_rules('home_display', 'Home Display', 'trim');
             $this->form_validation->set_rules('keywords', 'Keyword(s)', 'trim|callback_validate_keywords[' . $id . ']');
             $this->form_validation->set_rules('featured', 'Featured', 'required|numeric');
             $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
