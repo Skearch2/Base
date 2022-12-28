@@ -120,7 +120,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Brand</th>
 						<th>Organization</th>
 						<th>Members</th>
-						<th>Payments</th>
+						<!-- <th>Payments</th> -->
 						<th width=150>Actions</th>
 					</tr>
 				</thead>
@@ -240,8 +240,6 @@ $this->load->view('admin_panel/templates/js_global');
 					data: "organization"
 				}, {
 					data: "members"
-				}, {
-					data: "payments"
 				}, {
 					data: "Actions"
 				}],

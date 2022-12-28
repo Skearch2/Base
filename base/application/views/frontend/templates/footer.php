@@ -9,6 +9,7 @@
 					<a href="https://www.skearch.io/privacy">Privacy Policy</a>
 					<a href="https://www.skearch.io/tos">Terms of Service</a>
 					<a href="<?= base_url('news'); ?>">News</a>
+					<a href="<?= base_url('tips'); ?>">Tips</a>
 
 					<p class="copy-right">
 						Copyright © <?php echo date('Y'); ?> Skearch, LLC All rights reserved<br>

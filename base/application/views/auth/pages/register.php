@@ -116,9 +116,9 @@ $this->load->view('auth/templates/head');
 							<a href="login">
 								<button type="button" id="m_login_signup_cancel" class="btn btn-outline-danger m-btn m-btn--custom m-login__btn">Cancel</button>&nbsp;&nbsp;
 							</a>
-							<a href="payment">
+							<!-- <a href="payment">
 								<button type="button" id="m_login_payment" class="btn btn-outline-success m-btn m-btn--custom m-login__btn" style="visibility:hidden">Make a Payment</button>
-							</a>
+							</a> -->
 						</div>
 						<?= form_close() ?>
 					<?php endif; ?>
@@ -218,7 +218,7 @@ $this->load->view('auth/templates/head');
 			$("#is_brand_signup").val(1);
 			$('#btn_signup_user').removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide');
 			$("#btn_signup_brand").removeClass().addClass('btn m-btn--square btn-success m-btn--wide active');
-			$("#m_login_payment").css('visibility', 'visible');
+			// $("#m_login_payment").css('visibility', 'visible');
 			$('.alert').hide();
 		}
 
@@ -235,7 +235,7 @@ $this->load->view('auth/templates/head');
 			$("#is_brand_signup").val(0);
 			$('#btn_signup_user').removeClass().addClass('btn m-btn--square btn-success m-btn--wide active');
 			$("#btn_signup_brand").removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide');
-			$("#m_login_payment").css('visibility', 'hidden');
+			// $("#m_login_payment").css('visibility', 'hidden');
 			$('.alert').hide();
 		}
 
@@ -247,7 +247,7 @@ $this->load->view('auth/templates/head');
 				mask: "(999) 999-9999"
 			});
 
-			$("#m_login_payment").css('visibility', 'visible');
+			// $("#m_login_payment").css('visibility', 'visible');
 
 			var captcha = sliderCaptcha({
 				id: 'captcha',

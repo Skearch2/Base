@@ -64,6 +64,7 @@ $route['auth/get/csrf_hash']                          = 'auth/get_csrf_hash';
     Pages 
 */
 $route['home']                                   = 'frontend/pages';
+$route['tips']                                   = 'frontend/pages/tips';
 $route['browse']                                 = 'frontend/pages/browse_all';
 $route['browse/desc']                            = 'frontend/pages/browse_all/desc';
 $route['browse/get_data/umbrella']               = 'frontend/pages/get_data/umbrella';
@@ -107,9 +108,10 @@ $route['myskearch/auth/forgot_password']            = 'my_skearch/auth/forgot_pa
 $route['myskearch/auth/captcha/generate']           = 'my_skearch/auth/generate_captcha';
 $route['myskearch/auth/reset_password/(:any)']      = 'my_skearch/auth/reset_password/$1';
 $route['myskearch/auth/change_email']               = 'my_skearch/auth/change_email';
-$route['myskearch/auth/payment']                    = 'my_skearch/auth/payment';
-$route['myskearch/auth/payment/transaction/done']   = 'my_skearch/auth/payment/1';
+// $route['myskearch/auth/payment']                    = 'my_skearch/auth/payment';
+// $route['myskearch/auth/payment/transaction/done']   = 'my_skearch/auth/payment/1';
 $route['myskearch/auth/unsubscribe/email']          = 'my_skearch/auth/unsubscribe_email';
+
 
 /* 
     Dashboard 
@@ -354,8 +356,8 @@ $route['admin/brands/deals/delete/id/(:num)']         = 'admin_panel/brands/deal
 
 
 // Payments
-$route['admin/brand/payments/id/(:num)']                = 'admin_panel/brands/payments/index/$1';
-$route['admin/brand/payments/get/id/(:num)']            = 'admin_panel/brands/payments/get/$1';
+// $route['admin/brand/payments/id/(:num)']                = 'admin_panel/brands/payments/index/$1';
+// $route['admin/brand/payments/get/id/(:num)']            = 'admin_panel/brands/payments/get/$1';
 
 // View as
 $route['admin/viewas/brand/id/(:num)']                       = 'my_skearch/brand/ads/index/$1';
@@ -396,6 +398,12 @@ $route['admin/linkchecker/remove/id/(:num)']        = 'admin_panel/linkchecker/r
 $route['admin/linkchecker/run']                     = 'admin_panel/linkchecker/run';
 $route['admin/linkchecker/run/get/progress']        = 'admin_panel/linkchecker/get_curl_progress';
 $route['admin/linkchecker/get_status_info']         = 'admin_panel/option/get_status_info';
+
+/* Tip System */
+$route['admin/tips']                            = 'admin_panel/tips_crypto';
+$route['admin/tips/get/addresses']              = 'admin_panel/tips_crypto/get';
+$route['admin/tips/create/address']              = 'admin_panel/tips_crypto/create';
+$route['admin/tips/delete/address/id/(:num)']   = 'admin_panel/tips_crypto/delete/$1';
 
 /* Giveaways */
 $route['admin/giveaways']                                        = 'admin_panel/giveaways';
