@@ -22,25 +22,29 @@ $this->load->view('frontend/templates/header');
                 <div class="box">
                     <h3>Tips</h3>
                 </div>
-                <div class="middle-inner browse-inner">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col"></th>
-                                <th scope="col">Wallet Address</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($crypto_wallets as $wallet) : ?>
+                <div class="middle-inner browse-inner table-responsive">
+                    <?php if (empty($crypto_wallets)) : ?>
+                        There are no crypto wallets listed to receive tips.
+                    <?php else : ?>
+                        <table class="table table-hover">
+                            <thead>
                                 <tr>
-                                    <th scope="row"><?= $wallet->coin_name ?></th>
-                                    <td><?= $wallet->coin_wallet_address ?></td>
-                                    <td><button type="button" class="btn btn-default fa fa-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy=<?= $wallet->coin_wallet_address ?> title="Copy to clipboard"></td>
+                                    <th scope="col"></th>
+                                    <th scope="col">Wallet Address</th>
+                                    <th scope="col"></th>
                                 </tr>
-                            <?php endforeach ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($crypto_wallets as $wallet) : ?>
+                                    <tr>
+                                        <th scope="row"><?= $wallet->coin_name ?></th>
+                                        <td><?= $wallet->coin_wallet_address ?></td>
+                                        <td><button type="button" class="btn btn-default fa fa-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy=<?= $wallet->coin_wallet_address ?> title="Copy to clipboard"></td>
+                                    </tr>
+                                <?php endforeach ?>
+                            </tbody>
+                        </table>
+                    <?php endif ?>
                 </div>
             </div>
         </div>
