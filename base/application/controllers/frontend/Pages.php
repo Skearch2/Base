@@ -33,6 +33,7 @@ class Pages extends MY_Controller
     $this->load->model('admin_panel/Settings_model', 'Settings');
     $this->load->model('frontend/ads_model', 'Ads');
     $this->load->model('my_skearch/User_model', 'User');
+    $this->load->model('admin_panel/Tips_crypto_model', 'Tips_crypto_wallets');
 
     $this->user_id = $this->session->userdata('user_id');
 
@@ -45,8 +46,6 @@ class Pages extends MY_Controller
 
   /**
    * View page for Skearch Home
-   *
-   * @return void
    */
   public function index()
   {
@@ -66,7 +65,6 @@ class Pages extends MY_Controller
    * View page for all umbrellas and fields
    *
    * @param string $order
-   * @return void
    */
   public function browse_all($order = 'asc')
   {
@@ -100,7 +98,6 @@ class Pages extends MY_Controller
    * View page for an umbrella
    *
    * @param string $umbrella_name
-   * @return void
    */
   public function browse_umbrella($umbrella_name)
   {
@@ -152,7 +149,6 @@ class Pages extends MY_Controller
    *
    * @param string $umbrella_name
    * @param string $field_name
-   * @return void
    */
   public function browse_field($umbrella_name, $field_name)
   {
@@ -222,9 +218,18 @@ class Pages extends MY_Controller
   }
 
   /**
+   * Tips page
+   */
+  public function tips()
+  {
+    $data['crypto_wallets'] = $this->Tips_crypto_wallets->get();
+
+    $data['title'] = ucwords("MySkearch | Tips");
+    $this->load->view('frontend/tips', $data);
+  }
+
+  /**
    * Change theme
-   *
-   * @return void
    */
   public function change_theme()
   {

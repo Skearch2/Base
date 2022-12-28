@@ -436,84 +436,84 @@ class Auth extends MY_Controller
     /**
      * Payment page for Brands to pay
      */
-    public function payment($approved = 0)
-    {
-        if ($approved && $this->input->get('transaction_id')) {
-            $this->load->model('admin_panel/brands/payments_model', 'Payments');
-            $this->load->model('admin_panel/brands/brand_model', 'Brand');
+    // public function payment($approved = 0)
+    // {
+    //     if ($approved && $this->input->get('transaction_id')) {
+    //         $this->load->model('admin_panel/brands/payments_model', 'Payments');
+    //         $this->load->model('admin_panel/brands/brand_model', 'Brand');
 
-            $brand = $this->input->get('brand');
+    //         $brand = $this->input->get('brand');
 
-            // transaction details
-            $reference_id   = strtoupper(bin2hex(random_bytes(6))); // create random string of length 12
-            $service        = $this->input->get('service');
-            $transaction_id = $this->input->get('transaction_id');
-            $payment_type   = $this->input->get('payment_type');
-            $amount         = $this->input->get('amount');
-            $payment_date   = $this->input->get('payment_date');
+    //         // transaction details
+    //         $reference_id   = strtoupper(bin2hex(random_bytes(6))); // create random string of length 12
+    //         $service        = $this->input->get('service');
+    //         $transaction_id = $this->input->get('transaction_id');
+    //         $payment_type   = $this->input->get('payment_type');
+    //         $amount         = $this->input->get('amount');
+    //         $payment_date   = $this->input->get('payment_date');
 
-            // get the id and details of the lead member of the brand
-            // $id = $this->Brand->get_members($this->input->get('brand_id'), 1)[0]->id;
-            // $user = $this->ion_auth->user($id)->row();
+    //         // get the id and details of the lead member of the brand
+    //         // $id = $this->Brand->get_members($this->input->get('brand_id'), 1)[0]->id;
+    //         // $user = $this->ion_auth->user($id)->row();
 
-            // email template
-            $template = $this->Email_templates->get_template('brand_payment_confirmation');
+    //         // email template
+    //         $template = $this->Email_templates->get_template('brand_payment_confirmation');
 
-            // data used in email body
-            $data = array(
-                'brand'          => $brand,
-                'reference_id'   => $reference_id,
-                'service'        => $service,
-                'transaction_id' => $transaction_id,
-                'payment_type'   => $payment_type,
-                'amount'         => $amount,
-                'payment_date'   => $payment_date
-            );
+    //         // data used in email body
+    //         $data = array(
+    //             'brand'          => $brand,
+    //             'reference_id'   => $reference_id,
+    //             'service'        => $service,
+    //             'transaction_id' => $transaction_id,
+    //             'payment_type'   => $payment_type,
+    //             'amount'         => $amount,
+    //             'payment_date'   => $payment_date
+    //         );
 
-            $message = $this->parser->parse_string($template->body, $data, TRUE);
+    //         $message = $this->parser->parse_string($template->body, $data, TRUE);
 
-            // send email regarding payment confirmation
-            // $this->email->clear();
-            // $this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
-            // $this->email->to($user->email);
-            // $this->email->subject($template->subject);
-            // $this->email->message($message);
+    //         // send email regarding payment confirmation
+    //         // $this->email->clear();
+    //         // $this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
+    //         // $this->email->to($user->email);
+    //         // $this->email->subject($template->subject);
+    //         // $this->email->message($message);
 
-            // if ($this->email->send()) {
-            //     // log email
-            //     $this->Log_model->create(array(
-            //         'type' => 'Payment Confirmation',
-            //         'user_id' => $user->id
-            //     ));
-            // }
+    //         // if ($this->email->send()) {
+    //         //     // log email
+    //         //     $this->Log_model->create(array(
+    //         //         'type' => 'Payment Confirmation',
+    //         //         'user_id' => $user->id
+    //         //     ));
+    //         // }
 
-            // create a brand by the name given during payment
-            $brand_id = $this->Brand->create(array(
-                'brand' => $brand
-            ));
+    //         // create a brand by the name given during payment
+    //         $brand_id = $this->Brand->create(array(
+    //             'brand' => $brand
+    //         ));
 
-            $transaction_data = array(
-                'id'             => $reference_id,
-                'brand_id'       => $brand_id,
-                'service'        => $service,
-                'transaction_id' => $transaction_id,
-                'payment_type'   => $payment_type,
-                'amount'         => $amount,
-                'payment_date'   => $payment_date
-            );
+    //         $transaction_data = array(
+    //             'id'             => $reference_id,
+    //             'brand_id'       => $brand_id,
+    //             'service'        => $service,
+    //             'transaction_id' => $transaction_id,
+    //             'payment_type'   => $payment_type,
+    //             'amount'         => $amount,
+    //             'payment_date'   => $payment_date
+    //         );
 
-            $create = $this->Payments->create($transaction_data);
+    //         $create = $this->Payments->create($transaction_data);
 
-            if ($create) {
-                echo json_encode(1);
-            } else {
-                echo json_encode(0);
-            }
-        } else {
-            $data['title'] = ucwords("MySkearch | make payment");
-            $this->load->view('auth/pages/payment', $data);
-        }
-    }
+    //         if ($create) {
+    //             echo json_encode(1);
+    //         } else {
+    //             echo json_encode(0);
+    //         }
+    //     } else {
+    //         $data['title'] = ucwords("MySkearch | make payment");
+    //         $this->load->view('auth/pages/payment', $data);
+    //     }
+    // }
 
     /**
      * Set new password for MySkearch member

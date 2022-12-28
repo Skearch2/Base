@@ -903,3 +903,11 @@ text-align: center;
 .ad img {
 width: 100% !important;
 }
+
+.table tr {
+    color: white;
+}
+
+.table button {
+    color: white;
+}
