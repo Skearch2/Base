@@ -31,14 +31,18 @@ $this->load->view('frontend/templates/header');
                                 <tr>
                                     <th scope="col"></th>
                                     <th scope="col">Wallet Address</th>
-                                    <th scope="col"></th>
+                                    <th scope=" col"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($crypto_wallets as $wallet) : ?>
                                     <tr>
-                                        <th scope="row"><?= $wallet->coin_name ?></th>
-                                        <td><?= $wallet->coin_wallet_address ?></td>
+                                        <th class="lead" scope="row">
+                                            <pre><?= $wallet->coin_name ?></pre>
+                                        </th>
+                                        <td class="lead">
+                                            <pre><?= $wallet->coin_wallet_address ?></pre>
+                                        </td>
                                         <td><button type="button" class="btn btn-default fa fa-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy=<?= $wallet->coin_wallet_address ?> title="Copy to clipboard"></td>
                                     </tr>
                                 <?php endforeach ?>
