@@ -68,16 +68,6 @@ $this->load->view('auth/templates/head');
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="password" placeholder="Confirm Password" name="password2">
 							</div>
-							<div class="form-group m-form__group">
-								<div class="col m--align-left" style="padding-top: 20px;">
-									<label class="m-checkbox m-checkbox--secondary">
-										<input type="checkbox" name="is_premium_user_signup" <?= ($this->input->post('is_premium_user_signup')) ? "checked" : ""; ?>>Free upgrade to <a href="#" target="_blank" class="m-link m-link--primary"><b>Premium</b></a>
-										<span></span>
-									</label>
-									<span class="m-form__help">Promotional</span>
-								</div>
-							</div>
-							<br>
 						</div>
 						<div id="m-login__form m-form__brand" style=<?= $is_brand_signup ? 'display:block' : 'display:none' ?>>
 							<div class="form-group m-form__group">
@@ -93,12 +83,22 @@ $this->load->view('auth/templates/head');
 								<input class="form-control m-input" type="text" placeholder="Phone" name="phone" id="phone" value="<?= set_value('phone'); ?>">
 							</div>
 						</div>
-						<div class="form-group m-form__group m-login__form-sub">
+						<div class="form-group m-form__group">
 							<div class="col m--align-left" style="padding-top: 20px;">
 								<label class="m-checkbox m-checkbox--secondary">
 									<input type="checkbox" name="agree" <?= ($this->input->post('agree')) ? "checked" : ""; ?>>I Agree to the <a href="https://www.skearch.io/tos" target="_blank" class="m-link m-link--primary"><b>terms of service</b></a> and <a href="https://www.skearch.io/privacy" target="_blank" class="m-link m-link--primary"><b>privacy policy</b></a>.
 									<span></span>
 								</label>
+							</div>
+						</div>
+						<div id="m-login__form m-form__user checkbox_premium" style=<?= !$is_brand_signup ? 'display:block' : 'display:none' ?>>
+							<div class="col m--align-left" style="padding-top: 20px;">
+								<label class="m-checkbox m-checkbox--secondary">
+									<input type="checkbox" name="is_premium_user_signup" <?= ($this->input->post('is_premium_user_signup')) ? "checked" : ""; ?>>Upgrade to <a href="#" target="_blank" class="m-link m-link--primary"><b>Premium</b></a>
+									<span></span>
+								</label>
+								&nbsp;&nbsp;
+								<a href="<?= BASE_URL ?>tips" target="_blank" id="m_login_signup_submit" class="btn btn-primary btn-sm">Tip Skearch</a>
 							</div>
 						</div>
 						<div class="form-group m-form__group">
@@ -209,8 +209,10 @@ $this->load->view('auth/templates/head');
 		function showFormBrand() {
 			var formUser = document.getElementById("m-login__form m-form__user");
 			var formBrand = document.getElementById("m-login__form m-form__brand");
+			var checkboxPremium = document.getElementById("m-login__form m-form__user checkbox_premium");
 
 			formUser.style.display = "none";
+			checkboxPremium.style.display = "none";
 			formBrand.style.display = "block";
 
 			$('form').trigger("reset");
@@ -226,8 +228,10 @@ $this->load->view('auth/templates/head');
 		function showFormUser() {
 			var formUser = document.getElementById("m-login__form m-form__user");
 			var formBrand = document.getElementById("m-login__form m-form__brand");
+			var checkboxPremium = document.getElementById("m-login__form m-form__user checkbox_premium");
 
 			formUser.style.display = "block";
+			checkboxPremium.style.display = "block";
 			formBrand.style.display = "none";
 
 			$('form').trigger("reset");
