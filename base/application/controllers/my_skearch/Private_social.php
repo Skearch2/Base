@@ -29,6 +29,14 @@ class Private_social extends CI_Controller
             redirect("myskearch/auth/login");
         }
 
+        $this->load->model('my_skearch/User_model', 'User');
+
+        $this->user_id = $this->session->userdata('user_id');
+
+        if (!$this->User->check_latest_tos_ack($this->user_id)) {
+            redirect('tos_pp_ack');
+        }
+
         $this->load->model('my_skearch/private_social_model', 'Private_social');
 
         date_default_timezone_set("America/Chicago");
