@@ -23,12 +23,19 @@ class Media_vault extends MY_Controller
             redirect('myskearch/auth/login', 'refresh');
         }
 
+        $this->load->model('my_skearch/User_model', 'User');
+
+        $this->user_id = $this->session->userdata('user_id');
+
+        if (!$this->User->check_latest_tos_ack($this->user_id)) {
+            redirect('tos_pp_ack');
+        }
+
         // check if user is a brand member or admin
         if (!$this->ion_auth->in_group($this->config->item('brand', 'ion_auth') || $this->ion_auth->is_admin())) {
             redirect('myskearch', 'refresh');
         }
 
-        $this->load->model('my_skearch/User_model', 'User');
         $this->load->model('my_skearch/brand/Media_vault_model', 'Media_vault');
 
         if ($this->ion_auth->in_group($this->config->item('brand', 'ion_auth'))) {
