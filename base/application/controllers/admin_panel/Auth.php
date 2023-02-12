@@ -85,7 +85,8 @@ class Auth extends MY_Controller
 	{
 		if ($this->ion_auth->logged_in()) {
 			$this->ion_auth->logout();
-			$this->session->set_flashdata('messages', $this->ion_auth->messages());
+			$this->ion_auth->logout();
+			$this->session->set_flashdata('messages', 'You have successfully logged out.');
 		}
 
 		redirect('admin/auth/login');

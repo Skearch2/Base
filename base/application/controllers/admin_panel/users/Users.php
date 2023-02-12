@@ -96,16 +96,16 @@ class Users extends MY_Controller
 
             // only show to admin, editor, and brand member groups
             if (in_array($group, array(1, 2, 3))) {
-                if (strlen($this->input->post('phone'))) {
+                if (!empty($this->input->post('phone'))) {
                     $this->form_validation->set_rules('phone', 'Phone', 'trim|required|callback_validate_phone');
                 }
                 $this->form_validation->set_rules('address1', 'Address 1', 'trim');
                 $this->form_validation->set_rules('address2', 'Address 2', 'trim');
                 $this->form_validation->set_rules('city', 'City', 'trim');
-                if (strlen($this->input->post('state_other'))) {
+                if (!empty($this->input->post('state_other'))) {
                     $this->form_validation->set_rules('state_other', 'State/Province', 'trim|regex_match[/^([a-z ])+$/i]');
                 }
-                if (strlen($this->input->post('zipcode'))) {
+                if (!empty($this->input->post('zipcode'))) {
                     $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
                 }
                 // only show to brand member group
@@ -510,16 +510,16 @@ class Users extends MY_Controller
             // only show to admin, editor, and brand member groups
             if (in_array($group, array(1, 2, 3))) {
                 // $this->form_validation->set_rules('organization', 'Organization', 'trim');
-                if (strlen($this->input->post('phone'))) {
+                if (!empty($this->input->post('phone'))) {
                     $this->form_validation->set_rules('phone', 'Phone', 'trim|required|callback_validate_phone');
                 }
                 $this->form_validation->set_rules('address1', 'Address Line 1', 'trim');
                 $this->form_validation->set_rules('address2', 'Address Line 2', 'trim');
                 $this->form_validation->set_rules('city', 'City', 'trim');
-                if (strlen($this->input->post('state_other'))) {
+                if (!empty($this->input->post('state_other'))) {
                     $this->form_validation->set_rules('state_other', 'State/Province', 'trim|regex_match[/^([a-z ])+$/i]');
                 }
-                if (strlen($this->input->post('zipcode'))) {
+                if (!empty($this->input->post('zipcode'))) {
                     $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
                 }
                 // only show to brand member group

@@ -17,11 +17,17 @@ class Dashboard extends MY_Controller
 	{
 		parent::__construct();
 
+		$this->load->model('my_skearch/User_model', 'User');
+
 		if (!$this->ion_auth->logged_in()) {
 			redirect('myskearch/auth/login', 'refresh');
 		}
 
 		$this->user_id = $this->session->userdata('user_id');
+
+		if (!$this->User->check_latest_tos_ack($this->user_id)) {
+			redirect('tos_pp_ack');
+		}
 
 		// defines section in myskearch
 		$this->section = 'dashboard';
@@ -29,7 +35,6 @@ class Dashboard extends MY_Controller
 		$this->load->model('my_skearch/brand/Deals_model', 'Deals');
 		$this->load->model('admin_panel/Giveaway_model', 'Giveaways');
 		$this->load->model('Fields_History_model', 'Fields_History');
-		$this->load->model('my_skearch/User_model', 'User');
 
 		// update status on deals based on start/end date
 		$this->Deals->update_status();

@@ -34,6 +34,7 @@ class Pages extends MY_Controller
     $this->load->model('frontend/ads_model', 'Ads');
     $this->load->model('my_skearch/User_model', 'User');
     $this->load->model('admin_panel/Tips_crypto_model', 'Tips_crypto_wallets');
+    $this->load->model('admin_panel/Tos_pp_model', 'TOS');
 
     $this->user_id = $this->session->userdata('user_id');
 
@@ -227,6 +228,27 @@ class Pages extends MY_Controller
     $data['title'] = ucwords("MySkearch | Tips");
     $this->load->view('frontend/tips', $data);
   }
+
+  /**
+   * TOS/PP page
+   */
+  public function tos_pp($require_ack = null)
+  {
+    if ($require_ack) {
+      // get the lastest version of TOS/PP (date sorted desc)
+      $data['content'] = $this->TOS->get()[0]->content;
+
+      $data['title'] = ucwords("MySkearch | TOS/PP");
+      $this->load->view('frontend/tos_pp_ack', $data);
+    } else {
+      // get the lastest version of TOS/PP (date sorted desc)
+      $data['content'] = $this->TOS->get()[0]->content;
+
+      $data['title'] = ucwords("MySkearch | TOS/PP");
+      $this->load->view('frontend/tos_pp', $data);
+    }
+  }
+
 
   /**
    * Change theme
