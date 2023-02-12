@@ -65,6 +65,9 @@ $route['auth/get/csrf_hash']                          = 'auth/get_csrf_hash';
 */
 $route['home']                                   = 'frontend/pages';
 $route['tips']                                   = 'frontend/pages/tips';
+$route['tos']                                    = 'frontend/pages/tos_pp';
+$route['pp']                                     = 'frontend/pages/tos_pp';
+$route['tos_pp_ack']                             = 'frontend/pages/tos_pp/1';
 $route['browse']                                 = 'frontend/pages/browse_all';
 $route['browse/desc']                            = 'frontend/pages/browse_all/desc';
 $route['browse/get_data/umbrella']               = 'frontend/pages/get_data/umbrella';
@@ -111,6 +114,7 @@ $route['myskearch/auth/change_email']               = 'my_skearch/auth/change_em
 // $route['myskearch/auth/payment']                    = 'my_skearch/auth/payment';
 // $route['myskearch/auth/payment/transaction/done']   = 'my_skearch/auth/payment/1';
 $route['myskearch/auth/unsubscribe/email']          = 'my_skearch/auth/unsubscribe_email';
+$route['myskearch/auth/tos/accept']                 = 'my_skearch/auth/validate_tos_ack';
 
 
 /* 
@@ -434,7 +438,13 @@ $route['admin/email/marketing_emails/delete/id/(:num)'] = 'admin_panel/email/del
 $route['admin/email/marketing_emails/toggle/subscription/id/(:num)'] = 'admin_panel/email/toggle_marketing_email_subscription/$1';
 $route['admin/email/marketing_emails/send']         = 'admin_panel/email/send_mass_email';
 
+/* News */
+$route['admin/tos']                            = 'admin_panel/tos_pp';
+$route['admin/tos/get']                        = 'admin_panel/tos_pp/get';
+$route['admin/tos/get/id/(:num)']              = 'admin_panel/tos_pp/get/$1';
+$route['admin/tos/create']                     = 'admin_panel/tos_pp/create';
+
 /* Settings */
 $route['admin/settings']                       = 'admin_panel/settings';
-$route['admin/option/update_option']         = 'admin_panel/option/update_option';
-$route['admin/option/brandlinks_status_all'] = 'admin_panel/option/brandlinks_status_all';
+$route['admin/option/update_option']           = 'admin_panel/option/update_option';
+$route['admin/option/brandlinks_status_all']   = 'admin_panel/option/brandlinks_status_all';

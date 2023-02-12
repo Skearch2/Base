@@ -86,7 +86,7 @@ $this->load->view('auth/templates/head');
 						<div class="form-group m-form__group">
 							<div class="col m--align-left" style="padding-top: 20px;">
 								<label class="m-checkbox m-checkbox--secondary">
-									<input type="checkbox" name="agree" <?= ($this->input->post('agree')) ? "checked" : ""; ?>>I Agree to the <a href="https://www.skearch.io/tos" target="_blank" class="m-link m-link--primary"><b>terms of service</b></a> and <a href="https://www.skearch.io/privacy" target="_blank" class="m-link m-link--primary"><b>privacy policy</b></a>.
+									<input type="checkbox" name="tos_pp" <?= ($this->input->post('tos_pp')) ? "checked" : ""; ?>>I Agree to the <a href="<?= base_url('tos') ?>" target="_blank" class="m-link m-link--primary"><b>terms of service</b></a> and <a href="<?= base_url('pp') ?>" target="_blank" class="m-link m-link--primary"><b>privacy policy</b></a>.
 									<span></span>
 								</label>
 							</div>
@@ -157,7 +157,7 @@ $this->load->view('auth/templates/head');
 		// 						required: 0,
 		// 						phoneUS: 1
 		// 					},
-		// 					agree: {
+		// 					tos_pp: {
 		// 						required: 1
 		// 					}
 		// 				},
@@ -265,6 +265,7 @@ $this->load->view('auth/templates/head');
 						contentType: 'application/json',
 						dataType: 'json',
 						success: function(result) {
+							console.log('working')
 							$('#m_form').submit(function() {
 								$('<input />').attr('type', 'hidden')
 									.attr('name', 'captcha')

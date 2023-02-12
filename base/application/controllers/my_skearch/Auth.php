@@ -427,6 +427,7 @@ class Auth extends MY_Controller
     {
         if ($this->ion_auth->logged_in()) {
             $this->ion_auth->logout();
+            $this->ion_auth->logout();
             $this->session->set_flashdata('success', 'You have successfully logged out.');
         }
 
@@ -749,7 +750,7 @@ class Auth extends MY_Controller
 
             if ($is_unsubscribed) {
                 $subject = "Skearch - Unsubscribe Newsletter Confirmation";
-                $content = "Your email has been successfully unsubscribed from our email newsletter.";
+                $content = "Your email has been successfully unsubscribed from our email newslett$er.";
 
                 $this->email->clear();
                 $this->email->from($this->config->item('default_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
@@ -763,6 +764,21 @@ class Auth extends MY_Controller
                 $this->session->set_flashdata('error', 'Unable to unsubsribe email, some error occurred.');
             }
             redirect("myskearch/auth/unsubscribe/email");
+        }
+    }
+
+    /**
+     * Validates TOS/PP Acknowlegement
+     *
+     * @return bool
+     */
+    public function validate_tos_ack()
+    {
+        if ($this->input->post('tos_pp_accept_chk')) {
+            $user_id = $this->ion_auth->user()->row()->id;
+            $this->User->create_tos_ack_entry($user_id);
+
+            redirect('myskearch');
         }
     }
 
