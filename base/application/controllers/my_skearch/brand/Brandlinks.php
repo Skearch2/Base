@@ -24,13 +24,20 @@ class Brandlinks extends MY_Controller
             redirect('myskearch/auth/login', 'refresh');
         }
 
+        $this->load->model('my_skearch/User_model', 'User');
+
+        $this->user_id = $this->session->userdata('user_id');
+
+        if (!$this->User->check_latest_tos_ack($this->user_id)) {
+            redirect('tos_pp_ack');
+        }
+
         // check if user is a brand member
         if (!($this->ion_auth->get_users_groups()->row()->id == 3 || $this->ion_auth->is_admin())) {
             redirect('myskearch', 'refresh');
         }
 
         $this->load->model('my_skearch/brand/Brandlink_model', 'Brandlink');
-        $this->load->model('my_skearch/User_model', 'User');
 
         if (!$this->ion_auth->is_admin()) {
             $this->user_id  = $this->session->userdata('user_id');

@@ -31,6 +31,13 @@ class Profile extends MY_Controller
         }
 
         $this->load->model('my_skearch/User_model', 'User');
+
+        $this->user_id = $this->session->userdata('user_id');
+
+        if (!$this->User->check_latest_tos_ack($this->user_id)) {
+            redirect('tos_pp_ack');
+        }
+
         $this->load->model('admin_panel/brands/Brand_model', 'Brand');
         $this->load->model('Util_model', 'Util');
     }

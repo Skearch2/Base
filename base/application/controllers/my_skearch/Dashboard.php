@@ -17,11 +17,11 @@ class Dashboard extends MY_Controller
 	{
 		parent::__construct();
 
-		$this->load->model('my_skearch/User_model', 'User');
-
 		if (!$this->ion_auth->logged_in()) {
 			redirect('myskearch/auth/login', 'refresh');
 		}
+
+		$this->load->model('my_skearch/User_model', 'User');
 
 		$this->user_id = $this->session->userdata('user_id');
 
