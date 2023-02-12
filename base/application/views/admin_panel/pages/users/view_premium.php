@@ -140,6 +140,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Email Address</th>
 						<th>Gender</th>
 						<th>Status</th>
+						<th>TOS/PP</th>
 						<th>Payment</th>
 						<th>Actions</th>
 					</tr>
@@ -351,6 +352,8 @@ $this->load->view('admin_panel/templates/js_global');
 				}, {
 					data: "active"
 				}, {
+					data: "tos_ack"
+				}, {
 					data: "is_paid"
 				}, {
 					data: "Actions"
@@ -388,6 +391,21 @@ $this->load->view('admin_panel/templates/js_global');
 					}
 				}, {
 					targets: 4,
+					render: function(a, t, e, n) {
+						var s = {
+							0: {
+								title: "Pending",
+								class: "m-badge--warning"
+							},
+							1: {
+								title: "Acknowledged",
+								class: "m-badge--success"
+							}
+						};
+						return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + '</span>'
+					}
+				}, {
+					targets: 5,
 					render: function(a, t, e, n) {
 						var s = {
 							1: {

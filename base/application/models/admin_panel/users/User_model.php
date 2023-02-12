@@ -58,14 +58,48 @@ class User_model extends CI_Model
     public function get($id, $is_group = FALSE)
     {
         if ($is_group) {
-            // return all users from the group
+            $this->db->select('id');
+            $this->db->from('skearch_tos_pp');
+            $this->db->order_by('date_created', 'DESC');
+            $this->db->limit(1);
+            $latest_tos_id = $this->db->get_compiled_select();
+
+            $this->db->select("skearch_users.id");
+            $this->db->from('skearch_users');
+            $this->db->join('skearch_users_tos', 'skearch_users.id = skearch_users_tos.user_id', 'left');
+            $this->db->where("tos_id = ($latest_tos_id)");
+
+            $query = $this->db->get();
+
+            $acknowledged_users = array_column($query->result_array(), 'id');
+
+            // return all users from admin and staff group
             if ($id == 1 or $id == 2) {
-                return $this->ion_auth->users(array(1, 2))->result();
+                $staff = $this->ion_auth->users(array(1, 2))->result();
+
+                foreach ($staff as $user) {
+                    if (in_array($user->id, $acknowledged_users)) {
+                        $user->tos_ack = 1;
+                    } else {
+                        $user->tos_ack = 0;
+                    }
+                }
+                return $staff;
             } else {
-                return $this->ion_auth->users($id)->result();
+                // get users from the specified group
+                $users = $this->ion_auth->users($id)->result();
+
+                foreach ($users as $user) {
+                    if (in_array($user->id, $acknowledged_users)) {
+                        $user->tos_ack = 1;
+                    } else {
+                        $user->tos_ack = 0;
+                    }
+                }
+                return $users;
             }
         } else {
-            // return user
+            // return a user
             return $this->ion_auth->user($id)->row();
         }
     }

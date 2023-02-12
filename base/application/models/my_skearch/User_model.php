@@ -142,4 +142,63 @@ class User_model extends CI_Model
             return FALSE;
         }
     }
+
+    /**
+     * Create tos/pp acknowlegement entry for the user
+     *
+     * @param array $user_id User id
+     * @return boolean
+     */
+    public function create_tos_ack_entry($user_id)
+    {
+        $this->db->select('id');
+        $this->db->from('skearch_tos_pp');
+        $this->db->order_by('date_created', 'DESC');
+        $this->db->limit(1);
+
+        $query = $this->db->get();
+        $tos_id = $query->row()->id;  // get latest by date
+
+        $data = array(
+            'user_id' => $user_id,
+            'tos_id' => $tos_id
+        );
+
+        $this->db->insert('skearch_users_tos', $data);
+
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Check for latest tos ack by the user
+     *
+     * @param array $user_id User id
+     * @return boolean
+     */
+    public function check_latest_tos_ack($user_id)
+    {
+        $this->db->select('id');
+        $this->db->from('skearch_tos_pp');
+        $this->db->order_by('date_created', 'DESC');
+        $this->db->limit(1);
+        $latest_tos_id = $this->db->get_compiled_select();
+
+        $this->db->select("skearch_users.id");
+        $this->db->from('skearch_users');
+        $this->db->join('skearch_users_tos', 'skearch_users.id = skearch_users_tos.user_id', 'left');
+        $this->db->where("tos_id = ($latest_tos_id)");
+        $this->db->where("user_id = ($user_id)");
+
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 }

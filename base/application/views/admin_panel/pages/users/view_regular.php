@@ -139,6 +139,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Email Address</th>
 						<th>Gender</th>
 						<th>Status</th>
+						<th>TOS/PP</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -321,6 +322,8 @@ $this->load->view('admin_panel/templates/js_global');
 				}, {
 					data: "active"
 				}, {
+					data: "tos_ack"
+				}, {
 					data: "Actions"
 				}],
 				columnDefs: [{
@@ -353,6 +356,21 @@ $this->load->view('admin_panel/templates/js_global');
 						};
 						if (e['activation_selector'] !== null) return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[2].class + ' m-badge--wide">' + s[2].title + '</span>'
 						else return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
+					}
+				}, {
+					targets: 4,
+					render: function(a, t, e, n) {
+						var s = {
+							0: {
+								title: "Pending",
+								class: "m-badge--warning"
+							},
+							1: {
+								title: "Acknowledged",
+								class: "m-badge--success"
+							}
+						};
+						return '<span id= tablerow' + n['row'] + ' class="m-badge ' + s[a].class + ' m-badge--wide">' + s[a].title + '</span>'
 					}
 				}]
 			})
