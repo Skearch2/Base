@@ -443,6 +443,7 @@ $route['admin/tos']                            = 'admin_panel/tos_pp';
 $route['admin/tos/get']                        = 'admin_panel/tos_pp/get';
 $route['admin/tos/get/id/(:num)']              = 'admin_panel/tos_pp/get/$1';
 $route['admin/tos/create']                     = 'admin_panel/tos_pp/create';
+$route['admin/tos/delete/id/(:num)']           = 'admin_panel/tos_pp/delete/$1';
 
 /* Settings */
 $route['admin/settings']                       = 'admin_panel/settings';
