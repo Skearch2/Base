@@ -216,6 +216,11 @@ $this->load->view('admin_panel/templates/js_global');
 						return '<a onclick=view("' + e['id'] + '") data-toggle="modal" data-target="#m_modal_4" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-eye"></i></a>' +
 							'<a onclick=deleteTos(' + e['id'] + ') class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
+				}, {
+					targets: 1,
+					render: function(a, t, e, n) {
+						return new Date(e['date_created']).toLocaleString();
+					}
 				}]
 			})
 		}
