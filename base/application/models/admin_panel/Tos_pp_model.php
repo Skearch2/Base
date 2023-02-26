@@ -34,6 +34,24 @@ class Tos_pp_model extends CI_Model
     }
 
     /**
+     * Delete TOS/PP
+     *
+     * @param int $id
+     * @return boolean
+     */
+    public function delete($id)
+    {
+        $this->db->where('id', $id);
+        $query = $this->db->delete('skearch_tos_pp');
+
+        if ($query) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Get all TOS/PP
      *
      * @param  int id
