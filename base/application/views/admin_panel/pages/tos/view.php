@@ -58,7 +58,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">TOS/PP</h5>
+						<h5 class="modal-title"></h5>
 						<button type="button" cl ass="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -98,6 +98,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
+						<th>Title</th>
 						<th>Date Created</th>
 						<th width=150>Actions</th>
 					</tr>
@@ -139,6 +140,7 @@ $this->load->view('admin_panel/templates/js_global');
 			url: '<?= site_url('admin/tos/get/id/'); ?>' + id,
 			type: 'GET',
 			success: function(data, status) {
+				$("h5.modal-title").html(data.title)
 				$("div.modal-body").html(
 					"<p>" + data.content + "</p>"
 				)
@@ -158,6 +160,36 @@ $this->load->view('admin_panel/templates/js_global');
 		});
 	}
 
+	// delete TOS/PP
+	function deleteTos(id) {
+		swal({
+			title: "Are you sure?",
+			text: "Are you sure you want delete the TOS/PP with id: \"" + id + "\"?",
+			type: "warning",
+			confirmButtonClass: "btn btn-danger",
+			confirmButtonText: "Yes, delete it!",
+			showCancelButton: true,
+			timer: 5000
+		}).then(function(e) {
+			if (!e.value) return;
+			$.ajax({
+				url: '<?= site_url('admin/tos/delete/id/'); ?>' + id,
+				type: 'DELETE',
+				success: function(data, status) {
+					if (data == -1) {
+						swal("Not Allowed!", "You have no permission.", "warning")
+					} else if (data == 1) {
+						swal("Success!", "The TOS/PP has been deleted.", "success")
+						$("#" + id).remove();
+					}
+				},
+				error: function(xhr, status, error) {
+					swal("Error!", "Unable to delete the TOS/PP.", "error")
+				}
+			});
+		});
+	}
+
 	var DatatablesDataSourceAjaxServer = {
 		init: function() {
 			$("#m_table_1").DataTable({
@@ -167,8 +199,11 @@ $this->load->view('admin_panel/templates/js_global');
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
+				order: [1, 'desc'],
 				ajax: "<?= site_url("admin/tos/get"); ?>",
 				columns: [{
+					data: 'title'
+				}, {
 					data: "date_created"
 				}, {
 					data: "Actions"
@@ -178,7 +213,8 @@ $this->load->view('admin_panel/templates/js_global');
 					title: "Actions",
 					orderable: !1,
 					render: function(a, t, e, n) {
-						return '<a onclick=view("' + e['id'] + '") data-toggle="modal" data-target="#m_modal_4" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-eye"></i></a>'
+						return '<a onclick=view("' + e['id'] + '") data-toggle="modal" data-target="#m_modal_4" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-eye"></i></a>' +
+							'<a onclick=deleteTos(' + e['id'] + ') class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}]
 			})

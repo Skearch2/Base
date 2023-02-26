@@ -54,6 +54,7 @@ class TOS_PP extends MY_Controller
 
                 $this->load->view('admin_panel/pages/tos/create', $data);
             } else {
+                $data['title'] = $this->input->post('title');
                 $data['content'] = $this->input->post('content');
 
                 $create = $this->TOS->create($data);
@@ -64,6 +65,27 @@ class TOS_PP extends MY_Controller
                     $this->session->set_flashdata('create_success', 0);
                 }
                 redirect("admin/tos");
+            }
+        }
+    }
+
+    /**
+     * Delete TOS/PP
+     *
+     * @param int $id TOS/PP ID
+     * @return void
+     */
+    public function delete($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('tos_delete') && !$this->ion_auth->is_admin()) {
+            echo json_encode(-1);
+        } else {
+            $delete = $this->TOS->delete($id);
+
+            if ($delete) {
+                echo json_encode(1);
+            } else {
+                echo json_encode(0);
             }
         }
     }
