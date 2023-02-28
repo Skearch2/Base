@@ -35,7 +35,7 @@ class TOS_PP extends MY_Controller
     }
 
     /**
-     * Create new TOS/PP
+     * Create latest TOS/PP
      *
      * @return void
      */
@@ -46,6 +46,7 @@ class TOS_PP extends MY_Controller
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
+            $this->form_validation->set_rules('title', 'Title', 'trim|required');
             $this->form_validation->set_rules('content', 'Content', 'trim|required');
 
             if ($this->form_validation->run() == false) {
@@ -111,7 +112,7 @@ class TOS_PP extends MY_Controller
                     'iTotalDisplayRecords' => $total_tos,
                     'sEcho' => 0,
                     'sColumns' => "",
-                    'aaData' => $tos,
+                    'aaData' => $tos
                 );
             }
 
@@ -134,7 +135,47 @@ class TOS_PP extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
             $data['title'] = ucwords("TOS/PP");
+
+            $data['latest_tos_id'] = $this->TOS->get_latest()->id;
             $this->load->view('admin_panel/pages/tos/view', $data);
+        }
+    }
+
+    /**
+     * Update latest TOS/PP
+     *
+     * @return void
+     */
+    public function update($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('tos_update') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+            $this->form_validation->set_rules('title', 'Title', 'trim|required');
+            $this->form_validation->set_rules('content', 'Content', 'trim|required');
+
+            if ($this->form_validation->run() == false) {
+                // set page title
+                $data['title'] = ucwords("TOS/PP | Update");
+
+                $data['tos'] = $this->TOS->get($id);
+
+                $this->load->view('admin_panel/pages/tos/edit', $data);
+            } else {
+                $data['title'] = $this->input->post('title');
+                $data['content'] = $this->input->post('content');
+
+                $create = $this->TOS->update($id, $data);
+
+                if ($create) {
+                    $this->session->set_flashdata('update_success', 1);
+                } else {
+                    $this->session->set_flashdata('update_success', 0);
+                }
+                redirect("admin/tos");
+            }
         }
     }
 }
