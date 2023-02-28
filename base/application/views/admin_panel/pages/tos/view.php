@@ -92,6 +92,24 @@ $this->load->view('admin_panel/templates/subheader');
 						Unable to create TOS/PP.
 					</div>
 				</div>
+			<?php elseif ($this->session->flashdata('update_success') === 1) : ?>
+				<div id="alert" class="alert alert-success alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						The latest TOS/PP has been updated.
+					</div>
+				</div>
+			<?php elseif ($this->session->flashdata('update_success') === 0) : ?>
+				<div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="alert-icon">
+						Unable to update the lastest TOS/PP.
+					</div>
+				</div>
 			<?php endif ?>
 
 			<!--begin: Datatable -->
@@ -99,7 +117,7 @@ $this->load->view('admin_panel/templates/subheader');
 				<thead>
 					<tr>
 						<th>Title</th>
-						<th>Date Created</th>
+						<th>Last Updated</th>
 						<th width=150>Actions</th>
 					</tr>
 				</thead>
@@ -213,7 +231,9 @@ $this->load->view('admin_panel/templates/js_global');
 					title: "Actions",
 					orderable: !1,
 					render: function(a, t, e, n) {
+						latest_tos_id = "<?= $latest_tos_id ?>"
 						return '<a onclick=view("' + e['id'] + '") data-toggle="modal" data-target="#m_modal_4" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-eye"></i></a>' +
+							(e['id'] == latest_tos_id ? '<a href="<?= site_url() . "admin/tos/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' : '') +
 							'<a onclick=deleteTos(' + e['id'] + ') class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}, {

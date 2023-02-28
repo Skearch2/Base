@@ -44,7 +44,7 @@ class Tos_pp_model extends CI_Model
         $this->db->where('id', $id);
         $query = $this->db->delete('skearch_tos_pp');
 
-        if ($query) {
+        if ($this->db->affected_rows()) {
             return true;
         } else {
             return false;
@@ -63,7 +63,7 @@ class Tos_pp_model extends CI_Model
         $this->db->from('skearch_tos_pp');
         $this->db->order_by('date_created', 'DESC');
 
-        if ($id) {
+        if (!empty($id)) {
             $this->db->where('id', $id);
             $query = $this->db->get();
 
@@ -72,6 +72,44 @@ class Tos_pp_model extends CI_Model
             $query = $this->db->get();
 
             return $query->result();
+        }
+    }
+
+    /**
+     * Get latest TOS/PP
+     *
+     * @return mixed object
+     */
+    public function get_latest()
+    {
+        $this->db->select('id');
+        $this->db->from('skearch_tos_pp');
+        $this->db->order_by('date_created', 'DESC');
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
+    /**
+     * Update latest TOS/PP
+     *
+     * @param int   $id   TOS/PP id
+     * @param array $data array contains TOS data
+     *              $data[title, content]
+     * @return boolean
+     */
+    public function update($id, $data)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('skearch_tos_pp', $data);
+
+        $this->db->where('tos_id', $id);
+        $this->db->delete('skearch_users_tos');
+
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
