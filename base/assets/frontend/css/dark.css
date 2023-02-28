@@ -911,3 +911,18 @@ width: 100% !important;
 .table button {
     color: white;
 }
+
+.tips .lead pre
+{
+	color: #FFF;
+}
+
+.tos-pp
+{
+	color: #FFF;
+}
+
+.tos-pp a
+{
+	color: #009fff;
+}
