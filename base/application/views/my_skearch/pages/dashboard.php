@@ -160,8 +160,8 @@ $this->load->view('my_skearch/templates/start_pagebody');
 
 	<!--	Button - Set Skearch as homepage -->
 	<div class='home-footer-btn'>
-		<a href="#" class="btn-footer-skear"></a> <br>
-		<a href="#" title="Set Skearch as Default Search Engine" class="set-skearch">»Set Skearch as my default search engine</a>
+		<a href="javascript:void(0)" class="btn-footer-skear" onclick="set_homepage()"></a> <br>
+		<a href="javascript:void(0)" title="Set Skearch as Default Search Engine" class="set-skearch" onclick="set_homepage()">»Set Skearch as my default search engine</a>
 	</div>
 	<!--	End: Button - Set Skearch as homepage -->
 </div>
@@ -192,6 +192,27 @@ $this->load->view('my_skearch/templates/js_global');
 <!-- Page Scripts -->
 <script src="<?= site_url(ASSETS); ?>/js/jquery-vertical-loop.js" type="text/javascript"></script>
 <script>
+	// set homepage
+	function set_homepage() {
+		var url = '<?= site_url() ?>';
+		try {
+			//Set as homepage of the IE browser
+			obj.style.behavior = 'url(#default#homepage)';
+			obj.SetAsHomePage(url);
+		} catch (e) {
+			//Set as homepage of Chrome or Firefox browser
+			if (window.netscape) {
+				try {
+					netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+				} catch (e) {
+					alert("The browser refuses to set the current website as the homepage! To continue, please enter 'about:config' in the browser address bar and press Enter on your keyboard, then double-click [signed.applets.codebase_principal_support] to set its value to 'true'.");
+				}
+				var pre = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch);
+				pre.setCharPref('browser.startup.homepage', url);
+			}
+		}
+	}
+
 	// Opt in for the deal
 	function optInDeal(id, title, userID, element) {
 		swal({
