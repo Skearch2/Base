@@ -599,7 +599,7 @@ class Auth extends MY_Controller
             $this->form_validation->set_rules('password2', 'Confirm Password', 'required|matches[password]');
         }
         $this->form_validation->set_rules(
-            'agree',
+            'tos_pp',
             'Terms and Conditions',
             'required',
             array('required' => 'You must agree with the terms and conditions.')
