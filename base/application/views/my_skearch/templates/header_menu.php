@@ -59,7 +59,7 @@
 					<!--end::Search Form -->
 
 					<!--begin::Search Results -->
-					<div class="m-dropdown__wrapper">
+					<!-- <div class="m-dropdown__wrapper">
 						<div class="m-dropdown__arrow m-dropdown__arrow--center"></div>
 						<div class="m-dropdown__inner">
 							<div class="m-dropdown__body">
@@ -69,7 +69,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 
 					<!--end::Search Results -->
 				</div>
@@ -81,7 +81,7 @@
 					<div id="m_header_topbar" class="m-topbar  m-stack m-stack--ver m-stack--general">
 						<div class="m-stack__item m-topbar__nav-wrapper">
 							<ul class="m-topbar__nav m-nav m-nav--inline">
-								<li class="m-nav__item m-topbar__notifications m-dropdown m-dropdown--large m-dropdown--arrow m-dropdown--align-center 	m-dropdown--mobile-full-width" m-dropdown-toggle="click" m-dropdown-persistent="1">
+								<!-- <li class="m-nav__item m-topbar__notifications m-dropdown m-dropdown--large m-dropdown--arrow m-dropdown--align-center 	m-dropdown--mobile-full-width" m-dropdown-toggle="click" m-dropdown-persistent="1">
 									<a href="#" class="m-nav__link m-dropdown__toggle" id="m_topbar_notification_icon">
 										<span class="m-nav__link-badge m-badge m-badge--dot m-badge--dot-small m-badge--danger"></span>
 										<span class="m-nav__link-icon"><span class="m-nav__link-icon-wrapper"><i class="flaticon-alarm"></i></span></span>
@@ -207,7 +207,7 @@
 											</div>
 										</div>
 									</div>
-								</li>
+								</li> -->
 								<li class="m-nav__item m-topbar__user-profile  m-dropdown m-dropdown--medium m-dropdown--arrow  m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" m-dropdown-toggle="click">
 									<a href="#" class="m-nav__link m-dropdown__toggle">
 										<span class="m-topbar__userpic">
@@ -245,7 +245,6 @@
 																	<span class="m-nav__link-title">
 																		<span class="m-nav__link-wrap">
 																			<span class="m-nav__link-text">Admin Panel</span>
-																			<span class="m-nav__link-badge"><span class="m-badge m-badge--success">7</span></span>
 																		</span>
 																	</span>
 																</a>
@@ -261,32 +260,6 @@
 																</span>
 															</a>
 														</li>
-														<li class="m-nav__item">
-															<a href="profile.html" class="m-nav__link">
-																<i class="m-nav__link-icon flaticon-share"></i>
-																<span class="m-nav__link-text">Activity</span>
-															</a>
-														</li>
-														<li class="m-nav__item">
-															<a href="profile.html" class="m-nav__link">
-																<i class="m-nav__link-icon flaticon-chat-1"></i>
-																<span class="m-nav__link-text">Messages</span>
-															</a>
-														</li>
-														<li class="m-nav__separator m-nav__separator--fit">
-														</li>
-														<li class="m-nav__item">
-															<a href="profile.html" class="m-nav__link">
-																<i class="m-nav__link-icon flaticon-info"></i>
-																<span class="m-nav__link-text">FAQ</span>
-															</a>
-														</li>
-														<li class="m-nav__item">
-															<a href="profile.html" class="m-nav__link">
-																<i class="m-nav__link-icon flaticon-lifebuoy"></i>
-																<span class="m-nav__link-text">Support</span>
-															</a>
-														</li>
 														<li class="m-nav__separator m-nav__separator--fit">
 														</li>
 														<li class="m-nav__item">
@@ -297,11 +270,6 @@
 											</div>
 										</div>
 									</div>
-								</li>
-								<li id="m_quick_sidebar_toggle" class="m-nav__item">
-									<a href="#" class="m-nav__link m-dropdown__toggle">
-										<span class="m-nav__link-icon m-nav__link-icon-alt"><span class="m-nav__link-icon-wrapper"><i class="flaticon-grid-menu"></i></span></span>
-									</a>
 								</li>
 							</ul>
 						</div>

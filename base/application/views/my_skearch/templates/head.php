@@ -29,25 +29,6 @@
 					sessionStorage.fonts = true;
 				}
 			});
-
-			// Search for keyword
-			function ajaxSearch(keyword) {
-				if (keyword.length > 0) {
-					$.ajax({
-						url: '<?= site_url(); ?>search?search_keyword=' + keyword,
-						type: 'GET',
-						async: false,
-						success: function(data) {
-							urlObj = JSON.parse(data);
-							window.open(urlObj.url);
-						},
-						error: function(data) {
-							alert("Something went wrong. Can't Search");
-						}
-
-					});
-				}
-			}
 		</script>
 
 		<!--end::Web font -->
