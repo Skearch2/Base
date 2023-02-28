@@ -12,17 +12,7 @@
                 async: false,
                 success: function(data) {
                     urlObj = JSON.parse(data);
-                    if (urlObj.type == 'external') {
-                        var is_safari = navigator.userAgent.indexOf("Safari") > -1;
-                        if (is_safari) {
-                            // open url on current page
-                            window.location.replace(urlObj.url);
-                        } else {
-                            // open url on new page
-                            window.open(urlObj.url);
-                        }
-                    } else if (urlObj.type == 'internal')
-                        window.location.replace(urlObj.url);
+                    window.open(urlObj.url);
                 },
                 error: function(data) {
                     alert("Something went wrong. Can't Search");
