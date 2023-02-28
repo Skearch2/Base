@@ -70,12 +70,12 @@ $this->load->view('admin_panel/templates/subheader');
 								<div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-1x"></div>
 								<div class=" form-group m-form__group row">
 									<div class="col-lg-12 m-form__group-sub">
-										<input type="text" name="title" class="form-control m-input" placeholder="Title" value="<?= set_value('title') ?>">
+										<input type="text" name="title" class="form-control m-input" placeholder="Title" value="<?= set_value('title', $tos->title) ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
 									<div class="col-lg-12 col-md-12 col-sm-12">
-										<textarea name="content" id="html-editor" size="40"><?= set_value('content'); ?></textarea>
+										<textarea name="content" id="html-editor" size="40"><?= set_value('content', $tos->content); ?></textarea>
 									</div>
 								</div>
 							</div>
