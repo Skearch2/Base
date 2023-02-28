@@ -18,7 +18,7 @@ $this->load->view('frontend/templates/header');
 <section class="field-main">
     <div class="container">
         <div class="row">
-            <div class="main-box">
+            <div class="main-box tips">
                 <div class="box">
                     <h3>Tips</h3>
                 </div>
