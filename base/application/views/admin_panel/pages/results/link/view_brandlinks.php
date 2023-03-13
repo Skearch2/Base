@@ -84,6 +84,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Description</th>
 						<th>Field</th>
 						<th>Display Url</th>
+						<th>Clicks</th>
 						<th>Status</th>
 						<th width="18%">Actions</th>
 					</tr>
@@ -217,42 +218,63 @@ $this->load->view('admin_panel/templates/js_global');
 				}, {
 					data: "display_url"
 				}, {
+					data: "clicks"
+				}, {
 					data: "enabled"
 				}, {
 					data: "Actions"
 				}],
 				columnDefs: [{
-					targets: -1,
-					title: "Actions",
-					orderable: !1,
-					render: function(a, t, e, n) {
-						var redirectVal;
-						if (e['redirect'] == 0) redirectVal = "red";
-						else redirectVal = "#34bfa3";
-						var title = e['title'].replace(/ /g, '%20');
-						var row = (n.row).toString().slice(-1);
+						targets: -1,
+						title: "Actions",
+						orderable: !1,
+						render: function(a, t, e, n) {
+							var redirectVal;
+							if (e['redirect'] == 0) redirectVal = "red";
+							else redirectVal = "#34bfa3";
+							var title = e['title'].replace(/ /g, '%20');
+							var row = (n.row).toString().slice(-1);
 
-						//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
-						return '<a href="<?= site_url() . "admin/results/link/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
-							'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="BrandLink"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
-							'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
-					}
-				}, {
-					targets: 5,
-					render: function(a, t, e, n) {
-						var s = {
-							1: {
-								title: "Active",
-								class: " m-badge--success"
-							},
-							0: {
-								title: "Off",
-								class: " m-badge--danger"
+							//return'<a onclick="showResultDetails('+e['id']+')" data-toggle="modal" data-target="#m_modal_2" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="View"><i class="la la-search-plus"></i></a>'
+							return '<a href="<?= site_url() . "admin/results/link/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+								'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="BrandLink"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
+								'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+						}
+					}, {
+						targets: 4,
+						render: function(a, t, e, n) {
+							url = e['display_url']
+							pattern = /^((http|https|ftp):\/\/)/
+
+							if (!pattern.test(url)) {
+								url = "http://" + url;
 							}
-						};
-						return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
+
+							return '<a href="' + url + '" target="_blank">' + url + '</a>'
+						}
+					},
+					{
+						targets: 5,
+						render: function(a, t, e, n) {
+							return '<a href="<?= site_url('admin/results/links/view/activity/link/id/') ?>' + e['id'] + '" title="View Details">' + e['clicks'] + '</a>'
+						}
+					}, {
+						targets: 6,
+						render: function(a, t, e, n) {
+							var s = {
+								1: {
+									title: "Active",
+									class: " m-badge--success"
+								},
+								0: {
+									title: "Off",
+									class: " m-badge--danger"
+								}
+							};
+							return void 0 === s[a] ? a : '<span id= tablerow' + n['row'] + ' title="Toggle Status" onclick=toggle(' + e['id'] + ',' + n['row'] + ') class="m-badge ' + s[a].class + ' m-badge--wide" style="cursor:pointer">' + s[a].title + '</span>'
+						}
 					}
-				}]
+				]
 			})
 		}
 	}

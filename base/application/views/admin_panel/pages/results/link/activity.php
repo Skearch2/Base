@@ -41,7 +41,7 @@ $this->load->view('admin_panel/templates/subheader');
 								</button>
 								<div class="dropdown-menu" aria-labelledby="btnGroupDrop1" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 45px, 0px);">
 									<?php $current_year = Date('Y'); ?>
-									<?php while ($current_year >= $ad->oldest_activity_year) : ?>
+									<?php while ($current_year >= $link->oldest_activity_year) : ?>
 										<a class="dropdown-item" href="javascript:void(0)" onclick="updateStats(<?= $current_year ?>)"><?= $current_year ?></a>
 										<?php $current_year--; ?>
 									<?php endwhile ?>
@@ -53,7 +53,7 @@ $this->load->view('admin_panel/templates/subheader');
 				<div class="m-portlet__body">
 					<div class="m-widget21" style="min-height: 310px">
 						<div class="m-widget21__chart m-portlet-fit--sides" style="height:310px;">
-							<canvas id="m_chart_ad_stats"></canvas>
+							<canvas id="m_chart_link_stats"></canvas>
 						</div>
 					</div>
 				</div>
@@ -64,7 +64,6 @@ $this->load->view('admin_panel/templates/subheader');
 					<tr>
 						<th>Date</th>
 						<th>Clicks</th>
-						<th>Impressions</th>
 					</tr>
 				</thead>
 			</table>
@@ -97,21 +96,12 @@ $this->load->view('admin_panel/templates/js_global');
 
 <!--begin::Page Scripts -->
 <script>
-	const stats = document.getElementById("m_chart_ad_stats").getContext("2d");
+	const stats = document.getElementById("m_chart_link_stats").getContext("2d");
 	const chart = new Chart(stats, {
 		type: "bar",
 		data: {
 			labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novemeber", "December"],
 			datasets: [{
-				label: "Impressions",
-				backgroundColor: mApp.getColor("warning"),
-				borderColor: mApp.getColor("warning"),
-				pointBackgroundColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
-				pointBorderColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
-				pointHoverBackgroundColor: mApp.getColor("danger"),
-				pointHoverBorderColor: Chart.helpers.color("#000000").alpha(0.1).rgbString(),
-				data: <?= json_encode($ad->monthly_impressions) ?>,
-			}, {
 				label: "Clicks",
 				backgroundColor: mApp.getColor("danger"),
 				borderColor: mApp.getColor("danger"),
@@ -119,7 +109,7 @@ $this->load->view('admin_panel/templates/js_global');
 				pointBorderColor: Chart.helpers.color("#000000").alpha(0).rgbString(),
 				pointHoverBackgroundColor: mApp.getColor("danger"),
 				pointHoverBorderColor: Chart.helpers.color("#000000").alpha(0.1).rgbString(),
-				data: <?= json_encode($ad->monthly_clicks) ?>,
+				data: <?= json_encode($link->monthly_clicks) ?>,
 			}, ],
 		},
 		options: {
@@ -128,7 +118,7 @@ $this->load->view('admin_panel/templates/js_global');
 				text: <?= date('Y') ?>
 			},
 			legend: {
-				display: 1
+				display: 0
 			},
 			responsive: 1,
 			maintainAspectRatio: 0,
@@ -157,7 +147,7 @@ $this->load->view('admin_panel/templates/js_global');
 					var month = elements[0]._index + 1
 
 					filter_val = year + "-" + ("0" + month).slice(-2)
-					$('#m_table').DataTable().ajax.url("<?= site_url("admin/ads/manager/get/activity/ad/id/{$ad->id}") ?>/filter/" + filter_val).load()
+					$('#m_table').DataTable().ajax.url("<?= site_url("admin/results/links/get/activity/link/id/{$link->id}") ?>/filter/" + filter_val).load()
 				}
 			}
 		}
@@ -165,7 +155,7 @@ $this->load->view('admin_panel/templates/js_global');
 
 	function updateStats(year) {
 		$.ajax({
-			url: '<?= site_url("admin/ads/manager/get/activity/ad/id/{$ad->id}/year/"); ?>' + year,
+			url: '<?= site_url("admin/results/links/get/activity/link/id/{$link->id}/year/"); ?>' + year,
 			type: 'GET',
 			success: function(data, status) {
 				chart.config.data.datasets = [];
@@ -173,20 +163,13 @@ $this->load->view('admin_panel/templates/js_global');
 
 				chart.config.data.labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novemeber", "December"]
 
-				var dataSet1 = {
-					label: "Impressions",
-					data: data.impressions,
-					backgroundColor: mApp.getColor("warning")
-				}
-
-				var dataSet2 = {
+				var dataSet = {
 					label: "Clicks",
 					data: data.clicks,
 					backgroundColor: mApp.getColor("danger")
 				}
 
-				chart.config.data.datasets.push(dataSet1);
-				chart.config.data.datasets.push(dataSet2);
+				chart.config.data.datasets.push(dataSet);
 				chart.options.title.text = year;
 
 				chart.update();
@@ -216,8 +199,6 @@ $this->load->view('admin_panel/templates/js_global');
 					data: "date"
 				}, {
 					data: "clicks"
-				}, {
-					data: "impressions"
 				}]
 			});
 		}
@@ -228,8 +209,8 @@ $this->load->view('admin_panel/templates/js_global');
 	});
 
 	// menu highlight
-	$("#menu-brands").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
-	$("#submenu-brands-ads-manager").addClass("m-menu__item  m-menu__item--active");
+	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
+	$("#submenu-results-links").addClass("m-menu__item  m-menu__item--active");
 </script>
 <!--end::Page Scripts -->
 
