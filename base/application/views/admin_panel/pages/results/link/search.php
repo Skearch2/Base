@@ -147,6 +147,7 @@ $this->load->view('admin_panel/templates/subheader');
 						<th>Description</th>
 						<th>Field</th>
 						<th>Display Url</th>
+						<th>Clicks</th>
 						<th>Status</th>
 						<th width="150">Actions</th>
 					</tr>
@@ -412,6 +413,8 @@ $this->load->view('admin_panel/templates/js_global');
 				}, {
 					data: "display_url"
 				}, {
+					data: "clicks"
+				}, {
 					data: "enabled"
 				}, {
 					data: "Actions"
@@ -446,6 +449,11 @@ $this->load->view('admin_panel/templates/js_global');
 					}
 				}, {
 					targets: 5,
+					render: function(a, t, e, n) {
+						return '<a href="<?= site_url('admin/results/links/view/activity/link/id/') ?>' + e['id'] + '" title="View Details">' + e['clicks'] + '</a>'
+					}
+				}, {
+					targets: 6,
 					render: function(a, t, e, n) {
 						var s = {
 							1: {

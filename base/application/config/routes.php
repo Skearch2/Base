@@ -79,8 +79,9 @@ $route['browse/get_field_results/(:any)/(:any)'] = 'frontend/pages/get_field_res
 /* 
     Ads 
 */
-$route['redirect/ad/id/(:num)']                  = 'frontend/ads/redirect/$1';
-$route['update/impression/ad/id/(:num)']         = 'frontend/ads/update_impression/$1';
+$route['redirect/ad/id/(:num)']                  = 'frontend/activity/ad_redirect/$1';
+$route['update/impression/ad/id/(:num)']         = 'frontend/activity/update_ad_impression/$1';
+$route['redirect/link/id/(:num)']                = 'frontend/activity/link_redirect/$1';
 
 /* 
     Search 
@@ -280,6 +281,10 @@ $route['admin/results/links/priorities/field/id/(:num)']                       =
 $route['admin/results/links/search']                                           = 'admin_panel/results/links/index/search';
 $route['admin/results/links/status/(all|active|inactive)']                     = 'admin_panel/results/links/index/$1';
 $route['admin/results/links/branddirect/status/(active|inactive)']             = 'admin_panel/results/links/brandlinks/$1';
+$route['admin/results/links/get/activity/link/id/(:num)']                      = 'admin_panel/results/links/get_activity/$1';
+$route['admin/results/links/get/activity/link/id/(:num)/filter/(:any)']        = 'admin_panel/results/links/get_activity/$1/$2';
+$route['admin/results/links/get/activity/link/id/(:num)/year/(:num)']          = 'admin_panel/results/links/get_yearly_stats/$1/$2';
+$route['admin/results/links/view/activity/link/id/(:num)']                     = 'admin_panel/results/links/view_activity/$1';
 
 // Frontend
 $route['admin/results/suggestions/homepage']                = 'admin_panel/results/suggestions/homepage';

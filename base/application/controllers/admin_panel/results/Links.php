@@ -293,6 +293,89 @@ class Links extends MY_Controller
     }
 
     /**
+     * Get clicks and impressions history based on month and year for the link
+     *
+     * @param int    $link_id          Link id
+     * @param int    $month_and_year Month and Year
+     * @return void
+     */
+    public function get_activity($link_id, $month_and_year = null)
+    {
+        $activity = $this->links->get_link_activity($link_id, $month_and_year);
+
+        $total_activity = count($activity);
+        $result = [
+            'iTotalRecords' => $total_activity,
+            'iTotalDisplayRecords' => $total_activity,
+            'sEcho' => 0,
+            'sColumns' => '',
+            'aaData' => $activity,
+        ];
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
+
+    /**
+     * Get monthly clicks history based on the year for the link
+     *
+     * @param int    $ad_id         Ad id
+     * @param int    $year          Year
+     * @return void
+     */
+    public function get_yearly_stats($link_id, $year = null)
+    {
+        if ($year == null) {
+            $year = date('Y');
+        }
+
+        $yearly_stats = $this->links->get_ad_yearly_stats($link_id, $year);
+
+        $clicks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        foreach ($yearly_stats as $monthly_stats) {
+            $clicks[$monthly_stats->month - 1] = $monthly_stats->clicks;
+        }
+
+        $stats['clicks'] = $clicks;
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($stats));
+    }
+
+    /**
+     * View page for Ad clicks history
+     *
+     * @param int $id Ad id
+     * @return void
+     */
+    public function view_activity($id)
+    {
+        $link = $this->links->get($id);
+        $stats = $this->links->get_ad_yearly_stats($id, date('Y'));
+        $year = $this->links->get_oldest_activity_year($id);
+
+        $clicks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        $impressions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        foreach ($stats as $activity) {
+            $clicks[$activity->month - 1] = $activity->clicks;
+        }
+
+        $link->monthly_clicks = $clicks;
+        $link->oldest_activity_year = $year;
+
+        // page data
+        $data['link'] = $link;
+
+        // Load page content
+        $data['title'] = ucwords('link - click activity');
+        $this->load->view('admin_panel/pages/results/link/activity', $data);
+    }
+
+    /**
      * Show links page
      *
      * @param int|active|inactive|search $value Id of the field or status for the links or keyword search

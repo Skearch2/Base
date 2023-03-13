@@ -18,26 +18,56 @@ class Link_model extends CI_Model
     /**
      * Creates a link
      *
-     * @param array $link_data Array contains data for the umbrella
+     * @param array $link_data Array contains data for the link
      * @return void
      */
     public function create($link_data)
     {
-        // $data = array(
-        //     'priority' => $priority,
-        //     'title' => $title,
-        //     'description_short' => $description_short,
-        //     'display_url' => $display_url,
-        //     'www' => $www,
-        //     'sub_id' => $field_id,
-        //     'redirect' => $redirect,
-        //     'enabled' => $enabled
-        // );
+        $this->db->insert('skearch_listings', $link_data);
 
-        $query = $this->db->insert('skearch_listings', $link_data);
+        $link_id = $this->db->insert_id();
 
-        if ($query) {
-            return true;
+        if ($this->db->affected_rows()) {
+            // create initial activity record for the link after it is created
+            return $this->create_link_activity($link_id);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Create link click activity record
+     *
+     * @param int $link_id Ad ID
+     * @return boolean
+     */
+    private function create_link_activity($link_id)
+    {
+        $this->db->insert(
+            'skearch_links_activity',
+            array('link_id' => $link_id, 'clicks' => 0, 'date' => date("Y-m-d"))
+        );
+
+        if ($this->db->affected_rows()) {
+            return $link_id;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Reset link clicks history
+     *
+     * @param int  $id   Link ID
+     * @return boolean
+     */
+    public function reset_link_activity($id)
+    {
+        $this->db->where('link_id', $id);
+        $this->db->delete('skearch_ads_activity');
+
+        if ($this->db->affected_rows()) {
+            return $this->create_link_activity($id);
         } else {
             return false;
         }
@@ -115,11 +145,12 @@ class Link_model extends CI_Model
      */
     public function get_by_branddirect_status($status = NULL)
     {
-        $this->db->select('links.id, links.title, links.description_short,
+        $this->db->select('links.id, links.title, links.description_short, COALESCE(sum(skearch_links_activity.clicks), 0) as clicks,
         links.enabled, links.www, links.display_url, links.priority, links.redirect, fields.id AS field_id, fields.title AS field');
         $this->db->from('skearch_listings as links');
         $this->db->join('skearch_subcategories as fields', 'fields.id = links.sub_id', 'left');
         $this->db->join('skearch_categories as umbrellas', 'umbrellas.id = fields.parent_id', 'left');
+        $this->db->join('skearch_links_activity', 'skearch_links_activity.link_id = links.id', 'left');
         $this->db->where('umbrellas.enabled', 1);
         $this->db->where('fields.enabled', 1);
         $this->db->where('links.enabled', 1);
@@ -128,9 +159,14 @@ class Link_model extends CI_Model
         } elseif ($status == 'active') {
             $this->db->where('links.redirect', 1);
         }
-
+        $this->db->group_by('links.id');
+        $this->db->order_by('title', 'ASC');
         $query = $this->db->get();
-        return $query->result();
+        if ($query) {
+            return $query->result();
+        } else {
+            return FALSE;
+        }
     }
 
 
@@ -144,15 +180,17 @@ class Link_model extends CI_Model
     public function get_by_field($field_id, $status = NULL)
     {
         $this->db->select('skearch_listings.id, skearch_listings.title, skearch_listings.description_short,
-        skearch_listings.enabled, skearch_listings.www, skearch_listings.display_url, skearch_listings.priority, skearch_listings.redirect, skearch_subcategories.id AS field_id, skearch_subcategories.title AS field');
+        COALESCE(sum(skearch_links_activity.clicks), 0) as clicks, skearch_listings.enabled, skearch_listings.www, skearch_listings.display_url, skearch_listings.priority, skearch_listings.redirect, skearch_subcategories.id AS field_id, skearch_subcategories.title AS field');
         $this->db->from('skearch_listings');
         $this->db->join('skearch_subcategories', 'skearch_subcategories.id = skearch_listings.sub_id', 'left');
+        $this->db->join('skearch_links_activity', 'skearch_links_activity.link_id = skearch_listings.id', 'left');
         $this->db->where('skearch_listings.sub_id', $field_id);
         if ($status == 'inactive') {
             $this->db->where('skearch_listings.enabled', 0);
         } elseif ($status == 'active') {
             $this->db->where('skearch_listings.enabled', 1);
         }
+        $this->db->group_by('skearch_listings.id');
         $this->db->order_by('title', 'ASC');
         $query = $this->db->get();
         if ($query) {
@@ -172,14 +210,16 @@ class Link_model extends CI_Model
     public function get_by_status($status = NULL)
     {
         $this->db->select('skearch_listings.id, skearch_listings.title, skearch_listings.description_short,
-        skearch_listings.enabled, skearch_listings.www, skearch_listings.display_url, skearch_listings.priority, skearch_listings.redirect, skearch_subcategories.id AS field_id, skearch_subcategories.title AS field');
+        COALESCE(sum(skearch_links_activity.clicks), 0) as clicks, skearch_listings.enabled, skearch_listings.www, skearch_listings.display_url, skearch_listings.priority, skearch_listings.redirect, skearch_subcategories.id AS field_id, skearch_subcategories.title AS field');
         $this->db->from('skearch_listings');
         $this->db->join('skearch_subcategories', 'skearch_subcategories.id = skearch_listings.sub_id', 'left');
+        $this->db->join('skearch_links_activity', 'skearch_links_activity.link_id = skearch_listings.id', 'left');
         if ($status == 'inactive') {
             $this->db->where('skearch_listings.enabled', 0);
         } elseif ($status == 'active') {
             $this->db->where('skearch_listings.enabled', 1);
         }
+        $this->db->group_by('skearch_listings.id');
         $this->db->order_by('title', 'ASC');
         $query = $this->db->get();
         if ($query) {
@@ -202,10 +242,12 @@ class Link_model extends CI_Model
         }
 
         $this->db->select('skearch_subcategories.title AS stitle, skearch_listings.title, skearch_listings.id, skearch_listings.description_short,
-        skearch_listings.enabled, skearch_listings.display_url, skearch_listings.priority, skearch_listings.redirect ');
+        COALESCE(sum(skearch_links_activity.clicks), 0) as clicks, skearch_listings.enabled, skearch_listings.display_url, skearch_listings.priority, skearch_listings.redirect ');
         $this->db->from('skearch_listings');
-        $this->db->join('skearch_subcategories', 'skearch_subcategories.id = skearch_listings.sub_id');
+        $this->db->join('skearch_subcategories', 'skearch_subcategories.id = skearch_listings.sub_id', 'left');
+        $this->db->join('skearch_links_activity', 'skearch_links_activity.link_id = skearch_listings.id', 'left');
         $this->db->like('skearch_listings.title', $keywords, 'after');
+        $this->db->group_by('skearch_listings.id');
         $this->db->order_by('title', 'ASC');
 
         $query = $this->db->get();
@@ -214,6 +256,69 @@ class Link_model extends CI_Model
             return $query->result();
         } else {
             return FALSE;
+        }
+    }
+
+    /**
+     * Get clicks and impressions history based on month and year for the link
+     *
+     * @param int $id Link ID
+     * @param int $month_and_year Month and Year
+     * @return mixed object
+     */
+    public function get_link_activity($id, $month_and_year)
+    {
+        $this->db->select('link_id, clicks, DATE_FORMAT(date, "%b %d %Y") as date');
+        $this->db->from('skearch_links_activity');
+        $this->db->where('link_id', $id);
+        $this->db->like('date', $month_and_year, 'after');
+        $this->db->order_by('date', 'DESC');
+
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    /**
+     * Get monthly clicks and impressions based on the year for the link
+     *
+     * @param int $id Ad ID
+     * @param int $year Year
+     * @return mixed object
+     */
+    public function get_ad_yearly_stats($id, $year)
+    {
+        $this->db->select('link_id, COALESCE(sum(skearch_links_activity.clicks), 0) as clicks, DATE_FORMAT(date, "%c") as month, DATE_FORMAT(date, "%Y") as year');
+        $this->db->from('skearch_links_activity');
+        $this->db->where('link_id', $id);
+        $this->db->like('date', $year, 'after');
+        $this->db->group_by(array('DATE_FORMAT(date, "%c")', 'DATE_FORMAT(date, "%Y")'));
+        $this->db->order_by('month', 'ASC');
+
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    /**
+     * Get oldest activity year for the link
+     *
+     * @param int $id Link ID
+     * @return mixed object
+     */
+    public function get_oldest_activity_year($id)
+    {
+        $this->db->select('DATE_FORMAT(date, "%Y") as year');
+        $this->db->from('skearch_links_activity');
+        $this->db->where('link_id', $id);
+        $this->db->order_by('date', 'ASC');
+
+        $query = $this->db->get();
+
+        if ($query->num_rows()) {
+            return $query->row()->year;
+        } else {
+            return Date('Y');
         }
     }
 
@@ -243,16 +348,6 @@ class Link_model extends CI_Model
      */
     public function update($id, $link_data)
     {
-
-        // if (!is_null($priority))            $data['priority']          = $priority;
-        // if (!is_null($title))               $data['title']             = $title;
-        // if (!is_null($description_short))   $data['description_short'] = $description_short;
-        // if (!is_null($display_url))         $data['display_url']       = $display_url;
-        // if (!is_null($www))                 $data['www']               = $www;
-        // if (!is_null($field_id))            $data['sub_id']            = $field_id;
-        // if (!is_null($redirect))            $data['redirect']          = $redirect;
-        // if (!is_null($enabled))             $data['enabled']           = $enabled;
-
         $this->db->where('id', $id);
         $query = $this->db->update('skearch_listings', $link_data);
 
