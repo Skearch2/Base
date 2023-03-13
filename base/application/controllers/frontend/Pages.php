@@ -322,4 +322,21 @@ class Pages extends MY_Controller
       ->set_content_type('application/json')
       ->set_output(json_encode($adlinks));
   }
+
+  /**
+   * Redirect to link url reference
+   *
+   * @param int $link_id  Link ID
+   * @return void
+   */
+  public function redirect($link_id)
+  {
+    if (!$this->Ads->update_ad_activity($ad_id, $column = 'clicks')) {
+      log_message('error', "Unable to update ad's impression.");
+    }
+
+    $link_reference = $this->Ads->get_ad_link_reference($ad_id)->url;
+
+    redirect($link_reference);
+  }
 }

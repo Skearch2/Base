@@ -24,12 +24,15 @@ $this->load->view('frontend/templates/header');
             $.getJSON(uri, function(response) {
                 $(".result-listing").html("");
                 var items = [];
+                var site_url = "<?= site_url('redirect/link/id/') ?>"
                 $.each(response, function(key, val) {
                     items.push("\
 						<li>\
-							<div>" + (val.priority) + ". <a href='" + (val.www) + "' title='" + (val.title) + "' target='_blank'>" + (val.title) + "</a></div>\
+							<div>" + (val.priority) + ". <a href='" +
+                        site_url + (val.id) + "' title='" + (val.title) + "' target='_blank'>" + (val.title) + "</a></div>\
 							<p>" + (val.description_short) + "</br>\
-							    <span><a href='" + (val.www) + "' title='" + (val.title) + "' target='_blank'>" + (val.display_url) + "</a>\</span>\
+							    <span><a href='" +
+                        site_url + (val.id) + "' title='" + (val.title) + "' target='_blank'>" + (val.display_url) + "</a>\</span>\
                             </p>\
 						</li>\
 						");
