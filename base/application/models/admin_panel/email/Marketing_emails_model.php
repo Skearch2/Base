@@ -10,7 +10,7 @@ if (!defined('BASEPATH')) {
  * 
  * @package       Skearch
  * @author        Iftikhar Ejaz <iftikhar@skearch.com>
- * @copyright     Copyright (c) 2022
+ * @copyright     Copyright (c) 2023
  * @version       2.0
  */
 class Marketing_emails_model extends CI_Model
@@ -24,9 +24,15 @@ class Marketing_emails_model extends CI_Model
    */
   public function add($data)
   {
-    $this->db->insert_batch('marketing_emails', $data);
+    $this->db->trans_start();
 
-    if ($this->db->affected_rows()) {
+    foreach ($data as $item) {
+      $insert_query = $this->db->insert_string('marketing_emails', $item);
+      $insert_query = str_replace('INSERT INTO', 'INSERT IGNORE INTO', $insert_query);
+      $this->db->query($insert_query);
+    }
+
+    if ($this->db->trans_complete()) {
       return true;
     } else {
       return false;

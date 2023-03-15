@@ -175,7 +175,7 @@ class Users extends MY_Controller
                     }
 
                     // add user email to email marketing list
-                    $this->Marketing_emails_model->add([$email]);
+                    $this->Marketing_emails_model->add([array('email' => $email)]);
 
                     $this->session->set_flashdata('create_success', 1);
                 } else {

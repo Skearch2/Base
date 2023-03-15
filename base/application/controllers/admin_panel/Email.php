@@ -431,9 +431,9 @@ class Email extends MY_Controller
     public function add_marketing_emails()
     {
         if ($this->ion_auth_acl->has_permission('email') || $this->ion_auth->is_admin()) {
-            if (empty($this->input->post('emails'))) {
-                http_response_code(400);
-                exit;
+            if (empty($this->input->get('emails'))) {
+                echo json_encode(0);
+                return;
             }
 
             $email_array = preg_split("/\r\n|\n|\r/", $this->input->get('emails'));
