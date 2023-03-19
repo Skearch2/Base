@@ -299,7 +299,7 @@ class Links extends MY_Controller
      * @param int    $month_and_year Month and Year
      * @return void
      */
-    public function get_activity($link_id, $month_and_year = null)
+    public function get_activity($link_id, $month_and_year = "")
     {
         $activity = $this->links->get_link_activity($link_id, $month_and_year);
 
@@ -358,7 +358,6 @@ class Links extends MY_Controller
         $year = $this->links->get_oldest_activity_year($id);
 
         $clicks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        $impressions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         foreach ($stats as $activity) {
             $clicks[$activity->month - 1] = $activity->clicks;
