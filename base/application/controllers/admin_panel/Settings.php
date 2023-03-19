@@ -2,13 +2,13 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * File:    ~/application/controller/Option.php
+ * File:    ~/application/controller/Settings.php
  *
- * Controller to change Skearch version
+ * Controller to change Skearch settings
  * 
  * @package		Skearch
  * @author		Iftikhar Ejaz <ejaziftikhar@gmail.com>
- * @copyright	Copyright (c) 202-
+ * @copyright	Copyright (c) 2023
  * @version		2.0
  */
 class Settings extends MY_Controller
@@ -45,6 +45,7 @@ class Settings extends MY_Controller
 			$this->form_validation->set_rules('site_version', 'Version', 'trim|required');
 			$this->form_validation->set_rules('admin_email', 'Admin Email', 'trim|required|valid_email');
 			$this->form_validation->set_rules('brandlinks_status', 'BrandLinks', 'trim|required|numeric');
+			$this->form_validation->set_rules('userlinks', 'UserLinks', 'trim|required|numeric');
 
 			if ($this->form_validation->run() == false) {
 				// Page data
@@ -57,7 +58,8 @@ class Settings extends MY_Controller
 				$data = [
 					'site_version' => $this->input->post('site_version'),
 					'admin_email' => $this->input->post('admin_email'),
-					'brandlinks_status' => $this->input->post('brandlinks_status')
+					'brandlinks_status' => $this->input->post('brandlinks_status'),
+					'userlinks' => $this->input->post('userlinks')
 				];
 
 				$update = $this->Settings_model->update($data);
@@ -71,23 +73,5 @@ class Settings extends MY_Controller
 				redirect("admin/settings");
 			}
 		}
-	}
-
-	public function update_option()
-	{
-		$this->Option_model->update_skearch_ver($this->input->post('version'));
-		redirect('admin/option');
-	}
-
-	public function brandlinks_status_all()
-	{
-		$data = $this->input->post(NULL, TRUE);
-		$this->Option_model->brandlinks_status_all($data['enable_status']);
-		redirect('admin/option');
-	}
-
-	public function get_status_info()
-	{
-		echo $this->session->userdata('remainingUrls');
 	}
 }

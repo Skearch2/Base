@@ -292,7 +292,7 @@ class Ion_auth
                 $this->email->subject($template->subject);
                 $this->email->message($message);
 
-                if ($this->email->send() === true) {
+                if ($this->email->send()) {
                     log_email($id, "Account Activation", $template->subject, $message);
                     $this->ion_auth_model->trigger_events(['post_account_creation', 'post_account_creation_successful', 'activation_email_successful']);
                     $this->set_message('activation_email_successful');

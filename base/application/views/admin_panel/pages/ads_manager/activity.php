@@ -31,6 +31,22 @@ $this->load->view('admin_panel/templates/subheader');
 <div class="m-content">
 	<div class="m-portlet m-portlet--responsive-mobile">
 		<div class="m-portlet__body">
+			<h6 class="m-portlet__head-text">
+				<p>
+					Brand: <?= $ad->brand ?>
+					<br>
+					<?php $is_video = (substr($ad->media, -3) == "mp4") ? 1 : 0 ?>
+					<?php if ($is_video) : ?>
+						<video controls src="<?= site_url("base/media/$ad->media") ?>" style="display:block; width:auto; height:auto; max-width:600px; max-height:600px;">
+							Unable to play video, incompatible browser.
+						</video>
+					<?php else : ?>
+						<a href="<?= $ad->url ?>" target="_blank">
+							<img src="<?= site_url("base/media/$ad->media") ?>" title="<?= $ad->title ?>" style="display:block; width:auto; height:auto; max-width:300px; max-height:300px;">
+						</a>
+					<?php endif ?>
+				</p>
+			</h6>
 			<div class="m-portlet m-portlet--full-height m-portlet--skin-light m-portlet--fit">
 				<div class="m-portlet__head">
 					<div class="m-portlet__head-tools">

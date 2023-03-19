@@ -96,13 +96,33 @@ class Category_model extends CI_Model
      * Get listings from a category/subcategory
      * Order is used to order the data
      * 
-     * @param string $subcategory_id
+     * @param string $field_id
+     * @param string $order
      * @return object
      */
-    public function get_adlinks($subcategory_id)
+    public function get_adlinks($field_id, $order)
     {
-        $query = $this->db->query("SELECT * FROM skearch_listings WHERE enabled = 1 AND sub_id = $subcategory_id
-        ORDER BY priority ASC");
+        $this->db->select('skearch_listings.id, priority, title, description_short, display_url, COALESCE(sum(clicks), 0) as clicks');
+        $this->db->from('skearch_listings');
+        $this->db->join('skearch_links_activity', 'skearch_links_activity.link_id = skearch_listings.id', 'left');
+        $this->db->where('enabled', 1);
+        $this->db->where('sub_id', $field_id);
+        $this->db->group_by('skearch_listings.id');
+
+        if ($order == 'clicks') {
+            $this->db->order_by('clicks', 'desc');
+            $this->db->order_by('title', 'asc');
+        } else if ($order == 'asc') {
+            $this->db->order_by('title', 'asc');
+        } else if ($order == 'desc') {
+            $this->db->order_by('title', 'desc');
+        } else if ($order == 'random') {
+            $this->db->order_by('title', 'random');
+        } else {
+            $this->db->order_by('priority', 'asc');
+        }
+
+        $query = $this->db->get();
 
         return $query->result();
     }
