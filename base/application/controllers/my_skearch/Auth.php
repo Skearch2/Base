@@ -134,7 +134,7 @@ class Auth extends MY_Controller
 
             $data['user_id'] = $user->id;
 
-            $data['title'] = "MySkearch" + ucwords(" | set password");
+            $data['title'] = ucwords("MySkearch | set password");
             $this->load->view('auth/pages/set_password', $data);
         } else {
             $id = $user->id;
@@ -778,7 +778,7 @@ class Auth extends MY_Controller
             $user_id = $this->ion_auth->user()->row()->id;
             $this->User->create_tos_ack_entry($user_id);
 
-            redirect('myskearch');
+            redirect();
         }
     }
 

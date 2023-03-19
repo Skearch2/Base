@@ -7,6 +7,7 @@
 error_log
 php.ini
 .vscode/
+base/media/*
 
 # Codeigniter 3
 /system/*

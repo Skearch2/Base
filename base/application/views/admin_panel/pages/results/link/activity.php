@@ -31,6 +31,15 @@ $this->load->view('admin_panel/templates/subheader');
 <div class="m-content">
 	<div class="m-portlet m-portlet--responsive-mobile">
 		<div class="m-portlet__body">
+			<h6 class="m-portlet__head-text">
+				<p>
+					Title: <?= $link->title ?>
+					<br>
+					Url: <a href="<?= $link->www ?>" target="_blank"><?= $link->www ?></a>
+					<br>
+					Field: <?= $link->field ?>
+				</p>
+			</h6>
 			<div class="m-portlet m-portlet--full-height m-portlet--skin-light m-portlet--fit">
 				<div class="m-portlet__head">
 					<div class="m-portlet__head-tools">

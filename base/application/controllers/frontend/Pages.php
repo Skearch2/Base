@@ -28,15 +28,21 @@ class Pages extends MY_Controller
   {
     parent::__construct();
 
+    $this->load->model('my_skearch/User_model', 'User');
+
+    $this->user_id = $this->session->userdata('user_id');
+
+    if ($this->user_id && !$this->User->check_latest_tos_ack($this->user_id)) {
+      if (current_url() !== site_url('tos_pp_ack'))
+        redirect('tos_pp_ack');
+    }
+
     $this->load->model('Category_model', 'Category_model');
     $this->load->model('Fields_History_model', 'Fields_History');
     $this->load->model('admin_panel/Settings_model', 'Settings');
     $this->load->model('frontend/ads_model', 'Ads');
-    $this->load->model('my_skearch/User_model', 'User');
     $this->load->model('admin_panel/Tips_crypto_model', 'Tips_crypto_wallets');
     $this->load->model('admin_panel/Tos_pp_model', 'TOS');
-
-    $this->user_id = $this->session->userdata('user_id');
 
     // set default skearch theme
     if (empty($this->session->userdata('settings'))) {
@@ -300,27 +306,27 @@ class Pages extends MY_Controller
    * @param string $order
    * @return void
    */
-  public function get_field_results($field_id, $order)
+  public function get_field_results($field_id, $order = 'auto')
   {
 
-    $adlinks = $this->Category_model->get_adlinks($field_id);
+    $userlinks_status = $this->Settings->get()->userlinks == 1;
 
-    // sequence priority numbers
-    foreach ($adlinks as $index => $adlink) {
-      $adlink->priority = $index + 1;
+    if ($order == 'auto' && $userlinks_status == 1) {
+      $order = 'clicks';
+    } elseif ($order == 'auto' && $userlinks_status == 0) {
+      $order = 'priority';
     }
 
-    if ($order == 'asc') {
-      usort($adlinks, fn ($a, $b) => strcasecmp($a->title, $b->title));
-    } else if ($order == 'desc') {
-      usort($adlinks, fn ($a, $b) => strcasecmp($b->title, $a->title));
-    } else if ($order == 'random') {
-      shuffle($adlinks);
+    $links = $this->Category_model->get_adlinks($field_id, $order);
+
+    // sequence priority numbers
+    foreach ($links as $index => $link) {
+      $link->priority = $index + 1;
     }
 
     $this->output
       ->set_content_type('application/json')
-      ->set_output(json_encode($adlinks));
+      ->set_output(json_encode($links));
   }
 
   /**

@@ -141,6 +141,18 @@ $this->load->view('admin_panel/templates/subheader');
 										</span>
 									</div>
 								</div>
+								<div class="form-group m-form__group row">
+									<label for="key-member" class="col-2 col-form-label">UserLinks</label>
+									<div class="col-7">
+										<input type="hidden" name="userlinks" value="0" <?= set_value('userlinks', $settings->userlinks) == 0 ? 'checked' : "" ?>>
+										<span class="m-switch m-switch--icon-check">
+											<label>
+												<input type="checkbox" name="userlinks" value="1" <?= set_value('userlinks', $settings->userlinks) == 1 ? 'checked' : "" ?>>
+												<span></span>
+											</label>
+										</span>
+									</div>
+								</div>
 							</div>
 							<div class="m-portlet__foot m-portlet__foot--fit">
 								<div class="m-form__actions">

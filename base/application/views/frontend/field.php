@@ -15,64 +15,6 @@ $this->load->view('frontend/templates/header');
 ?>
 
 <script>
-    $(document).ready(function() {
-        $.fn.showResults = function(value) {
-            $.ajaxSetup({
-                cache: false
-            });
-            var uri = "<?= site_url('browse/get_field_results/' . $field_id . '/'); ?>" + value;
-            $.getJSON(uri, function(response) {
-                $(".result-listing").html("");
-                var items = [];
-                var site_url = "<?= site_url('redirect/link/id/') ?>"
-                $.each(response, function(key, val) {
-                    items.push("\
-						<li>\
-							<div>" + (val.priority) + ". <a href='" +
-                        site_url + (val.id) + "' title='" + (val.title) + "' target='_blank'>" + (val.title) + "</a></div>\
-							<p>" + (val.description_short) + "</br>\
-							    <span><a href='" +
-                        site_url + (val.id) + "' title='" + (val.title) + "' target='_blank'>" + (val.display_url) + "</a>\</span>\
-                            </p>\
-						</li>\
-						");
-                });
-                $("<ul/>", {
-                    "class": "result-listing",
-                    "tabindex": 0,
-                    "id": "GFG_UP",
-                    html: items.join("")
-                }).appendTo("#container_vertical");
-            });
-        }
-
-        $("#button_shuffle").click(function() {
-            $.fn.showResults("random");
-        });
-
-        $("#priority_logo").click(function() {
-            $.fn.showResults("priority");
-        });
-
-        $("#button_order").click(function() {
-            var order = $(this).attr('value');
-            if (order === 'asc') {
-                $("#button_order").removeClass('btn-a2z').addClass('btn-z2a');
-                $("#button_order").attr('value', 'desc');
-                $("#button_order").html("Z-A")
-                $("#button_order").prop('title', 'Display results in descending order');
-            } else if (order === 'desc') {
-                $("#button_order").removeClass('btn-z2a').addClass('btn-a2z');
-                $("#button_order").attr('value', 'asc');
-                $("#button_order").html("A-Z");
-                $("#button_order").prop('title', 'Display results in ascending order');
-            }
-            $.fn.showResults(order);
-        });
-
-        $.fn.showResults("priority");
-
-    });
 </script>
 
 <!-- Media Box A -->
@@ -209,6 +151,61 @@ $this->load->view('frontend/templates/footer');
 <!-- Page Scripts -->
 <script>
     $(document).ready(function() {
+        $.fn.showResults = function(value) {
+            $.ajaxSetup({
+                cache: false
+            });
+            var uri = "<?= site_url('browse/get_field_results/' . $field_id . '/'); ?>" + value;
+            $.getJSON(uri, function(response) {
+                $(".result-listing").html("");
+                var items = [];
+                var site_url = "<?= site_url('redirect/link/id/') ?>"
+                $.each(response, function(key, val) {
+                    items.push("\
+						<li>\
+							<div>" + (val.priority) + ". <a href='" +
+                        site_url + (val.id) + "' title='" + (val.title) + "' target='_blank'>" + (val.title) + "</a></div>\
+							<p>" + (val.description_short) + "</br>\
+							    <span><a href='" +
+                        site_url + (val.id) + "' title='" + (val.title) + "' target='_blank'>" + (val.display_url) + "</a>\</span>\
+                            </p>\
+						</li>\
+						");
+                });
+                $("<ul/>", {
+                    "class": "result-listing",
+                    "tabindex": 0,
+                    "id": "GFG_UP",
+                    html: items.join("")
+                }).appendTo("#container_vertical");
+            });
+        }
+
+        $("#button_shuffle").click(function() {
+            $.fn.showResults("random");
+        });
+
+        $("#priority_logo").click(function() {
+            $.fn.showResults("priority");
+        });
+
+        $("#button_order").click(function() {
+            var order = $(this).attr('value');
+            if (order === 'asc') {
+                $("#button_order").removeClass('btn-a2z').addClass('btn-z2a');
+                $("#button_order").attr('value', 'desc');
+                $("#button_order").html("Z-A")
+                $("#button_order").prop('title', 'Display results in descending order');
+            } else if (order === 'desc') {
+                $("#button_order").removeClass('btn-z2a').addClass('btn-a2z');
+                $("#button_order").attr('value', 'asc');
+                $("#button_order").html("A-Z");
+                $("#button_order").prop('title', 'Display results in ascending order');
+            }
+            $.fn.showResults(order);
+        });
+
+        $.fn.showResults("auto");
 
         // activate the carousel for media box A and B
         $('#myCarouselA').find('.carousel-item').first().addClass('active');
