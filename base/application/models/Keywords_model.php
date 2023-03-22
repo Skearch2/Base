@@ -136,7 +136,7 @@ class Keywords_model extends CI_Model
         $this->db->where('link_type', 'field');
         $query2 = $this->db->get_compiled_select();
 
-        $query = $this->db->query($query1 . " UNION " . $query2);
+        $query = $this->db->query($query1 . " UNION " . $query2 . "ORDER BY keyword");
 
         return $query->result();
     }

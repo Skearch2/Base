@@ -111,7 +111,7 @@ class Pages extends MY_Controller
 
     // redirect if umbrella is not found
     if (!$this->Category_model->get_category_id($umbrella_name)) {
-      redirect(site_url() . '/browse', 'refresh');
+      redirect(site_url() . 'browse');
     } else {
 
       $umbrella_id = $this->Category_model->get_category_id($umbrella_name)->id;
@@ -160,67 +160,62 @@ class Pages extends MY_Controller
   public function browse_field($umbrella_name, $field_name)
   {
     // redirect if umbrella is not found
-    if (!$this->Category_model->get_category_id($umbrella_name)) {
-      redirect(site_url() . '/browse', 'refresh');
+    if (!$this->Category_model->get_category_id($umbrella_name) or !$this->Category_model->get_subcategory_id($field_name)) {
+      redirect(site_url() . 'browse');
     } else {
-      //$umbrella_id = $this->Category_model->get_category_id($umbrella_name)->id;
 
-      if (!$this->Category_model->get_subcategory_id($field_name)) {
-        redirect(site_url() . '/browse/' . $umbrella_name, 'refresh');
-      } else {
-        $field_id = $this->Category_model->get_subcategory_id($field_name)->id;
+      $field_id = $this->Category_model->get_subcategory_id($field_name)->id;
 
-        // get ads for banner a
-        $banner_a_ads = $this->Ads->get_ads('A', 'field', $field_id);
-        // get ads for banner b
-        $banner_b_ads = $this->Ads->get_ads('B', 'field', $field_id);
+      // get ads for banner a
+      $banner_a_ads = $this->Ads->get_ads('A', 'field', $field_id);
+      // get ads for banner b
+      $banner_b_ads = $this->Ads->get_ads('B', 'field', $field_id);
 
-        // if no ads found get global ads for banner a
+      // if no ads found get global ads for banner a
+      if (!$banner_a_ads) {
+        $banner_a_ads = $this->Ads->get_ads('A', 'global', 0);
         if (!$banner_a_ads) {
-          $banner_a_ads = $this->Ads->get_ads('A', 'global', 0);
-          if (!$banner_a_ads) {
-            // if no global ads found get default ads for banner a
-            $banner_a_ads = $this->Ads->get_ads('A', 'default', 0);
-          }
+          // if no global ads found get default ads for banner a
+          $banner_a_ads = $this->Ads->get_ads('A', 'default', 0);
         }
-
-        // if no ads found get global ads for banner b
-        if (!$banner_b_ads) {
-          $banner_b_ads = $this->Ads->get_ads('B', 'global', 0);
-          if (!$banner_b_ads) {
-            // if no global ads found get default ads for banner b
-            $banner_b_ads = $this->Ads->get_ads('B', 'default', 0);
-          }
-        }
-
-        $data['field_id'] = $field_id;
-        $data['suggest_fields'] = $this->Category_model->get_field_suggestions($data['field_id']);
-        $data['results'] = $this->Category_model->get_field_suggestions($field_id);
-        $data['umbrella_name'] = ucwords(urldecode($umbrella_name));
-        $data['field_name'] = urldecode($field_name);
-        $data['banner_a_ads'] = $banner_a_ads;
-        $data['banner_b_ads'] = $banner_b_ads;
-
-        // save the field in the field history
-        if ($this->ion_auth->logged_in()) {
-
-          $user_data = array(
-            'user_id' => $this->session->userdata('user_id'),
-            'field_id' => $field_id
-          );
-
-          if ($this->Fields_History->exists($user_data)) {
-            $this->Fields_History->update($user_data);
-          } else {
-            $this->Fields_History->create($user_data);
-          }
-        }
-
-        // set page title
-        $data['title'] = ucwords(urldecode($umbrella_name) . " - " . urldecode($field_name));
-
-        $this->load->view('frontend/field', $data);
       }
+
+      // if no ads found get global ads for banner b
+      if (!$banner_b_ads) {
+        $banner_b_ads = $this->Ads->get_ads('B', 'global', 0);
+        if (!$banner_b_ads) {
+          // if no global ads found get default ads for banner b
+          $banner_b_ads = $this->Ads->get_ads('B', 'default', 0);
+        }
+      }
+
+      $data['field_id'] = $field_id;
+      $data['suggest_fields'] = $this->Category_model->get_field_suggestions($data['field_id']);
+      $data['results'] = $this->Category_model->get_field_suggestions($field_id);
+      $data['umbrella_name'] = ucwords(urldecode($umbrella_name));
+      $data['field_name'] = urldecode($field_name);
+      $data['banner_a_ads'] = $banner_a_ads;
+      $data['banner_b_ads'] = $banner_b_ads;
+
+      // save the field in the field history
+      if ($this->ion_auth->logged_in()) {
+
+        $user_data = array(
+          'user_id' => $this->session->userdata('user_id'),
+          'field_id' => $field_id
+        );
+
+        if ($this->Fields_History->exists($user_data)) {
+          $this->Fields_History->update($user_data);
+        } else {
+          $this->Fields_History->create($user_data);
+        }
+      }
+
+      // set page title
+      $data['title'] = ucwords(urldecode($umbrella_name) . " - " . urldecode($field_name));
+
+      $this->load->view('frontend/field', $data);
     }
   }
 
