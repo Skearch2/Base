@@ -53,7 +53,7 @@ class Umbrella_model extends CI_Model
     }
 
     /**
-     * Check for duplicate umbrella or field title 
+     * Check for duplicate umbrella title
      *
      * @param string $string String
      * @return boolean
@@ -64,15 +64,7 @@ class Umbrella_model extends CI_Model
         $this->db->from('skearch_categories');
         $this->db->where('title', $string);
 
-        $query1 = $this->db->get_compiled_select();
-
-        $this->db->select('title');
-        $this->db->from('skearch_subcategories');
-        $this->db->where('title', $string);
-
-        $query2 = $this->db->get_compiled_select();
-
-        $query = $this->db->query($query1 . " UNION " . $query2);
+        $query = $this->db->get();
 
         if ($query->num_rows()) {
             return true;

@@ -53,30 +53,19 @@ class Keywords_model extends CI_Model
     }
 
     /**
-     * Check if the keyword already exists as brandlink keyword or search keyword
+     * Check if the keyword already exist
      *
      * @param string $keyword Keyword
      * @param int    $id Keyword ID
      * @return boolean
      */
-    public function duplicate_check($keyword, $id = null)
+    public function duplicate_check($keyword)
     {
-        $this->db->select("id");
+        $this->db->select('keyword');
         $this->db->from('search_keywords');
         $this->db->where('keyword', $keyword);
-        if ($id) {
-            $this->db->where_not_in('id', $id);
-        }
 
-        $query1 = $this->db->get_compiled_select();
-
-        $this->db->select('id');
-        $this->db->from('skearch_brands_brandlinks');
-        $this->db->where('keyword', $keyword);
-
-        $query2 = $this->db->get_compiled_select();
-
-        $query = $this->db->query($query1 . " UNION " . $query2);
+        $query = $this->db->get();
 
         if ($query->num_rows()) {
             return true;

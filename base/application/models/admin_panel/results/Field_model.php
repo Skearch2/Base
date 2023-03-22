@@ -23,16 +23,6 @@ class Field_model extends CI_Model
      */
     public function create($data)
     {
-        // $data = array(
-        //     'title'             => $data['title'],
-        //     'description'       => $data['$description'],
-        //     'description_short' => $data['$description_short'],
-        //     'parent_id'         => $data['$parent_id'],
-        //     'home_display'      => $data['$home_display'],
-        //     'keywords'          => $data['$keywords'],
-        //     'featured'          => $data['$featured'],
-        //     'enabled'           => $data['$enabled']
-        // );
 
         $this->db->insert('skearch_subcategories', $data);
 
@@ -172,19 +162,31 @@ class Field_model extends CI_Model
      */
     public function update($id, $field_data)
     {
-        // if (array_key_exists('title', $field_data))                      $data['title']              = $field_data['title'];
-        // if (array_key_exists('description', $field_data))                $data['description']        = $field_data['description'];
-        // if (array_key_exists('description_short', $field_data))          $data['description_short']  = $field_data['description_short'];
-        // if (array_key_exists('parent_id', $field_data))                  $data['parent_id']          = $field_data['parent_id'];
-        // if (array_key_exists('home_display', $field_data))               $data['home_display']       = $field_data['home_display'];
-        // if (array_key_exists('keywords', $field_data))                   $data['keywords']           = $field_data['keywords'];
-        // if (array_key_exists('featured', $field_data))                   $data['featured']           = $field_data['featured'];
-        // if (array_key_exists('enabled', $field_data))                    $data['enabled']            = $field_data['enabled'];
-
         $this->db->where('id', $id);
         $this->db->update('skearch_subcategories', $field_data);
 
         if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Check for duplicate field title
+     *
+     * @param string $string String
+     * @return boolean
+     */
+    public function duplicate_check($string)
+    {
+        $this->db->select('title');
+        $this->db->from('skearch_subcategories');
+        $this->db->where('title', $string);
+
+        $query = $this->db->get();
+
+        if ($query->num_rows()) {
             return true;
         } else {
             return false;

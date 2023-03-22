@@ -80,24 +80,31 @@
             document.google_search_form.submit();
         }
 
-			// Search for keyword
-			function ajaxSearch(keyword) {
-				if (keyword.length > 0) {
-					$.ajax({
-						url: '<?= site_url(); ?>search?search_keyword=' + keyword,
-						type: 'GET',
-						async: false,
-						success: function(data) {
-							urlObj = JSON.parse(data);
-							window.open(urlObj.url);
-						},
-						error: function(data) {
-							alert("Something went wrong. Can't Search");
-						}
+        // Redirect to specific url based on keyword
+        function search(keyword) {
+            if (keyword.length > 0) {
+                $.ajax({
+                    url: '<?= site_url(); ?>search?search_keyword=' + keyword,
+                    type: 'GET',
+                    async: false,
+                    success: function(data) {
+                        urlObj = JSON.parse(data);
+                        if (urlObj.type == 'internal') {
+                            window.open(urlObj.url, "_self");
+                        } else {
+                            window.open(urlObj.url);
+                        }
 
-					});
-				}
-			}
+                    },
+                    error: function(data) {
+                        alert("Something went wrong. Can't Search");
+                    },
+                    complete: function(data) {
+                        $('#search_keyword').val("");
+                    }
+                });
+            }
+        }
 
         // Change front end theme
         function changeTheme() {

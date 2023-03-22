@@ -68,7 +68,8 @@ $this->load->view('admin_panel/templates/subheader');
 											</div>
 										</div>
 									</div>
-								<?php elseif (validation_errors()) : ?>
+								<?php endif ?>
+								<?php if (validation_errors()) : ?>
 									<div class="m-form__content">
 										<div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
 											<div class="m-alert__icon">
