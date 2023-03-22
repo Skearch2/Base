@@ -240,7 +240,7 @@ class Brandlinks extends MY_Controller
             if (isset($brandlink_id) && $this->Brandlink->get_by_id($brandlink_id)->keyword === $keyword) {
                 return true;
             } else {
-                $this->form_validation->set_message('validate_keyword', "Keyword already exists either as BrandLink or Search keyword.");
+                $this->form_validation->set_message('validate_keyword', "This keyword is already reserved.");
                 return false;
             }
         }

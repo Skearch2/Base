@@ -59,7 +59,7 @@ $this->load->view('admin_panel/templates/subheader');
 										<h3 class="m-form__section">Umbrella Information</h3>
 									</div>
 								</div>
-								<input type="hidden" name="id" value="<?= $umbrella->id ?>">
+								<input type="hidden" name="umbrella_id" value="<?= $umbrella->id ?>">
 								<div class="form-group m-form__group row">
 									<label for="example-text-input" class="col-2 col-form-label">Title *</label>
 									<div class="col-7">

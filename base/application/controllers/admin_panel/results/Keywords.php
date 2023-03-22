@@ -35,6 +35,7 @@ class Keywords extends MY_Controller
         $this->load->model('Keywords_model', 'Keywords');
         $this->load->model('admin_panel/results/Field_model', 'Fields');
         $this->load->model('admin_panel/results/Umbrella_model', 'Umbrellas');
+        $this->load->model('admin_panel/brands/brandlink_model', 'Brandlinks');
     }
 
     /**
@@ -51,7 +52,7 @@ class Keywords extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $this->form_validation->set_rules('keywords', 'Keyword(s)', 'callback_validate_keywords');
+            $this->form_validation->set_rules('keywords', 'Keyword', 'callback_validate_keyword');
             $this->form_validation->set_rules('link_type', 'Link to', 'required');
             if ($this->input->post("link_type") == 'umbrella') {
                 $this->form_validation->set_rules('umbrella_id', 'Umbrella', 'required|numeric');
@@ -263,20 +264,27 @@ class Keywords extends MY_Controller
      * @param string $id Keyword ID
      * @return void
      */
-    public function validate_keyword($string, $id)
+    public function validate_keyword($keyword, $id = null)
     {
-        if (empty($string)) {
-            $this->form_validation->set_message('validate_keyword', "The %s field is required");
+        if (ctype_alpha(str_replace(array("\n", "\t", ' '), '', $keyword)) === false) {
+            $this->form_validation->set_message('validate_keyword', "%s can only contain alphabets and spaces.");
             return false;
         }
 
-        if (ctype_alpha(str_replace(array("\n", "\t", ' '), '', $string)) === false) {
-            $this->form_validation->set_message('validate_keyword', "The %s can only contain alphabets and spaces.");
-            return false;
+        if ($this->Keywords->duplicate_check($keyword)) {
+            if (empty($id)) {
+                $this->form_validation->set_message('validate_keyword', "%s already exists.");
+                return false;
+            } else {
+                if ($this->Keywords->get_by_id($id)->keyword !== $keyword) {
+                    $this->form_validation->set_message('validate_keyword', "%s already exists.");
+                    return false;
+                }
+            }
         }
 
-        if ($this->Keywords->duplicate_check($string, $id)) {
-            $this->form_validation->set_message('validate_keyword', "The %s already reserved as BrandLink or Search keyword.");
+        if ($this->Brandlinks->duplicate_check($keyword)) {
+            $this->form_validation->set_message('validate_keyword', "%s already exists as a BrandLink.");
             return false;
         }
 
@@ -310,7 +318,7 @@ class Keywords extends MY_Controller
             if ($this->Keywords->duplicate_check_using_link($keyword)) {
                 array_push($duplicate_keywords, $keyword);
                 $duplicate_keywords_in_string = implode(' , ', $duplicate_keywords);
-                $this->form_validation->set_message('validate_keywords', "%s already reserved as BrandLink or Search keyword: <br><i>$duplicate_keywords_in_string</i>");
+                $this->form_validation->set_message('validate_keywords', "%s already exist either as BrandLink or Search keyword: <br><i>$duplicate_keywords_in_string</i>");
                 $check = false;
             }
         }

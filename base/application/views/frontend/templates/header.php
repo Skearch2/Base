@@ -8,9 +8,9 @@
 			</div>
 			<div class="col-sm-6 search-box">
 				<div class="search-bar">
-					<form action="javascript:void(0)" onsubmit="ajaxSearch(document.getElementById('ajaxsearch').value)">
+					<form action="javascript:void(0)" onsubmit="search($('#search_keyword').val())">
 						<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
-						<input id="ajaxsearch" type="text" size="64" class="google-input" placeholder="Enter Keywords...">
+						<input id="search_keyword" type="text" size="64" class="google-input" placeholder="Enter Keyword...">
 						<button class="search-btn" border="0"></button>
 					</form>
 				</div>

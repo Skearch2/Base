@@ -69,7 +69,7 @@ class Pages extends MY_Controller
   }
 
   /**
-   * View page for all umbrellas and fields
+   * Browse all page
    *
    * @param string $order
    */
@@ -102,7 +102,7 @@ class Pages extends MY_Controller
 
 
   /**
-   * View page for an umbrella
+   * Umbrella page
    *
    * @param string $umbrella_name
    */
@@ -152,7 +152,7 @@ class Pages extends MY_Controller
   }
 
   /**
-   * View page for a field
+   * Field page
    *
    * @param string $umbrella_name
    * @param string $field_name
@@ -306,7 +306,7 @@ class Pages extends MY_Controller
    * @param string $order
    * @return void
    */
-  public function get_field_results($field_id, $order = 'auto')
+  public function get_results($field_id, $order = 'auto')
   {
 
     $userlinks_status = $this->Settings->get()->userlinks == 1;

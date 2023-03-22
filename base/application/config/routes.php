@@ -63,18 +63,17 @@ $route['auth/get/csrf_hash']                          = 'auth/get_csrf_hash';
 /* 
     Pages 
 */
-$route['home']                                   = 'frontend/pages';
+$route['home']                                      = 'frontend/pages';
+$route['browse']                                    = 'frontend/pages/browse_all';
+$route['browse/desc']                               = 'frontend/pages/browse_all/desc';
+$route['browse/(:any)']                             = 'frontend/pages/browse_umbrella/$1';
+$route['browse/(:any)/(:any)']                      = 'frontend/pages/browse_field/$1/$2';
+$route['get_results/field/id/(:num)/order/(:any)']  = 'frontend/pages/get_results/$1/$2';
+
 $route['tips']                                   = 'frontend/pages/tips';
 $route['tos']                                    = 'frontend/pages/tos_pp';
 $route['pp']                                     = 'frontend/pages/tos_pp';
 $route['tos_pp_ack']                             = 'frontend/pages/tos_pp/1';
-$route['browse']                                 = 'frontend/pages/browse_all';
-$route['browse/desc']                            = 'frontend/pages/browse_all/desc';
-$route['browse/get_data/umbrella']               = 'frontend/pages/get_data/umbrella';
-$route['browse/get_data/field']                  = 'frontend/pages/get_data/field';
-$route['browse/(:any)']                          = 'frontend/pages/browse_umbrella/$1';
-$route['browse/(:any)/(:any)']                   = 'frontend/pages/browse_field/$1/$2';
-$route['browse/get_field_results/(:any)/(:any)'] = 'frontend/pages/get_field_results/$1/$2';
 
 /* 
     Ads 

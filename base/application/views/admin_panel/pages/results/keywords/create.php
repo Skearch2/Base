@@ -45,7 +45,7 @@ $this->load->view('admin_panel/templates/subheader');
                         <i class="la la-check-circle"></i>
                       </div>
                       <div class="m-alert__text">
-                        The keyword(s) have been added.
+                        The keyword has been added.
                       </div>
                       <div class="m-alert__close">
                         <button type="button" class="close" data-close="alert" aria-label="Close">
@@ -60,7 +60,7 @@ $this->load->view('admin_panel/templates/subheader');
                         <i class="la la-times-circle"></i>
                       </div>
                       <div class="m-alert__text">
-                        Unable to add keyword(s).
+                        Unable to add keyword.
                       </div>
                       <div class="m-alert__close">
                         <button type="button" class="close" data-close="alert" aria-label="Close">
@@ -68,7 +68,8 @@ $this->load->view('admin_panel/templates/subheader');
                       </div>
                     </div>
                   </div>
-                <?php elseif (validation_errors()) : ?>
+                <?php endif ?>
+                <?php if (validation_errors()) : ?>
                   <div class="m-form__content">
                     <div class="m-alert m-alert--icon alert alert-danger m--show" role="alert">
                       <div class="m-alert__icon">
@@ -104,7 +105,7 @@ $this->load->view('admin_panel/templates/subheader');
                   </div>
                 </div>
                 <div class="form-group m-form__group row">
-                  <label for="example-text-input" class="col-2 col-form-label">Keyword(s) *</label>
+                  <label for="example-text-input" class="col-2 col-form-label">Keyword *</label>
                   <div class="col-7">
                     <input class="form-control m-input" type="text" id="keywords" name="keywords" data-role="tagsinput" value="<?= set_value('keywords') ?>">
                   </div>
