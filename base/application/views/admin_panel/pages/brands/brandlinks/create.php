@@ -75,13 +75,13 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="brand" class="col-2 col-form-label">BrandLink Keyword *</label>
+									<label for="brand" class="col-2 col-form-label">Keyword *</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="keyword" value="<?= set_value('keyword'); ?>">
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="organization" class="col-2 col-form-label">URL - Droppage *</label>
+									<label for="organization" class="col-2 col-form-label">Droppage *</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="url" id="url" value="<?= set_value('url'); ?>">
 									</div>

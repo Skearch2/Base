@@ -4,7 +4,7 @@
 
 <script>
     // Search for keyword
-    function ajaxSearch(keyword) {
+    function search(keyword) {
         if (keyword.length > 0) {
             $.ajax({
                 url: '<?= site_url(); ?>search?search_keyword=' + keyword,
@@ -12,12 +12,20 @@
                 async: false,
                 success: function(data) {
                     urlObj = JSON.parse(data);
-                    window.open(urlObj.url);
+                    if (urlObj.type == 'internal') {
+                        console.log(urlObj)
+                        window.open(urlObj.url, "_self");
+                    } else {
+                        window.open(urlObj.url);
+                    }
+
                 },
                 error: function(data) {
                     alert("Something went wrong. Can't Search");
+                },
+                complete: function(data) {
+                    $('#search_keyword').val("");
                 }
-
             });
         }
     }

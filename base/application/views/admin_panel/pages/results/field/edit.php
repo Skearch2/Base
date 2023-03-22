@@ -74,6 +74,7 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
+									<input type="hidden" name="field_id" value="<?= $field->id ?>">
 									<label for="example-text-input" class="col-2 col-form-label">Title *</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="title" value="<?= set_value('title', $field->title) ?>">

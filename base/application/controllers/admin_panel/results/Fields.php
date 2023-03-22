@@ -41,6 +41,7 @@ class Fields extends MY_Controller
         $this->load->model('admin_panel/results/umbrella_model', 'umbrellas');
         $this->load->model('admin_panel/results/field_model', 'fields');
         $this->load->model('admin_panel/results/link_model', 'links');
+        $this->load->model('admin_panel/brands/brandlink_model', 'brandlinks');
         $this->load->model('Keywords_model', 'Keywords');
     }
 
@@ -57,7 +58,7 @@ class Fields extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $this->form_validation->set_rules('title', 'Title', 'required|trim');
+            $this->form_validation->set_rules('title', 'Title', 'required|trim|callback_duplicate_check');
             $this->form_validation->set_rules('description', 'Description', 'max_length[500]|trim');
             $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
             $this->form_validation->set_rules('parent_id', 'Umbrella', 'required');
@@ -284,7 +285,7 @@ class Fields extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $this->form_validation->set_rules('title', 'Title', 'required|trim');
+            $this->form_validation->set_rules('title', 'Title', 'required|trim|callback_duplicate_check');
             $this->form_validation->set_rules('description', 'Description', 'max_length[500]|trim');
             $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
             $this->form_validation->set_rules('parent_id', 'Umbrella', 'required');
@@ -348,6 +349,37 @@ class Fields extends MY_Controller
     }
 
     /**
+     * Check for duplicate umbrella or field title 
+     *
+     * @param string $string String
+     * @return void
+     */
+    public function duplicate_check($string)
+    { {
+            if (!empty($this->input->post('field_id'))) {
+                $field_id = $this->input->post('field_id');
+            }
+
+            if ($this->umbrellas->duplicate_check($string)) {
+                $this->form_validation->set_message('duplicate_check', "{field} already exists in Umbrellas.");
+                return false;
+            } elseif ($this->fields->duplicate_check($string)) {
+                if (isset($field_id)) {
+                    if ($this->fields->get($field_id)->title !== $string) {
+                        $this->form_validation->set_message('duplicate_check', "{field} already exists in Fields.");
+                        return false;
+                    }
+                } else {
+                    $this->form_validation->set_message('duplicate_check', "{field} already exists in Fields.");
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+    }
+
+    /**
      * Validate keywords and check for duplicates
      *
      * @param string $string Keywords seperated by comma
@@ -374,13 +406,10 @@ class Fields extends MY_Controller
             if ($this->Keywords->duplicate_check_using_link($keyword, $link_id, $link_type = 'field')) {
                 array_push($duplicate_keywords, $keyword);
                 $duplicate_keywords_in_string = implode(' , ', $duplicate_keywords);
-                $this->form_validation->set_message('validate_keywords', "%s already reserved as BrandLink or Search keyword: <br><i>$duplicate_keywords_in_string</i>");
+                $this->form_validation->set_message('validate_keywords', "%s already exist either as BrandLink or Search keyword: <br><i>$duplicate_keywords_in_string</i>");
                 $check = false;
             }
         }
-
-        // print_r($duplicate_keywords);
-        // die();
 
         return $check;
     }

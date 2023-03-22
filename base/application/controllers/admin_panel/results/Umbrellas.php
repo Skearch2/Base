@@ -40,6 +40,7 @@ class Umbrellas extends MY_Controller
 
         $this->load->model('admin_panel/results/umbrella_model', 'Umbrella');
         $this->load->model('admin_panel/results/field_model', 'Field');
+        $this->load->model('admin_panel/brands/brandlink_model', 'Brandlinks');
         $this->load->model('Keywords_model', 'Keywords');
     }
 
@@ -80,7 +81,6 @@ class Umbrellas extends MY_Controller
                 $umbrella_id = $this->Umbrella->create($umbrella_data);
 
                 if ($umbrella_id) {
-
                     if (!empty($this->input->post('keywords'))) {
                         $keywords = explode(',', $this->input->post('keywords'));
                         foreach ($keywords as $i => $keyword) {
@@ -93,7 +93,6 @@ class Umbrellas extends MY_Controller
                         }
                         $this->Keywords->create($keywords_data);
                     }
-
                     $this->session->set_flashdata('create_success', 1);
                 } else {
                     $this->session->set_flashdata('create_success', 0);
@@ -308,16 +307,26 @@ class Umbrellas extends MY_Controller
      */
     public function duplicate_check($string)
     {
-        $umbrella_id = $this->input->post('id');
-
-        if ($this->Umbrella->duplicate_check($string)) {
-            if ($this->Umbrella->get($umbrella_id)->title !== $string) {
-                $this->form_validation->set_message('duplicate_check', "{field} already reserved to Umbrella or Field.");
-                return false;
-            }
+        if (!empty($this->input->post('umbrella_id'))) {
+            $umbrella_id = $this->input->post('umbrella_id');
         }
 
-        return true;
+        if ($this->Umbrella->duplicate_check($string)) {
+            if (isset($umbrella_id)) {
+                if ($this->Umbrella->get($umbrella_id)->title !== $string) {
+                    $this->form_validation->set_message('duplicate_check', "{field} already exists in Umbrellas.");
+                    return false;
+                }
+            } else {
+                $this->form_validation->set_message('duplicate_check', "{field} already exists in Umbrellas.");
+                return false;
+            }
+        } elseif ($this->Field->duplicate_check($string)) {
+            $this->form_validation->set_message('duplicate_check', "{field} already exists in Fields.");
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -347,7 +356,7 @@ class Umbrellas extends MY_Controller
             if ($this->Keywords->duplicate_check_using_link($keyword, $link_id, $link_type = 'umbrella')) {
                 array_push($duplicate_keywords, $keyword);
                 $duplicate_keywords_in_string = implode(' , ', $duplicate_keywords);
-                $this->form_validation->set_message('validate_keywords', "%s already reserved as BrandLink or Search keyword: <br><i>$duplicate_keywords_in_string</i>");
+                $this->form_validation->set_message('validate_keywords', "%s already exist either as BrandLink or Search keyword: <br><i>$duplicate_keywords_in_string</i>");
                 $check = false;
             }
         }

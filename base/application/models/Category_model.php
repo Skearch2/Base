@@ -155,7 +155,7 @@ class Category_model extends CI_Model
     /**
      * Get umbrella title
      * 
-     * @param int $limit
+     * @param int $umbrella_id
      * @return object
      */
     public function get_category_title($umbrella_id)
@@ -164,9 +164,10 @@ class Category_model extends CI_Model
         $this->db->select('title');
         $this->db->from('skearch_categories');
         $this->db->where('id', $umbrella_id);
+
         $query = $this->db->get();
 
-        return $query->result();
+        return $query->row();
     }
 
     /**
@@ -184,7 +185,7 @@ class Category_model extends CI_Model
         $this->db->where('skearch_subcategories.id', $field_id);
         $query = $this->db->get();
 
-        return $query->result();
+        return $query->row();
     }
 
     /*

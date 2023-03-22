@@ -37,7 +37,6 @@ $this->load->view('admin_panel/templates/subheader');
 					<div class="tab-pane active" id="m_user_profile_tab_1">
 						<form class="m-form m-form--state m-form--fit m-form--label-align-right" id="m_form" role="form" method="POST">
 							<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
-							<input type="hidden" name="id" value="<?= $brandlink->id ?>">
 							<input type="hidden" name="brand_id" value="<?= $brandlink->brand_id ?>">
 							<div class="m-portlet__body">
 								<?php if (validation_errors()) : ?>

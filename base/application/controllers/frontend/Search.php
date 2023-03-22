@@ -26,7 +26,7 @@ class Search extends MY_Controller
     }
 
     /**
-     * Determines web page based on keywords
+     * Determines redirect url based on keyword
      *
      * @return void
      */
@@ -34,59 +34,49 @@ class Search extends MY_Controller
     {
         $keyword = $this->input->get('search_keyword');
 
-        $cat = $this->Category_model->get_categories();
-        $sub_cat = $this->Category_model->get_subcategories();
-        $links = $this->Category_model->get_results();
+        if (empty($keyword)) {
+            header("HTTP/1.1 400 Bad Request");
+            exit;
+        }
+
+        /* If keyword matches with the title of an umbrella then redirect to the umbrella page */
+        // $umbrellas = $this->Category_model->get_categories();
+        // foreach ($umbrellas as $umbrella) {
+        //     if (strcasecmp($umbrella->title, $keyword) == 0) {
+        //         echo json_encode(array("type" => "internal", "url" => site_url("browse/" . strtolower($umbrella->title))));
+        //         return;
+        //     }
+        // }
+
+        /* If keyword matches with the title of a field then redirect to the field page */
+        // $fields = $this->Category_model->get_subcategories();
+        // foreach ($fields as $field) {
+        //     $umbrella = $this->Category_model->get_category_title($field->parent_id)->title;
+        //     if (strcasecmp($field->title, $keyword) == 0) {
+        //         echo json_encode(array("type" => "internal", "url" => site_url("browse/" . strtolower($umbrella) . "/" . strtolower($field->title))));
+        //         return;
+        //     }
+        // }
+
+        /* If keyword matches with a brandlink then redirect to the brandlink drop page */
         $brandlinks = $this->Category_model->get_brandlinks();
-
-        /* If keyword matches with the title of umbrella page then redirect to the umbrella page */
-        foreach ($cat as $item) {
-            if (strtolower($item->title) === strtolower($keyword)) {
-                echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $item->title)));
-                return;
-            }
-        }
-
-        /* If keyword matches with the title of field page then redirect to the field page */
-        foreach ($sub_cat as $item) {
-            $ptitle = $this->Category_model->get_category_title($item->parent_id)[0]->title;
-            if (strtolower($item->title) === strtolower($keyword)) {
-                echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $ptitle . "/" . $item->title)));
-                return;
-            }
-        }
-
-        /* If keyword matches with adlink's url then redirect to that url */
-        if ($this->Category_model->get_brandlinks_status()) {
-            foreach ($links as $item) {
-                if ($item->www) {
-                    $urlhost = $this->get_domainInfo($item->www);
-                    if (strcmp(strtolower($urlhost['host']), strtolower($keyword)) == 0) {
-                        echo json_encode(array("type" => "external", "url" => $item->www));
-                        return;
-                    }
-                }
-            }
-        }
-
-        /* If keyword matches with brandlinks then redirect to it's drop page */
         foreach ($brandlinks as $brandlink) {
-            if (strcmp(strtolower($brandlink->keyword), strtolower($keyword)) == 0) {
+            if (strcasecmp($brandlink->keyword, $keyword) == 0) {
                 echo json_encode(array("type" => "external", "url" => $brandlink->url));
                 return;
             }
         }
 
         /* If keyword matches with search keyword then redirect to its linked umbrella or field page */
-        $matched_keyword = $this->Keywords->get_by_keyword($keyword);
-        if ($matched_keyword) {
-            if ($matched_keyword->link_type === 'umbrella') {
-                $data = $this->Category_model->get_category_title($matched_keyword->link_id);
-                echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $data[0]->title)));
+        $search_keyword = $this->Keywords->get_by_keyword($keyword);
+        if ($search_keyword) {
+            if ($search_keyword->link_type === 'umbrella') {
+                $umbrella = $this->Category_model->get_category_title($search_keyword->link_id);
+                echo json_encode(array("type" => "internal", "url" => site_url("browse/" . strtolower($umbrella->title))));
                 return;
-            } else if ($matched_keyword->link_type === 'field') {
-                $data = $this->Category_model->get_field_and_umbrella_title($matched_keyword->link_id);
-                echo json_encode(array("type" => "internal", "url" => site_url("browse/" . $data[0]->umbrella . "/" . $data[0]->field)));
+            } else if ($search_keyword->link_type === 'field') {
+                $title = $this->Category_model->get_field_and_umbrella_title($search_keyword->link_id);
+                echo json_encode(array("type" => "internal", "url" => site_url("browse/" . strtolower($title->umbrella) . "/" . strtolower($title->field))));
                 return;
             }
         }
@@ -96,7 +86,6 @@ class Search extends MY_Controller
 
         // get search engine from user settings
         if ($this->ion_auth->logged_in()) {
-
             $search_engine = $this->session->userdata('settings')->search_engine;
 
             if ($search_engine === 'startpage') {
@@ -106,35 +95,7 @@ class Search extends MY_Controller
             }
         }
 
-        echo json_encode(array("type" => "external", "url" => $search_url . $keyword));
+        echo json_encode(array("type" => "external", "url" => $search_url . strtolower($keyword)));
         return;
-    }
-
-    /**
-     * Returns URL information
-     *
-     * @param string $url
-     * @return void
-     */
-    private function get_domainInfo($url)
-    {
-        // regex can be replaced with parse_url
-        preg_match("/^(https|http|ftp):\/\/(.*?)\//", "$url/", $matches);
-
-        $parts = explode(".", $matches[2]);
-        $tld = array_pop($parts);
-        $host = array_pop($parts);
-        if (strlen($tld) == 2 && strlen($host) <= 3) {
-            $tld = "$host.$tld";
-            $host = array_pop($parts);
-        }
-
-        return array(
-            'protocol' => $matches[1],
-            'subdomain' => implode(".", $parts),
-            'domain' => "$host.$tld",
-            'host' => $host,
-            'tld' => $tld
-        );
     }
 }

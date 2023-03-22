@@ -151,11 +151,11 @@ $this->load->view('frontend/templates/footer');
 <!-- Page Scripts -->
 <script>
     $(document).ready(function() {
-        $.fn.showResults = function(value) {
+        $.fn.showResults = function(order) {
             $.ajaxSetup({
                 cache: false
             });
-            var uri = "<?= site_url('browse/get_field_results/' . $field_id . '/'); ?>" + value;
+            var uri = "<?= site_url('get_results/field/id/' . $field_id . '/order/'); ?>" + order;
             $.getJSON(uri, function(response) {
                 $(".result-listing").html("");
                 var items = [];

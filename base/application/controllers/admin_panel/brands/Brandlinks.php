@@ -36,6 +36,7 @@ class Brandlinks extends MY_Controller
 
         $this->load->model('admin_panel/brands/brandlink_model', 'Brandlinks');
         $this->load->model('admin_panel/brands/brand_model', 'Brand');
+        $this->load->model('Keywords_model', 'Keywords');
     }
 
     /**
@@ -216,7 +217,7 @@ class Brandlinks extends MY_Controller
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
-            $this->form_validation->set_rules('keyword', 'BrandLink Keyword', 'trim|required|callback_validate_keyword');
+            $this->form_validation->set_rules('keyword', 'BrandLink Keyword', 'trim|required|callback_validate_keyword[' . $id . ']');
             $this->form_validation->set_rules('url', 'URL - Droppage', 'trim|required|valid_url');
             $this->form_validation->set_rules('active', 'Enabled', 'trim|required');
 
@@ -279,15 +280,23 @@ class Brandlinks extends MY_Controller
      * @param string $keyword Keyword
      * @return void
      */
-    public function validate_keyword($keyword)
+    public function validate_keyword($keyword, $id = null)
     {
-        $brandlink_id = $this->input->post('id');
-
         if ($this->Brandlinks->duplicate_check($keyword)) {
-            if ($this->Brandlinks->get_by_id($brandlink_id)->keyword !== $keyword) {
-                $this->form_validation->set_message('validate_keyword', "Keyword already exists either as BrandLink or Search keyword.");
+            if (empty($id)) {
+                $this->form_validation->set_message('validate_keyword', "%s already exists.");
                 return false;
+            } else {
+                if ($this->Brandlinks->get_by_id($id)->keyword !== $keyword) {
+                    $this->form_validation->set_message('validate_keyword', "%s already exists.");
+                    return false;
+                }
             }
+        }
+
+        if ($this->Keywords->duplicate_check($keyword)) {
+            $this->form_validation->set_message('validate_keyword', "%s already exists as a Search keyword.");
+            return false;
         }
 
         return true;
