@@ -52,7 +52,7 @@ class Keywords extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $this->form_validation->set_rules('keywords', 'Keyword', 'callback_validate_keyword');
+            $this->form_validation->set_rules('keywords', 'Keyword', 'trim|required|callback_validate_keyword');
             $this->form_validation->set_rules('link_type', 'Link to', 'required');
             if ($this->input->post("link_type") == 'umbrella') {
                 $this->form_validation->set_rules('umbrella_id', 'Umbrella', 'required|numeric');
