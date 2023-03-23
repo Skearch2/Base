@@ -285,7 +285,7 @@ class Fields extends MY_Controller
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
 
-            $this->form_validation->set_rules('title', 'Title', 'required|trim|callback_duplicate_check');
+            $this->form_validation->set_rules('title', 'Title', 'trim|required|callback_duplicate_check');
             $this->form_validation->set_rules('description', 'Description', 'max_length[500]|trim');
             $this->form_validation->set_rules('description_short', 'Short Description', 'required|max_length[140]|trim');
             $this->form_validation->set_rules('parent_id', 'Umbrella', 'required');
@@ -355,28 +355,29 @@ class Fields extends MY_Controller
      * @return void
      */
     public function duplicate_check($string)
-    { {
-            if (!empty($this->input->post('field_id'))) {
-                $field_id = $this->input->post('field_id');
-            }
+    {
+        if (!empty($this->input->post('field_id'))) {
+            $field_id = $this->input->post('field_id');
+        }
 
-            if ($this->umbrellas->duplicate_check($string)) {
-                $this->form_validation->set_message('duplicate_check', "{field} already exists in Umbrellas.");
-                return false;
-            } elseif ($this->fields->duplicate_check($string)) {
-                if (isset($field_id)) {
-                    if ($this->fields->get($field_id)->title !== $string) {
-                        $this->form_validation->set_message('duplicate_check', "{field} already exists in Fields.");
-                        return false;
-                    }
-                } else {
+        if ($this->umbrellas->duplicate_check($string)) {
+            $this->form_validation->set_message('duplicate_check', "{field} already exists in Umbrellas.");
+            return false;
+        } 
+        
+        if ($this->fields->duplicate_check($string)) {
+            if (isset($field_id)) {
+                if (strcasecmp($this->fields->get($field_id)->title, $string) != 0) {
                     $this->form_validation->set_message('duplicate_check', "{field} already exists in Fields.");
                     return false;
                 }
             } else {
-                return true;
+                $this->form_validation->set_message('duplicate_check', "{field} already exists in Fields.");
+                return false;
             }
         }
+
+        return true;
     }
 
     /**
