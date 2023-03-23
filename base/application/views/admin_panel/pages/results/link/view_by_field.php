@@ -118,6 +118,7 @@ $this->load->view('admin_panel/templates/subheader');
 			<table class="table table-striped- table-bordered table-hover table-checkable" id="m_table_1">
 				<thead>
 					<tr>
+						<th></th>
 						<th>Priority</th>
 						<th>Title</th>
 						<th>Description</th>
@@ -437,11 +438,14 @@ $this->load->view('admin_panel/templates/js_global');
 				responsive: !0,
 				dom: '<"top"lfp>rt<"bottom"ip><"clear">',
 				rowId: "id",
+				order: [0, 'asc'],
 				searchDelay: 500,
 				processing: !0,
 				serverSide: !1,
 				ajax: "<?= site_url(); ?>admin/results/links/get/field/id/<?= $field_id; ?>",
 				columns: [{
+					data: "priority"
+				}, {
 					data: "priority"
 				}, {
 					data: "title"
@@ -461,24 +465,6 @@ $this->load->view('admin_panel/templates/js_global');
 						title: "Actions",
 						orderable: !1,
 						render: function(a, t, e, n) {
-							var $select = $("<select class=\"form-control m-input m-input--air\" onchange=updatePriority(" + e['id'] + ",this.value)></select>", {
-								"id": "priority" + e['id'],
-							});
-							for (var i = 1; i <= 250; i++) {
-								var $option = $("<option></option>", {
-									"text": i,
-									"value": i
-								});
-
-								if (searchArray(i, obj)) {
-									$option.attr('disabled', 'disabled');
-								}
-								if (i == e['priority']) {
-									$option.attr("selected", "selected")
-								}
-								$select.append($option);
-							}
-
 							var redirectVal;
 							if (e['redirect'] == 0) redirectVal = "red";
 							else redirectVal = "#34bfa3";
@@ -489,18 +475,39 @@ $this->load->view('admin_panel/templates/js_global');
 							return '<a href="<?= site_url() . "admin/results/link/update/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
 								'<a onclick=moveOrDuplicateDialog(' + e['id'] + ') data-toggle="modal" data-target="#modal_option" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Move/Duplicate"><i class="la la-copy"></i></a>' +
 								'<a onclick=toggleRedirect("' + e['id'] + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="BrandLink"><i style="color:' + redirectVal + '" id="redirect' + e['id'] + '" class="la la-share"></i></a>' +
-								'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>' +
-								$select.prop("outerHTML")
+								'<a onclick=deleteLink("' + e['id'] + '","' + title + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 						}
-					},
-					{
+					}, {
 						targets: 0,
+						visible: false,
 						render: function(a, t, e, n) {
-							// return '<a href="javascript:;" id="priority-dropdown-' + e['id'] + '" title="Change Priority" onclick="showPriorities(' + e['id'] + ',' + e['priority'] + ')">' + e['priority'] + '</a>'
 							return e['priority']
 						}
 					}, {
-						targets: 3,
+						targets: 1,
+						orderable: 0,
+						render: function(a, t, e, n) {
+							var $select_priority = $("<select class=\"form-control\" onchange=updatePriority(" + e['id'] + ",this.value)></select>", {
+								"id": "priority" + e['id'],
+							});
+							for (var i = 1; i <= 250; i++) {
+								var $option = $("<option></option>", {
+									"value": i,
+									"text": i
+								});
+
+								if (searchArray(i, obj)) {
+									$option.attr('disabled', 'disabled');
+								}
+								if (i == e['priority']) {
+									$option.attr("selected", "selected")
+								}
+								$select_priority.append($option);
+							}
+							return $select_priority.prop("outerHTML")
+						}
+					}, {
+						targets: 4,
 						render: function(a, t, e, n) {
 							url = e['display_url']
 							pattern = /^((http|https|ftp):\/\/)/
@@ -513,13 +520,13 @@ $this->load->view('admin_panel/templates/js_global');
 						}
 					},
 					{
-						targets: 4,
+						targets: 5,
 						render: function(a, t, e, n) {
 							return '<a href="<?= site_url('admin/results/links/view/activity/link/id/') ?>' + e['id'] + '" title="View Details">' + e['clicks'] + '</a>'
 						}
 					},
 					{
-						targets: 5,
+						targets: 6,
 						render: function(a, t, e, n) {
 							var s = {
 								1: {
@@ -542,6 +549,14 @@ $this->load->view('admin_panel/templates/js_global');
 	jQuery(document).ready(function() {
 		getPriorities();
 		DatatablesDataSourceAjaxServer.init();
+		var BootstrapSelect = {
+			init: function() {
+				$(".m_selectpicker").selectpicker()
+			}
+		};
+		jQuery(document).ready(function() {
+			BootstrapSelect.init()
+		});
 	});
 
 	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");
