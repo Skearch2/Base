@@ -549,14 +549,6 @@ $this->load->view('admin_panel/templates/js_global');
 	jQuery(document).ready(function() {
 		getPriorities();
 		DatatablesDataSourceAjaxServer.init();
-		var BootstrapSelect = {
-			init: function() {
-				$(".m_selectpicker").selectpicker()
-			}
-		};
-		jQuery(document).ready(function() {
-			BootstrapSelect.init()
-		});
 	});
 
 	$("#menu-results").addClass("m-menu__item m-menu__item--submenu m-menu__item--open m-menu__item--expanded");

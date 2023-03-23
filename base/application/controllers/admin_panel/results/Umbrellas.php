@@ -237,7 +237,7 @@ class Umbrellas extends MY_Controller
             $data['title'] = ucwords('access denied');
             $this->load->view('admin_panel/errors/error_403', $data);
         } else {
-            $this->form_validation->set_rules('title', 'Title', 'trim|required|alpha_numeric_spaces|callback_duplicate_check');
+            $this->form_validation->set_rules('title', 'Title', 'trim|alpha_numeric_spaces|callback_duplicate_check');
             $this->form_validation->set_rules('description', 'Description', 'trim|max_length[500]');
             $this->form_validation->set_rules('description_short', 'Short Description', 'trim|required|max_length[140]');
             $this->form_validation->set_rules('umbrella_name', 'Umbrella Name', 'alpha_numeric_spaces|trim');
@@ -313,7 +313,7 @@ class Umbrellas extends MY_Controller
 
         if ($this->Umbrella->duplicate_check($string)) {
             if (isset($umbrella_id)) {
-                if ($this->Umbrella->get($umbrella_id)->title !== $string) {
+                if (strcasecmp($this->Umbrella->get($umbrella_id)->title, $string) != 0) {
                     $this->form_validation->set_message('duplicate_check', "{field} already exists in Umbrellas.");
                     return false;
                 }
@@ -321,12 +321,14 @@ class Umbrellas extends MY_Controller
                 $this->form_validation->set_message('duplicate_check', "{field} already exists in Umbrellas.");
                 return false;
             }
-        } elseif ($this->Field->duplicate_check($string)) {
+        }
+
+        if ($this->Field->duplicate_check($string)) {
             $this->form_validation->set_message('duplicate_check', "{field} already exists in Fields.");
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     /**
