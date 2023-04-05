@@ -39,24 +39,19 @@ class Search extends MY_Controller
             exit;
         }
 
-        /* If keyword matches with the title of an umbrella then redirect to the umbrella page */
-        // $umbrellas = $this->Category_model->get_categories();
-        // foreach ($umbrellas as $umbrella) {
-        //     if (strcasecmp($umbrella->title, $keyword) == 0) {
-        //         echo json_encode(array("type" => "internal", "url" => site_url("browse/" . strtolower($umbrella->title))));
-        //         return;
-        //     }
-        // }
-
-        /* If keyword matches with the title of a field then redirect to the field page */
-        // $fields = $this->Category_model->get_subcategories();
-        // foreach ($fields as $field) {
-        //     $umbrella = $this->Category_model->get_category_title($field->parent_id)->title;
-        //     if (strcasecmp($field->title, $keyword) == 0) {
-        //         echo json_encode(array("type" => "internal", "url" => site_url("browse/" . strtolower($umbrella) . "/" . strtolower($field->title))));
-        //         return;
-        //     }
-        // }
+        /* If keyword matches with link's url hostname then redirect to that url */
+        $links = $this->Category_model->get_results();
+        if ($this->Category_model->get_brandlinks_status()) {
+            foreach ($links as $item) {
+                if ($item->www) {
+                    $hostname = $this->parse_hostname($item->www);
+                    if (strcmp(strtolower($hostname), strtolower($keyword)) == 0) {
+                        echo json_encode(array("type" => "external", "url" => $item->www));
+                        return;
+                    }
+                }
+            }
+        }
 
         /* If keyword matches with a brandlink then redirect to the brandlink drop page */
         $brandlinks = $this->Category_model->get_brandlinks();
@@ -97,5 +92,23 @@ class Search extends MY_Controller
 
         echo json_encode(array("type" => "external", "url" => $search_url . strtolower($keyword)));
         return;
+    }
+
+    /**
+     * Returns hostname from the url
+     *
+     * @param string $url
+     * @return void
+     */
+    private function parse_hostname($url)
+    {
+        // regex can be replaced with parse_url
+        preg_match("/^(https|http|ftp):\/\/(.*?)\//", "$url/", $matches);
+
+        $parts = explode(".", $matches[2]);
+        $tld = array_pop($parts);
+        $host = array_pop($parts);
+
+        return $host;
     }
 }
