@@ -151,7 +151,7 @@ class Users extends MY_Controller
                 // only show to admin, editor, and brand member groups
                 if (in_array($group, array(1, 2, 3))) {
                     // $additional_data['organization'] = $this->input->post('organization');
-                    $additional_data['phone'] = preg_replace("/[^0-9]/", "", $this->input->post('phone'));
+                    $additional_data['phone'] = $this->input->post('phone');
                     $additional_data['address1'] = $this->input->post('address1');
                     $additional_data['address2'] = $this->input->post('address2');
                     $additional_data['city'] = $this->input->post('city');

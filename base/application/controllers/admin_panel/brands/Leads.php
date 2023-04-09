@@ -113,7 +113,6 @@ class Leads extends MY_Controller
         } else {
 
             $this->form_validation->set_rules('username', 'Username', 'trim|required|is_unique[skearch_users.username]|alpha_numeric|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']');
-            $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
             $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[skearch_users.email]');
             $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|alpha');
             $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|alpha');
@@ -122,11 +121,11 @@ class Leads extends MY_Controller
             $this->form_validation->set_rules('brand', 'Brand', 'required');
             $this->form_validation->set_rules('brand_id', 'Brand ID', 'numeric');
             $this->form_validation->set_rules('key_member', 'Key Member', 'required');
-            $this->form_validation->set_rules('phone', 'Phone', 'numeric|exact_length[10]');
+            $this->form_validation->set_rules('phone', 'Phone', 'trim|required|callback_validate_phone');
             $this->form_validation->set_rules('address1', 'Address 1', 'trim');
             $this->form_validation->set_rules('address2', 'Address 2', 'trim');
             $this->form_validation->set_rules('city', 'City', 'trim');
-            if (strlen($this->input->post('zipcode'))) {
+            if (empty($this->input->post('zipcode')) || strlen($this->input->post('zipcode'))) {
                 $this->form_validation->set_rules('zipcode', 'Zipcode', 'numeric|exact_length[5]');
             }
 
@@ -156,7 +155,7 @@ class Leads extends MY_Controller
             } else {
 
                 $username = $this->input->post('username');
-                $password = $this->input->post('password');
+                $password = base64_encode(random_bytes(10));
                 $email = $this->input->post('email');
 
                 $additional_data['firstname'] = $this->input->post('firstname');
@@ -167,18 +166,18 @@ class Leads extends MY_Controller
                 $additional_data['address1'] = $this->input->post('address1');
                 $additional_data['address2'] = $this->input->post('address2');
                 $additional_data['city'] = $this->input->post('city');
-                $additional_data['state'] = $this->input->post('state');
+                // $additional_data['state'] = $this->input->post('state');
                 $additional_data['country'] = $this->input->post('country');
                 $additional_data['zipcode'] = $this->input->post('zipcode');
 
-                $create = $user_id = $this->User->create($username, $password, $email, $additional_data, array(3));
+                $user_id = $this->User->create($username, $password, $email, $additional_data, array('3'));
 
                 // link user to brand
                 $brand = $this->input->post('brand');
                 $is_key_member = $this->input->post('key_member');
                 $link = $this->Brand->link_user($user_id, $brand, $is_key_member);
 
-                if ($create && $link) {
+                if ($user_id && $link) {
                     $this->session->set_flashdata('user_create_success', 1);
                 } else {
                     $this->session->set_flashdata('user_create_success', 0);
@@ -250,6 +249,22 @@ class Leads extends MY_Controller
 
             // Load page content
             $this->load->view('admin_panel/pages/brands/leads/view', $data);
+        }
+    }
+
+    /**
+     * Validates US phone numnber
+     *
+     * @return bool
+     */
+    public function validate_phone()
+    {
+        $phone = preg_replace("/[^0-9]/", "", $this->input->post('phone'));
+        if (strlen($phone) != 10) {
+            $this->form_validation->set_message('validate_phone', 'The %s number entered is invalid.');
+            return false;
+        } else {
+            return true;
         }
     }
 }

@@ -86,7 +86,7 @@ $this->load->view('auth/templates/head');
 						<div class="form-group m-form__group">
 							<div class="col m--align-left" style="padding-top: 20px;">
 								<label class="m-checkbox m-checkbox--secondary">
-									<input type="checkbox" name="tos_pp" <?= ($this->input->post('tos_pp')) ? "checked" : ""; ?>>I Agree to the <a href="<?= base_url('tos') ?>" target="_blank" class="m-link m-link--primary"><b>terms of service</b></a> and <a href="<?= base_url('pp') ?>" target="_blank" class="m-link m-link--primary"><b>privacy policy</b></a>.
+									<input type="checkbox" name="tos_pp" id="tos_pp" <?= ($this->input->post('tos_pp')) ? "checked" : ""; ?>>I Agree to the <a id="tos" href="<?= base_url('tos') ?>" target="_blank" class="m-link m-link--primary"><b>terms of service</b></a> and <a id="pp" href="<?= base_url('pp') ?>" target="_blank" class="m-link m-link--primary"><b>privacy policy</b></a>.
 									<span></span>
 								</label>
 							</div>
@@ -94,7 +94,7 @@ $this->load->view('auth/templates/head');
 						<div id="m-login__form m-form__user checkbox_premium" style=<?= !$is_brand_signup ? 'display:block' : 'display:none' ?>>
 							<div class="col m--align-left" style="padding-top: 20px;">
 								<label class="m-checkbox m-checkbox--secondary">
-									<input type="checkbox" name="is_premium_user_signup" <?= ($this->input->post('is_premium_user_signup')) ? "checked" : ""; ?>>Upgrade to <a href="#" target="_blank" class="m-link m-link--primary"><b>Premium</b></a>
+									<input type="checkbox" name="is_premium_user_signup" <?= ($this->input->post('is_premium_user_signup')) ? "checked" : ""; ?>>Upgrade to <b class="m-link m-link--primary">Premium</b>
 									<span></span>
 								</label>
 								&nbsp;&nbsp;
@@ -276,6 +276,25 @@ $this->load->view('auth/templates/head');
 					});
 				}
 			});
+
+
+			// check if the tos and pp links were clicked
+			var tos_pp_view = false
+
+			$("#tos").click(function() {
+				tos_pp_view = true
+			})
+
+			$("#pp").click(function() {
+				tos_pp_view = true
+			})
+
+			$("#tos_pp").click(function() {
+				if (!tos_pp_view) {
+					$(this).prop('checked', false);
+					alert("You must view our Terms of Service and Privacy Policy before agreeing to it.");
+				}
+			})
 		});
 	</script>
 
