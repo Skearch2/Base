@@ -9,7 +9,7 @@
 					<a href="<?= base_url('pp'); ?>">Privacy Policy</a>
 					<a href="<?= base_url('tos'); ?>">Terms of Service</a>
 					<a href="<?= base_url('news'); ?>">News</a>
-					<a href="<?= base_url('tips'); ?>">Tip Skearch</a>
+					<a href="<?= base_url('tips'); ?>">Send a Tip</a>
 
 					<p class="copy-right">
 						Copyright © <?php echo date('Y'); ?> Skearch, LLC All rights reserved<br>
