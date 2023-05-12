@@ -57,13 +57,37 @@ class Tips_crypto_model extends CI_Model
      *
      * @return mixed object|false
      */
-    public function get()
+    public function get($id = null)
     {
         $this->db->select('*');
         $this->db->from('skearch_tips');
 
-        $query = $this->db->get();
+        if (!is_null($id)) {
+            $this->db->where('id', $id);
+            $query = $this->db->get();
+            return $query->row();
+        }
 
+        $query = $this->db->get();
         return $query->result();
+    }
+
+    /**
+     * Update ad
+     *
+     * @param array $data array contains data for coin
+     *              $data[coin_name, coin_wallet_address]
+     * @return boolean
+     */
+    public function update($id, $data)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('skearch_tips', $data);
+
+        if ($this->db->affected_rows()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

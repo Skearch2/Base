@@ -363,8 +363,8 @@ class Fields extends MY_Controller
         if ($this->umbrellas->duplicate_check($string)) {
             $this->form_validation->set_message('duplicate_check', "{field} already exists in Umbrellas.");
             return false;
-        } 
-        
+        }
+
         if ($this->fields->duplicate_check($string)) {
             if (isset($field_id)) {
                 if (strcasecmp($this->fields->get($field_id)->title, $string) != 0) {
@@ -390,7 +390,8 @@ class Fields extends MY_Controller
     public function validate_keywords($string, $link_id = null)
     {
         if (empty($string)) {
-            return true;
+            $this->form_validation->set_message('validate_keywords', "%s require atleast one keyword.");
+            return false;
         }
 
         $keywords = explode(',', $string);

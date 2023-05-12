@@ -134,4 +134,47 @@ class Tips_crypto extends MY_Controller
             $this->load->view('admin_panel/pages/tips/view', $data);
         }
     }
+
+    /**
+     * Update brand
+     *
+     * @param int $id Wallet id
+     * @return void
+     */
+    public function update($id)
+    {
+        if (!$this->ion_auth_acl->has_permission('tips_system_update') && !$this->ion_auth->is_admin()) {
+            // set page title
+            $data['title'] = ucwords('access denied');
+            $this->load->view('admin_panel/errors/error_403', $data);
+        } else {
+            $this->form_validation->set_rules('coin_name', 'Coin Name', 'trim|required');
+            $this->form_validation->set_rules('wallet_address', 'Wallet Address', 'trim|required');
+
+            if ($this->form_validation->run() == false) {
+
+                $wallet = $this->Crypto_addresses->get($id);
+
+                $data['coin_name'] = $wallet->coin_name;
+                $data['wallet_address'] = $wallet->coin_wallet_address;
+
+                // set page title
+                $data['title'] = ucwords("Tip System | Update Wallet");
+
+                $this->load->view('admin_panel/pages/tips/update', $data);
+            } else {
+                $data['coin_name'] = $this->input->post('coin_name');
+                $data['coin_wallet_address'] = $this->input->post('wallet_address');
+
+                $update = $this->Crypto_addresses->update($id, $data);
+
+                if ($update) {
+                    $this->session->set_flashdata('update_success', 1);
+                } else {
+                    $this->session->set_flashdata('update_success', 0);
+                }
+                redirect("admin/tips");
+            }
+        }
+    }
 }
