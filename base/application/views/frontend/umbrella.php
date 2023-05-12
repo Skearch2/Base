@@ -59,11 +59,11 @@ $this->load->view('frontend/templates/header');
             <?php foreach ($results as $results) : ?>
               <?php if (!$results->is_result_umbrella) : ?>
                 <div class="col-sm-3 f-box">
-                  <a href="<?= base_url('browse/') . strtolower($results->umbrella) ?>/<?= strtolower($results->title) ?>" class="btn btn-link" role="button"><?= $results->title ?></a>
+                  <a href="<?= base_url('browse/') . strtolower($results->umbrella) ?>/<?= strtolower($results->title) ?>" class="btn btn-link" role="button"><?= $results->home_display ?></a>
                 </div>
               <?php else : ?>
                 <div class="col-sm-3 f-box umbrella">
-                  <a href="<?= base_url('browse/') . strtolower($results->title) ?>" class="btn btn-link" role="button"><?= $results->title ?></a>
+                  <a href="<?= base_url('browse/') . strtolower($results->title) ?>" class="btn btn-link" role="button"><?= $results->home_display ?></a>
                 </div>
               <?php endif ?>
             <?php endforeach ?>

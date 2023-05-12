@@ -412,6 +412,7 @@ $route['admin/tips']                            = 'admin_panel/tips_crypto';
 $route['admin/tips/get/addresses']              = 'admin_panel/tips_crypto/get';
 $route['admin/tips/create/address']              = 'admin_panel/tips_crypto/create';
 $route['admin/tips/delete/address/id/(:num)']   = 'admin_panel/tips_crypto/delete/$1';
+$route['admin/tips/update/address/id/(:num)']   = 'admin_panel/tips_crypto/update/$1';
 
 /* Giveaways */
 $route['admin/giveaways']                                        = 'admin_panel/giveaways';

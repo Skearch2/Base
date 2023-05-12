@@ -19,7 +19,7 @@ $this->load->view('frontend/templates/startbody');
                 <div class="box">
                     <h3>Updated Terms of Service / Privacy Policy</h3>
                 </div>
-                <div class="border-box browse-inner">
+                <div class="border-box browse-inner tos-pp">
                     In order to access MySkearch you need to accept our latest <b>terms of service</b> and <b>privacy policy</b> at the end of this page.
                 </div>
                 <div class="border-box browse-inner tos-pp">

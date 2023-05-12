@@ -187,7 +187,8 @@ $this->load->view('admin_panel/templates/js_global');
 					orderable: !1,
 					render: function(a, t, e, n) {
 						var coin_name = e['coin_name'].replace(/ /g, '%20');
-						return '<a onclick=deleteCoin("' + e['id'] + '","' + coin_name + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
+						return '<a href="<?= site_url() . "admin/tips/update/address/id/" ?>' + e['id'] + '" class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Edit"><i class="la la-edit"></i></a>' +
+							'<a onclick=deleteCoin("' + e['id'] + '","' + coin_name + '") class="m-portlet__nav-link btn m-btn m-btn--hover-brand m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"><i style="color:RED" class="la la-trash"></i></a>'
 					}
 				}]
 			})
