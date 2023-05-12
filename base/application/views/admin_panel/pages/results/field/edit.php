@@ -109,7 +109,7 @@ $this->load->view('admin_panel/templates/subheader');
 									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<label for="example-text-input" class="col-2 col-form-label">Keyword(s)</label>
+									<label for="example-text-input" class="col-2 col-form-label">Keyword(s)*</label>
 									<div class="col-7">
 										<input class="form-control m-input" type="text" name="keywords" data-role="tagsinput" value="<?= set_value('keywords', $keywords) ?>">
 										<span class="m-form__help">Press Enter after each keyword to continue adding more.</span>
@@ -200,6 +200,9 @@ $this->load->view('admin_panel/templates/js_global');
 						required: 1
 					},
 					parent_id: {
+						required: 1
+					},
+					keywords: {
 						required: 1
 					}
 				},

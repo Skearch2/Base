@@ -319,6 +319,14 @@ class Pages extends MY_Controller
       $link->priority = $index + 1;
     }
 
+    if ($order == 'asc') {
+      usort($links, fn ($a, $b) => strcasecmp($a->title, $b->title));
+    } else if ($order == 'desc') {
+      usort($links, fn ($a, $b) => strcasecmp($b->title, $a->title));
+    } else if ($order == 'random') {
+      shuffle($links);
+    }
+
     $this->output
       ->set_content_type('application/json')
       ->set_output(json_encode($links));

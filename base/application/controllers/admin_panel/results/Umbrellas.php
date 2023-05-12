@@ -341,7 +341,8 @@ class Umbrellas extends MY_Controller
     public function validate_keywords($string, $link_id = null)
     {
         if (empty($string)) {
-            return true;
+            $this->form_validation->set_message('validate_keywords', "%s require atleast one keyword.");
+            return false;
         }
 
         $keywords = explode(',', $string);
