@@ -42,7 +42,7 @@ $this->load->view('auth/templates/head');
 						<input id="is_brand_signup" name="is_brand_signup" type="hidden" value="<?= $is_brand_signup; ?>">
 						<div id="m-login__form m-form__user" style=<?= !$is_brand_signup ? 'display:block' : 'display:none' ?>>
 							<div class="form-group m-form__group">
-								<input class="form-control m-input" type="text" placeholder="Skearch ID or username" name="skearch_id" value="<?= set_value('skearch_id'); ?>">
+								<input class="form-control m-input" type="text" placeholder="Skearch ID / Username" name="skearch_id" value="<?= set_value('skearch_id'); ?>">
 							</div>
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="text" placeholder="Email" name="email" value="<?= set_value('email'); ?>">
