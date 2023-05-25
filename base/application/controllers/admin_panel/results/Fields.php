@@ -62,7 +62,7 @@ class Fields extends MY_Controller
             $this->form_validation->set_rules('description', 'Description', 'max_length[500]|trim');
             $this->form_validation->set_rules('description_short', 'Hover Over Info', 'required|max_length[140]|trim');
             $this->form_validation->set_rules('parent_id', 'Umbrella', 'required');
-            $this->form_validation->set_rules('home_display', 'Home Display', 'required|alpha_numeric_spaces|trim');
+            $this->form_validation->set_rules('home_display', 'Button Display Name', 'required|alpha_numeric_spaces|trim');
             $this->form_validation->set_rules('keywords', 'Keyword(s)', 'callback_validate_keywords');
             $this->form_validation->set_rules('featured', 'Featured', 'required|numeric');
             $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
@@ -289,7 +289,7 @@ class Fields extends MY_Controller
             $this->form_validation->set_rules('description', 'Description', 'max_length[500]|trim');
             $this->form_validation->set_rules('description_short', 'Hover Over Info', 'required|max_length[140]|trim');
             $this->form_validation->set_rules('parent_id', 'Umbrella', 'required');
-            $this->form_validation->set_rules('home_display', 'Home Display', 'required|alpha_numeric_spaces|trim');
+            $this->form_validation->set_rules('home_display', 'Button Display Name', 'required|alpha_numeric_spaces|trim');
             $this->form_validation->set_rules('keywords', 'Keyword(s)', 'trim|callback_validate_keywords[' . $id . ']');
             $this->form_validation->set_rules('featured', 'Featured', 'required|numeric');
             $this->form_validation->set_rules('enabled', 'Enabled', 'required|numeric');
