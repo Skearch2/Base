@@ -184,9 +184,6 @@ $this->load->view('admin_panel/templates/js_global');
 					},
 					home_display: {
 						required: 1
-					},
-					keywords: {
-						required: 1
 					}
 				},
 				invalidHandler: function(e, r) {
