@@ -192,6 +192,7 @@ $this->load->view('admin_panel/templates/js_global');
 	var FormControls = {
 		init: function() {
 			$("#m_form").validate({
+				ignore: "",
 				rules: {
 					title: {
 						required: 1
@@ -203,9 +204,6 @@ $this->load->view('admin_panel/templates/js_global');
 						required: 1
 					},
 					home_display: {
-						required: 1
-					},
-					keywords: {
 						required: 1
 					}
 				},
