@@ -129,13 +129,13 @@ class Category_model extends CI_Model
      */
     public function get_homepage_results()
     {
-        $this->db->select("skearch_homepage_fields.id, skearch_homepage_fields.result_id, skearch_homepage_fields.is_result_umbrella, skearch_categories.title, skearch_categories.home_display, null as umbrella", false);
+        $this->db->select("skearch_homepage_fields.id, skearch_homepage_fields.result_id, skearch_homepage_fields.is_result_umbrella, skearch_categories.title, skearch_categories.home_display, skearch_categories.description_short, null as umbrella", false);
         $this->db->from('skearch_homepage_fields');
         $this->db->join('skearch_categories', 'skearch_homepage_fields.result_id = skearch_categories.id', 'left');
         $this->db->where('skearch_homepage_fields.is_result_umbrella', 1);
         $query1 = $this->db->get_compiled_select();
 
-        $this->db->select("skearch_homepage_fields.id, skearch_homepage_fields.result_id, skearch_homepage_fields.is_result_umbrella, skearch_subcategories.title, skearch_subcategories.home_display, skearch_categories.title as umbrella", false);
+        $this->db->select("skearch_homepage_fields.id, skearch_homepage_fields.result_id, skearch_homepage_fields.is_result_umbrella, skearch_subcategories.title, skearch_subcategories.home_display, skearch_subcategories.description_short, skearch_categories.title as umbrella", false);
         $this->db->from('skearch_homepage_fields');
         $this->db->join('skearch_subcategories', 'skearch_homepage_fields.result_id = skearch_subcategories.id', 'left');
         $this->db->join('skearch_categories', 'skearch_subcategories.parent_id = skearch_categories.id', 'left');
@@ -143,6 +143,9 @@ class Category_model extends CI_Model
         $query2 = $this->db->get_compiled_select();
 
         $query = $this->db->query($query1 . " UNION " . $query2 . " ORDER BY id ASC");
+
+        // print_r($query->result());
+        // die();
 
         return $query->result();
     }
@@ -214,7 +217,12 @@ class Category_model extends CI_Model
         $this->db->where('skearch_categories.id = skearch_fields_suggestions.result_id');
         $umbrella_home_display = $this->db->get_compiled_select();
 
-        $this->db->select("id, result_id, is_result_umbrella, ($umbrella_title) as title, ($umbrella_home_display) as home_display, null as umbrella", false);
+        $this->db->select('description_short');
+        $this->db->from('skearch_categories');
+        $this->db->where('skearch_categories.id = skearch_fields_suggestions.result_id');
+        $umbrella_hover_over_info = $this->db->get_compiled_select();
+
+        $this->db->select("id, result_id, is_result_umbrella, ($umbrella_title) as title, ($umbrella_home_display) as home_display, ($umbrella_hover_over_info) as hover_over_info, null as umbrella", false);
         $this->db->from('skearch_fields_suggestions');
         $this->db->where('field_id', $field_id);
         $this->db->where('is_result_umbrella', 1);
@@ -230,13 +238,18 @@ class Category_model extends CI_Model
         $this->db->where('skearch_subcategories.id = skearch_fields_suggestions.result_id');
         $field_home_display = $this->db->get_compiled_select();
 
+        $this->db->select('description_short');
+        $this->db->from('skearch_subcategories');
+        $this->db->where('skearch_subcategories.id = skearch_fields_suggestions.result_id');
+        $field_hover_over_info = $this->db->get_compiled_select();
+
         $this->db->select('skearch_categories.title as umbrella');
         $this->db->from('skearch_subcategories');
         $this->db->join('skearch_categories', 'skearch_subcategories.parent_id = skearch_categories.id', 'left');
         $this->db->where('skearch_subcategories.id = skearch_fields_suggestions.result_id');
         $field_umbrella = $this->db->get_compiled_select();
 
-        $this->db->select("id, result_id, is_result_umbrella, ($field_title) as title, ($field_home_display) as home_display, ($field_umbrella) as umbrella");
+        $this->db->select("id, result_id, is_result_umbrella, ($field_title) as title, ($field_home_display) as home_display, ($field_hover_over_info) as hover_over_info, ($field_umbrella) as umbrella");
         $this->db->from('skearch_fields_suggestions');
         $this->db->where('field_id', $field_id);
         $this->db->where('is_result_umbrella', 0);
@@ -265,7 +278,12 @@ class Category_model extends CI_Model
         $this->db->where('skearch_categories.id = skearch_umbrella_suggestions.result_id');
         $umbrella_home_display = $this->db->get_compiled_select();
 
-        $this->db->select("id, result_id, is_result_umbrella, ($umbrella_title) as title, ($umbrella_home_display) as home_display, null as umbrella", false);
+        $this->db->select('description_short');
+        $this->db->from('skearch_categories');
+        $this->db->where('skearch_categories.id = skearch_umbrella_suggestions.result_id');
+        $umbrella_hover_over_info = $this->db->get_compiled_select();
+
+        $this->db->select("id, result_id, is_result_umbrella, ($umbrella_title) as title, ($umbrella_home_display) as home_display, ($umbrella_hover_over_info) as hover_over_info, null as umbrella", false);
         $this->db->from('skearch_umbrella_suggestions');
         $this->db->where('umbrella_id', $umbrella_id);
         $this->db->where('is_result_umbrella', 1);
@@ -281,13 +299,18 @@ class Category_model extends CI_Model
         $this->db->where('skearch_subcategories.id = skearch_umbrella_suggestions.result_id');
         $field_home_display = $this->db->get_compiled_select();
 
+        $this->db->select('description_short');
+        $this->db->from('skearch_subcategories');
+        $this->db->where('skearch_subcategories.id = skearch_umbrella_suggestions.result_id');
+        $field_hover_over_info = $this->db->get_compiled_select();
+
         $this->db->select('skearch_categories.title as umbrella');
         $this->db->from('skearch_subcategories');
         $this->db->join('skearch_categories', 'skearch_subcategories.parent_id = skearch_categories.id', 'left');
         $this->db->where('skearch_subcategories.id = skearch_umbrella_suggestions.result_id');
         $field_umbrella = $this->db->get_compiled_select();
 
-        $this->db->select("id, result_id, is_result_umbrella, ($field_title) as title, ($field_home_display) as home_display, ($field_umbrella) as umbrella");
+        $this->db->select("id, result_id, is_result_umbrella, ($field_title) as title, ($field_home_display) as home_display, ($field_hover_over_info) as hover_over_info, ($field_umbrella) as umbrella");
         $this->db->from('skearch_umbrella_suggestions');
         $this->db->where('umbrella_id', $umbrella_id);
         $this->db->where('is_result_umbrella', 0);
