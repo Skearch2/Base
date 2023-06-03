@@ -52,9 +52,9 @@ $this->load->view('frontend/templates/nav');
                 <button style="visibility:hidden" class="btn btn-link"></button>
             <?php else : ?>
                 <?php if ($result->is_result_umbrella != 1) : ?>
-                    <a href="browse/<?= strtolower($result->umbrella) ?>/<?= strtolower($result->title) ?>" class="btn btn-link" role="button"><?= empty($result->home_display) ? $result->title : $result->home_display ?></a>
+                    <a href="browse/<?= strtolower($result->umbrella) ?>/<?= strtolower($result->title) ?>" class="btn btn-link" role="button" title="<?= $result->description_short ?>"><?= empty($result->home_display) ? $result->title : $result->home_display ?></a>
                 <?php else : ?>
-                    <a href="browse/<?= strtolower($result->title) ?>" class="btn btn-link" role="button"><?= empty($result->home_display) ? $result->title : $result->home_display ?></a>
+                    <a href="browse/<?= strtolower($result->title) ?>" class="btn btn-link" role="button" title="<?= $result->description_short ?>"><?= empty($result->home_display) ? $result->title : $result->home_display ?></a>
                 <?php endif ?>
             <?php endif ?>
         <?php endforeach ?>
