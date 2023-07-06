@@ -141,6 +141,17 @@
                 method: "GET"
             })
         }
+
+        $(document).ready(function() {
+            <?php if (!$this->ion_auth->logged_in()) : ?>
+                window.onload = function() {
+                    if (!window.location.hash) {
+                        window.location = window.location + '#loaded';
+                        changeTheme()
+                    }
+                }
+            <?php endif ?>
+        });
     </script>
 
 </head>

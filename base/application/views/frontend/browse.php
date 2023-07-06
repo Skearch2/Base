@@ -63,6 +63,7 @@ $this->load->view('frontend/templates/header');
                 </div>
                 <div class="middle-inner browse-inner">
                     <div class="row category_list_home accessorize-list" id="GFG_UP">
+                        <!-- <?php print_r($umbrellas) ?> -->
                         <?php foreach ($umbrellas as $umbrella => $fields) : ?>
                             <div class="col-sm-3 f-box">
                                 <a href="<?= BASE_URL ?>browse/<?= $umbrella ?>" title="<?= $umbrella ?>"><?= $umbrella ?><i class="fa fa-angle-down"></i>
@@ -70,7 +71,7 @@ $this->load->view('frontend/templates/header');
                                 <div class="acz-sublist">
                                     <ul>
                                         <?php foreach ($fields as $field) : ?>
-                                            <li> <a href="<?= BASE_URL ?>browse/<?= $umbrella ?>/<?= $field->title ?>" title="<?= $field->title ?>"><?= $field->title ?></a>
+                                            <li> <a href="<?= BASE_URL ?>browse/<?= $umbrella ?>/<?= $field->title ?>" title="<?= $field->description_short ?>"><?= $field->title ?></a>
                                             </li>
                                         <?php endforeach ?>
                                     </ul>

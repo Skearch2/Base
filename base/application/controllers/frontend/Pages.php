@@ -192,6 +192,8 @@ class Pages extends MY_Controller
       $data['field_id'] = $field_id;
       $data['suggest_fields'] = $this->Category_model->get_field_suggestions($data['field_id']);
       $data['results'] = $this->Category_model->get_field_suggestions($field_id);
+      $umbrella_id =  $this->Category_model->get_category_id($umbrella_name)->id;
+      $data['umbrella'] = $this->Category_model->get_category_title($umbrella_id);
       $data['umbrella_name'] = ucwords(urldecode($umbrella_name));
       $data['field_name'] = urldecode($field_name);
       $data['banner_a_ads'] = $banner_a_ads;
@@ -258,16 +260,27 @@ class Pages extends MY_Controller
   {
     $settings = $this->session->userdata('settings');
 
-    if ($settings->theme === 'light') {
-      $settings->theme = 'dark';
-      $this->session->set_userdata('settings', $settings);
-      if ($this->ion_auth->logged_in()) {
-        $this->User->update_settings($this->user_id, array('theme' => 'dark'));
+    if (!$this->ion_auth->logged_in()) {
+      $currentTime = new DateTime();
+      $startTime = new DateTime('20:00');
+      $endTime = (new DateTime('06:00'))->modify('+1 day');
+
+      // turn theme dark at night time
+      if ($currentTime >= $startTime && $currentTime <= $endTime) {
+        $settings->theme = 'dark';
+      } else {
+        $settings->theme = 'light';
       }
-    } else if ($settings->theme === 'dark') {
-      $settings->theme = 'light';
+
       $this->session->set_userdata('settings', $settings);
-      if ($this->ion_auth->logged_in()) {
+    } else {
+      if ($settings->theme === 'light') {
+        $settings->theme = 'dark';
+        $this->session->set_userdata('settings', $settings);
+        $this->User->update_settings($this->user_id, array('theme' => 'dark'));
+      } else if ($settings->theme === 'dark') {
+        $settings->theme = 'light';
+        $this->session->set_userdata('settings', $settings);
         $this->User->update_settings($this->user_id, array('theme' => 'light'));
       }
     }
