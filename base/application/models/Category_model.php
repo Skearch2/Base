@@ -159,7 +159,7 @@ class Category_model extends CI_Model
     public function get_category_title($umbrella_id)
     {
 
-        $this->db->select('title');
+        $this->db->select('*');
         $this->db->from('skearch_categories');
         $this->db->where('id', $umbrella_id);
 
