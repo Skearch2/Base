@@ -34,6 +34,8 @@ $this->load->view('auth/templates/head');
 						<div class="form-group" id="btn_signup">
 							<button id="btn_signup_brand" type="button" onclick="showFormBrand()" class="btn m-btn--square <?= $is_brand_signup ? 'btn-success m-btn--wide active' : 'btn-secondary m-btn--wide' ?>">Brand</button>
 							&nbsp;
+							<button id="btn_signup_brandlink" type="button" onclick="" class="btn m-btn--square btn-secondary m-btn--wide disabled" title="Feature coming soon!">Get BrandLink Now</button>
+							&nbsp;
 							<button id="btn_signup_user" type="button" onclick="showFormUser()" class="btn m-btn--square <?= !$is_brand_signup ? 'btn-success m-btn--wide active' : 'btn-secondary m-btn--wide' ?>">User</button>
 						</div>
 
