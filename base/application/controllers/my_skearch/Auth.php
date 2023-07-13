@@ -571,7 +571,7 @@ class Auth extends MY_Controller
     }
 
     /**
-     * Allow user or brand to signup
+     * Allow user or brand or brandlink user to signup
      */
     public function signup()
     {
@@ -579,24 +579,31 @@ class Auth extends MY_Controller
             redirect('myskearch/dashboard', 'refresh');
         }
 
-        // check if it is a brand signup
-        $is_brand_signup = (null !== $this->input->post("is_brand_signup")) ? $this->input->post("is_brand_signup") : 1;
+        $default_signup_type = "user";
+
+        // check sign up type
+        $signup_type = (null !== $this->input->post("signup_type")) ? $this->input->post("signup_type") : $default_signup_type;
 
         // check if the user is signing up for the premium user
         $is_premium_user_signup = (null !== $this->input->post("is_premium_user_signup")) ? $this->input->post("is_premium_user_signup") : 0;
 
-        if (!empty($is_brand_signup) && $is_brand_signup == 1) {
+        if ($signup_type == 'brand') {
             $this->form_validation->set_rules('name', 'Name', 'trim|required');
             $this->form_validation->set_rules('brandname', 'Brand Name', 'trim|required|is_unique[skearch_brand_leads.brandname]');
             $this->form_validation->set_rules('email_b', 'Email', 'trim|required|valid_email');
             $this->form_validation->set_rules('phone', 'Phone', 'trim|callback_validate_phone');
-        } else {
+        } else if ($signup_type == 'user') {
             $this->form_validation->set_rules('skearch_id', 'Skearch ID', 'trim|required|callback_validate_username|is_unique[skearch_users.username]|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']', array('is_unique' => 'The Skearch ID or username already exists.'));
             $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
-            // $this->form_validation->set_rules('gender', 'Gender', 'required');
-            // $this->form_validation->set_rules('age_group', 'Age group', 'required');
             $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
             $this->form_validation->set_rules('password2', 'Confirm Password', 'required|matches[password]');
+        } else if ($signup_type == 'brandlink_user') {
+            $this->form_validation->set_rules('name_blu', 'Name', 'trim|required');
+            $this->form_validation->set_rules('phone_blu', 'Phone', 'trim|required|callback_validate_phone');
+            $this->form_validation->set_rules('email_blu', 'Email', 'trim|required|valid_email');
+            $this->form_validation->set_rules('skearch_id_blu', 'Skearch ID', 'trim|required|callback_validate_username|is_unique[skearch_users.username]|min_length[' . $this->config->item('min_username_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_username_length', 'ion_auth') . ']', array('is_unique' => 'The Skearch ID or username already exists.'));
+            $this->form_validation->set_rules('password_blu', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
+            $this->form_validation->set_rules('password2_blu', 'Confirm Password', 'required|matches[password_blu]');
         }
         $this->form_validation->set_rules(
             'tos_pp',
@@ -608,7 +615,7 @@ class Auth extends MY_Controller
 
         if ($this->form_validation->run() === false) {
 
-            $data['is_brand_signup'] = $is_brand_signup;
+            $data['signup_type'] = $signup_type;
             $data['states'] = $this->Util->get_state_list();
             $data['countries'] = $this->Util->get_country_list();
 
@@ -628,7 +635,7 @@ class Auth extends MY_Controller
             // if captcha is valid
             if ($row->count > 0) {
                 // if brand sign up
-                if ($is_brand_signup) {
+                if ($signup_type == 'brand') {
 
                     $name      = $this->input->post('name');
                     $brandname = $this->input->post('brandname');
@@ -703,30 +710,45 @@ class Auth extends MY_Controller
                         $this->session->set_flashdata('error', 'Unable to signup for the brand, please try again!');
                         redirect('myskearch/auth/signup');
                     }
-                }
-                // User sign up
-                else {
+                } else if ($signup_type == 'brandlink_user') {
+                    // user data
+                    $username = $this->input->post('skearch_id_blu');
+                    $password = $this->input->post('password_blu');
+                    $email = $this->input->post('email_blu');
+
+                    // split into first name and last name
+                    $name = explode(' ', $this->input->post('name_blu'), 2);
+                    $firstname = $name[0];
+                    $lastname = $name[1];
+
+                    $additional_data = array(
+                        'firstname'  => $firstname,
+                        'lastname' => $lastname,
+                        'phone' => $this->input->post('phone_blu')
+                    );
+
+                    $group = $this->config->item('brandlink_user', 'ion_auth');
+                } else if ($signup_type == 'user') {
                     // user data
                     $username = $this->input->post('skearch_id');
                     $password = $this->input->post('password');
                     $email = $this->input->post('email');
-                    $additional_data = array(
-                        // 'gender'    => $this->input->post('gender'),
-                        // 'age_group' => $this->input->post('age_group')
-                    );
+
+                    $additional_data = array();
+
                     $group = ($is_premium_user_signup) ? $this->config->item('premium', 'ion_auth') : $this->config->item('regular', 'ion_auth');
+                }
 
-                    // create user
-                    $user = $this->User->create($username, $password, $email, $additional_data, array($group));
+                // create user
+                $user = $this->User->create($username, $password, $email, $additional_data, array($group));
 
-                    if ($user) {
-                        $this->session->set_flashdata('signup_success', true);
-                        $this->session->set_flashdata('success', 'An email has been sent to you for your new account activation.');
-                        redirect('myskearch/auth/signup');
-                    } else {
-                        $this->session->set_flashdata('error', $this->ion_auth->errors());
-                        redirect('myskearch/auth/signup');
-                    }
+                if ($user) {
+                    $this->session->set_flashdata('signup_success', true);
+                    $this->session->set_flashdata('success', 'An email has been sent to you for your new account activation.');
+                    redirect('myskearch/auth/signup');
+                } else {
+                    $this->session->set_flashdata('error', $this->ion_auth->errors());
+                    redirect('myskearch/auth/signup');
                 }
             } else {
                 $this->session->set_flashdata('error', "Unable to complete security validation. Please try again!");

@@ -90,6 +90,7 @@ $route['search'] = 'frontend/search';
 /* 
     Theme 
 */
+$route['theme/detect'] = 'frontend/pages/detect_theme';
 $route['theme/change'] = 'frontend/pages/change_theme';
 
 
