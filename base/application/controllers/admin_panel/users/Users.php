@@ -304,8 +304,10 @@ class Users extends MY_Controller
                 $group = "Brand Users";
             } elseif ($id == 4) {
                 $group = "Premium Users";
-            } else {
+            } elseif ($id == 5) {
                 $group = "Regular Users";
+            } elseif ($id == 6) {
+                $group = "BrandLink Users";
             }
 
             $data['group'] = $id;
@@ -320,6 +322,8 @@ class Users extends MY_Controller
                 $this->load->view('admin_panel/pages/users/view_premium', $data);
             } elseif ($id == 5) {
                 $this->load->view('admin_panel/pages/users/view_regular', $data);
+            } elseif ($id == 6) {
+                $this->load->view('admin_panel/pages/users/view_brandlink', $data);
             } else {
                 show_404();
             }

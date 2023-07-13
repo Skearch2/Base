@@ -32,17 +32,17 @@ $this->load->view('auth/templates/head');
 						</div>
 						<?= form_open('', array('id' => 'm_form', 'class' => 'm-login__form m-form m-form--fit')) ?>
 						<div class="form-group" id="btn_signup">
-							<button id="btn_signup_brand" type="button" onclick="showFormBrand()" class="btn m-btn--square <?= $is_brand_signup ? 'btn-success m-btn--wide active' : 'btn-secondary m-btn--wide' ?>">Brand</button>
+							<button id="btn_signup_brand" type="button" onclick="showFormBrand()" class="btn m-btn--square <?= $signup_type == 'brand' ? 'btn-success m-btn--wide active' : 'btn-secondary m-btn--wide' ?>">Brand</button>
 							&nbsp;
-							<button id="btn_signup_brandlink" type="button" onclick="" class="btn m-btn--square btn-secondary m-btn--wide disabled" title="Feature coming soon!">Get BrandLink Now</button>
+							<button id="btn_signup_brandlink" type="button" onclick="showFormBrandlinkUser()" class="btn m-btn--square <?= $signup_type == 'brandlink_user' ? 'btn-success m-btn--wide active' : 'btn-secondary m-btn--wide' ?>">Get BrandLink Now</button>
 							&nbsp;
-							<button id="btn_signup_user" type="button" onclick="showFormUser()" class="btn m-btn--square <?= !$is_brand_signup ? 'btn-success m-btn--wide active' : 'btn-secondary m-btn--wide' ?>">User</button>
+							<button id="btn_signup_user" type="button" onclick="showFormUser()" class="btn m-btn--square <?= $signup_type == 'user' ? 'btn-success m-btn--wide active' : 'btn-secondary m-btn--wide' ?>">User</button>
 						</div>
 
 						<?php $this->load->view('auth/templates/notifications'); ?>
 
-						<input id="is_brand_signup" name="is_brand_signup" type="hidden" value="<?= $is_brand_signup; ?>">
-						<div id="m-login__form m-form__user" style=<?= !$is_brand_signup ? 'display:block' : 'display:none' ?>>
+						<input id="signup_type" name="signup_type" type="hidden" value="<?= $signup_type; ?>">
+						<div id="m-login__form m-form__user" style=<?= $signup_type == 'user' ? 'display:block' : 'display:none' ?>>
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="text" placeholder="Skearch ID / Username" name="skearch_id" value="<?= set_value('skearch_id'); ?>">
 							</div>
@@ -71,7 +71,27 @@ $this->load->view('auth/templates/head');
 								<input class="form-control m-input" type="password" placeholder="Confirm Password" name="password2">
 							</div>
 						</div>
-						<div id="m-login__form m-form__brand" style=<?= $is_brand_signup ? 'display:block' : 'display:none' ?>>
+						<div id="m-login__form m-form__brandlink" style=<?= $signup_type == 'brandlink_user' ? 'display:block' : 'display:none' ?>>
+							<div class="form-group m-form__group">
+								<input class="form-control m-input" type="text" placeholder="Name" name="name_blu" value="<?= set_value('name_blu'); ?>">
+							</div>
+							<div class="form-group m-form__group">
+								<input class="form-control m-input" type="text" placeholder="Phone" name="phone_blu" id="phone" value="<?= set_value('phone_blu'); ?>">
+							</div>
+							<div class="form-group m-form__group">
+								<input class="form-control m-input" type="text" placeholder="Email" name="email_blu" value="<?= set_value('email_blu'); ?>">
+							</div>
+							<div class="form-group m-form__group">
+								<input class="form-control m-input" type="text" placeholder="Skearch ID / Username" name="skearch_id_blu" value="<?= set_value('skearch_id_blu'); ?>">
+							</div>
+							<div class="form-group m-form__group">
+								<input class="form-control m-input" type="password" placeholder="Password" name="password_blu" id="password">
+							</div>
+							<div class="form-group m-form__group">
+								<input class="form-control m-input" type="password" placeholder="Confirm Password" name="password2_blu">
+							</div>
+						</div>
+						<div id="m-login__form m-form__brand" style=<?= $signup_type == 'brand' ? 'display:block' : 'display:none' ?>>
 							<div class="form-group m-form__group">
 								<input class="form-control m-input" type="text" placeholder="Name" name="name" value="<?= set_value('name'); ?>">
 							</div>
@@ -93,7 +113,7 @@ $this->load->view('auth/templates/head');
 								</label>
 							</div>
 						</div>
-						<div id="m-login__form m-form__user checkbox_premium" style=<?= !$is_brand_signup ? 'display:block' : 'display:none' ?>>
+						<div id="m-login__form m-form__user checkbox_premium" style=<?= $signup_type == 'user' ? 'display:block' : 'display:none' ?>>
 							<div class="col m--align-left" style="padding-top: 20px;">
 								<label class="m-checkbox m-checkbox--secondary">
 									<input type="checkbox" name="is_premium_user_signup" <?= ($this->input->post('is_premium_user_signup')) ? "checked" : ""; ?>>Upgrade to <b class="m-link m-link--primary">Premium</b>
@@ -139,7 +159,7 @@ $this->load->view('auth/templates/head');
 	<!--begin::Page Scripts -->
 	<script src="<?= site_url(ASSETS) ?>/auth/vendors/custom/slidercaptcha/slidercaptcha.js"></script>
 	<script>
-		// <?php if ($is_brand_signup) : ?>
+		// <?php if ($signup_type == 'brand') : ?>
 		// 	var FormControls = {
 		// 		init: function() {
 		// 			$("#m_form").validate({
@@ -207,21 +227,56 @@ $this->load->view('auth/templates/head');
 		// 	};
 		// <?php endif ?>
 
+		var FormControls = {
+			init: function() {
+				$("#m_form").validate({
+					submitHandler: function(e) {
+						$("#phone").unmask();
+						form.submit();
+					},
+				});
+			}
+		};
+
 		// Show sign up form for brand user
 		function showFormBrand() {
 			var formUser = document.getElementById("m-login__form m-form__user");
 			var formBrand = document.getElementById("m-login__form m-form__brand");
+			var formBrandlink = document.getElementById("m-login__form m-form__brandlink");
 			var checkboxPremium = document.getElementById("m-login__form m-form__user checkbox_premium");
 
 			formUser.style.display = "none";
 			checkboxPremium.style.display = "none";
 			formBrand.style.display = "block";
+			formBrandlink.style.display = "none";
 
 			$('form').trigger("reset");
 
-			$("#is_brand_signup").val(1);
+			$("#signup_type").val('brand');
 			$('#btn_signup_user').removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide');
 			$("#btn_signup_brand").removeClass().addClass('btn m-btn--square btn-success m-btn--wide active');
+			$("#btn_signup_brandlink").removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide');
+			// $("#m_login_payment").css('visibility', 'visible');
+			$('.alert').hide();
+		}
+
+		function showFormBrandlinkUser() {
+			var formUser = document.getElementById("m-login__form m-form__user");
+			var formBrand = document.getElementById("m-login__form m-form__brand");
+			var formBrandlink = document.getElementById("m-login__form m-form__brandlink");
+			var checkboxPremium = document.getElementById("m-login__form m-form__user checkbox_premium");
+
+			formUser.style.display = "none";
+			formBrand.style.display = "none";
+			checkboxPremium.style.display = "none";
+			formBrandlink.style.display = "block";
+
+			$('form').trigger("reset");
+
+			$("#signup_type").val('brandlink_user');
+			$('#btn_signup_user').removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide');
+			$("#btn_signup_brand").removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide');
+			$("#btn_signup_brandlink").removeClass().addClass('btn m-btn--square btn-success m-btn--wide active');
 			// $("#m_login_payment").css('visibility', 'visible');
 			$('.alert').hide();
 		}
@@ -230,23 +285,25 @@ $this->load->view('auth/templates/head');
 		function showFormUser() {
 			var formUser = document.getElementById("m-login__form m-form__user");
 			var formBrand = document.getElementById("m-login__form m-form__brand");
+			var formBrandlink = document.getElementById("m-login__form m-form__brandlink");
 			var checkboxPremium = document.getElementById("m-login__form m-form__user checkbox_premium");
 
 			formUser.style.display = "block";
 			checkboxPremium.style.display = "block";
 			formBrand.style.display = "none";
+			formBrandlink.style.display = "none";
 
 			$('form').trigger("reset");
 
-			$("#is_brand_signup").val(0);
+			$("#signup_type").val('user');
 			$('#btn_signup_user').removeClass().addClass('btn m-btn--square btn-success m-btn--wide active');
 			$("#btn_signup_brand").removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide');
+			$("#btn_signup_brandlink").removeClass().addClass('btn m-btn--square btn-secondary m-btn--wide');
 			// $("#m_login_payment").css('visibility', 'hidden');
 			$('.alert').hide();
 		}
 
 		$(document).ready(function() {
-			// FormControls.init();
 
 			// Mask phone field to US number format
 			$("#phone").inputmask("mask", {

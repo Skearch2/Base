@@ -239,3 +239,4 @@ $config['editor']  = 2;
 $config['brand']   = 3;
 $config['premium'] = 4;
 $config['regular'] = 5;
+$config['brandlink_user'] = 6;

@@ -43,10 +43,21 @@ class Pages extends MY_Controller
     $this->load->model('frontend/ads_model', 'Ads');
     $this->load->model('admin_panel/Tips_crypto_model', 'Tips_crypto_wallets');
     $this->load->model('admin_panel/Tos_pp_model', 'TOS');
+    $this->load->model('my_skearch/User_model', 'User');
 
     // set default skearch theme
     if (empty($this->session->userdata('settings'))) {
-      $settings = (object) array('theme' => 'light');
+      $settings = (object) array('theme' => 'auto', 'theme_css' => 'light');
+      $this->session->set_userdata('settings', $settings);
+    } else {
+      $settings = $this->session->userdata('settings');
+      if ($settings->theme === 'auto') {
+        $settings->theme_css = 'light';
+      } else if ($settings->theme === 'light') {
+        $settings->theme_css = 'light';
+      } else if ($settings->theme === 'dark') {
+        $settings->theme_css = 'dark';
+      }
       $this->session->set_userdata('settings', $settings);
     }
   }
@@ -252,6 +263,35 @@ class Pages extends MY_Controller
     }
   }
 
+  /**
+   * Detect theme
+   */
+  public function detect_theme()
+  {
+    $settings = $this->session->userdata('settings');
+
+    if ($settings->theme === 'auto') {
+
+      $ip = $_SERVER['REMOTE_ADDR'];
+      $ipInfo = file_get_contents('http://ip-api.com/json/' . $ip);
+      $ipInfo = json_decode($ipInfo);
+      $timezone = 'America/Chicago';
+
+      $currentTime = new DateTime("now", new DateTimeZone($timezone));
+      $startTime = new DateTime('20:00', new DateTimeZone($timezone));
+      $endTime = (new DateTime('06:00', new DateTimeZone($timezone)))->modify('+1 day');
+
+      // turn theme dark at night time
+      if ($currentTime >= $startTime && $currentTime <= $endTime) {
+        $settings->theme_css = 'dark';
+      } else {
+        $settings->theme_css = 'light';
+      }
+
+      $this->session->set_userdata('settings', $settings);
+    }
+  }
+
 
   /**
    * Change theme
@@ -260,28 +300,53 @@ class Pages extends MY_Controller
   {
     $settings = $this->session->userdata('settings');
 
-    if (!$this->ion_auth->logged_in()) {
-      $currentTime = new DateTime();
-      $startTime = new DateTime('20:00');
-      $endTime = (new DateTime('06:00'))->modify('+1 day');
+    if ($settings->theme === 'auto') {
+      $settings->theme = 'light';
+    } else if ($settings->theme === 'light') {
+      $settings->theme = 'dark';
+    } else if ($settings->theme === 'dark') {
+      $settings->theme = 'auto';
+    }
+    $this->session->set_userdata('settings', $settings);
+
+    if ($settings->theme === 'auto') {
+
+      $ip = $_SERVER['REMOTE_ADDR'];
+      $ipInfo = file_get_contents('http://ip-api.com/json/' . $ip);
+      $ipInfo = json_decode($ipInfo);
+      $timezone = 'America/Chicago';
+
+      $currentTime = new DateTime("now", new DateTimeZone($timezone));
+      $startTime = new DateTime('20:00', new DateTimeZone($timezone));
+      $endTime = (new DateTime('06:00', new DateTimeZone($timezone)))->modify('+1 day');
 
       // turn theme dark at night time
       if ($currentTime >= $startTime && $currentTime <= $endTime) {
-        $settings->theme = 'dark';
+        $settings->theme_css = 'dark';
       } else {
-        $settings->theme = 'light';
+        $settings->theme_css = 'light';
       }
 
       $this->session->set_userdata('settings', $settings);
-    } else {
-      if ($settings->theme === 'light') {
-        $settings->theme = 'dark';
-        $this->session->set_userdata('settings', $settings);
-        $this->User->update_settings($this->user_id, array('theme' => 'dark'));
-      } else if ($settings->theme === 'dark') {
-        $settings->theme = 'light';
-        $this->session->set_userdata('settings', $settings);
+
+      if ($this->ion_auth->logged_in()) {
+        $this->User->update_settings($this->user_id, array('theme' => 'auto'));
+      }
+    } else if ($settings->theme === 'light') {
+
+      $settings->theme_css = 'light';
+      $this->session->set_userdata('settings', $settings);
+
+      if ($this->ion_auth->logged_in()) {
         $this->User->update_settings($this->user_id, array('theme' => 'light'));
+      }
+    } else if ($settings->theme === 'dark') {
+
+      $settings->theme_css = 'dark';
+      $this->session->set_userdata('settings', $settings);
+
+      if ($this->ion_auth->logged_in()) {
+        $this->User->update_settings($this->user_id, array('theme' => 'dark'));
       }
     }
   }
