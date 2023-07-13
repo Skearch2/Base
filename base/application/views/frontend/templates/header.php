@@ -18,7 +18,11 @@
 			<div class="col-sm-2 col field-btn">
 				<a class="btn-cat" href="<?= site_url('browse') ?>"></a>
 				<a class="theme-change" onclick="changeTheme()" title="Change theme">
-					<div class="theme-change icon"></div>
+					<?php if ($this->session->userdata('settings')->theme == 'auto') : ?>
+						<div class="fa fa-font" style="cursor:pointer"></div>
+					<?php else : ?>
+						<div class="theme-change icon"></div>
+					<?php endif ?>
 				</a>
 			</div>
 			<div class="col-sm-12 login-bar" style="padding: 0;">
@@ -32,7 +36,6 @@
 					<a href="<?= site_url() ?>myskearch/auth/login" class="btn btn-danger" role="button">Sign in</a>
 					<!--span>Not a Member?</span-->
 					<a href="<?= site_url() ?>myskearch/auth/signup" class="btn btn-danger" role="button">Get Started</a>
-
 				<?php endif ?>
 			</div>
 		</div>

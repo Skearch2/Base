@@ -38,7 +38,7 @@
     *       Toastr
 	-->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href='<?= base_url(ASSETS) ?>/frontend/css/<?= $this->session->userdata('settings')->theme ?>.css' rel="stylesheet">
+    <link href='<?= base_url(ASSETS) ?>/frontend/css/<?= $this->session->userdata('settings')->theme_css ?>.css' rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
@@ -60,6 +60,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
+
     <!--
 	* 	Link to:
 	* 		** Icons **
@@ -68,6 +69,7 @@
 	-->
     <link rel='icon' href='<?= base_url(ASSETS); ?>/frontend/images/favicon.png' type='image/png' />
     <link rel='shortcut icon' href='<?= base_url(ASSETS); ?>/frontend/images/favicon.png' type='image/png' />
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i&display=swap" rel="stylesheet">
@@ -115,7 +117,22 @@
                     location.reload(true);
                 },
                 error: function(xhr, status, error) {
-                    alert("Unable to change the theme.");
+                    console.log("Unable to change the theme.");
+                }
+
+            });
+        }
+
+        // detect front end theme
+        function detectTheme() {
+            $.ajax({
+                url: '<?= base_url('theme/detect'); ?>',
+                type: 'GET',
+                success: function(data, status) {
+                    location.reload(true);
+                },
+                error: function(xhr, status, error) {
+                    console.log("Unable to change the theme.");
                 }
 
             });
@@ -143,14 +160,12 @@
         }
 
         $(document).ready(function() {
-            <?php if (!$this->ion_auth->logged_in()) : ?>
-                window.onload = function() {
-                    if (!window.location.hash) {
-                        window.location = window.location + '#loaded';
-                        changeTheme()
-                    }
+            window.onload = function() {
+                if (!window.location.hash) {
+                    window.location = window.location + '#loaded';
+                    detectTheme()
                 }
-            <?php endif ?>
+            }
         });
     </script>
 
