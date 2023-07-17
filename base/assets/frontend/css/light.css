@@ -45,12 +45,21 @@ ul {
 }
 
 .login-bar .theme-change {
-	margin-top: 3px;
+	margin-top: 2px;
 	margin-left: 13px;
 }
 
 .theme-change .theme-change.icon {
-	background-image: url(../images/moon.png);
+	background-image: url(../images/sun.png);
+	background-repeat: no-repeat;
+	background-size: 100%;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+}
+
+.theme-change .theme-change.icon.auto {
+	background-image: url(../images/a-dark.png);
 	background-repeat: no-repeat;
 	background-size: 100%;
 	width: 30px;
