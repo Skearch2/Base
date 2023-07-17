@@ -16,7 +16,7 @@
                 <?php endif ?>
                 <a class="theme-change" onclick="changeTheme()" title="Change theme">
                     <?php if ($this->session->userdata('settings')->theme == 'auto') : ?>
-                        <div class="fa fa-font" style="cursor:pointer"></div>
+                        <div class="theme-change icon auto"></div>
                     <?php else : ?>
                         <div class="theme-change icon"></div>
                     <?php endif ?>

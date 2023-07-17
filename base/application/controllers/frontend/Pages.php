@@ -45,21 +45,39 @@ class Pages extends MY_Controller
     $this->load->model('admin_panel/Tos_pp_model', 'TOS');
     $this->load->model('my_skearch/User_model', 'User');
 
-    // set default skearch theme
-    if (empty($this->session->userdata('settings'))) {
-      $settings = (object) array('theme' => 'auto', 'theme_css' => 'light');
-      $this->session->set_userdata('settings', $settings);
-    } else {
-      $settings = $this->session->userdata('settings');
-      if ($settings->theme === 'auto') {
-        $settings->theme_css = 'light';
-      } else if ($settings->theme === 'light') {
-        $settings->theme_css = 'light';
-      } else if ($settings->theme === 'dark') {
-        $settings->theme_css = 'dark';
-      }
+    // set theme to auto for non users
+    if (!$this->session->userdata('settings') or !$this->session->userdata('settings')->theme) {
+      $settings = (object) array('theme' => 'auto');
       $this->session->set_userdata('settings', $settings);
     }
+
+    $settings = $this->session->userdata('settings');
+
+    if ($settings->theme === 'light') {
+      $settings->theme_css = 'light';
+    } else if ($settings->theme === 'dark') {
+      $settings->theme_css = 'dark';
+    } else {
+      // change theme to light or dark based on time
+
+      $ip = $_SERVER['REMOTE_ADDR'];
+      $ipInfo = file_get_contents('http://ip-api.com/json/' . $ip);
+      $ipInfo = json_decode($ipInfo);
+
+      $timezone = ($ipInfo->status == 'success' ? $ipInfo->timezone : 'America/Chicago');
+
+      $currentTime = new DateTime("now", new DateTimeZone($timezone));
+      $startTime = new DateTime('20:00', new DateTimeZone($timezone));
+      $endTime = (new DateTime('06:00', new DateTimeZone($timezone)))->modify('+1 day');
+
+      if ($currentTime >= $startTime && $currentTime <= $endTime) {
+        $settings->theme_css = 'dark';
+      } else {
+        $settings->theme_css = 'light';
+      }
+    }
+
+    $this->session->set_userdata('settings', $settings);
   }
 
   /**
@@ -76,6 +94,7 @@ class Pages extends MY_Controller
 
     // set page title
     $data['title'] = ucwords('Skearch Home');
+
     $this->load->view('frontend/home', $data);
   }
 
@@ -262,36 +281,6 @@ class Pages extends MY_Controller
       $this->load->view('frontend/tos_pp', $data);
     }
   }
-
-  /**
-   * Detect theme
-   */
-  public function detect_theme()
-  {
-    $settings = $this->session->userdata('settings');
-
-    if ($settings->theme === 'auto') {
-
-      $ip = $_SERVER['REMOTE_ADDR'];
-      $ipInfo = file_get_contents('http://ip-api.com/json/' . $ip);
-      $ipInfo = json_decode($ipInfo);
-      $timezone = 'America/Chicago';
-
-      $currentTime = new DateTime("now", new DateTimeZone($timezone));
-      $startTime = new DateTime('20:00', new DateTimeZone($timezone));
-      $endTime = (new DateTime('06:00', new DateTimeZone($timezone)))->modify('+1 day');
-
-      // turn theme dark at night time
-      if ($currentTime >= $startTime && $currentTime <= $endTime) {
-        $settings->theme_css = 'dark';
-      } else {
-        $settings->theme_css = 'light';
-      }
-
-      $this->session->set_userdata('settings', $settings);
-    }
-  }
-
 
   /**
    * Change theme
