@@ -15,11 +15,7 @@
                     <a href="myskearch/auth/signup" class="btn btn-danger" role="button">Get Started</a>
                 <?php endif ?>
                 <a class="theme-change" onclick="changeTheme()" title="Change theme">
-                    <?php if ($this->session->userdata('settings')->theme == 'auto') : ?>
-                        <div class="theme-change icon auto"></div>
-                    <?php else : ?>
-                        <div class="theme-change icon"></div>
-                    <?php endif ?>
+                    <div class="theme-change icon"></div>
                 </a>
             </div>
         </div>

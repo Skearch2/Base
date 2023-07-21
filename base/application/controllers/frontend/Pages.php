@@ -45,9 +45,9 @@ class Pages extends MY_Controller
     $this->load->model('admin_panel/Tos_pp_model', 'TOS');
     $this->load->model('my_skearch/User_model', 'User');
 
-    // set theme to auto for non users
+    // set theme to light for non users as default
     if (!$this->session->userdata('settings') or !$this->session->userdata('settings')->theme) {
-      $settings = (object) array('theme' => 'auto');
+      $settings = (object) array('theme' => 'light');
       $this->session->set_userdata('settings', $settings);
     }
 
@@ -289,39 +289,14 @@ class Pages extends MY_Controller
   {
     $settings = $this->session->userdata('settings');
 
-    if ($settings->theme === 'auto') {
-      $settings->theme = 'light';
-    } else if ($settings->theme === 'light') {
+    if ($settings->theme === 'light') {
       $settings->theme = 'dark';
     } else if ($settings->theme === 'dark') {
-      $settings->theme = 'auto';
+      $settings->theme = 'light';
     }
     $this->session->set_userdata('settings', $settings);
 
-    if ($settings->theme === 'auto') {
-
-      $ip = $_SERVER['REMOTE_ADDR'];
-      $ipInfo = file_get_contents('http://ip-api.com/json/' . $ip);
-      $ipInfo = json_decode($ipInfo);
-      $timezone = 'America/Chicago';
-
-      $currentTime = new DateTime("now", new DateTimeZone($timezone));
-      $startTime = new DateTime('20:00', new DateTimeZone($timezone));
-      $endTime = (new DateTime('06:00', new DateTimeZone($timezone)))->modify('+1 day');
-
-      // turn theme dark at night time
-      if ($currentTime >= $startTime && $currentTime <= $endTime) {
-        $settings->theme_css = 'dark';
-      } else {
-        $settings->theme_css = 'light';
-      }
-
-      $this->session->set_userdata('settings', $settings);
-
-      if ($this->ion_auth->logged_in()) {
-        $this->User->update_settings($this->user_id, array('theme' => 'auto'));
-      }
-    } else if ($settings->theme === 'light') {
+    if ($settings->theme === 'light') {
 
       $settings->theme_css = 'light';
       $this->session->set_userdata('settings', $settings);
