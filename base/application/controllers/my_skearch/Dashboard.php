@@ -66,8 +66,9 @@ class Dashboard extends MY_Controller
 	 */
 	public function index()
 	{
-		// default search engine
+		// default settings
 		$data['search_engine'] = $this->session->userdata('settings')->search_engine;
+		$data['theme'] = $this->session->userdata('settings')->theme;
 
 		// brand deals
 		$brand_deals = $this->Deals->get($status = 'running');
@@ -128,12 +129,20 @@ class Dashboard extends MY_Controller
 	public function update_settings()
 	{
 		$search_engine = $this->input->get('search_engine');
-		$update = $this->User->update_settings($this->user_id, array('search_engine' => $search_engine));
+		$theme = $this->input->get('theme');
+
+		$settings = array(
+			'search_engine' => $search_engine,
+			'theme' => $theme
+		);
+
+		$update = $this->User->update_settings($this->user_id, $settings);
 
 		if ($update) {
 			// update settings in user session
 			$settings = $this->session->userdata('settings');
 			$settings->search_engine = $search_engine;
+			$settings->theme = $theme;
 			$this->session->set_userdata('settings', $settings);
 			echo json_encode(1);
 		} else {
