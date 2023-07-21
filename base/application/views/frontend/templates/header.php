@@ -18,11 +18,7 @@
 			<div class="col-sm-2 col field-btn">
 				<a class="btn-cat" href="<?= site_url('browse') ?>"></a>
 				<a class="theme-change" onclick="changeTheme()" title="Change theme">
-					<?php if ($this->session->userdata('settings')->theme == 'auto') : ?>
-						<div class="themechange icon auto"></div>
-					<?php else : ?>
-						<div class="themechange icon"></div>
-					<?php endif ?>
+					<div class="theme-change icon"></div>
 				</a>
 			</div>
 			<div class="col-sm-12 login-bar" style="padding: 0;">

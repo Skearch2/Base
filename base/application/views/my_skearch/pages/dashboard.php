@@ -50,6 +50,15 @@ $this->load->view('my_skearch/templates/start_pagebody');
 						<option value="google" <?= ($search_engine === 'google') ? 'selected' : '' ?>>Google</option>
 					</select>
 				</div>
+				<label class="col-1 col-form-label"></label>
+				<label for="theme" class="col-2 col-form-label">Deafult Theme</label>
+				<div class="col-3">
+					<select class="form-control m-input" id="theme" name="theme" onchange=update_settings()>
+						<option value="auto" <?= ($theme === 'auto') ? 'selected' : '' ?>>Auto</option>
+						<option value="light" <?= ($theme === 'light') ? 'selected' : '' ?>>Light</option>
+						<option value="dark" <?= ($theme === 'dark') ? 'selected' : '' ?>>Dark</option>
+					</select>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -271,7 +280,8 @@ $this->load->view('my_skearch/templates/js_global');
 			// dataType: 'json',
 			data: {
 				// csrf_name: csrf_hash,
-				search_engine: $('#search_engine').val()
+				search_engine: $('#search_engine').val(),
+				theme: $('#theme').val()
 			},
 			success: function(data, status) {
 				if (data == 1)
