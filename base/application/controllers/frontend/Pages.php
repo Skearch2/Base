@@ -293,6 +293,12 @@ class Pages extends MY_Controller
       $settings->theme = 'dark';
     } else if ($settings->theme === 'dark') {
       $settings->theme = 'light';
+    } else {
+      if ($settings->theme_css = 'light') {
+        $settings->theme = 'dark';
+      } else if ($settings->theme_css = 'dark') {
+        $settings->theme = 'light';
+      }
     }
     $this->session->set_userdata('settings', $settings);
 
