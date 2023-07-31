@@ -66,11 +66,20 @@ class Pages extends MY_Controller
 
       $timezone = ($ipInfo->status == 'success' ? $ipInfo->timezone : 'America/Chicago');
 
-      $currentTime = new DateTime("now", new DateTimeZone($timezone));
-      $startTime = new DateTime('20:00', new DateTimeZone($timezone));
-      $endTime = (new DateTime('06:00', new DateTimeZone($timezone)))->modify('+1 day');
+      $current_time = new DateTime("now", new DateTimeZone($timezone));
+      $start_time = new DateTime('20:00', new DateTimeZone($timezone));
+      $end_time = (new DateTime('06:00', new DateTimeZone($timezone)));
 
-      if ($currentTime >= $startTime && $currentTime <= $endTime) {
+      if (
+        ($start_time < $end_time &&
+          $current_time >= $start_time &&
+          $current_time <= $end_time
+        ) ||
+        ($start_time > $end_time && ($current_time >= $start_time ||
+          $current_time <= $end_time
+        )
+        )
+      ) {
         $settings->theme_css = 'dark';
       } else {
         $settings->theme_css = 'light';
