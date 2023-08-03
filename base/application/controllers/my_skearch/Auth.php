@@ -863,7 +863,7 @@ class Auth extends MY_Controller
         $data = array(
             'user_id' => $id,
             'search_engine' => 'duckduckgo',
-            'theme' => 'light'
+            'theme' => 'auto'
         );
         $this->db->insert('skearch_users_settings', $data);
     }
