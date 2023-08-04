@@ -17,9 +17,11 @@
 			</div>
 			<div class="col-sm-2 col field-btn">
 				<a class="btn-cat" href="<?= site_url('browse') ?>"></a>
-				<a class="theme-change" onclick="changeTheme()" title="Change theme">
-					<div class="theme-change icon"></div>
-				</a>
+				<?php if ($this->ion_auth->logged_in()) : ?>
+					<a class="theme-change" onclick="changeTheme()" title="Change theme">
+						<div class="theme-change icon"></div>
+					</a>
+				<?php endif ?>
 			</div>
 			<div class="col-sm-12 login-bar" style="padding: 0;">
 				<?php if ($this->ion_auth->logged_in()) : ?>
