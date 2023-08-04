@@ -53,9 +53,9 @@ class Pages extends MY_Controller
 
     $settings = $this->session->userdata('settings');
 
-    if ($settings->theme === 'light') {
+    if ($this->ion_auth->logged_in() && $settings->theme === 'light') {
       $settings->theme_css = 'light';
-    } else if ($settings->theme === 'dark') {
+    } else if ($this->ion_auth->logged_in() && $settings->theme === 'dark') {
       $settings->theme_css = 'dark';
     } else {
       // change theme to light or dark based on time
@@ -296,35 +296,29 @@ class Pages extends MY_Controller
    */
   public function change_theme()
   {
-    $settings = $this->session->userdata('settings');
+    if ($this->ion_auth->logged_in()) {
+      $settings = $this->session->userdata('settings');
 
-    if ($settings->theme === 'light') {
-      $settings->theme = 'dark';
-    } else if ($settings->theme === 'dark') {
-      $settings->theme = 'light';
-    } else {
-      if ($settings->theme_css = 'light') {
+      if ($settings->theme === 'light') {
         $settings->theme = 'dark';
-      } else if ($settings->theme_css = 'dark') {
+      } else if ($settings->theme === 'dark') {
         $settings->theme = 'light';
+      } else {
+        if ($settings->theme_css = 'light') {
+          $settings->theme = 'dark';
+        } else if ($settings->theme_css = 'dark') {
+          $settings->theme = 'light';
+        }
       }
-    }
-    $this->session->set_userdata('settings', $settings);
-
-    if ($settings->theme === 'light') {
-
-      $settings->theme_css = 'light';
       $this->session->set_userdata('settings', $settings);
 
-      if ($this->ion_auth->logged_in()) {
+      if ($settings->theme === 'light') {
+        $settings->theme_css = 'light';
+        $this->session->set_userdata('settings', $settings);
         $this->User->update_settings($this->user_id, array('theme' => 'light'));
-      }
-    } else if ($settings->theme === 'dark') {
-
-      $settings->theme_css = 'dark';
-      $this->session->set_userdata('settings', $settings);
-
-      if ($this->ion_auth->logged_in()) {
+      } else if ($settings->theme === 'dark') {
+        $settings->theme_css = 'dark';
+        $this->session->set_userdata('settings', $settings);
         $this->User->update_settings($this->user_id, array('theme' => 'dark'));
       }
     }

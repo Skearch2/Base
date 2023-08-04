@@ -9,14 +9,14 @@
                     <?php endif ?>
                     <a href="myskearch" class="btn btn-danger" role="button">MySkearch</a>
                     <a href="myskearch/auth/logout" class="btn btn-danger" role="button">Logout</a>
+                    <a class="theme-change" onclick="changeTheme()" title="Change theme">
+                        <div class="theme-change icon"></div>
+                    </a>
                 <?php else : ?>
                     <a href="myskearch/auth/login" class="btn btn-danger" role="button">Sign in</a>
                     <!--span>Not a Member?</span-->
                     <a href="myskearch/auth/signup" class="btn btn-danger" role="button">Get Started</a>
                 <?php endif ?>
-                <a class="theme-change" onclick="changeTheme()" title="Change theme">
-                    <div class="theme-change icon"></div>
-                </a>
             </div>
         </div>
     </div>
